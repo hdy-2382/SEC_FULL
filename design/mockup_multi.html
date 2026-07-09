@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>멀티과제 샘플 — 로봇 개발 표준 보고 체계 (POC · Pilot · 양산평가)</title>
+<style>
+  :root{
+    --bg:#EAF2F9; --card:#FFFFFF; --card-alt:#F4F9FD;
+    --ink:#0E1A2A; --ink-soft:#2E3D52; --muted:#6E7D90;
+    --line:#C9DCEC; --line-soft:#DFEAF4;
+    --navy:#1E4A7A; --navy-deep:#0F2E54; --sky:#2E89D6; --sky-soft:#EAF2FB;
+    --green:#3E9B6E; --green-soft:#DDEEE2;
+    --crit:#C0392B; --crit-soft:#F7E1DD;
+    --major:#E08600; --major-soft:#FBEDD6;
+    --minor:#3F7CC4; --minor-soft:#E5EFFA;
+    --rust:#8B2E1F;
+    --sans:"Malgun Gothic","맑은 고딕",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    --shadow-sm:0 1px 2px rgba(15,20,25,.05),0 1px 3px rgba(15,20,25,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+  .app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+  .side{background:linear-gradient(180deg,#13335c,#0c1f3b);color:#cdd9ea;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 0}
+  .side .brand{display:flex;gap:10px;align-items:center;padding:0 20px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .side .brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2E89D6,#5fb0ec);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+  .side .brand b{color:#fff;font-size:13px;line-height:1.25}
+  .nav{padding:12px 12px;display:flex;flex-direction:column;gap:2px}
+  .nav .t{font-size:10px;letter-spacing:.1em;color:#7f93b0;text-transform:uppercase;padding:8px 12px 6px}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#b8c6da;text-decoration:none;font-size:12.5px;font-weight:600;cursor:pointer}
+  .nav a .st{width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.12);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+  .nav a .stage{margin-left:auto;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.1);color:#9fb6d4}
+  .nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav a.active{background:linear-gradient(90deg,rgba(46,137,214,.28),rgba(46,137,214,.10));color:#fff;box-shadow:inset 2px 0 0 #2E89D6}
+  .nav a.active .st{background:#2E89D6;color:#fff}
+  .side .foot{margin-top:auto;padding:14px 20px 2px;font-size:11px;color:#7f93b0;line-height:1.5}
+  .side .foot .dot{color:#46d07f}
+
+  .main{padding:0 26px 48px}
+  .topbar{display:flex;align-items:center;gap:16px;padding:18px 2px 12px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 72%,rgba(234,242,249,0));z-index:5}
+  .topbar h1{font-size:19px;font-weight:800;color:var(--navy-deep)}
+  .topbar .meta{color:var(--muted);font-size:12.5px;display:flex;gap:14px;margin-left:4px}.topbar .meta b{color:var(--ink-soft)}
+  .topbar .sp{flex:1}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer}
+  .banner{background:#fff7e6;border:1px solid #f0d79a;color:#8a6420;border-radius:8px;padding:8px 12px;font-size:12.5px;margin:0 2px 12px}
+
+  .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:26px;box-shadow:var(--shadow-sm)}
+  .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}
+  .sbox-h .tag{font-size:11px;font-weight:800;color:#fff;background:var(--navy);padding:4px 12px;border-radius:20px;letter-spacing:.03em}
+  .sbox-h .tag.t-perf{background:#4A6FA5}.sbox-h .tag.t-rel{background:var(--navy)}.sbox-h .tag.t-safe{background:#3E7A5E}
+  .sbox-h h2{font-size:16px;font-weight:800;color:var(--navy-deep)}
+  .sbox-h .d{font-size:11.5px;color:var(--muted);margin-left:auto}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px}
+  .panel h3{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:3px}
+  .panel .psub{font-size:11px;color:var(--muted);margin-bottom:12px;letter-spacing:.02em}
+  .grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g23{grid-template-columns:1.5fr 1fr}
+  .mt{margin-top:14px}
+  .row-flex{display:flex;align-items:center}
+  .vlabel{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--card-alt);border:1px solid var(--line);color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line-soft)}
+  th{color:var(--muted);font-weight:700;font-size:11.5px}td.c,th.c{text-align:center}td.r,th.r{text-align:right}
+  tbody tr:hover{background:var(--sky-soft)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:800}
+  .b-crit{background:var(--crit-soft);color:var(--crit)}.b-major{background:var(--major-soft);color:var(--major)}.b-minor{background:var(--minor-soft);color:var(--minor)}
+  .b-ok{background:var(--green-soft);color:var(--green)}.b-prog{background:var(--minor-soft);color:var(--minor)}.b-wait{background:#eee;color:#777}
+  .mini{font-size:11px;color:var(--muted)}
+  .prog-bar{height:8px;border-radius:6px;background:var(--line-soft);overflow:hidden}.prog-bar i{display:block;height:100%;background:var(--sky)}
+  .req{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:800;vertical-align:1px;margin-left:3px}
+  .req.must{background:var(--sky-soft);color:var(--sky)}.req.opt{background:#ececec;color:#999}
+
+  /* 단계 칩 */
+  .chip{font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px}
+  .chip.pass{background:var(--green-soft);color:var(--green)}.chip.fail{background:var(--crit-soft);color:var(--crit)}.chip.prog{background:var(--minor-soft);color:var(--minor)}.chip.wait{background:#eee;color:#888}
+  .stagechip{font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.02em}
+  .st-poc{background:#E5EFFA;color:#3F7CC4}.st-pilot{background:#FBEDD6;color:#B36F0A}.st-mass{background:#DDEEE2;color:#2F7A55}
+
+  /* 실증 사다리 */
+  .ladder{display:flex;align-items:stretch;gap:7px;flex-wrap:wrap}
+  .ladder .rung{flex:1;min-width:148px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;position:relative}
+  .ladder .rung.next{border-style:dashed;background:var(--card-alt)}
+  .ladder .rung .stg{font-size:10.5px;font-weight:800;letter-spacing:.04em}
+  .ladder .rung .run{font-size:14.5px;font-weight:800;color:var(--navy-deep);margin:4px 0 2px}
+  .ladder .rung .env{font-size:10.5px;color:var(--muted)}
+  .ladder .gt{flex:0 0 auto;width:112px;background:linear-gradient(180deg,#13335c,#0c1f3b);border:1px solid #0c1f3b;border-radius:12px;padding:11px 11px;color:#fff}
+  .ladder .gt .stg{color:#9fd0ff}
+  .ladder .gt .run{font-size:12.5px;font-weight:800;margin:4px 0 2px;color:#fff;line-height:1.3}
+  .ladder .gt .env{font-size:10px;color:#9fb6d4}
+  .ladder .ar{align-self:center;color:var(--sky);font-weight:800;font-size:15px}
+  .gatecards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .gatecard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+  .gatecard h4{font-size:12.5px;font-weight:800;color:var(--navy-deep);margin-bottom:2px}
+  .gatecard h4 .gd{color:var(--sky);margin-right:5px}
+  .gatecard .gsub{font-size:10.5px;color:var(--muted);margin-bottom:9px}
+  .gatecard .items{display:flex;flex-wrap:wrap;gap:5px}
+  .gatecard .items span{font-size:10.5px;font-weight:700;background:var(--card-alt);border:1px solid var(--line-soft);border-radius:14px;padding:3px 10px;color:var(--ink-soft)}
+  .gatecard .items span.hl{background:var(--sky-soft);border-color:var(--line);color:var(--navy-deep)}
+  .principles{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .principles span{font-size:11.5px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 13px}
+  .principles b{color:var(--navy-deep)}
+
+  /* 과제 카드 (홈) */
+  .pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px;cursor:pointer;transition:box-shadow .15s,transform .15s}
+  .pcard:hover{box-shadow:0 4px 14px rgba(15,46,84,.14);transform:translateY(-1px)}
+  .pcard .ph{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+  .pcard .ph b{font-size:13.5px;color:var(--navy-deep)}
+  .pcard .ph .stagechip{margin-left:auto}
+  .pcard .psub{font-size:11px;color:var(--muted);margin-bottom:11px}
+  .pcard .kv{display:flex;gap:14px;margin-bottom:10px}
+  .pcard .kv .k{font-size:10.5px;color:var(--muted)}.pcard .kv .v{font-size:16px;font-weight:800;color:var(--navy-deep)}.pcard .kv .v small{font-size:11px;color:var(--muted);font-weight:700}
+  .tracks{display:flex;gap:6px;margin:10px 0}
+  .tracks span{flex:1;text-align:center;font-size:10.5px;font-weight:700;border-radius:8px;padding:5px 2px}
+  .tk-ok{background:var(--green-soft);color:var(--green)}.tk-prog{background:var(--minor-soft);color:var(--minor)}.tk-warn{background:var(--major-soft);color:var(--major)}
+  .pcard .foot{display:flex;align-items:center;margin-top:9px;font-size:11px;color:var(--muted)}
+  .pcard .foot .gate{margin-left:auto;font-weight:800;color:var(--ink-soft)}
+
+  /* TECOP */
+  .tecop{display:flex;gap:6px;flex-wrap:wrap}
+  .tecop .tp{font-size:10.5px;font-weight:800;border-radius:16px;padding:3px 9px;cursor:default}
+  .tp.ok{background:var(--green-soft);color:var(--green)}.tp.warn{background:var(--major-soft);color:var(--major)}.tp.risk{background:var(--crit-soft);color:var(--crit)}
+
+  /* 세부 단계 lifecycle */
+  .lifecycle{display:flex;margin-top:4px}
+  .lc{flex:1;position:relative;text-align:center;padding:0 4px}
+  .lc::before{content:"";position:absolute;top:21px;left:-50%;width:100%;height:3px;background:var(--line);z-index:0}
+  .lc:first-child::before{display:none}
+  .lc.done::before,.lc.cur::before{background:var(--green)}
+  .lc .dot{width:34px;height:34px;border-radius:50%;margin:5px auto 8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;position:relative;z-index:1}
+  .lc.done .dot{background:var(--green)}.lc.cur .dot{background:var(--sky);box-shadow:0 0 0 4px var(--sky-soft)}.lc.todo .dot{background:#cdd6e2}
+  .lc .nm{font-size:12px;font-weight:800;color:var(--ink)}.lc.todo .nm{color:var(--muted)}
+  .lc .stt{font-size:10px;font-weight:700;margin-top:2px}.lc.done .stt{color:var(--green)}.lc.cur .stt{color:var(--sky)}.lc.todo .stt{color:var(--muted)}
+  .lc .note{margin:9px 5px 0;min-height:40px;border:1px dashed var(--line);border-radius:7px;background:var(--card-alt);font-size:10.5px;color:var(--ink-soft);padding:6px 7px;text-align:left;line-height:1.35}
+
+  /* 게이트 crit-grid */
+  .crit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+  .crit{border:1px solid var(--line-soft);border-radius:10px;padding:10px 11px;background:var(--card-alt)}
+  .crit .k{font-size:11px;color:var(--muted);margin-bottom:5px}.crit .v{font-size:15px;font-weight:800;color:var(--ink)}
+  .crit .s{font-size:10.5px;font-weight:800;margin-top:6px;display:inline-block;padding:2px 8px;border-radius:20px}
+  .s.pass{background:var(--green-soft);color:var(--green)}.s.fail{background:var(--crit-soft);color:var(--crit)}.s.prog{background:var(--minor-soft);color:var(--minor)}.s.wait{background:#eee;color:#888}
+
+  /* 무고장 런 게이지 (공통 컴포넌트) */
+  .rgauge .glabel{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:5px}
+  .rgauge .glabel b{color:var(--navy-deep);font-size:13px}
+  .rgauge .track{position:relative;height:16px;border-radius:9px;background:var(--line-soft);overflow:visible}
+  .rgauge .track i{display:block;height:100%;border-radius:9px 0 0 9px;background:linear-gradient(90deg,#2E89D6,#5fb0ec)}
+  .rgauge .mark{position:absolute;top:-4px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:var(--crit-soft);border:2px solid var(--rust);color:var(--rust);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:default}
+  .rgauge .gfoot{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:9px;flex-wrap:wrap}
+  .rgauge .gfoot b{color:var(--ink-soft)}
+  .paramrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+  .paramrow span{font-size:10.5px;font-weight:700;background:var(--card-alt);border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--ink-soft)}
+  .paramrow b{color:var(--navy-deep)}
+
+  /* 4분류 보드 (POC) */
+  .fourway{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .fw{border-radius:10px;padding:11px 12px;border:1px solid var(--line-soft);background:var(--card-alt)}
+  .fw .t{font-size:11px;font-weight:800;color:var(--muted)}
+  .fw .n{font-size:24px;font-weight:800;margin:3px 0 1px;color:var(--navy-deep)}
+  .fw .m{font-size:10.5px;color:var(--muted)}
+  .fw.hero{background:var(--green-soft);border-color:#bfe0cc}.fw.hero .n{color:var(--green)}
+  .stat-big{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}.stat-big b{font-size:26px;font-weight:800;color:var(--navy-deep)}.stat-big span{font-size:12px;color:var(--muted)}
+  .big-num{font-size:30px;font-weight:800}
+
+  .qbox{background:var(--sky-soft);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--ink-soft);margin-bottom:13px}
+  .qbox b{color:var(--navy-deep)}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:13px 15px}
+  .kpi .k{font-size:11.5px;color:var(--muted)}.kpi .v{font-size:22px;font-weight:800;color:var(--navy-deep);margin-top:3px}.kpi .v small{font-size:12px;color:var(--muted);font-weight:700}.kpi .sub{font-size:10.5px;color:var(--ink-soft);margin-top:2px}
+  .clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--ink-soft);margin-top:8px}
+  .clegend span{display:inline-flex;align-items:center;gap:5px}.clegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .view{display:none}.view.on{display:block}
+  .ptitle{display:flex;align-items:center;gap:10px;margin:2px 2px 14px;flex-wrap:wrap}
+  .ptitle h2{font-size:17px;font-weight:800;color:var(--navy-deep)}
+  .ptitle .meta{font-size:12px;color:var(--muted)}.ptitle .meta b{color:var(--ink-soft)}
+  .tmpl{font-size:10.5px;font-weight:800;background:#0F2E54;color:#9fd0ff;border-radius:6px;padding:3px 9px;letter-spacing:.03em}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">R</div><b>Robot Reliability<br>Portfolio</b></div>
+    <nav class="nav">
+      <a data-view="home" class="active"><span class="st">▦</span> 한눈에 보기</a>
+      <div class="t">과제 (표준 템플릿)</div>
+      <a data-view="pa"><span class="st">A</span> 커넥터 조립 협동로봇<span class="stage">POC</span></a>
+      <a data-view="pb"><span class="st">B</span> 박스 이적재 물류로봇<span class="stage">Pilot</span></a>
+      <a data-view="pc"><span class="st">C</span> 부품 체결/반송 자동화<span class="stage">양산평가</span></a>
+    </nav>
+    <div class="foot"><span class="dot">●</span> 샘플 · 가상 데이터<br>공통 레코드 1종 · 단계 템플릿 3종<br>업데이트 2026-07-06</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1 id="tb-title">로봇 개발 표준 보고 체계</h1>
+      <div class="meta"><span>기준일 <b>2026-07-06 (월)</b></span><span>진행 과제 <b>3</b></span></div>
+      <div class="sp"></div><button class="btn">PDF 리포트</button>
+    </div>
+    <div class="banner">🧪 <b>멀티과제 샘플</b> — 과제별 페이지 × 단계 표준 템플릿(개발 POC/Pilot · 실증 양산평가). 모든 수치는 가상 데이터.</div>
+
+    <!-- ================= 홈 (포트폴리오) ================= -->
+    <div class="view on" id="view-home">
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">표준 프로세스</span><h2>전체 체인 — 기간(데이터 축적) 5 + 심의 게이트(체크리스트) 2</h2><span class="d">무고장 런은 동일 컴포넌트 · 파라미터만 단계별 상향</span></div>
+        <div class="ladder">
+          <div class="rung"><div class="stg" style="color:#3F7CC4">① POC</div><div class="run">사외 72h 무에러</div><div class="env">랩·사외 · 비정상 상황 평가 병행</div></div>
+          <div class="ar">→</div>
+          <div class="rung"><div class="stg" style="color:#B36F0A">② Pilot</div><div class="run">무정지 300h</div><div class="env">사내 파일럿 · 설계 동결 후</div></div>
+          <div class="ar">→</div>
+          <div class="rung"><div class="stg" style="color:#2F7A55">③ 양산평가</div><div class="run">무정지 1개월</div><div class="env">실제 라인 · 판정 합의제</div></div>
+          <div class="ar">→</div>
+          <div class="gt"><div class="stg">◆ 심의</div><div class="run">인증<br>운영승인심의</div><div class="env">이관 산출물 합의</div></div>
+          <div class="ar">→</div>
+          <div class="gt"><div class="stg">◆ 심의</div><div class="run">확산<br>투자심의</div><div class="env">영향성 평가 · 투자결정</div></div>
+          <div class="ar">→</div>
+          <div class="rung"><div class="stg" style="color:#7A4FB3">④ 양산적용</div><div class="run">라인별 SAT 런</div><div class="env">양산 퀄 · 횡전개 · 함대(fleet)화</div></div>
+          <div class="ar">→</div>
+          <div class="rung"><div class="stg" style="color:#666">⑤ 운영 전환</div><div class="run">상시 RAM 지표</div><div class="env">통합관제 · 보전/CIP · FMEA 환류</div></div>
+        </div>
+        <div class="gatecards">
+          <div class="gatecard">
+            <h4><span class="gd">◆</span>인증 · 운영승인심의 — 이관 패키지 표준 안건</h4>
+            <div class="gsub">기간이 아니라 이벤트 — 산출물 체크리스트로 관리 · FRACAS 미종결 건은 잔여 리스크 명세로 인수인계</div>
+            <div class="items"><span>기능/성능 검증</span><span>퀄(Qual)</span><span>매뉴얼</span><span>표준관리</span><span>자산등록</span><span>점검표</span><span class="hl">이관 산출물 점검/합의</span><span class="hl">잔여 리스크 명세 + 오너 지정</span></div>
+          </div>
+          <div class="gatecard">
+            <h4><span class="gd">◆</span>양산 확산 투자심의 — 실증 데이터의 경제성 변환</h4>
+            <div class="gsub">계약 잣대로 실증된 숫자(MCBF·MTTR·가동률)만 사용 — 신뢰성 → 처리량·인력·보전비 → ROI</div>
+            <div class="items"><span>라인 생산 영향성 평가 (제조)</span><span>영향성 평가 (기술혁신)</span><span class="hl">실증 결과 패키지</span><span>확산 ROI/TCO</span><span class="hl">확산도입 투자결정</span></div>
+          </div>
+        </div>
+        <div class="principles">
+          <span>① 고장 레코드 스키마는 <b>전 과제·전 단계 공통</b></span>
+          <span>② 기간엔 <b>템플릿 3종</b>(개발·실증·운영) · 심의엔 <b>체크리스트</b></span>
+          <span>③ 판정 잣대·리셋 규칙은 <b>데이터 이전에 확정</b></span>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">과제 현황</span><h2>진행 중 과제 3건</h2><span class="d">카드 클릭 → 과제 페이지</span></div>
+        <div class="pcards">
+
+          <div class="pcard" data-go="pa">
+            <div class="ph"><b>PJT-A · 커넥터 조립 협동로봇</b><span class="stagechip st-poc">POC</span></div>
+            <div class="psub">템플릿 ① 개발 (POC 모드) · PM 김OO · D+34</div>
+            <div class="kv">
+              <div><div class="k">72h 무에러 런</div><div class="v">52<small>/72h</small></div></div>
+              <div><div class="k">발굴 이슈</div><div class="v">18<small>건 · 종결 11</small></div></div>
+              <div><div class="k">컨셉 리스크</div><div class="v" style="color:var(--green)">0<small>건</small></div></div>
+            </div>
+            <div class="rgauge"><div class="track"><i style="width:72.2%"></i><span class="mark" style="left:43%" title="1차 시도: 31h 시점 비전 오인식 → 리셋 후 2차 진행">↺</span></div></div>
+            <div class="tracks"><span class="tk-ok">성능 ✓ 3/3</span><span class="tk-prog">신뢰성 · 72h 런</span><span class="tk-prog">안전 · 컨셉 합의</span></div>
+            <div class="tecop">
+              <span class="tp warn" title="Technical — 72h 무에러 2차 진행 중">T 주의</span><span class="tp ok" title="Economic — 개략 사업성 확인">E 양호</span><span class="tp ok" title="Commercial — 해당 없음(사내)">C 양호</span><span class="tp warn" title="Organizational — 수혜부서 후보 협의 전">O 주의</span><span class="tp ok" title="Political/Regulatory — 안전 컨셉 합의 완료">P 양호</span>
+            </div>
+            <div class="foot"><span>재발 0건</span><span class="gate">게이트 리뷰 D-9</span></div>
+          </div>
+
+          <div class="pcard" data-go="pb">
+            <div class="ph"><b>PJT-B · 박스 이적재 물류로봇</b><span class="stagechip st-pilot">Pilot</span></div>
+            <div class="psub">템플릿 ① 개발 (Pilot 모드) · PM 이OO · D+71</div>
+            <div class="kv">
+              <div><div class="k">MCBF (성장)</div><div class="v">1,240<small>/1,500Cy</small></div></div>
+              <div><div class="k">고장</div><div class="v">23<small>건 · 마감 21</small></div></div>
+              <div><div class="k">재발</div><div class="v" style="color:var(--major)">1<small>건</small></div></div>
+            </div>
+            <div class="rgauge"><div class="track"><i style="width:82.7%"></i></div></div>
+            <div class="tracks"><span class="tk-ok">성능 ✓</span><span class="tk-prog">신뢰성 · 성장 추적</span><span class="tk-prog">안전 · 인증 심사</span></div>
+            <div class="tecop">
+              <span class="tp ok" title="Technical — 성장곡선 순항">T 양호</span><span class="tp warn" title="Economic — 양산 원가 검토 중">E 주의</span><span class="tp ok" title="Commercial — 공급계약 초안 합의">C 양호</span><span class="tp ok" title="Organizational — 수혜부서 지표 정의 참여 완료">O 양호</span><span class="tp ok" title="Political/Regulatory — 인증 일정 정상">P 양호</span>
+            </div>
+            <div class="foot"><span>SW v0.9.4 · HW Rev C</span><span class="gate">게이트 리뷰 D-23</span></div>
+          </div>
+
+          <div class="pcard" data-go="pc">
+            <div class="ph"><b>PJT-C · 부품 체결/반송 자동화</b><span class="stagechip st-mass">양산평가</span></div>
+            <div class="psub">템플릿 ② 실증 · PM 박OO · D+18/90</div>
+            <div class="kv">
+              <div><div class="k">무정지 1개월(환산)</div><div class="v">287<small>/360Cy</small></div></div>
+              <div><div class="k">관련 고장</div><div class="v" style="color:var(--major)">2<small>/한도 3</small></div></div>
+              <div><div class="k">가동률</div><div class="v">99.1<small>%</small></div></div>
+            </div>
+            <div class="rgauge"><div class="track"><i style="width:79.7%"></i><span class="mark" style="left:16.7%" title="E-01 그리퍼 슬립 · 60Cy · 관련 판정(합의)">↺</span><span class="mark" style="left:46.9%" title="E-02 비전 타임아웃 · 169Cy · 관련 판정(합의)">↺</span></div></div>
+            <div class="tracks"><span class="tk-ok">성능 ✓</span><span class="tk-prog">신뢰성 · 무정지 런</span><span class="tk-prog">안전 · 위험성평가</span></div>
+            <div class="tecop">
+              <span class="tp ok" title="Technical — 진도 정상">T 양호</span><span class="tp ok" title="Economic — 투자 승인 완료">E 양호</span><span class="tp warn" title="Commercial — 계약 마감 9/30 · 에러 여유 1회">C 주의</span><span class="tp ok" title="Organizational — 수혜부서 합동 판정 운영 중">O 양호</span><span class="tp ok" title="Political/Regulatory — 안전검수 통과">P 양호</span>
+            </div>
+            <div class="foot"><span>재발 1건 · 판정중 1건</span><span class="gate">가동인증 D-72</span></div>
+          </div>
+        </div>
+
+        <div class="kpis mt">
+          <div class="kpi"><div class="k">누적 결함/고장 레코드</div><div class="v">46<small>건</small></div><div class="sub">A 18 · B 23 · C 5 — 공통 스키마</div></div>
+          <div class="kpi"><div class="k">시정조치 마감률</div><div class="v">78<small>%</small></div><div class="sub">36/46 종결 (검증 포함)</div></div>
+          <div class="kpi"><div class="k">재발 (전 과제)</div><div class="v" style="color:var(--major)">2<small>건</small></div><div class="sub">B 파지실패 · C 그리퍼슬립</div></div>
+          <div class="kpi"><div class="k">무고장 런 진행</div><div class="v">3<small>건</small></div><div class="sub">72h · 예열 88h · 287/360Cy</div></div>
+          <div class="kpi"><div class="k">이번 달 게이트 리뷰</div><div class="v">2<small>건</small></div><div class="sub">A D-9 · B D-23</div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 과제 A : POC ================= -->
+    <div class="view" id="view-pa">
+      <div class="ptitle">
+        <h2>PJT-A · 커넥터 조립 협동로봇</h2><span class="stagechip st-poc">POC</span><span class="tmpl">템플릿 ① 개발 — POC 모드</span>
+        <span class="meta">PM <b>김OO</b> · 기간 <b>2026-06-02 ~ 07-15 (D+34)</b> · 게이트 리뷰 <b>07-15 (D-9)</b></span>
+      </div>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">단계 진행</span><h2>POC 세부 단계</h2><span class="d">P1→P4 · 게이트 통과 시 Pilot 이관</span></div>
+        <div class="panel">
+          <div class="lifecycle">
+            <div class="lc done"><div class="dot">✓</div><div class="nm">P1 평가항목/방법 정의</div><div class="stt">완료</div><div class="note">FMEA 초판 · 고장모드 분류 확정 · 판정기준서 v1 (에러/정지/어시스트 구분)</div></div>
+            <div class="lc done"><div class="dot">✓</div><div class="nm">P2 안전인증 컨셉미팅</div><div class="stt">완료</div><div class="note">위험원 12건 식별 → 설계 반영 목록 합의 (06-10)</div></div>
+            <div class="lc done"><div class="dot">✓</div><div class="nm">P3 기성능 평가/검증</div><div class="stt">완료</div><div class="note">택트 12.5s · 반복정밀도 ±0.04mm · 체결성공률 99.2% — 3/3 충족</div></div>
+            <div class="lc cur"><div class="dot">●</div><div class="nm">P4 사외 72h 무에러 + 비정상 평가</div><div class="stt">진행 중</div><div class="note">2차 시도 52/72h · 비정상 시나리오 6/8 PASS</div></div>
+          </div>
+        </div>
+        <div class="panel mt">
+          <div class="row-flex"><h3>게이트 통과 기준 (Pilot 이관)</h3><span class="vlabel" style="margin-left:auto">사전 확정 · 리뷰 07-15</span></div>
+          <div class="psub">EXIT CRITERIA · 데이터 이전에 합의된 잣대</div>
+          <div class="crit-grid">
+            <div class="crit"><div class="k">① 기성능 스펙</div><div class="v">3/3</div><span class="s pass">충족</span></div>
+            <div class="crit"><div class="k">② 72h 무에러</div><div class="v">52/72h</div><span class="s prog">2차 진행</span></div>
+            <div class="crit"><div class="k">③ 비정상 시나리오</div><div class="v">6/8</div><span class="s prog">1 재시험</span></div>
+            <div class="crit"><div class="k">④ 상위 심각도 미해결</div><div class="v">0건</div><span class="s pass">충족</span></div>
+            <div class="crit"><div class="k">⑤ FMEA 상위 리스크</div><div class="v">조치계획 수립</div><span class="s pass">충족</span></div>
+          </div>
+          <div class="row-flex mt"><span class="mini" style="margin-right:10px">게이트 리뷰 고정 안건 — TECOP</span>
+            <div class="tecop">
+              <span class="tp warn" title="72h 무에러 2차 진행 중">T 주의</span><span class="tp ok" title="개략 사업성 확인(대체 인력 2명분)">E 양호</span><span class="tp ok">C 양호</span><span class="tp warn" title="수혜부서 후보 협의 전 — Pilot 지표 정의에 참여 필요">O 주의</span><span class="tp ok" title="안전 컨셉 합의 완료">P 양호</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag t-rel">신뢰성 트랙</span><h2>에러 분석 — POC 방식</h2><span class="d">지표(MTBF) 없음 — 발굴·분류가 목적</span></div>
+        <div class="qbox">이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계 대신 <b>전수 4분류</b>로 보고.</div>
+        <div class="grid g23">
+          <div class="panel">
+            <h3>발굴 이슈 4분류 (전수)</h3><div class="psub">18건 발굴 · 종결 11 · 진행 7</div>
+            <div class="fourway">
+              <div class="fw hero"><div class="t">① 컨셉 리스크</div><div class="n">0</div><div class="m">컨셉킬러 없음 — POC 핵심 결론</div></div>
+              <div class="fw"><div class="t">② 설계 개선</div><div class="n">6</div><div class="m">종결 3 · 진행 3</div></div>
+              <div class="fw"><div class="t">③ 구현(SW) 버그</div><div class="n">9</div><div class="m">종결 6 · 진행 3</div></div>
+              <div class="fw"><div class="t">④ 시험환경 요인</div><div class="n">3</div><div class="m">종결 2 · 진행 1</div></div>
+            </div>
+            <div class="mini mt">① 이 0건이 아니게 되면 즉시 게이트 보류 → 컨셉 재검토. 정직한 분류가 이 단계 보고의 신뢰도를 결정.</div>
+          </div>
+          <div class="panel">
+            <h3>고장모드 Pareto</h3><div class="psub">건수 순 · 누적 % (수정개발 우선순위)</div>
+            <table>
+              <thead><tr><th>고장모드</th><th style="width:84px">건수</th><th class="r">누적</th></tr></thead>
+              <tbody>
+                <tr title="비전 오인식 5건 — 누적 27.8%"><td>비전 오인식</td><td><div class="prog-bar"><i style="width:100%"></i></div><span class="mini">5</span></td><td class="r">28%</td></tr>
+                <tr title="체결 토크 이탈 4건 — 누적 50%"><td>체결 토크 이탈</td><td><div class="prog-bar"><i style="width:80%"></i></div><span class="mini">4</span></td><td class="r">50%</td></tr>
+                <tr title="그리퍼 파지 실패 3건 — 누적 66.7%"><td>그리퍼 파지 실패</td><td><div class="prog-bar"><i style="width:60%"></i></div><span class="mini">3</span></td><td class="r">67%</td></tr>
+                <tr title="통신 지연 2건 — 누적 77.8%"><td>통신 지연</td><td><div class="prog-bar"><i style="width:40%"></i></div><span class="mini">2</span></td><td class="r">78%</td></tr>
+                <tr title="기타 4건 — 누적 100%"><td class="mini">기타 (4모드)</td><td><div class="prog-bar"><i style="width:80%;background:#b9cfe4"></i></div><span class="mini">4</span></td><td class="r">100%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid g2 mt">
+          <div class="panel rgauge">
+            <div class="row-flex"><h3>무고장 런 — 사외 72h 무에러</h3><span class="vlabel" style="margin-left:auto">공통 컴포넌트 · POC 파라미터</span></div>
+            <div class="paramrow"><span>목표 <b>72h</b></span><span>잣대 <b>무에러</b> (에러 1건 = 리셋)</span><span>환경 <b>사외 랩</b></span><span>리셋 규칙 <b>사전 확정 v1</b></span></div>
+            <div class="glabel"><span>2차 시도 <b>52h</b> 경과</span><span>남은 <b>20h</b> (~07-08 06:00)</span></div>
+            <div class="track"><i style="width:72.2%"></i><span class="mark" style="left:43%" title="1차 시도: 31h 시점 비전 오인식(조명 반사) → 조명 후드 개선 후 2차 착수">↺</span></div>
+            <div class="gfoot"><span>1차 <b>31h 리셋</b> (비전 오인식 → 조명 후드 개선)</span><span>에러/정지 기록은 <b>POC부터 모두 수집</b> — 게이트만 무에러 잣대 적용</span></div>
+          </div>
+          <div class="panel">
+            <h3>비정상 상황 평가 (Fault Injection)</h3><div class="psub">의도적 이상 주입 → 복구 거동 검증 · 첫 MTTR 측정 지점</div>
+            <table>
+              <thead><tr><th>시나리오</th><th class="c">복구시간</th><th class="c">판정</th></tr></thead>
+              <tbody>
+                <tr><td>비상정지 후 재기동</td><td class="c">45s</td><td class="c"><span class="badge b-ok">PASS</span></td></tr>
+                <tr><td>순간 정전 복구</td><td class="c">2.1m</td><td class="c"><span class="badge b-ok">PASS</span></td></tr>
+                <tr><td>자재 걸림 제거 후 재개</td><td class="c">1.4m</td><td class="c"><span class="badge b-ok">PASS</span></td></tr>
+                <tr><td>통신 두절 → 자동 재접속</td><td class="c">—</td><td class="c"><span class="badge b-crit">FAIL · 재시험</span></td></tr>
+                <tr><td>도어 오픈 인터록 외 3건</td><td class="c">≤1m</td><td class="c"><span class="badge b-ok">PASS ×3</span></td></tr>
+                <tr><td>과부하 정지 복구</td><td class="c">—</td><td class="c"><span class="badge b-wait">대기</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">기록</span><h2>이슈 레코드 (공통 스키마)</h2><span class="d">전 과제 동일 컬럼 · POC는 버전/검증 <b>선택</b></span></div>
+        <div class="panel">
+          <table>
+            <thead><tr><th>ID</th><th>고장모드 (표준분류)</th><th class="c">심각도</th><th>근본원인 분류</th><th>시정조치</th><th class="c">버전<span class="req opt">선택</span></th><th class="c">무발생 검증<span class="req opt">선택</span></th><th class="c">상태</th></tr></thead>
+            <tbody>
+              <tr><td><b>ISS-012</b></td><td>비전 오인식</td><td class="c"><span class="badge b-major">Maj</span></td><td>시험환경 (조명 반사)</td><td>조명 후드 추가</td><td class="c mini">—</td><td class="c mini">—</td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+              <tr><td><b>ISS-015</b></td><td>통신 두절 복구 실패</td><td class="c"><span class="badge b-crit">Crit</span></td><td>설계 (재접속 로직 부재)</td><td>재접속 상태기계 설계 변경</td><td class="c mini">—</td><td class="c mini">—</td><td class="c"><span class="badge b-prog">조치중</span></td></tr>
+              <tr><td><b>ISS-017</b></td><td>체결 토크 이탈</td><td class="c"><span class="badge b-major">Maj</span></td><td>구현 (토크 프로파일)</td><td>프로파일 보정 + 재시험</td><td class="c mini">—</td><td class="c mini">—</td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+              <tr><td><b>ISS-018</b></td><td>그리퍼 파지 실패</td><td class="c"><span class="badge b-minor">Min</span></td><td>구현 (파지력 파라미터)</td><td>파라미터 튜닝</td><td class="c mini">—</td><td class="c mini">—</td><td class="c"><span class="badge b-prog">조치중</span></td></tr>
+            </tbody>
+          </table>
+          <div class="mini mt">POC는 <b>보고 부담 최소화</b>가 원칙 — 필수 5필드(ID·고장모드·심각도·원인분류·상태)만 강제, 나머지는 선택. 단계가 오르면 필수로 전환.</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 과제 B : Pilot ================= -->
+    <div class="view" id="view-pb">
+      <div class="ptitle">
+        <h2>PJT-B · 박스 이적재 물류로봇</h2><span class="stagechip st-pilot">Pilot</span><span class="tmpl">템플릿 ① 개발 — Pilot 모드</span>
+        <span class="meta">PM <b>이OO</b> · 기간 <b>2026-04-27 ~ 08-31 (D+71)</b> · 게이트 리뷰 <b>07-29 (D-23)</b></span>
+      </div>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">단계 진행</span><h2>Pilot 세부 단계</h2><span class="d">L1→L4 · 게이트 통과 시 양산평가 이관</span></div>
+        <div class="panel">
+          <div class="lifecycle">
+            <div class="lc done"><div class="dot">✓</div><div class="nm">L1 가동 지표 정의</div><div class="stt">완료</div><div class="note">MCBF/MTTR/가동률 산식 확정 — 양산평가와 동일 산식 · 수혜부서 참여</div></div>
+            <div class="lc cur"><div class="dot">●</div><div class="nm">L2 신뢰성 평가/검증 (TAAF)</div><div class="stt">진행 중</div><div class="note">반복운전→고장→FRACAS→재운전 · MCBF 1,240 (목표 1,500)</div></div>
+            <div class="lc cur"><div class="dot">●</div><div class="nm">L3 신뢰성시험사양서</div><div class="stt">진행 중</div><div class="note">v0.9 협의 — 300h 판정 기준·리셋 규칙 명문화 · HW품질사양서/안전인증 심사</div></div>
+            <div class="lc todo"><div class="dot">4</div><div class="nm">L4 무정지 300h</div><div class="stt">예정</div><div class="note">설계 동결(07-25 예정) 후 본 런 착수 · 현재 예열 런 88h 무정지</div></div>
+          </div>
+        </div>
+        <div class="panel mt">
+          <div class="row-flex"><h3>게이트 통과 기준 (양산평가 이관)</h3><span class="vlabel" style="margin-left:auto">사전 확정 · 리뷰 07-29</span></div>
+          <div class="psub">EXIT CRITERIA</div>
+          <div class="crit-grid">
+            <div class="crit"><div class="k">① MCBF 성장 목표</div><div class="v">1,240/1,500</div><span class="s prog">83%</span></div>
+            <div class="crit"><div class="k">② 만성(재발) 고장</div><div class="v">1건</div><span class="s fail">마감 필요</span></div>
+            <div class="crit"><div class="k">③ 시정조치 검증마감</div><div class="v">91%</div><span class="s prog">21/23</span></div>
+            <div class="crit"><div class="k">④ 안전인증서</div><div class="v">심사 중</div><span class="s prog">~07-20</span></div>
+            <div class="crit"><div class="k">⑤ 무정지 300h</div><div class="v">동결 후</div><span class="s wait">예정</span></div>
+          </div>
+          <div class="row-flex mt"><span class="mini" style="margin-right:10px">게이트 리뷰 고정 안건 — TECOP</span>
+            <div class="tecop">
+              <span class="tp ok" title="성장곡선 순항">T 양호</span><span class="tp warn" title="양산 원가 절감안 검토 중 (그리퍼 단가)">E 주의</span><span class="tp ok" title="공급계약 초안 합의">C 양호</span><span class="tp ok" title="수혜부서가 L1 지표 정의에 참여 완료">O 양호</span><span class="tp ok" title="인증 일정 정상">P 양호</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag t-rel">신뢰성 트랙</span><h2>에러 분석 — Pilot 방식</h2><span class="d">개별 사건이 아니라 추세로 보고</span></div>
+        <div class="qbox">이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.</div>
+
+        <div class="grid g23">
+          <div class="panel">
+            <div class="row-flex"><h3>MCBF 성장곡선 (Crow-AMSAA식 추적)</h3><span class="vlabel" style="margin-left:auto">주차별 · 목표 1,500Cy</span></div>
+            <div class="psub">MEAN CYCLES BETWEEN FAILURES · 수정개발이 실제 안정화로 이어지는지의 정량 증거</div>
+            <svg width="100%" height="200" viewBox="0 0 460 200" role="img" aria-label="주차별 MCBF 성장곡선, 480에서 1240까지 상승, 목표 1500">
+              <line x1="44" y1="34" x2="440" y2="34" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="48" y="28" font-size="10" fill="#B36F0A" font-weight="700">목표 1,500</text>
+              <line x1="44" y1="165" x2="440" y2="165" stroke="#C9DCEC"/>
+              <g font-size="9" fill="#9aa9bb" text-anchor="end"><text x="40" y="168">0</text><text x="40" y="103">800</text><text x="40" y="37">1,500</text></g>
+              <polyline fill="none" stroke="#2E89D6" stroke-width="2" points="60,123 130,112 200,99 270,85 340,71 410,57"/>
+              <g fill="#2E89D6">
+                <circle cx="60" cy="123" r="3.5"><title>W1 · MCBF 480</title></circle>
+                <circle cx="130" cy="112" r="3.5"><title>W2 · MCBF 610</title></circle>
+                <circle cx="200" cy="99" r="3.5"><title>W3 · MCBF 760 · SW v0.9.2 배포</title></circle>
+                <circle cx="270" cy="85" r="3.5"><title>W4 · MCBF 920</title></circle>
+                <circle cx="340" cy="71" r="3.5"><title>W5 · MCBF 1,080 · 그리퍼 Rev C 적용</title></circle>
+                <circle cx="410" cy="57" r="4.5" stroke="#fff" stroke-width="1.5"><title>W6(현재) · MCBF 1,240</title></circle>
+              </g>
+              <text x="410" y="44" font-size="11" fill="#0F2E54" font-weight="800" text-anchor="middle">1,240</text>
+              <g font-size="9.5" fill="#6E7D90" text-anchor="middle">
+                <text x="200" y="185">▲ v0.9.2</text><text x="340" y="185">▲ Rev C</text>
+              </g>
+              <g font-size="10" fill="#6E7D90" text-anchor="middle"><text x="60" y="177">W1</text><text x="130" y="177">W2</text><text x="270" y="177">W4</text><text x="410" y="177">W6</text></g>
+            </svg>
+            <div class="clegend"><span><i style="background:#2E89D6"></i>주차별 MCBF</span><span><i style="background:#E08600"></i>목표 (점선)</span><span>▲ 수정 배포 시점 — 배포 후 기울기 상승 = 조치 유효의 증거</span></div>
+          </div>
+          <div class="panel">
+            <h3>고장모드 Pareto</h3><div class="psub">23건 · 상위 2개 모드가 52%</div>
+            <table>
+              <thead><tr><th>고장모드</th><th style="width:80px">건수</th><th class="r">누적</th><th class="c">조치</th></tr></thead>
+              <tbody>
+                <tr title="파지 실패 7건 — 재발 1 포함"><td>파지 실패 <span style="color:var(--crit)" title="재발 이력">↺</span></td><td><div class="prog-bar"><i style="width:100%"></i></div><span class="mini">7</span></td><td class="r">30%</td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+                <tr title="주행 정위치 이탈 5건"><td>정위치 이탈</td><td><div class="prog-bar"><i style="width:71%"></i></div><span class="mini">5</span></td><td class="r">52%</td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+                <tr title="컨베이어 I/F 타임아웃 4건"><td>컨베이어 I/F 타임아웃</td><td><div class="prog-bar"><i style="width:57%"></i></div><span class="mini">4</span></td><td class="r">70%</td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+                <tr title="충전 도킹 실패 3건"><td>충전 도킹 실패</td><td><div class="prog-bar"><i style="width:43%"></i></div><span class="mini">3</span></td><td class="r">83%</td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+                <tr title="기타 4건"><td class="mini">기타 (4모드)</td><td><div class="prog-bar"><i style="width:57%;background:#b9cfe4"></i></div><span class="mini">4</span></td><td class="r">100%</td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+              </tbody>
+            </table>
+            <div class="mini mt">지난 리뷰 1위였던 <b>정위치 이탈</b>은 v0.9.4로 종결 — 이번 Pareto에서 순위 하락 = 조치가 실효.</div>
+          </div>
+        </div>
+
+        <div class="grid g3 mt">
+          <div class="panel rgauge">
+            <div class="row-flex"><h3>무고장 런 — 무정지 300h</h3><span class="vlabel" style="margin-left:auto">Pilot 파라미터</span></div>
+            <div class="paramrow"><span>목표 <b>300h</b></span><span>잣대 <b>무정지</b></span><span>환경 <b>사내 파일럿</b></span></div>
+            <div class="glabel"><span>사전 예열 런 <b>88h</b> 무정지</span><span>본 런: 설계 동결(07-25) 후 리셋 시작</span></div>
+            <div class="track"><i style="width:29.3%"></i></div>
+            <div class="gfoot"><span>리셋 규칙: 정지 발생 → FRACAS 종결 후 <b>0h부터 재시작</b> (사양서 v0.9 합의안)</span></div>
+          </div>
+          <div class="panel">
+            <h3>시정조치 규율</h3><div class="psub">모든 수정 → 검증 런 · 재발 추적</div>
+            <div class="stat-big"><b>91%</b><span>검증마감 21/23</span></div>
+            <div class="prog-bar" style="height:10px"><i style="width:91%;background:var(--green)"></i></div>
+            <div class="mini mt">재발 <b style="color:var(--major)">1건</b> (파지 실패) — 근본원인 재분석 → 그리퍼 Rev C 교체, 무발생 검증 210/300Cy 진행. <b>게이트 전 마감 필수.</b></div>
+          </div>
+          <div class="panel">
+            <h3>형상(버전) 기록</h3><div class="psub">고장 시점 버전 필수 — "구버전 고장" 입증 수단</div>
+            <table>
+              <tbody>
+                <tr><th style="width:80px">현재 SW</th><td><b>v0.9.4</b> <span class="mini">(06-28 배포)</span></td></tr>
+                <tr><th>현재 HW</th><td><b>Rev C</b> <span class="mini">(그리퍼 코팅 변경)</span></td></tr>
+                <tr><th>동결 예정</th><td>07-25 — 이후 변경 시 <b>300h 리셋</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">기록</span><h2>고장 레코드 (공통 스키마)</h2><span class="d">Pilot부터 버전/검증 <b>필수</b></span></div>
+        <div class="panel">
+          <table>
+            <thead><tr><th>ID</th><th>고장모드 (표준분류)</th><th class="c">심각도</th><th>근본원인 분류</th><th>시정조치</th><th class="c">버전<span class="req must">필수</span></th><th class="c" style="width:120px">무발생 검증<span class="req must">필수</span></th><th class="c">상태</th></tr></thead>
+            <tbody>
+              <tr><td><b>F-019</b></td><td>파지 실패 <span style="color:var(--crit)" title="F-007과 동일 모드 재발">↺ 재발</span></td><td class="c"><span class="badge b-crit">Crit</span></td><td>부품 (그리퍼 코팅 편차)</td><td>그리퍼 Rev C 교체</td><td class="c">v0.9.3</td><td class="c"><div class="prog-bar"><i style="width:70%"></i></div><span class="mini">210/300Cy</span></td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+              <tr><td><b>F-021</b></td><td>정위치 이탈</td><td class="c"><span class="badge b-major">Maj</span></td><td>SW (오도메트리 드리프트)</td><td>v0.9.4 보정 패치</td><td class="c">v0.9.4</td><td class="c"><div class="prog-bar"><i style="width:100%;background:var(--green)"></i></div><span class="mini">300/300</span></td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+              <tr><td><b>F-022</b></td><td>컨베이어 I/F 타임아웃</td><td class="c"><span class="badge b-minor">Min</span></td><td>설계 (핸드셰이크 로직)</td><td>타임아웃 로직 변경</td><td class="c">v0.9.4</td><td class="c"><div class="prog-bar"><i style="width:40%"></i></div><span class="mini">120/300</span></td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+              <tr><td><b>F-023</b></td><td>충전 도킹 실패</td><td class="c"><span class="badge b-minor">Min</span></td><td>시험환경 (마커 오염)</td><td>청소 주기 SOP 반영</td><td class="c">—</td><td class="c"><div class="prog-bar"><i style="width:100%;background:var(--green)"></i></div><span class="mini">300/300</span></td><td class="c"><span class="badge b-ok">종결</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 과제 C : 양산평가 ================= -->
+    <div class="view" id="view-pc">
+      <div class="ptitle">
+        <h2>PJT-C · 부품 체결/반송 자동화</h2><span class="stagechip st-mass">양산평가</span><span class="tmpl">템플릿 ② 실증</span>
+        <span class="meta">PM <b>박OO</b> · 기간 <b>2026-06-18 ~ 09-30 (D+18/90)</b> · 가동인증 목표 <b>09-16 (D-72)</b></span>
+      </div>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">단계 진행</span><h2>양산평가 세부 단계</h2><span class="d">M1→M4 · 통과 시 적용/운영 이관</span></div>
+        <div class="panel">
+          <div class="lifecycle">
+            <div class="lc done"><div class="dot">✓</div><div class="nm">M1 수혜부서 협의 · 라인 선정</div><div class="stt">완료</div><div class="note">2라인 선정 · 성공 기준을 계약 파라미터로 동결 (아래) · 판정 규칙 서면 합의</div></div>
+            <div class="lc cur"><div class="dot">●</div><div class="nm">M2 시범 라인 운영 · 안정성 검증</div><div class="stt">진행 중</div><div class="note">무정지 1개월(환산 360Cy) 진행 287/360 · MTTR 실측 중</div></div>
+            <div class="lc cur"><div class="dot">●</div><div class="nm">M3 안전검수 · 위험성평가</div><div class="stt">진행 중</div><div class="note">안전검수 통과(06-30) · 설치 상태 위험성평가 진행</div></div>
+            <div class="lc todo"><div class="dot">4</div><div class="nm">M4 가동인증</div><div class="stt">예정</div><div class="note">게이트 리뷰 → 인증서 + 운영 이관 패키지(알람 대응 매뉴얼·보전 계획)</div></div>
+          </div>
+        </div>
+        <div class="panel mt">
+          <div class="row-flex"><h3>계약 파라미터 (M1 동결 — 임의 변경 불가)</h3><span class="vlabel" style="margin-left:auto">config 고정</span></div>
+          <div class="psub">ACCEPTANCE CONTRACT · 데이터 이전에 수혜부서와 서면 합의된 잣대</div>
+          <div class="crit-grid">
+            <div class="crit"><div class="k">① 무정지 완주</div><div class="v">287/360Cy</div><span class="s prog">79.7%</span></div>
+            <div class="crit"><div class="k">② 관련 고장 한도</div><div class="v">2/3</div><span class="s prog">여유 1</span></div>
+            <div class="crit"><div class="k">③ MTBF≥100 @80%</div><div class="v">69%</div><span class="s fail">+43Cy 필요</span></div>
+            <div class="crit"><div class="k">④ MTTR ≤ 30분</div><div class="v">18분</div><span class="s pass">충족</span></div>
+            <div class="crit"><div class="k">⑤ 안전 3종</div><div class="v">검수✓ 평가● 인증—</div><span class="s prog">진행</span></div>
+          </div>
+          <div class="row-flex mt"><span class="mini" style="margin-right:10px">게이트 리뷰 고정 안건 — TECOP</span>
+            <div class="tecop">
+              <span class="tp ok" title="진도 정상">T 양호</span><span class="tp ok" title="투자 승인 완료">E 양호</span><span class="tp warn" title="계약 마감 9/30 · 관련 고장 여유 1회 — 리스크 관리 중">C 주의</span><span class="tp ok" title="합동 판정 위원회 운영 중">O 양호</span><span class="tp ok" title="안전검수 통과">P 양호</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag t-rel">신뢰성 트랙</span><h2>에러 분석 — 양산평가 방식</h2><span class="d">무게중심이 원인에서 <b>판정</b>으로</span></div>
+        <div class="qbox">이 단계의 질문: <b>“잔여 고장률이 계약 기준 이내인가?”</b> — 설계 동결 상태. 모든 사건은 <b>사전 합의된 규칙으로 판정</b>(관련/비관련)하고 증거를 남긴다. 사후 재해석 = 신뢰 붕괴.</div>
+
+        <div class="grid g23">
+          <div class="panel">
+            <div class="row-flex"><h3>판정 대장 (Adjudication Log)</h3><span class="vlabel" style="margin-left:auto">합동 판정 · 증거 첨부</span></div>
+            <div class="psub">발생 사건 5건 · 관련 2 (한도 3) · 비관련 2 · 판정중 1</div>
+            <table>
+              <thead><tr><th>사건</th><th>내용 · 발생 Cycle</th><th class="c">판정</th><th>귀책 분류</th><th>증거</th><th class="c">합의</th></tr></thead>
+              <tbody>
+                <tr><td><b>E-01</b></td><td>그리퍼 슬립 · 60Cy</td><td class="c"><span class="badge b-crit">관련</span></td><td>설비 (부품)</td><td class="mini">로그 + 영상</td><td class="c"><span class="badge b-ok">합의완료</span></td></tr>
+                <tr><td><b>E-02</b></td><td>비전 타임아웃 · 169Cy</td><td class="c"><span class="badge b-crit">관련</span></td><td>설비 (SW)</td><td class="mini">로그 + 재현시험</td><td class="c"><span class="badge b-ok">합의완료</span></td></tr>
+                <tr><td><b>E-03</b></td><td>자재 치수 이탈 정지 · 203Cy</td><td class="c"><span class="badge b-ok">비관련</span></td><td>자재 (로트 불량)</td><td class="mini">로트 검사성적서</td><td class="c"><span class="badge b-ok">합의완료</span></td></tr>
+                <tr><td><b>E-04</b></td><td>조작 순서 오류 정지 · 241Cy</td><td class="c"><span class="badge b-ok">비관련</span></td><td>운영 (조작)</td><td class="mini">CCTV + 교육 기록</td><td class="c"><span class="badge b-ok">합의완료</span></td></tr>
+                <tr><td><b>E-05</b></td><td>경로 이탈 · 279Cy</td><td class="c"><span class="badge b-prog">판정중</span></td><td class="mini">로그 분석 중</td><td class="mini">수집 중</td><td class="c"><span class="badge b-wait">합동리뷰 07-08</span></td></tr>
+              </tbody>
+            </table>
+            <div class="mini mt">⚠️ E-05가 <b>관련</b> 판정 시 3/3 도달 — 한도 소진. 판정 기준·리셋 규칙은 M1 합의문 §4 적용 (사후 변경 불가).</div>
+          </div>
+          <div class="panel rgauge">
+            <div class="row-flex"><h3>무고장 런 — 무정지 1개월</h3><span class="vlabel" style="margin-left:auto">양산평가 파라미터</span></div>
+            <div class="paramrow"><span>목표 <b>360Cy</b> (1개월 환산)</span><span>잣대 <b>무정지 · 관련 고장만</b></span><span>환경 <b>실제 라인</b></span></div>
+            <div class="glabel"><span>누적 <b>287Cy</b> (79.7%)</span><span>남은 <b>73Cy</b> (~09-30)</span></div>
+            <div class="track"><i style="width:79.7%"></i><span class="mark" style="left:16.7%" title="E-01 그리퍼 슬립 · 60Cy · 관련(합의)">↺</span><span class="mark" style="left:46.9%" title="E-02 비전 타임아웃 · 169Cy · 관련(합의)">↺</span></div>
+            <div class="gfoot"><span>연속 무고장 <b>118Cy</b> · 최대 기록 145Cy</span></div>
+            <h3 class="mt" style="margin-bottom:3px">신뢰수준 입증 (무고장시험)</h3>
+            <div class="psub">목표 MTBF 100Cy @ 신뢰수준 80% → 필요 무고장 161Cy</div>
+            <div class="glabel"><span>현재 연속 <b>118Cy</b> → 입증 69%</span><span>80%까지 <b>+43Cy</b></span></div>
+            <div class="track" style="height:12px"><i style="width:73%"></i></div>
+            <div class="gfoot"><span class="mini">T ≈ 목표MTBF × (−ln(1−CL)) = 100 × 1.61 = 161Cy</span></div>
+          </div>
+        </div>
+
+        <div class="grid g3 mt">
+          <div class="panel"><h3>MTTR (복구성)</h3><div class="psub">목표 ≤ 30분 · 어시스트 제외</div><div class="big-num" style="color:var(--green)">18<span style="font-size:13px;color:var(--muted)"> 분 평균</span></div><div class="mini">최대 41분 (E-02) · 대응 주체: 라인 오퍼레이터 1차</div></div>
+          <div class="panel"><h3>가동률</h3><div class="psub">MTBF/(MTBF+MTTR) 기준 · 목표 ≥ 98.5%</div><div class="big-num" style="color:var(--navy-deep)">99.1<span style="font-size:13px;color:var(--muted)">%</span></div><div class="prog-bar mt" style="height:8px"><i style="width:99.1%;background:var(--green)"></i></div></div>
+          <div class="panel"><h3>안전 트랙</h3><div class="psub">M3 · 설치 상태 기준</div>
+            <table><tbody>
+              <tr><td>안전검수</td><td class="c"><span class="badge b-ok">통과 06-30</span></td></tr>
+              <tr><td>위험성평가 (설치 상태)</td><td class="c"><span class="badge b-prog">진행 ~07-18</span></td></tr>
+              <tr><td>가동인증</td><td class="c"><span class="badge b-wait">예정 09-16</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <section class="sbox">
+        <div class="sbox-h"><span class="tag">기록</span><h2>고장 레코드 (공통 스키마)</h2><span class="d">관련 판정 건은 FRACAS 계속 — 검증 종결까지</span></div>
+        <div class="panel">
+          <table>
+            <thead><tr><th>ID</th><th>고장모드 (표준분류)</th><th class="c">심각도</th><th>근본원인 분류</th><th>시정조치</th><th class="c">버전<span class="req must">필수</span></th><th class="c" style="width:120px">무발생 검증<span class="req must">필수</span></th><th class="c">상태</th></tr></thead>
+            <tbody>
+              <tr><td><b>E-01</b></td><td>그리퍼 슬립 <span style="color:var(--crit)" title="Pilot 단계 F-계열과 동일 모드 — 재발 추적 링크">↺</span></td><td class="c"><span class="badge b-major">Maj</span></td><td>부품 (코팅 편차)</td><td>그리퍼 교체 · 입고검사 강화</td><td class="c">v1.0.2</td><td class="c"><div class="prog-bar"><i style="width:48%"></i></div><span class="mini">95/200Cy</span></td><td class="c"><span class="badge b-prog">검증중</span></td></tr>
+              <tr><td><b>E-02</b></td><td>비전 타임아웃</td><td class="c"><span class="badge b-crit">Crit</span></td><td>SW (버퍼 설정)</td><td>버퍼 사이즈 조정</td><td class="c">v1.0.2</td><td class="c"><div class="prog-bar"><i style="width:4%"></i></div><span class="mini">8/200Cy</span></td><td class="c"><span class="badge b-prog">조치중</span></td></tr>
+              <tr><td><b>E-05</b></td><td>경로 이탈</td><td class="c"><span class="badge b-wait">판정중</span></td><td class="mini">분석 중</td><td class="mini">—</td><td class="c">v1.0.3</td><td class="c mini">—</td><td class="c"><span class="badge b-prog">분석중</span></td></tr>
+            </tbody>
+          </table>
+          <div class="mini mt">설계 변경이 불가피한 관련 고장 발생 시 — 합의문 §5 회귀 규칙: <b>경미 → 기록 후 계속 / 중대 → 런 리셋 또는 Pilot 복귀</b>. "조용히 고치고 계속"은 없음.</div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+</div>
+<script>
+  const navs=[...document.querySelectorAll('.nav a[data-view]')];
+  const views={home:'view-home',pa:'view-pa',pb:'view-pb',pc:'view-pc'};
+  const titles={home:'로봇 개발 표준 보고 체계 — 한눈에 보기',pa:'PJT-A · POC — 템플릿 ① 개발',pb:'PJT-B · Pilot — 템플릿 ① 개발',pc:'PJT-C · 양산평가 — 템플릿 ② 실증'};
+  function show(key){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+    document.getElementById(views[key]).classList.add('on');
+    navs.forEach(a=>a.classList.toggle('active',a.dataset.view===key));
+    document.getElementById('tb-title').textContent=titles[key];
+    window.scrollTo({top:0});
+  }
+  navs.forEach(a=>a.addEventListener('click',()=>{location.hash=a.dataset.view;}));
+  document.querySelectorAll('.pcard[data-go]').forEach(c=>c.addEventListener('click',()=>{location.hash=c.dataset.go;}));
+  function fromHash(){const k=location.hash.replace('#','');show(views[k]?k:'home');}
+  addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>
