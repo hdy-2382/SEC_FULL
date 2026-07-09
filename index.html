@@ -3,28 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>케미컬 체결/반송 자동화 시스템</title>
+<title>로봇 개발 표준 보고 체계</title>
 <!-- 캐시 우회: 수정 후 새로고침만 해도 styles.css가 바로 반영됨 -->
 <script>document.write('<link rel="stylesheet" href="styles.css?t=' + Date.now() + '">');</script>
 </head>
 <body>
 <div class="app">
-  
+
   <aside class="side">
-    <div class="brand"><div class="logo" id="brand-logo">케</div><b id="brand-name">케미컬 체결/반송<br>자동화</b></div>
-    <nav class="nav" id="nav">
-      <a href="#s-status" class="active"><span class="st">▦</span> 개발 현황</a>
-      <a href="#s0"><span class="st">▣</span> 평가 결과 요약</a>
-      <div class="t">신뢰성 입증 6단계 흐름</div>
-      <a href="#s1"><span class="st">1</span> 기준 정의</a>
-      <a href="#s2"><span class="st">2</span> 결함 관리</a>
-      <a href="#s3"><span class="st">3</span> 신뢰성 성장</a>
-      <a href="#s4"><span class="st">4</span> 신뢰수준 입증</a>
-      <a href="#s5"><span class="st">5</span> 결함 종결</a>
-      <a href="#s6"><span class="st">6</span> 근거 기록</a>
-      <div class="t">참고</div>
-      <a href="#s-info"><span class="st">ℹ</span> 프로젝트 정보</a>
-    </nav>
+    <div class="brand"><div class="logo" id="brand-logo">R</div><b id="brand-name">Robot Reliability<br>Portfolio</b></div>
+    <nav class="nav" id="nav"></nav>
     <div class="sgoals" id="side-goals"></div>
     <div id="side-line"></div>
     <div id="side-months"></div>
@@ -33,13 +21,14 @@
 
   <main class="main">
     <div class="topbar">
-      <h1 id="page-title">케미컬 체결/반송 자동화 시스템</h1>
+      <h1 id="page-title">로봇 개발 표준 보고 체계</h1>
       <div class="meta" id="topmeta"></div>
       <div class="sp"></div><div class="tb-lc" id="topbar-lc"></div><button class="btn" id="print-btn" onclick="window.print()">PDF 리포트</button>
     </div>
 
-    <section id="s-overview" class="sbox"></section>
-    <div class="sbox sbox-steps" id="s-steps"></div>
+    <div id="s-home"></div>
+    <section id="s-overview" class="sbox" style="display:none"></section>
+    <div class="sbox sbox-steps" id="s-steps" style="display:none"></div>
   </main>
 </div>
 
@@ -52,7 +41,11 @@
 </div>
 <div class="lightbox" id="lightbox" onclick="this.classList.remove('open')"><img id="lightbox-img" alt=""></div>
 
-<!-- 캐시 우회: 수정 후 새로고침만 해도 app.js가 바로 반영됨 -->
-<script>document.write('<script src="app.js?t=' + Date.now() + '"><\/script>');</script>
+<!-- 캐시 우회: 수정 후 새로고침만 해도 JS가 바로 반영됨. 로드 순서 고정: core → 템플릿 → 홈 → app(라우터) -->
+<script>
+  ['core.js', 'tpl-mass.js', 'home.js', 'app.js'].forEach(function (f) {
+    document.write('<script src="' + f + '?t=' + Date.now() + '"><\/script>');
+  });
+</script>
 </body>
 </html>
