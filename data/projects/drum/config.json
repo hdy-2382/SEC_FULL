@@ -1,0 +1,125 @@
+{
+  "stage": "poc",
+  "run": {
+    "target": 72,
+    "unit": "h",
+    "criterion": "무에러",
+    "env": "사외 랩"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "warn",
+      "note": "72h 무에러 2차 진행 중"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "타당성 분석 — 개략 사업성 확인"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "해당 없음 (사내)"
+    },
+    {
+      "k": "O",
+      "status": "warn",
+      "note": "수혜부서 후보 협의 전 — Pilot 지표 정의 참여 필요"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "안전인증 컨셉 합의 완료"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-07-15",
+    "label": "게이트 리뷰(Pilot 이관)",
+    "criteria": [
+      {
+        "label": "① 기성능 스펙",
+        "value": "3/3",
+        "status": "pass"
+      },
+      {
+        "label": "② 72h 무에러",
+        "value": "auto:run",
+        "status": "prog"
+      },
+      {
+        "label": "③ 비정상 시나리오",
+        "value": "6/8 · 1 재시험",
+        "status": "prog"
+      },
+      {
+        "label": "④ 상위 심각도 미해결",
+        "value": "0건",
+        "status": "pass"
+      },
+      {
+        "label": "⑤ FMEA 상위 리스크",
+        "value": "조치계획 수립",
+        "status": "pass"
+      }
+    ]
+  },
+  "project": {
+    "name": "드럼 자동화 (POC)",
+    "department": "인프라 기술팀",
+    "team": "김OO, 박OO",
+    "startDate": "2026-06-05",
+    "endDate": "2026-07-15"
+  },
+  "lifecycle": [
+    {
+      "stage": "P1 타당성·평가항목 정의",
+      "status": "done",
+      "note": "FMEA 초판 · 판정기준서 v1 · 예상 ROI 산출"
+    },
+    {
+      "stage": "P2 안전인증 컨셉미팅",
+      "status": "done",
+      "note": "위험원 12건 식별 → 설계 반영 합의 (06-12)"
+    },
+    {
+      "stage": "P3 기성능 평가/검증",
+      "status": "done",
+      "note": "택트·반복정밀도·체결성공률 3/3 충족"
+    },
+    {
+      "stage": "P4 사외 72h 무에러 + 비정상 평가",
+      "status": "current",
+      "note": "2차 시도 진행 · 비정상 6/8 PASS"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "드럼 자동화 — POC",
+      "brandLogo": "드",
+      "brandName": "드럼 자동화<br>POC",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "FRACAS-lite · 전수 4분류",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "POC 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

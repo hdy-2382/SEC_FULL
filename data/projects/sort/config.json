@@ -1,0 +1,126 @@
+{
+  "stage": "pilot",
+  "run": {
+    "target": 300,
+    "unit": "h",
+    "criterion": "무정지",
+    "env": "사내 (공정 연결 없이)",
+    "growthTarget": 1500
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "ok",
+      "note": "MCBF 성장곡선 순항"
+    },
+    {
+      "k": "E",
+      "status": "warn",
+      "note": "양산 원가 절감안 검토 중 (그리퍼 단가)"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "공급계약 초안 합의"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "수혜부서 가동 지표 정의 참여 완료"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "안전인증 심사 일정 정상"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-07-29",
+    "label": "게이트 리뷰(양산시범 이관)",
+    "criteria": [
+      {
+        "label": "① MCBF 성장 목표",
+        "value": "auto:growth",
+        "status": "prog"
+      },
+      {
+        "label": "② 만성(재발) 고장",
+        "value": "1건 — 마감 필요",
+        "status": "fail"
+      },
+      {
+        "label": "③ 시정조치 검증마감",
+        "value": "auto:actions",
+        "status": "prog"
+      },
+      {
+        "label": "④ 안전인증서",
+        "value": "심사 중 (~07-20)",
+        "status": "prog"
+      },
+      {
+        "label": "⑤ 무정지 300h",
+        "value": "설계 동결(07-25) 후",
+        "status": "wait"
+      }
+    ]
+  },
+  "project": {
+    "name": "분류 자동화 (Pilot)",
+    "department": "인프라 기술팀",
+    "team": "이OO, 김OO",
+    "startDate": "2026-05-25",
+    "endDate": "2026-08-31"
+  },
+  "lifecycle": [
+    {
+      "stage": "L1 가동 지표 정의",
+      "status": "done",
+      "note": "MCBF/MTTR/가동률 산식 확정 — 양산시범과 동일 산식"
+    },
+    {
+      "stage": "L2 신뢰성 평가/검증 (TAAF)",
+      "status": "current",
+      "note": "반복운전→FRACAS→재운전 · 성장 추적"
+    },
+    {
+      "stage": "L3 신뢰성시험사양서 · 임시 사용 안전 승인",
+      "status": "current",
+      "note": "v0.9 협의 — 300h 판정·리셋 규칙 명문화"
+    },
+    {
+      "stage": "L4 무정지 300h",
+      "status": "todo",
+      "note": "설계 동결(07-25 예정) 후 본 런 · 현재 예열 런"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "분류 자동화 — Pilot",
+      "brandLogo": "분",
+      "brandName": "분류 자동화<br>Pilot",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "FRACAS + MCBF 성장 추적",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "Pilot 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "L1→L4 · 게이트 통과 시 양산 시범 평가 이관"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

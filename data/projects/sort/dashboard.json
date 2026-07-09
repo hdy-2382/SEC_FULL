@@ -1,0 +1,900 @@
+{
+  "generatedAt": "2026-07-09T06:39:15Z",
+  "source": "분류Pilot_샘플.xlsx",
+  "config": {
+    "stage": "pilot",
+    "run": {
+      "target": 300,
+      "unit": "h",
+      "criterion": "무정지",
+      "env": "사내 (공정 연결 없이)",
+      "growthTarget": 1500
+    },
+    "tecop": [
+      {
+        "k": "T",
+        "status": "ok",
+        "note": "MCBF 성장곡선 순항"
+      },
+      {
+        "k": "E",
+        "status": "warn",
+        "note": "양산 원가 절감안 검토 중 (그리퍼 단가)"
+      },
+      {
+        "k": "C",
+        "status": "ok",
+        "note": "공급계약 초안 합의"
+      },
+      {
+        "k": "O",
+        "status": "ok",
+        "note": "수혜부서 가동 지표 정의 참여 완료"
+      },
+      {
+        "k": "P",
+        "status": "ok",
+        "note": "안전인증 심사 일정 정상"
+      }
+    ],
+    "gate": {
+      "reviewDate": "2026-07-29",
+      "label": "게이트 리뷰(양산시범 이관)",
+      "criteria": [
+        {
+          "label": "① MCBF 성장 목표",
+          "value": "auto:growth",
+          "status": "prog"
+        },
+        {
+          "label": "② 만성(재발) 고장",
+          "value": "1건 — 마감 필요",
+          "status": "fail"
+        },
+        {
+          "label": "③ 시정조치 검증마감",
+          "value": "auto:actions",
+          "status": "prog"
+        },
+        {
+          "label": "④ 안전인증서",
+          "value": "심사 중 (~07-20)",
+          "status": "prog"
+        },
+        {
+          "label": "⑤ 무정지 300h",
+          "value": "설계 동결(07-25) 후",
+          "status": "wait"
+        }
+      ]
+    },
+    "project": {
+      "name": "분류 자동화 (Pilot)",
+      "department": "인프라 기술팀",
+      "team": "이OO, 김OO",
+      "startDate": "2026-05-25",
+      "endDate": "2026-08-31"
+    },
+    "lifecycle": [
+      {
+        "stage": "L1 가동 지표 정의",
+        "status": "done",
+        "note": "MCBF/MTTR/가동률 산식 확정 — 양산시범과 동일 산식"
+      },
+      {
+        "stage": "L2 신뢰성 평가/검증 (TAAF)",
+        "status": "current",
+        "note": "반복운전→FRACAS→재운전 · 성장 추적"
+      },
+      {
+        "stage": "L3 신뢰성시험사양서 · 임시 사용 안전 승인",
+        "status": "current",
+        "note": "v0.9 협의 — 300h 판정·리셋 규칙 명문화"
+      },
+      {
+        "stage": "L4 무정지 300h",
+        "status": "todo",
+        "note": "설계 동결(07-25 예정) 후 본 런 · 현재 예열 런"
+      }
+    ],
+    "ui": {
+      "app": {
+        "title": "분류 자동화 — Pilot",
+        "brandLogo": "분",
+        "brandName": "분류 자동화<br>Pilot",
+        "evalDateLabel": "평가일",
+        "printBtn": "PDF 리포트",
+        "footBrand": "FRACAS + MCBF 성장 추적",
+        "updatedPrefix": "업데이트 "
+      },
+      "nav": {
+        "overview": "한눈에 보기",
+        "all": "평가 상세 내역"
+      },
+      "common": {
+        "stDone": "완료",
+        "stCurrent": "진행 중",
+        "stTodo": "예정",
+        "noteEmpty": "— 메모"
+      },
+      "overview": {
+        "stageTitle": "Pilot 세부 단계",
+        "stageCurrentPrefix": "현재: ",
+        "stageSub": "L1→L4 · 게이트 통과 시 양산 시범 평가 이관"
+      },
+      "modal": {
+        "title": "상세"
+      }
+    }
+  },
+  "codes": [
+    {
+      "code": "SRT-01",
+      "type": "파지 실패",
+      "severity": "Major",
+      "desc": "그리퍼 파지 실패/미끄러짐"
+    },
+    {
+      "code": "SRT-02",
+      "type": "정위치 이탈",
+      "severity": "Major",
+      "desc": "AMR 정위치 정지 실패"
+    },
+    {
+      "code": "SRT-03",
+      "type": "컨베이어 I/F 타임아웃",
+      "severity": "Minor",
+      "desc": "설비 인터페이스 응답 지연"
+    },
+    {
+      "code": "SRT-04",
+      "type": "충전 도킹 실패",
+      "severity": "Minor",
+      "desc": "자동충전 도킹 실패"
+    },
+    {
+      "code": "SRT-05",
+      "type": "센서 오검지",
+      "severity": "Minor",
+      "desc": "근접/영역 센서 오검지"
+    },
+    {
+      "code": "SRT-06",
+      "type": "티칭 이탈",
+      "severity": "Major",
+      "desc": "적재 좌표 티칭 이탈"
+    }
+  ],
+  "daily": [
+    {
+      "date": "2026-05-25",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 2,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-05-26",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 2,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-05-27",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 1,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-05-28",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-05-29",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-05-30",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 400,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-01",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 413,
+      "errors": 1,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-02",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 413,
+      "errors": 1,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-03",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 413,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-04",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 413,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-05",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 413,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-06",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 415,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-08",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 326,
+      "errors": 1,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-09",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 326,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-10",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 326,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-11",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 326,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-12",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 326,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-13",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 330,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-15",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-16",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-17",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-18",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-19",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-20",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-22",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 1,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-23",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-24",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-25",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-26",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-27",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-29",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-06-30",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-01",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-02",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-03",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-04",
+      "personnel": "2",
+      "activity": "분류·이적재 반복 운전",
+      "total": 240,
+      "errors": 0,
+      "streak": 0,
+      "hours": 11,
+      "notes": ""
+    }
+  ],
+  "errors": [
+    {
+      "no": 1,
+      "date": "2026-05-25",
+      "time": "9:10",
+      "cycle": 400,
+      "code": "SRT-01",
+      "type": "파지 실패",
+      "detail": "박스 모서리 파지 미끄러짐",
+      "cause": "그리퍼 압력 프로파일 미흡",
+      "action": "파라미터 보정",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.1",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 2,
+      "date": "2026-05-25",
+      "time": "10:15",
+      "cycle": 800,
+      "code": "SRT-02",
+      "type": "정위치 이탈",
+      "detail": "AMR 정지 위치 12mm 이탈",
+      "cause": "오도메트리 드리프트",
+      "action": "보정 패치",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.1",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 3,
+      "date": "2026-05-26",
+      "time": "11:20",
+      "cycle": 1200,
+      "code": "SRT-03",
+      "type": "컨베이어 I/F 타임아웃",
+      "detail": "핸드셰이크 응답 지연",
+      "cause": "타임아웃 설정 과소",
+      "action": "타임아웃 로직 변경",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.1",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 4,
+      "date": "2026-05-26",
+      "time": "12:25",
+      "cycle": 1600,
+      "code": "SRT-04",
+      "type": "충전 도킹 실패",
+      "detail": "도킹 마커 오염",
+      "cause": "마커 청소 주기 부재",
+      "action": "청소 SOP 반영",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.1",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 5,
+      "date": "2026-05-27",
+      "time": "13:30",
+      "cycle": 2000,
+      "code": "SRT-01",
+      "type": "파지 실패",
+      "detail": "동일 모드 재발 — 코팅 편차",
+      "cause": "그리퍼 코팅 로트 편차",
+      "action": "그리퍼 Rev C 교체",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.2",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 6,
+      "date": "2026-06-01",
+      "time": "14:35",
+      "cycle": 2400,
+      "code": "SRT-05",
+      "type": "센서 오검지",
+      "detail": "근접 센서 노이즈",
+      "cause": "EMI 영향",
+      "action": "필터 추가",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.2",
+      "hw_ver": "Rev B",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 7,
+      "date": "2026-06-02",
+      "time": "15:40",
+      "cycle": 2800,
+      "code": "SRT-06",
+      "type": "티칭 이탈",
+      "detail": "적재 좌표 오차 누적",
+      "cause": "티칭 기준점 관리 미흡",
+      "action": "기준점 재티칭 SOP",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.2",
+      "hw_ver": "Rev C",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 8,
+      "date": "2026-06-08",
+      "time": "16:45",
+      "cycle": 3200,
+      "code": "SRT-01",
+      "type": "파지 실패",
+      "detail": "재발 검증 중 재현",
+      "cause": "Rev C 적용 전 잔존",
+      "action": "Rev C 전수 적용",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.3",
+      "hw_ver": "Rev C",
+      "detailMore": "",
+      "images": []
+    },
+    {
+      "no": 9,
+      "date": "2026-06-22",
+      "time": "9:50",
+      "cycle": 3600,
+      "code": "SRT-01",
+      "type": "파지 실패",
+      "detail": "고속 모드 한정 재현",
+      "cause": "속도 프로파일 한계",
+      "action": "v0.9.4 속도 보정",
+      "result": "정상복귀",
+      "owner_sec": "이OO",
+      "owner": "업체 김OO",
+      "sw_ver": "v0.9.3",
+      "hw_ver": "Rev C",
+      "detailMore": "",
+      "images": []
+    }
+  ],
+  "actions": [
+    {
+      "id": "A-001",
+      "code": "SRT-01",
+      "action": "그리퍼 Rev C 전수 적용 + v0.9.4 속도 보정",
+      "owner": "김OO",
+      "due": "2026-07-08",
+      "status": "검증중",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-27"
+    },
+    {
+      "id": "A-002",
+      "code": "SRT-02",
+      "action": "오도메트리 보정 패치 (v0.9.2)",
+      "owner": "이OO",
+      "due": "2026-06-10",
+      "status": "검증완료",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-03"
+    },
+    {
+      "id": "A-003",
+      "code": "SRT-03",
+      "action": "핸드셰이크 타임아웃 로직 변경",
+      "owner": "이OO",
+      "due": "2026-06-12",
+      "status": "검증완료",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-05"
+    },
+    {
+      "id": "A-004",
+      "code": "SRT-04",
+      "action": "도킹 마커 청소 주기 SOP",
+      "owner": "박OO",
+      "due": "2026-06-08",
+      "status": "검증완료",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-02"
+    },
+    {
+      "id": "A-005",
+      "code": "SRT-05",
+      "action": "EMI 필터 추가",
+      "owner": "박OO",
+      "due": "2026-06-15",
+      "status": "검증완료",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-10"
+    },
+    {
+      "id": "A-006",
+      "code": "SRT-06",
+      "action": "기준점 재티칭 SOP + 주기 점검",
+      "owner": "김OO",
+      "due": "2026-06-20",
+      "status": "검증완료",
+      "verifyStart": 0,
+      "verifyStartDate": "2026-06-14"
+    }
+  ],
+  "metrics": {
+    "progress": {
+      "cum": 121.0,
+      "target": 300.0,
+      "pct": 40.3
+    }
+  },
+  "run": {
+    "cum": 121.0,
+    "target": 300.0,
+    "pct": 40.3,
+    "attempt": 8,
+    "resets": [
+      {
+        "at": 11.0,
+        "date": "2026-05-25",
+        "note": ""
+      },
+      {
+        "at": 22.0,
+        "date": "2026-05-26",
+        "note": ""
+      },
+      {
+        "at": 33.0,
+        "date": "2026-05-27",
+        "note": ""
+      },
+      {
+        "at": 77.0,
+        "date": "2026-06-01",
+        "note": ""
+      },
+      {
+        "at": 88.0,
+        "date": "2026-06-02",
+        "note": ""
+      },
+      {
+        "at": 143.0,
+        "date": "2026-06-08",
+        "note": ""
+      },
+      {
+        "at": 275.0,
+        "date": "2026-06-22",
+        "note": ""
+      }
+    ],
+    "totalHours": 396.0
+  },
+  "growth": [
+    {
+      "week": 1,
+      "weekStart": "2026-05-25",
+      "mcbf": 480
+    },
+    {
+      "week": 2,
+      "weekStart": "2026-06-01",
+      "mcbf": 697
+    },
+    {
+      "week": 3,
+      "weekStart": "2026-06-08",
+      "mcbf": 855
+    },
+    {
+      "week": 4,
+      "weekStart": "2026-06-15",
+      "mcbf": 1035
+    },
+    {
+      "week": 5,
+      "weekStart": "2026-06-22",
+      "mcbf": 1080
+    },
+    {
+      "week": 6,
+      "weekStart": "2026-06-29",
+      "mcbf": 1240
+    }
+  ],
+  "growthTarget": 1500,
+  "pareto": [
+    {
+      "mode": "파지 실패",
+      "count": 4,
+      "cumPct": 44
+    },
+    {
+      "mode": "정위치 이탈",
+      "count": 1,
+      "cumPct": 56
+    },
+    {
+      "mode": "컨베이어 I/F 타임아웃",
+      "count": 1,
+      "cumPct": 67
+    },
+    {
+      "mode": "충전 도킹 실패",
+      "count": 1,
+      "cumPct": 78
+    },
+    {
+      "mode": "센서 오검지",
+      "count": 1,
+      "cumPct": 89
+    },
+    {
+      "mode": "티칭 이탈",
+      "count": 1,
+      "cumPct": 100
+    }
+  ],
+  "recurrence": {
+    "count": 1,
+    "items": [
+      {
+        "mode": "파지 실패",
+        "count": 4
+      }
+    ]
+  },
+  "versions": [
+    {
+      "ver": "v0.9.1",
+      "date": "2026-05-25"
+    },
+    {
+      "ver": "v0.9.2",
+      "date": "2026-05-27"
+    },
+    {
+      "ver": "v0.9.3",
+      "date": "2026-06-08"
+    }
+  ],
+  "actionRate": {
+    "total": 6,
+    "closed": 5,
+    "pct": 83
+  }
+}

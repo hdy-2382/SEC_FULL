@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T06:14:30Z",
+  "generatedAt": "2026-07-09T06:39:15Z",
   "source": "양산평가_샘플.xlsx",
   "config": {
     "stage": "mass",
@@ -601,6 +601,7 @@
       "total": 4,
       "errors": 1,
       "streak": 3,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -610,6 +611,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": "ERR-001 발생 → 연속 리셋"
     },
     {
@@ -619,6 +621,7 @@
       "total": 1,
       "errors": 1,
       "streak": 0,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -628,6 +631,7 @@
       "total": 3,
       "errors": 2,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -637,6 +641,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -646,6 +651,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": "ERR-002 발생 → 연속 리셋"
     },
     {
@@ -655,6 +661,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -664,6 +671,7 @@
       "total": 10,
       "errors": 0,
       "streak": 10,
+      "hours": 0,
       "notes": "ERR-003 발생 → 연속 리셋"
     },
     {
@@ -673,6 +681,7 @@
       "total": 1,
       "errors": 1,
       "streak": 0,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -682,6 +691,7 @@
       "total": 4,
       "errors": 1,
       "streak": 3,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -691,6 +701,7 @@
       "total": 11,
       "errors": 0,
       "streak": 11,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -700,6 +711,7 @@
       "total": 7,
       "errors": 0,
       "streak": 7,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -709,6 +721,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -718,6 +731,7 @@
       "total": 3,
       "errors": 1,
       "streak": 2,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -727,6 +741,7 @@
       "total": 1,
       "errors": 0,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -736,6 +751,7 @@
       "total": 6,
       "errors": 1,
       "streak": 5,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -745,6 +761,7 @@
       "total": 18,
       "errors": 0,
       "streak": 18,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -754,6 +771,7 @@
       "total": 2,
       "errors": 1,
       "streak": 1,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -763,6 +781,7 @@
       "total": 10,
       "errors": 0,
       "streak": 10,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -772,6 +791,7 @@
       "total": 0,
       "errors": 0,
       "streak": 0,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -781,6 +801,7 @@
       "total": 12,
       "errors": 0,
       "streak": 12,
+      "hours": 0,
       "notes": ""
     },
     {
@@ -790,6 +811,7 @@
       "total": 0,
       "errors": 0,
       "streak": 0,
+      "hours": 0,
       "notes": ""
     }
   ],
@@ -807,6 +829,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "박영희",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "현장 조도 320→210 LUX 급감 구간에서 반복 발생. 노출 EV+0.7 보정 후 재현되지 않음. 비전 threshold 0.82→0.74 하향으로 픽업 성공률 회복.",
       "images": [
         "ERR-001_1.jpg",
@@ -826,6 +850,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "홍길동",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "",
       "images": []
     },
@@ -842,6 +868,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "김철수",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "",
       "images": []
     },
@@ -858,6 +886,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "박영희",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "오전 역광 유입 구간에서 ERR-001 재발. 차광 설치 후 해결.",
       "images": []
     },
@@ -874,6 +904,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "홍길동",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "",
       "images": []
     },
@@ -890,6 +922,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "김철수",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "자가 복구되어 라인 정지 없음. 경고만 발생.",
       "images": []
     },
@@ -906,6 +940,8 @@
       "result": "정상복귀",
       "owner_sec": "이상혁",
       "owner": "홍길동",
+      "sw_ver": "",
+      "hw_ver": "",
       "detailMore": "조치 A-003 적용 후에도 재발 — 근본원인이 패드 마모임을 추가 확인. 패드 교체로 재검증 진행.",
       "images": [
         "ERR-002_grip.png"
@@ -1643,6 +1679,7 @@
           "total": 4,
           "errors": 1,
           "streak": 3,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1652,6 +1689,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": "ERR-001 발생 → 연속 리셋"
         },
         {
@@ -1661,6 +1699,7 @@
           "total": 1,
           "errors": 1,
           "streak": 0,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1670,6 +1709,7 @@
           "total": 3,
           "errors": 2,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1679,6 +1719,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1688,6 +1729,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": "ERR-002 발생 → 연속 리셋"
         },
         {
@@ -1697,6 +1739,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1706,6 +1749,7 @@
           "total": 10,
           "errors": 0,
           "streak": 10,
+          "hours": 0,
           "notes": "ERR-003 발생 → 연속 리셋"
         },
         {
@@ -1715,6 +1759,7 @@
           "total": 1,
           "errors": 1,
           "streak": 0,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1724,6 +1769,7 @@
           "total": 4,
           "errors": 1,
           "streak": 3,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1733,6 +1779,7 @@
           "total": 11,
           "errors": 0,
           "streak": 11,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1742,6 +1789,7 @@
           "total": 7,
           "errors": 0,
           "streak": 7,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1751,6 +1799,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1760,6 +1809,7 @@
           "total": 3,
           "errors": 1,
           "streak": 2,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1769,6 +1819,7 @@
           "total": 1,
           "errors": 0,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1778,6 +1829,7 @@
           "total": 6,
           "errors": 1,
           "streak": 5,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1787,6 +1839,7 @@
           "total": 18,
           "errors": 0,
           "streak": 18,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1796,6 +1849,7 @@
           "total": 2,
           "errors": 1,
           "streak": 1,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1805,6 +1859,7 @@
           "total": 10,
           "errors": 0,
           "streak": 10,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1814,6 +1869,7 @@
           "total": 0,
           "errors": 0,
           "streak": 0,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1823,6 +1879,7 @@
           "total": 12,
           "errors": 0,
           "streak": 12,
+          "hours": 0,
           "notes": ""
         },
         {
@@ -1832,6 +1889,7 @@
           "total": 0,
           "errors": 0,
           "streak": 0,
+          "hours": 0,
           "notes": ""
         }
       ],
@@ -1849,6 +1907,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "박영희",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "현장 조도 320→210 LUX 급감 구간에서 반복 발생. 노출 EV+0.7 보정 후 재현되지 않음. 비전 threshold 0.82→0.74 하향으로 픽업 성공률 회복.",
           "images": [
             "ERR-001_1.jpg",
@@ -1868,6 +1928,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "홍길동",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "",
           "images": []
         },
@@ -1884,6 +1946,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "김철수",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "",
           "images": []
         },
@@ -1900,6 +1964,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "박영희",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "오전 역광 유입 구간에서 ERR-001 재발. 차광 설치 후 해결.",
           "images": []
         },
@@ -1916,6 +1982,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "홍길동",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "",
           "images": []
         },
@@ -1932,6 +2000,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "김철수",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "자가 복구되어 라인 정지 없음. 경고만 발생.",
           "images": []
         },
@@ -1948,6 +2018,8 @@
           "result": "정상복귀",
           "owner_sec": "이상혁",
           "owner": "홍길동",
+          "sw_ver": "",
+          "hw_ver": "",
           "detailMore": "조치 A-003 적용 후에도 재발 — 근본원인이 패드 마모임을 추가 확인. 패드 교체로 재검증 진행.",
           "images": [
             "ERR-002_grip.png"

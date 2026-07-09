@@ -50,15 +50,15 @@
         "startDate": "2026-06-01",
         "endDate": "2026-09-30"
       },
-      "generatedAt": "2026-07-09T06:14:30Z",
+      "generatedAt": "2026-07-09T06:39:15Z",
       "summary": {
         "progress": {
           "cum": 49,
           "target": 360,
           "pct": 13.6
         },
-        "recur": 3,
         "records": 7,
+        "recur": 3,
         "errorBudget": {
           "used": 2,
           "limit": 3,
@@ -81,13 +81,183 @@
       "id": "drum",
       "name": "드럼 자동화",
       "abbr": "D",
-      "hasData": false
+      "hasData": true,
+      "stage": "poc",
+      "run": {
+        "target": 72,
+        "unit": "h",
+        "criterion": "무에러",
+        "env": "사외 랩"
+      },
+      "gate": {
+        "reviewDate": "2026-07-15",
+        "label": "게이트 리뷰(Pilot 이관)",
+        "criteria": [
+          {
+            "label": "① 기성능 스펙",
+            "value": "3/3",
+            "status": "pass"
+          },
+          {
+            "label": "② 72h 무에러",
+            "value": "auto:run",
+            "status": "prog"
+          },
+          {
+            "label": "③ 비정상 시나리오",
+            "value": "6/8 · 1 재시험",
+            "status": "prog"
+          },
+          {
+            "label": "④ 상위 심각도 미해결",
+            "value": "0건",
+            "status": "pass"
+          },
+          {
+            "label": "⑤ FMEA 상위 리스크",
+            "value": "조치계획 수립",
+            "status": "pass"
+          }
+        ]
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "warn",
+          "note": "72h 무에러 2차 진행 중"
+        },
+        {
+          "k": "E",
+          "status": "ok",
+          "note": "타당성 분석 — 개략 사업성 확인"
+        },
+        {
+          "k": "C",
+          "status": "ok",
+          "note": "해당 없음 (사내)"
+        },
+        {
+          "k": "O",
+          "status": "warn",
+          "note": "수혜부서 후보 협의 전 — Pilot 지표 정의 참여 필요"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "안전인증 컨셉 합의 완료"
+        }
+      ],
+      "project": {
+        "name": "드럼 자동화 (POC)",
+        "department": "인프라 기술팀",
+        "team": "김OO, 박OO",
+        "startDate": "2026-06-05",
+        "endDate": "2026-07-15"
+      },
+      "generatedAt": "2026-07-09T06:39:15Z",
+      "summary": {
+        "progress": {
+          "cum": 52.0,
+          "target": 72.0,
+          "pct": 72.2
+        },
+        "records": 18,
+        "issueStats": {
+          "total": 18,
+          "closed": 11,
+          "open": 7
+        },
+        "concept": 0
+      }
     },
     {
       "id": "sort",
       "name": "분류 자동화",
       "abbr": "S",
-      "hasData": false
+      "hasData": true,
+      "stage": "pilot",
+      "run": {
+        "target": 300,
+        "unit": "h",
+        "criterion": "무정지",
+        "env": "사내 (공정 연결 없이)",
+        "growthTarget": 1500
+      },
+      "gate": {
+        "reviewDate": "2026-07-29",
+        "label": "게이트 리뷰(양산시범 이관)",
+        "criteria": [
+          {
+            "label": "① MCBF 성장 목표",
+            "value": "auto:growth",
+            "status": "prog"
+          },
+          {
+            "label": "② 만성(재발) 고장",
+            "value": "1건 — 마감 필요",
+            "status": "fail"
+          },
+          {
+            "label": "③ 시정조치 검증마감",
+            "value": "auto:actions",
+            "status": "prog"
+          },
+          {
+            "label": "④ 안전인증서",
+            "value": "심사 중 (~07-20)",
+            "status": "prog"
+          },
+          {
+            "label": "⑤ 무정지 300h",
+            "value": "설계 동결(07-25) 후",
+            "status": "wait"
+          }
+        ]
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "ok",
+          "note": "MCBF 성장곡선 순항"
+        },
+        {
+          "k": "E",
+          "status": "warn",
+          "note": "양산 원가 절감안 검토 중 (그리퍼 단가)"
+        },
+        {
+          "k": "C",
+          "status": "ok",
+          "note": "공급계약 초안 합의"
+        },
+        {
+          "k": "O",
+          "status": "ok",
+          "note": "수혜부서 가동 지표 정의 참여 완료"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "안전인증 심사 일정 정상"
+        }
+      ],
+      "project": {
+        "name": "분류 자동화 (Pilot)",
+        "department": "인프라 기술팀",
+        "team": "이OO, 김OO",
+        "startDate": "2026-05-25",
+        "endDate": "2026-08-31"
+      },
+      "generatedAt": "2026-07-09T06:39:15Z",
+      "summary": {
+        "progress": {
+          "cum": 121.0,
+          "target": 300.0,
+          "pct": 40.3
+        },
+        "records": 9,
+        "recur": 1
+      }
     }
   ]
 }

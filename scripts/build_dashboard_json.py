@@ -72,6 +72,7 @@ DAILY_FIELD_ALIASES = {
     "total":     ["일일평가", "평가횟수", "사이클", "total"],
     "errors":    ["일일에러", "에러", "errors"],
     "streak":    ["연속성공", "연속", "streak"],
+    "hours":     ["가동시간", "런시간", "hours"],   # Pilot~: 무정지 런(시간 잣대) 산출용 (선택)
     "notes":     ["비고", "메모", "notes"],
 }
 ERROR_FIELD_ALIASES = {
@@ -89,6 +90,9 @@ ERROR_FIELD_ALIASES = {
     # owner_sec(삼성)를 owner(업체)보다 먼저 매핑해 교차 매칭을 방지.
     "owner_sec": ["삼성담당자", "삼성담당", "삼성", "secowner", "sec"],
     "owner":     ["업체담당자", "업체담당", "협력사담당", "업체", "협력사", "vendor", "담당", "owner"],
+    # Pilot~: 발생 시점 형상(버전) — "구버전 고장" 입증 수단 (docs/RECORD_SCHEMA.md #9)
+    "sw_ver": ["sw버전", "sw버젼", "소프트웨어버전", "swver"],
+    "hw_ver": ["hw버전", "hw버젼", "하드웨어버전", "hwver"],
     # 업체가 입력하는 확장 자료 (선택) — "더 상세" 모달에서만 표시.
     #   detail_more : 긴 설명 텍스트
     #   images      : 사진 파일명(쉼표/줄바꿈 구분). 실제 파일은 data/errors/ 폴더에 둔다.
@@ -96,8 +100,35 @@ ERROR_FIELD_ALIASES = {
     "images":      ["사진", "이미지", "첨부파일", "첨부", "파일명", "image", "photo", "attachment"],
 }
 
+# ── POC 전용 시트 (템플릿① POC 모드 — 보고 부담 최소화: 필수 5필드) ──
+ISSUE_FIELD_ALIASES = {
+    "id":       ["이슈id", "이슈번호", "id", "no"],
+    "mode":     ["고장모드", "모드", "유형"],
+    "severity": ["심각도", "등급"],
+    "cause4":   ["원인분류", "4분류", "분류"],
+    "status":   ["상태"],
+    "date":     ["발생일", "일자"],
+    "detail":   ["상세", "내용"],
+    "images":   ["사진", "이미지"],
+}
+RUN_FIELD_ALIASES = {
+    "date":   ["일자", "날짜", "평가일"],
+    "hours":  ["런시간", "가동시간", "시간"],
+    "errors": ["에러수", "에러"],
+    "notes":  ["비고", "메모"],
+}
+ABN_FIELD_ALIASES = {
+    "scenario": ["시나리오", "항목"],
+    "recovery": ["복구시간", "복구"],
+    "verdict":  ["판정", "결과"],
+    "notes":    ["비고"],
+}
+
 DAILY_SHEET_KEYWORDS  = ["일일평가", "일일", "daily"]
 ERRORS_SHEET_KEYWORDS = ["에러로그", "에러", "error"]
+ISSUES_SHEET_KEYWORDS = ["이슈로그", "이슈", "issue"]
+RUNLOG_SHEET_KEYWORDS = ["런기록", "런로그", "run"]
+ABN_SHEET_KEYWORDS    = ["비정상평가", "비정상", "abnormal"]
 
 
 def _norm(s) -> str:
@@ -295,6 +326,7 @@ def _parse_daily(rows: list[list]) -> list[dict]:
             "total":     max(0, _cell_to_int(_safe_idx(row, cmap["total"]))),
             "errors":    max(0, _cell_to_int(_safe_idx(row, cmap.get("errors")))),
             "streak":    max(0, _cell_to_int(_safe_idx(row, cmap.get("streak")))),
+            "hours":     max(0, _cell_to_int(_safe_idx(row, cmap.get("hours")))),
             "notes":     _cell_to_str(_safe_idx(row, cmap.get("notes"))),
         })
     out.sort(key=lambda r: r["date"])
@@ -329,6 +361,9 @@ def _parse_errors(rows: list[list]) -> list[dict]:
             "result":    _cell_to_str(_safe_idx(row, cmap.get("result"))),
             "owner_sec": _cell_to_str(_safe_idx(row, cmap.get("owner_sec"))),
             "owner":     _cell_to_str(_safe_idx(row, cmap.get("owner"))),
+            # Pilot~: 발생 시점 형상 (선택 컬럼 — 없으면 빈 값)
+            "sw_ver":    _cell_to_str(_safe_idx(row, cmap.get("sw_ver"))),
+            "hw_ver":    _cell_to_str(_safe_idx(row, cmap.get("hw_ver"))),
             # 확장 자료(선택): 더 상세 모달에서만 사용
             "detailMore": _cell_to_str(_safe_idx(row, cmap.get("detail_more"))),
             "images":     _split_images(_safe_idx(row, cmap.get("images"))),
@@ -431,6 +466,59 @@ def _load_workbook_rows(src: Path) -> tuple[list[list], list[list]]:
         print("[build] openpyxl 실패 (DRM 추정) → xlwings로 Excel 통한 재시도")
         daily_rows, errors_rows, _ = _load_via_xlwings(src)
         return daily_rows, errors_rows
+
+
+# ── 전체 시트 로더 (POC 등 시트 구성이 다른 단계용) — openpyxl → xlwings 폴백 ──
+def _load_all_sheets(src: Path) -> dict[str, list[list]]:
+    try:
+        from openpyxl import load_workbook
+        wb = load_workbook(src, data_only=True)
+        return {n: [list(r) for r in wb[n].iter_rows(values_only=True)] for n in wb.sheetnames}
+    except zipfile.BadZipFile:
+        print("[build] openpyxl 실패 (DRM 추정) → xlwings로 Excel 통한 재시도")
+        import xlwings as xw
+        app = xw.App(visible=False, add_book=False)
+        app.display_alerts = False
+        try:
+            wb = app.books.open(str(src), update_links=False, read_only=True)
+            try:
+                return {s.name: _xlwings_sheet_rows(s) for s in wb.sheets}
+            finally:
+                wb.close()
+        finally:
+            app.quit()
+
+
+def _pick_sheet(sheets: dict[str, list[list]], keywords: list[str]) -> list[list]:
+    name = _find_name(list(sheets.keys()), keywords)
+    return sheets.get(name, []) if name else []
+
+
+def _parse_generic(rows: list[list], aliases: dict, required: str) -> list[dict]:
+    """별칭 사전 기반 범용 시트 파서 — required 필드가 빈 행은 스킵."""
+    if not rows:
+        return []
+    header_idx = _find_header_row(rows, aliases)
+    cmap = _build_column_map(rows[header_idx], aliases)
+    out = []
+    for row in rows[header_idx + 1:]:
+        if row is None or all(c is None or c == "" for c in row):
+            continue
+        rec = {}
+        for field in aliases:
+            v = _safe_idx(row, cmap.get(field))
+            if field in ("hours", "errors"):
+                rec[field] = max(0, _cell_to_int(v))
+            elif field == "images":
+                rec[field] = _split_images(v)
+            elif field == "date":
+                rec[field] = _cell_to_str(v)
+            else:
+                rec[field] = _cell_to_str(v)
+        if not rec.get(required):
+            continue
+        out.append(rec)
+    return out
 
 
 # ── 관리 데이터(config + SEC_REPORT.xlsx) 로딩 ─────────────────────────
@@ -908,8 +996,190 @@ def _compute(daily, errors, config, codes, actions, now=None) -> dict:
     }
 
 
+# ── 단계별 계산: POC (통계 금지 — 4분류·Pareto·무고장 런·비정상평가) ──
+FOURWAY_MAP = [
+    ("concept", "① 컨셉 리스크", ["컨셉"]),
+    ("design",  "② 설계 개선",   ["설계"]),
+    ("impl",    "③ 구현(SW) 버그", ["구현", "sw", "버그"]),
+    ("env",     "④ 시험환경 요인", ["시험환경", "환경", "시험"]),
+]
+CLOSED_STATUSES = ("종결", "완료", "검증완료")
+
+
+def _pareto(items: list[dict], key: str) -> list[dict]:
+    """고장모드별 건수 내림차순 + 누적% (수정개발 우선순위)."""
+    counts: dict[str, int] = {}
+    for it in items:
+        k = it.get(key) or "(미분류)"
+        counts[k] = counts.get(k, 0) + 1
+    rows = sorted(counts.items(), key=lambda kv: -kv[1])
+    total = sum(counts.values()) or 1
+    out, cum = [], 0
+    for mode, n in rows:
+        cum += n
+        out.append({"mode": mode, "count": n, "cumPct": round(cum / total * 100)})
+    return out
+
+
+def _run_gauge(runlog: list[dict], target: float) -> dict:
+    """무고장 런 게이지: 연속 무에러/무정지 시간. 에러 발생일 = 리셋(그날 시간까지 진행 후 0부터)."""
+    runlog = sorted(runlog, key=lambda r: r.get("date") or "")
+    cum = 0.0        # 현재 시도 누적 시간
+    total = 0.0      # 전체 누적 가동 시간
+    resets = []      # [{atHours(전체 누적 기준 위치), date}]
+    for r in runlog:
+        h = r.get("hours") or 0
+        total += h
+        cum += h
+        if (r.get("errors") or 0) > 0:
+            resets.append({"at": round(total, 1), "date": r.get("date") or "", "note": r.get("notes") or ""})
+            cum = 0.0
+    pct = round(min(100.0, cum / target * 100), 1) if target else 0
+    return {"cum": round(cum, 1), "target": target, "pct": pct,
+            "attempt": len(resets) + 1, "resets": resets, "totalHours": round(total, 1)}
+
+
+def _recur_by_mode(items: list[dict], key: str) -> dict:
+    counts: dict[str, int] = {}
+    for it in items:
+        k = it.get(key) or ""
+        if k:
+            counts[k] = counts.get(k, 0) + 1
+    recur = [{"mode": k, "count": n} for k, n in counts.items() if n > 1]
+    return {"count": len(recur), "items": recur}
+
+
+def _compute_poc(issues: list[dict], runlog: list[dict], abnormal: list[dict], config: dict) -> dict:
+    run_cfg = config.get("run") or {}
+    target = float(run_cfg.get("target") or 72)
+    run = _run_gauge(runlog, target)
+    fourway = []
+    for key, label, kws in FOURWAY_MAP:
+        subset = [i for i in issues
+                  if any(kw in _norm(i.get("cause4") or "") for kw in [_norm(k) for k in kws])]
+        closed = sum(1 for i in subset if (i.get("status") or "") in CLOSED_STATUSES)
+        fourway.append({"key": key, "label": label, "count": len(subset), "closed": closed})
+    mapped = sum(f["count"] for f in fourway)
+    if mapped < len(issues):   # 분류 누락분은 시험환경이 아니라 별도 표기 대신 구현으로 오해 없게 카운트만 경고
+        print(f"[build] ⚠ 이슈 {len(issues) - mapped}건의 원인분류가 4분류에 매칭되지 않음")
+    closed_total = sum(1 for i in issues if (i.get("status") or "") in CLOSED_STATUSES)
+    return {
+        "metrics": {"progress": {"cum": run["cum"], "target": run["target"], "pct": run["pct"]}},
+        "run": run,
+        "fourway": fourway,
+        "pareto": _pareto(issues, "mode"),
+        "recurrence": _recur_by_mode(issues, "mode"),
+        "issueStats": {"total": len(issues), "closed": closed_total, "open": len(issues) - closed_total},
+        "abnormal": abnormal,
+    }
+
+
+# ── 단계별 계산: Pilot (추세 — MCBF 성장·Pareto·시정조치 규율·형상) ──
+def _compute_pilot(daily: list[dict], errors: list[dict], config: dict,
+                   codes: list[dict], actions: list[dict]) -> dict:
+    run_cfg = config.get("run") or {}
+    target = float(run_cfg.get("target") or 300)
+    growth_target = run_cfg.get("growthTarget") or (config.get("acceptance") or {}).get("mtbfTargetCycle")
+
+    # 무정지 런(시간): 일일평가 hours 합산, 에러 발생일 리셋
+    runlog = [{"date": d["date"], "hours": d.get("hours") or 0,
+               "errors": d.get("errors") or 0, "notes": d.get("notes") or ""} for d in daily]
+    run = _run_gauge(runlog, target)
+
+    # 주차별 MCBF 성장 (누적 cycles / 누적 errors) — 월요일 시작 주 단위
+    growth = []
+    if daily:
+        cum_cy, cum_err = 0, 0
+        week_of = {}
+        for d in daily:
+            dt = datetime.strptime(d["date"], "%Y-%m-%d").date()
+            monday = dt - timedelta(days=dt.weekday())
+            week_of.setdefault(monday, []).append(d)
+        for i, monday in enumerate(sorted(week_of)):
+            for d in week_of[monday]:
+                cum_cy += d.get("total") or 0
+                cum_err += d.get("errors") or 0
+            growth.append({"week": i + 1, "weekStart": monday.isoformat(),
+                           "mcbf": round(cum_cy / max(cum_err, 1))})
+
+    # 형상(버전) 이력: 에러로그의 sw_ver 등장 순서 (버전 배포 시점 근사)
+    versions, seen = [], set()
+    for e in errors:
+        v = e.get("sw_ver") or ""
+        if v and v not in seen:
+            seen.add(v)
+            versions.append({"ver": v, "date": e.get("date") or ""})
+
+    # 시정조치 규율: 검증완료율 (모든 수정 → 검증 런)
+    closed = sum(1 for a in actions if (a.get("status") or "") in CLOSED_STATUSES
+                 or (a.get("verifyResult") or "") == "검증완료")
+    act_rate = {"total": len(actions), "closed": closed,
+                "pct": round(closed / len(actions) * 100) if actions else 0}
+
+    return {
+        "metrics": {"progress": {"cum": run["cum"], "target": run["target"], "pct": run["pct"]}},
+        "run": run,
+        "growth": growth,
+        "growthTarget": growth_target,
+        "pareto": _pareto(errors, "type"),
+        "recurrence": _recur_by_mode(errors, "type"),
+        "versions": versions,
+        "actionRate": act_rate,
+    }
+
+
 def build_project(pid: str):
     _set_project(pid)
+    config = _load_config()
+    stage = config.get("stage", "mass")
+    if stage == "poc":
+        return _build_poc(pid, config)
+    if stage == "pilot":
+        return _build_pilot(pid, config)
+    return _build_mass(pid, config)
+
+
+def _now_iso():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _write_out(pid: str, out: dict, tail: str):
+    OUT_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[build:{pid}] 출력: {OUT_PATH.relative_to(ROOT)}  ({tail})")
+
+
+def _build_poc(pid: str, config: dict):
+    src = _pick_latest_xlsx()
+    print(f"[build:{pid}] 입력 파일: {src.name} (stage=poc)")
+    sheets = _load_all_sheets(src)
+    issues   = _parse_generic(_pick_sheet(sheets, ISSUES_SHEET_KEYWORDS), ISSUE_FIELD_ALIASES, "id")
+    runlog   = _parse_generic(_pick_sheet(sheets, RUNLOG_SHEET_KEYWORDS), RUN_FIELD_ALIASES, "date")
+    abnormal = _parse_generic(_pick_sheet(sheets, ABN_SHEET_KEYWORDS), ABN_FIELD_ALIASES, "scenario")
+    computed = _compute_poc(issues, runlog, abnormal, config)
+    out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
+           "issues": issues, "runlog": runlog, **computed}
+    _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
+               f"무고장 런 {computed['run']['cum']}/{computed['run']['target']}h, "
+               f"비정상 {len(abnormal)}건")
+
+
+def _build_pilot(pid: str, config: dict):
+    src = _pick_latest_xlsx()
+    print(f"[build:{pid}] 입력 파일: {src.name} (stage=pilot)")
+    daily_rows, errors_rows = _load_workbook_rows(src)
+    daily  = _parse_daily(daily_rows)
+    errors = _parse_errors(errors_rows)
+    codes, actions = _load_mgmt()
+    computed = _compute_pilot(daily, errors, config, codes, actions)
+    out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
+           "codes": codes, "daily": daily, "errors": errors, "actions": actions, **computed}
+    g = computed["growth"]
+    _write_out(pid, out, f"daily {len(daily)}, errors {len(errors)}, "
+               f"MCBF {g[-1]['mcbf'] if g else '—'}/{computed.get('growthTarget') or '—'}, "
+               f"무정지 런 {computed['run']['cum']}/{computed['run']['target']}h")
+
+
+def _build_mass(pid: str, config: dict):
     src = _pick_latest_xlsx()
     print(f"[build:{pid}] 입력 파일: {src.name}")
 
@@ -958,11 +1228,17 @@ def build_project(pid: str):
 def _portfolio_summary(stage: str, out: dict) -> dict:
     """홈(포트폴리오) 카드용 요약 — 단계별로 헤드라인 수치만 추린다."""
     m = out.get("metrics", {}) or {}
-    s = {
-        "progress":   m.get("progress"),
-        "recur":      (out.get("recurrence") or {}).get("count"),
-        "records":    len(out.get("errors") or []),
-    }
+    recs = out.get("errors")
+    if recs is None:
+        recs = out.get("issues") or []
+    s = {"progress": m.get("progress"), "records": len(recs)}
+    if stage == "poc":
+        # POC의 '동일 모드 다건'은 발굴 단계의 자연스러운 현상 — 재발 KPI에서 제외.
+        s["issueStats"] = out.get("issueStats")
+        fw = out.get("fourway") or []
+        s["concept"] = next((f.get("count") for f in fw if f.get("key") == "concept"), None)
+    else:
+        s["recur"] = (out.get("recurrence") or {}).get("count")
     if stage == "mass":
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")

@@ -168,52 +168,118 @@ def build_guide_sheet(wb: Workbook):
         row += 1   # 섹션 간 여백
 
 
-# ── 일일평가 시트 ──────────────────────────────────────────────
-def build_daily_sheet(wb: Workbook):
+# ── 일일평가 시트 (Pilot부터 가동시간 컬럼 추가 — 무정지 런 산출) ─────────
+def build_daily_sheet(wb: Workbook, pilot: bool = False):
     ws = wb.create_sheet("일일평가")
     ws.sheet_properties.tabColor = NAVY
-    cols   = ["평가일", "입실인원", "주평가내용", "일일평가", "일일에러", "연속성공", "비고"]
-    widths = [15, 22, 48, 12, 12, 12, 26]
+    cols   = ["평가일", "입실인원", "주평가내용", "일일평가", "일일에러", "연속성공"]
+    widths = [15, 22, 48, 12, 12, 12]
+    if pilot:
+        cols += ["가동시간(h)"]; widths += [12]
+    cols += ["비고"]; widths += [26]
     _style_header(ws, cols, widths)
 
-    examples = [
-        ["2026-06-01", "홍길동, 김철수", "JOB 생성 - 픽업 - 적재 사이클 셋업", 42, 0, 42,  "← 예시 (덮어쓰거나 아래에 입력)"],
-        ["2026-06-02", "홍길동, 김철수", "사이클 반복 안정성 검증",            78, 0, 120, "← 예시"],
-    ]
-    _example_rows(ws, 2, examples, len(cols), height=24)
+    ex1 = ["2026-06-01", "홍길동, 김철수", "JOB 생성 - 픽업 - 적재 사이클 셋업", 42, 0, 42]
+    ex2 = ["2026-06-02", "홍길동, 김철수", "사이클 반복 안정성 검증",            78, 0, 120]
+    if pilot:
+        ex1 += [10]; ex2 += [11]
+    ex1 += ["← 예시 (덮어쓰거나 아래에 입력)"]; ex2 += ["← 예시"]
+    _example_rows(ws, 2, [ex1, ex2], len(cols), height=24)
     _blank_rows(ws, 4, 16, len(cols), height=22)
 
 
-# ── 에러로그 시트 ──────────────────────────────────────────────
-def build_errors_sheet(wb: Workbook):
+# ── 에러로그 시트 (Pilot부터 SW/HW버전 필수 — docs/RECORD_SCHEMA.md #9) ──
+def build_errors_sheet(wb: Workbook, pilot: bool = False):
     ws = wb.create_sheet("에러로그")
     ws.sheet_properties.tabColor = NAVY
     cols   = ["No", "발생일", "시각", "회차", "코드", "유형", "상세", "원인", "조치", "결과",
-              "삼성 담당자", "업체 담당자", "상세설명", "사진(파일명)"]
-    widths = [6, 14, 10, 10, 12, 18, 44, 34, 44, 13, 13, 13, 54, 26]
+              "삼성 담당자", "업체 담당자"]
+    widths = [6, 14, 10, 10, 12, 18, 44, 34, 44, 13, 13, 13]
+    if pilot:
+        cols += ["SW버전", "HW버전"]; widths += [11, 11]
+    cols += ["상세설명", "사진(파일명)"]; widths += [54, 26]
     _style_header(ws, cols, widths)
 
-    examples = [
-        [1, "2026-06-08", "14:32", 358, "ERR-001", "비전 인식 오류", "픽업 대상 부품의 비전 좌표 인식 실패, 로봇 정지",
-         "조도 변화로 카메라 노출값 부적합 추정", "조명 LUX 재조정 + 비전 threshold 보정", "정상복귀", "양희두", "박영희",
-         "현장 조도 320→210 LUX 급감 구간에서 반복. 노출 보정 후 재현 안 됨. (분석 리포트 별첨)", "ERR-001_1.jpg, ERR-001_2.jpg"],
-        [2, "2026-06-17", "11:08", 953, "ERR-002", "그리퍼 그립 실패", "부품 표면 마찰계수 편차로 그리핑 실패, 자동 정지",
-         "부품 표면 코팅 편차 추정", "그리퍼 압력 +5% 조정, 표면 사전검사 추가", "정상복귀", "김현일", "홍길동",
-         "코팅 로트 편차로 마찰계수 0.40→0.28. 압력 상향으로 해결.", "ERR-002_grip.png"],
-    ]
-    _example_rows(ws, 2, examples, len(cols), height=42)
+    ex1 = [1, "2026-06-08", "14:32", 358, "ERR-001", "비전 인식 오류", "픽업 대상 부품의 비전 좌표 인식 실패, 로봇 정지",
+           "조도 변화로 카메라 노출값 부적합 추정", "조명 LUX 재조정 + 비전 threshold 보정", "정상복귀", "양희두", "박영희"]
+    ex2 = [2, "2026-06-17", "11:08", 953, "ERR-002", "그리퍼 그립 실패", "부품 표면 마찰계수 편차로 그리핑 실패, 자동 정지",
+           "부품 표면 코팅 편차 추정", "그리퍼 압력 +5% 조정, 표면 사전검사 추가", "정상복귀", "김현일", "홍길동"]
+    if pilot:
+        ex1 += ["v0.9.1", "Rev B"]; ex2 += ["v0.9.2", "Rev B"]
+    ex1 += ["현장 조도 320→210 LUX 급감 구간에서 반복. 노출 보정 후 재현 안 됨. (분석 리포트 별첨)", "ERR-001_1.jpg, ERR-001_2.jpg"]
+    ex2 += ["코팅 로트 편차로 마찰계수 0.40→0.28. 압력 상향으로 해결.", "ERR-002_grip.png"]
+    _example_rows(ws, 2, [ex1, ex2], len(cols), height=42)
     _blank_rows(ws, 4, 14, len(cols), height=24)
 
 
+# ── POC 시트 3종 (보고 부담 최소화 — 필수 5필드) ──────────────────────
+def build_issues_sheet(wb: Workbook):
+    ws = wb.create_sheet("이슈로그")
+    ws.sheet_properties.tabColor = NAVY
+    cols   = ["이슈ID", "고장모드", "심각도", "원인분류", "상태", "발생일", "상세", "사진(파일명)"]
+    widths = [10, 20, 10, 14, 10, 14, 48, 26]
+    _style_header(ws, cols, widths)
+    _example_rows(ws, 2, [
+        ["ISS-001", "비전 오인식", "Major", "구현(SW)", "종결", "2026-06-08",
+         "픽업 좌표 인식 실패 — 노출 보정으로 해결", "← 예시. 원인분류: 컨셉 리스크/설계/구현(SW)/시험환경"],
+        ["ISS-002", "체결 토크 이탈", "Critical", "설계", "조치중", "2026-06-10",
+         "토크 상한 이탈 — 프로파일 재설계 진행", ""],
+    ], len(cols), height=30)
+    _blank_rows(ws, 4, 18, len(cols), height=22)
+
+
+def build_runlog_sheet(wb: Workbook):
+    ws = wb.create_sheet("런기록")
+    ws.sheet_properties.tabColor = NAVY
+    cols   = ["일자", "런시간(h)", "에러수", "비고"]
+    widths = [15, 12, 10, 48]
+    _style_header(ws, cols, widths)
+    _example_rows(ws, 2, [
+        ["2026-06-29", 10, 0, "← 예시. 에러수>0인 날 = 무에러 런 리셋"],
+        ["2026-06-30", 11, 1, "31h 시점 비전 오인식 → 리셋 (이슈로그 ISS-001)"],
+    ], len(cols), height=24)
+    _blank_rows(ws, 4, 16, len(cols), height=22)
+
+
+def build_abn_sheet(wb: Workbook):
+    ws = wb.create_sheet("비정상평가")
+    ws.sheet_properties.tabColor = NAVY
+    cols   = ["시나리오", "복구시간", "판정", "비고"]
+    widths = [34, 12, 12, 44]
+    _style_header(ws, cols, widths)
+    _example_rows(ws, 2, [
+        ["비상정지 후 재기동", "45s", "PASS", "← 예시. 판정: PASS / FAIL / 대기"],
+        ["통신 두절 → 자동 재접속", "—", "FAIL", "재접속 로직 개선 후 재시험"],
+    ], len(cols), height=24)
+    _blank_rows(ws, 4, 12, len(cols), height=22)
+
+
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="단계별 업체 보고 양식 생성 (docs/RECORD_SCHEMA.md 매핑)")
+    ap.add_argument("--stage", choices=["poc", "pilot", "mass"], default="mass",
+                    help="poc=이슈로그·런기록·비정상평가 / pilot=일일평가·에러로그+버전 / mass=현행")
+    args = ap.parse_args()
+
     wb = Workbook()
     wb.remove(wb.active)
     build_guide_sheet(wb)
-    build_daily_sheet(wb)
-    build_errors_sheet(wb)
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    wb.save(OUT_PATH)
-    print(f"[template] 생성 완료: {OUT_PATH.relative_to(ROOT)}")
+    if args.stage == "poc":
+        build_issues_sheet(wb)
+        build_runlog_sheet(wb)
+        build_abn_sheet(wb)
+        out = ROOT / "data" / "vendor_template_poc.xlsx"
+    elif args.stage == "pilot":
+        build_daily_sheet(wb, pilot=True)
+        build_errors_sheet(wb, pilot=True)
+        out = ROOT / "data" / "vendor_template_pilot.xlsx"
+    else:
+        build_daily_sheet(wb)
+        build_errors_sheet(wb)
+        out = OUT_PATH
+    out.parent.mkdir(parents=True, exist_ok=True)
+    wb.save(out)
+    print(f"[template] 생성 완료 ({args.stage}): {out.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

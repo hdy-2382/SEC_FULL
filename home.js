@@ -40,11 +40,15 @@ function homeCard(e) {
     kv.push({ k: '에러 (한도)', v: eb.used != null ? eb.used : '—', sub: `/${eb.limit != null ? eb.limit : '—'}`, warn: eb.limit && eb.used >= eb.limit - 1 });
     const mtbf = s.mtbf || {};
     kv.push({ k: 'MTBF', v: fmt(mtbf.current), sub: `/${fmt(mtbf.target)}${esc(unit)}` });
+  } else if (e.stage === 'poc') {
+    const st = s.issueStats || {};
+    kv.push({ k: '발굴 이슈', v: st.total != null ? st.total : s.records, sub: `건 · 종결 ${st.closed != null ? st.closed : '—'}` });
+    kv.push({ k: '컨셉 리스크', v: s.concept != null ? s.concept : '—', sub: '건', good: s.concept === 0, warn: s.concept > 0 });
   } else {
     kv.push({ k: '레코드', v: s.records != null ? s.records : '—', sub: '건' });
     kv.push({ k: '재발', v: s.recur != null ? s.recur : '—', sub: '건', warn: s.recur > 0 });
   }
-  const kvHtml = kv.map(x => `<div><div class="k">${x.k}</div><div class="v"${x.warn ? ' style="color:var(--major)"' : ''}>${x.v}<small>${x.sub}</small></div></div>`).join('');
+  const kvHtml = kv.map(x => `<div><div class="k">${x.k}</div><div class="v"${x.warn ? ' style="color:var(--major)"' : x.good ? ' style="color:var(--green)"' : ''}>${x.v}<small>${x.sub}</small></div></div>`).join('');
   const pct = Math.max(0, Math.min(100, prog.pct != null ? prog.pct : 0));
   const gate = e.gate || {};
   const dd = ddayLabel(gate.reviewDate);
@@ -54,7 +58,9 @@ function homeCard(e) {
     <div class="kv">${kvHtml}</div>
     <div class="rgauge"><div class="track"><i style="width:${pct}%"></i></div></div>
     ${tecopRow(e.tecop)}
-    <div class="pfoot"><span>${s.recur ? `재발 ${s.recur}건` : '재발 0건'}</span><span class="gate">${esc(gate.label || '게이트 리뷰')} ${esc(dd)}</span></div>
+    <div class="pfoot"><span>${e.stage === 'poc'
+      ? `진행 이슈 ${((s.issueStats || {}).open != null) ? s.issueStats.open : '—'}건`
+      : (s.recur ? `재발 ${s.recur}건` : '재발 0건')}</span><span class="gate">${esc(gate.label || '게이트 리뷰')} ${esc(dd)}</span></div>
   </div>`;
 }
 
