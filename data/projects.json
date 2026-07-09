@@ -1,0 +1,30 @@
+{
+  "_readme": "과제 레지스트리 + 전사(홈) 설정. 과제 추가 = projects[]에 등록 + data/projects/<id>/ 폴더 구성 (config.json, raw/, errors/, assets/, REPORT.xlsx). stage는 각 과제 config.json이 단일 출처.",
+  "org": {
+    "title": "로봇 개발 표준 보고 체계",
+    "brandLogo": "R",
+    "brandName": "Robot Reliability<br>Portfolio",
+    "footNote": "공통 레코드 1종 · 단계 템플릿 · 잣대 사전 확정",
+    "process": {
+      "ladder": [
+        { "stg": "① POC", "run": "사외 72h 무에러", "env": "랩·사외 · 비정상 상황 평가 병행", "color": "#3F7CC4" },
+        { "stg": "② Pilot", "run": "무정지 300h", "env": "사내 (공정 연결 없이) · 설계 동결 후", "color": "#B36F0A" },
+        { "stg": "③ 양산 시범 평가", "run": "무정지 1개월", "env": "사내 (공정 연결) · 판정 합의제", "color": "#2F7A55" },
+        { "gate": true, "stg": "◆ 심의", "run": "인증<br>운영승인심의", "env": "이관 산출물 합의" },
+        { "gate": true, "stg": "◆ 심의", "run": "확산<br>투자심의", "env": "영향성 평가 · 투자결정" },
+        { "stg": "④ 양산 적용", "run": "라인별 SAT 런", "env": "양산 퀄 · 횡전개", "color": "#7A4FB3" },
+        { "stg": "⑤ 운영/관제", "run": "상시 RAM 지표", "env": "통합관제 · 보전/CIP · FMEA 환류", "color": "#666666" }
+      ],
+      "principles": [
+        "① 고장 레코드 스키마는 <b>전 과제·전 단계 공통</b>",
+        "② 기간엔 <b>단계 템플릿</b>(개발·실증·운영) · 심의엔 <b>체크리스트</b>",
+        "③ 판정 잣대·리셋 규칙은 <b>데이터 이전에 확정</b>"
+      ]
+    }
+  },
+  "projects": [
+    { "id": "chem", "name": "케미컬 체결/반송 자동화", "abbr": "C", "order": 1 },
+    { "id": "drum", "name": "드럼 자동화", "abbr": "D", "order": 2 },
+    { "id": "sort", "name": "분류 자동화", "abbr": "S", "order": 3 }
+  ]
+}

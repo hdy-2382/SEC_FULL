@@ -19,6 +19,13 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
 const fmt = (n) => (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('ko-KR');
 let DATA = null;
 
+/* ── 멀티 과제 ──
+   REG  = data/projects.json (과제 레지스트리 + 전사 설정)
+   BASE = 현재 과제의 데이터 루트 (data/projects/<id>/) — 이미지 등 상대 자원의 기준 경로 */
+let REG = null;
+let BASE = 'data/projects/chem/';
+const projectBase = (id) => 'data/projects/' + id + '/';
+
 /* ── 화면 글자(ui) 접근 헬퍼 ──
    U = config.json 의 ui 블록. T()=글자 가져오기, TT()=글자+{치환}, tpl()=치환 엔진 */
 let U = {};
@@ -292,7 +299,7 @@ function discussModel() {
 
 /* 설비 평가 진행(라인 레이아웃) 패널 — 사이드바(#side-line) 표시 · 클릭 시 openLineLayout() 모달 확대 */
 function lineLayoutFigure(C, m) {
-  const img = (C.line && C.line.layoutImage) || 'data/assets/line_layout.png';
+  const img = (C.line && C.line.layoutImage) || (BASE + 'assets/line_layout.png');
   const Lh = T('overview.lineImageHeight', 300);
   const Lfit = T('overview.lineImageFit', 'contain');
   // 캡션: config에서 자유 편집(overview.lineCaption). {cum}/{target}은 자동 진행값, <b>..</b> 강조 태그 사용 가능.
@@ -644,7 +651,7 @@ function openModal(i) {
   const e = DATA.errors[i]; if (!e) return;
   $('modal-title').textContent = TT('modal.titleFull', { code: e.code || '', no: e.no });
   const imgs = (e.images || []).map(fn =>
-    `<img src="data/errors/${esc(fn)}" alt="${esc(fn)}" onclick="lightbox('data/errors/${esc(fn)}')" onerror="this.replaceWith(document.createTextNode('${esc(TT('modal.imgMissing', { fn }))}'))">`).join('');
+    `<img src="${BASE}errors/${esc(fn)}" alt="${esc(fn)}" onclick="lightbox('${BASE}errors/${esc(fn)}')" onerror="this.replaceWith(document.createTextNode('${esc(TT('modal.imgMissing', { fn }))}'))">`).join('');
   $('modal-body').innerHTML = `
     <div class="ed-meta"><span><b>${esc(T('modal.occur'))}</b> ${esc(e.date)} ${esc(e.time || '')}</span><span><b>${esc(T('modal.cycle'))}</b> ${fmt(e.cycle)}</span>
     <span><b>${esc(T('modal.type'))}</b> ${esc(e.type || '—')}</span><span><b>${esc(T('modal.owner'))}</b> ${esc(TT('modal.ownerVal', { sec: e.owner_sec || '—', vendor: e.owner || '—' }))}</span></div>
@@ -671,7 +678,7 @@ function lightbox(src) { $('lightbox-img').src = src; $('lightbox').classList.ad
 function openLineLayout() {
   const C = (DATA && DATA.config) || {};
   const m = DATA.metrics || {};
-  const img = (C.line && C.line.layoutImage) || 'data/assets/line_layout.png';
+  const img = (C.line && C.line.layoutImage) || (BASE + 'assets/line_layout.png');
   const Lfit = T('overview.lineImageFit', 'contain');
   const prog = (m && m.progress) || {};
   const cap = TT('overview.lineCaption',
@@ -857,15 +864,21 @@ function mount() {
   initRouter();   // 탭 = 해당 섹션만 표시 (단일 섹션 뷰). 인쇄 시에는 전체 펼침.
 }
 
-/* dashboard.json(데이터) + config.json(화면 글자 ui)를 함께 로드.
-   config.json 의 ui 를 우선 사용해 글자만 고쳐도 새로고침으로 즉시 반영되게 한다. */
-Promise.all([
-  fetch('data/dashboard.json?t=' + Date.now()).then(r => r.json()),
-  fetch('data/config.json?t=' + Date.now()).then(r => r.json()).catch(() => null),
-]).then(([d, cfg]) => {
+/* 레지스트리(projects.json) → 과제의 dashboard.json + config.json 로드.
+   config.json 의 ui 를 우선 사용해 글자만 고쳐도 새로고침으로 즉시 반영되게 한다.
+   (M1: 첫 과제 고정 로드 — M2에서 해시 라우터가 과제 선택을 담당) */
+fetch('data/projects.json?t=' + Date.now()).then(r => r.json()).then(reg => {
+  REG = reg;
+  const pid = (reg.projects && reg.projects[0] && reg.projects[0].id) || 'chem';
+  BASE = projectBase(pid);
+  return Promise.all([
+    fetch(BASE + 'dashboard.json?t=' + Date.now()).then(r => r.json()),
+    fetch(BASE + 'config.json?t=' + Date.now()).then(r => r.json()).catch(() => null),
+  ]);
+}).then(([d, cfg]) => {
   DATA = d;
   U = (cfg && cfg.ui) || (d.config && d.config.ui) || {};
   mount();
 }).catch(err => {
-  document.querySelector('.main').innerHTML = `<div class="banner" style="margin-top:20px">${esc(T('modal.errorLoad', '데이터를 불러오지 못했습니다 (data/dashboard.json). 로컬에서는 HTTP 서버로 여세요.'))}<br><span class="mini">${esc(err.message)}</span></div>`;
+  document.querySelector('.main').innerHTML = `<div class="banner" style="margin-top:20px">${esc(T('modal.errorLoad', '데이터를 불러오지 못했습니다 (data/projects/…/dashboard.json). 로컬에서는 HTTP 서버로 여세요.'))}<br><span class="mini">${esc(err.message)}</span></div>`;
 });

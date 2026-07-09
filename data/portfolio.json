@@ -1,0 +1,93 @@
+{
+  "projects": [
+    {
+      "id": "chem",
+      "name": "케미컬 체결/반송 자동화",
+      "abbr": "C",
+      "hasData": true,
+      "stage": "mass",
+      "run": {
+        "target": 360,
+        "unit": "Cy",
+        "criterion": "무정지 · 관련 고장만",
+        "env": "사내 (공정 연결)"
+      },
+      "gate": {
+        "reviewDate": "2026-09-30",
+        "label": "가동인증"
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "ok",
+          "note": "진도 정상"
+        },
+        {
+          "k": "E",
+          "status": "ok",
+          "note": "투자 승인 완료"
+        },
+        {
+          "k": "C",
+          "status": "warn",
+          "note": "계약 마감 9/30 · 에러 여유 1회"
+        },
+        {
+          "k": "O",
+          "status": "ok",
+          "note": "수혜부서 합동 판정 운영 중"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "안전검수 통과"
+        }
+      ],
+      "project": {
+        "name": "S4 증축동",
+        "department": "A-INFRA 기술팀",
+        "team": "양희두, 김현일",
+        "startDate": "2026-06-01",
+        "endDate": "2026-09-30"
+      },
+      "generatedAt": "2026-07-09T06:14:30Z",
+      "summary": {
+        "progress": {
+          "cum": 49,
+          "target": 360,
+          "pct": 13.6
+        },
+        "recur": 3,
+        "records": 7,
+        "errorBudget": {
+          "used": 2,
+          "limit": 3,
+          "resets": 3,
+          "lifetimeErrors": 14,
+          "dailyAvg": 0.64,
+          "weeklyAvg": 3.5
+        },
+        "mtbf": {
+          "current": 103,
+          "target": 100
+        },
+        "acceptance": {
+          "passed": 0,
+          "total": 5
+        }
+      }
+    },
+    {
+      "id": "drum",
+      "name": "드럼 자동화",
+      "abbr": "D",
+      "hasData": false
+    },
+    {
+      "id": "sort",
+      "name": "분류 자동화",
+      "abbr": "S",
+      "hasData": false
+    }
+  ]
+}

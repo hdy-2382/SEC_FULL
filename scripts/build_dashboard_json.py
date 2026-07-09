@@ -35,10 +35,32 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW_DIR = ROOT / "data" / "raw"
-OUT_PATH = ROOT / "data" / "dashboard.json"
-CONFIG_PATH = ROOT / "data" / "config.json"
-MGMT_PATH = ROOT / "data" / "SEC_REPORT.xlsx"
+PROJECTS_ROOT = ROOT / "data" / "projects"
+REGISTRY_PATH = ROOT / "data" / "projects.json"
+PORTFOLIO_PATH = ROOT / "data" / "portfolio.json"
+
+# 과제별 경로 — _set_project()가 설정 (멀티 과제: data/projects/<id>/ 기준)
+RAW_DIR = OUT_PATH = CONFIG_PATH = MGMT_PATH = None
+
+
+def _set_project(pid: str):
+    """모든 입출력 경로를 해당 과제 폴더로 지정한다."""
+    global RAW_DIR, OUT_PATH, CONFIG_PATH, MGMT_PATH
+    base = PROJECTS_ROOT / pid
+    if not base.is_dir():
+        raise SystemExit(f"과제 폴더가 없습니다: {base}")
+    RAW_DIR = base / "raw"
+    OUT_PATH = base / "dashboard.json"
+    CONFIG_PATH = base / "config.json"
+    MGMT_PATH = base / "REPORT.xlsx"
+    if not MGMT_PATH.exists() and (base / "SEC_REPORT.xlsx").exists():
+        MGMT_PATH = base / "SEC_REPORT.xlsx"  # 구명 하위호환
+
+
+def _load_registry():
+    if not REGISTRY_PATH.exists():
+        raise SystemExit(f"과제 레지스트리가 없습니다: {REGISTRY_PATH}")
+    return json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
 
 
 # ── 컬럼 헤더 매핑 ─────────────────────────────────────────────
@@ -886,9 +908,10 @@ def _compute(daily, errors, config, codes, actions, now=None) -> dict:
     }
 
 
-def main():
+def build_project(pid: str):
+    _set_project(pid)
     src = _pick_latest_xlsx()
-    print(f"[build] 입력 파일: {src.name}")
+    print(f"[build:{pid}] 입력 파일: {src.name}")
 
     daily_rows, errors_rows = _load_workbook_rows(src)
     daily  = _parse_daily(daily_rows)
@@ -927,9 +950,78 @@ def main():
         encoding="utf-8",
     )
     m = computed["metrics"]
-    print(f"[build] 출력: {OUT_PATH.relative_to(ROOT)}  "
+    print(f"[build:{pid}] 출력: {OUT_PATH.relative_to(ROOT)}  "
           f"(daily {len(daily)}, errors {len(errors)}, 진행 {m['progress']['pct']}%, "
           f"신뢰수준 {m['confidence']['currentPct']}%, 합격 {computed['acceptance']['passed']}/5)")
+
+
+def _portfolio_summary(stage: str, out: dict) -> dict:
+    """홈(포트폴리오) 카드용 요약 — 단계별로 헤드라인 수치만 추린다."""
+    m = out.get("metrics", {}) or {}
+    s = {
+        "progress":   m.get("progress"),
+        "recur":      (out.get("recurrence") or {}).get("count"),
+        "records":    len(out.get("errors") or []),
+    }
+    if stage == "mass":
+        s["errorBudget"] = m.get("errorBudget")
+        s["mtbf"] = m.get("mtbf")
+        s["acceptance"] = {k: (out.get("acceptance") or {}).get(k) for k in ("passed", "total")}
+    return s
+
+
+def write_portfolio():
+    """레지스트리의 전 과제를 훑어 data/portfolio.json 생성 (홈 화면 입력).
+    dashboard.json 이 없는 과제는 hasData=false 로 등재한다."""
+    reg = _load_registry()
+    entries = []
+    for p in sorted(reg.get("projects", []), key=lambda x: x.get("order", 99)):
+        pid = p["id"]
+        base = PROJECTS_ROOT / pid
+        entry = {"id": pid, "name": p.get("name", pid), "abbr": p.get("abbr", pid[:1].upper()),
+                 "hasData": False}
+        cfg_path = base / "config.json"
+        dash_path = base / "dashboard.json"
+        if cfg_path.exists():
+            cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            entry["stage"] = cfg.get("stage", "mass")
+            entry["run"] = cfg.get("run")
+            entry["gate"] = cfg.get("gate")
+            entry["tecop"] = cfg.get("tecop")
+            prj = cfg.get("project") or {}
+            entry["project"] = {k: prj.get(k) for k in ("name", "department", "team", "startDate", "endDate")}
+        if dash_path.exists():
+            out = json.loads(dash_path.read_text(encoding="utf-8"))
+            entry["hasData"] = True
+            entry["generatedAt"] = out.get("generatedAt")
+            entry["summary"] = _portfolio_summary(entry.get("stage", "mass"), out)
+        entries.append(entry)
+    PORTFOLIO_PATH.write_text(
+        json.dumps({"projects": entries}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    n_data = sum(1 for e in entries if e["hasData"])
+    print(f"[build] 포트폴리오: {PORTFOLIO_PATH.relative_to(ROOT)} (과제 {len(entries)}, 데이터 보유 {n_data})")
+
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="과제별 엑셀 → dashboard.json (+ 전사 portfolio.json)")
+    ap.add_argument("--project", help="과제 id (data/projects/<id>). 생략 시 데이터가 있는 전 과제 빌드")
+    args = ap.parse_args()
+
+    reg = _load_registry()
+    if args.project:
+        pids = [args.project]
+    else:
+        # config.json 이 있는 과제만 빌드 대상 (레지스트리 등재만 된 과제는 스킵)
+        pids = [p["id"] for p in reg.get("projects", [])
+                if (PROJECTS_ROOT / p["id"] / "config.json").exists()]
+        if not pids:
+            raise SystemExit("빌드할 과제가 없습니다 (data/projects/<id>/config.json 필요)")
+    for pid in pids:
+        build_project(pid)
+    write_portfolio()
 
 
 if __name__ == "__main__":

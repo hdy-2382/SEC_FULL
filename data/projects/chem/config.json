@@ -1,4 +1,43 @@
 {
+  "stage": "mass",
+  "_stage_readme": "poc | pilot | mass | ops — 템플릿·빌드 계산 선택. docs/PROCESS.md 참조",
+  "run": {
+    "target": 360,
+    "unit": "Cy",
+    "criterion": "무정지 · 관련 고장만",
+    "env": "사내 (공정 연결)"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "ok",
+      "note": "진도 정상"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "투자 승인 완료"
+    },
+    {
+      "k": "C",
+      "status": "warn",
+      "note": "계약 마감 9/30 · 에러 여유 1회"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "수혜부서 합동 판정 운영 중"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "안전검수 통과"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-09-30",
+    "label": "가동인증"
+  },
   "project": {
     "name": "S4 증축동",
     "department": "A-INFRA 기술팀",
@@ -54,7 +93,7 @@
     }
   ],
   "line": {
-    "layoutImage": "data/assets/line_layout.png",
+    "layoutImage": "data/projects/chem/assets/line_layout.png",
     "stations": [
       {
         "name": "설비 1",
