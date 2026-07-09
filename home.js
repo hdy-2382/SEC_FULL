@@ -74,10 +74,18 @@ function renderHome() {
     : `<div class="rung"><div class="stg" style="color:${esc(r.color || 'var(--muted)')}">${esc(r.stg)}</div><div class="run">${esc(r.run)}</div><div class="env">${esc(r.env || '')}</div></div>`
   ).join('<div class="ar">→</div>');
   const principles = (proc.principles || []).map(p => `<span>${p}</span>`).join('');
+  const gatecards = (proc.gates || []).map(g => `
+    <div class="gatecard">
+      <h4><span class="gd">◆</span>${esc(g.title)}</h4>
+      <div class="gsub">${esc(g.sub || '')}</div>
+      <div class="items">${(g.items || []).map(it => typeof it === 'string'
+        ? `<span>${esc(it)}</span>` : `<span${it.hl ? ' class="hl"' : ''}>${esc(it.t)}</span>`).join('')}</div>
+    </div>`).join('');
   const procBox = (proc.ladder && proc.ladder.length) ? `
     <section class="sbox">
       <div class="sbox-h"><span class="tag">${esc(orgT('procTag', '표준 프로세스'))}</span><h2>${esc(orgT('procTitle', '전체 체인 — 기간(데이터 축적) + 심의 게이트(체크리스트)'))}</h2><span class="d">${esc(orgT('procDesc', '무고장 런은 동일 컴포넌트 · 파라미터만 단계별 상향 · docs/PROCESS.md'))}</span></div>
       <div class="ladder">${ladder}</div>
+      ${gatecards ? `<div class="gatecards">${gatecards}</div>` : ''}
       ${principles ? `<div class="principles">${principles}</div>` : ''}
     </section>` : '';
 

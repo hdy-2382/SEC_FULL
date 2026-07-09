@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T06:39:15Z",
+  "generatedAt": "2026-07-09T06:46:36Z",
   "source": "양산평가_샘플.xlsx",
   "config": {
     "stage": "mass",
@@ -1307,6 +1307,53 @@
     "openCritical": 1,
     "verifyClosedRate": 0
   },
+  "adjudication": [
+    {
+      "id": "JD-01",
+      "target": "1",
+      "verdict": "관련",
+      "attribution": "설비 (SW)",
+      "evidence": "로그 + 재현시험",
+      "agreed": "합의완료",
+      "date": "2026-06-12"
+    },
+    {
+      "id": "JD-02",
+      "target": "2",
+      "verdict": "관련",
+      "attribution": "설비 (부품)",
+      "evidence": "로그 + 영상",
+      "agreed": "합의완료",
+      "date": "2026-06-16"
+    },
+    {
+      "id": "JD-03",
+      "target": "3",
+      "verdict": "비관련",
+      "attribution": "자재 (로트 불량)",
+      "evidence": "로트 검사성적서",
+      "agreed": "합의완료",
+      "date": "2026-06-17"
+    },
+    {
+      "id": "JD-04",
+      "target": "4",
+      "verdict": "비관련",
+      "attribution": "운영 (조작)",
+      "evidence": "CCTV + 교육 기록",
+      "agreed": "합의완료",
+      "date": "2026-06-18"
+    },
+    {
+      "id": "JD-05",
+      "target": "5",
+      "verdict": "판정중",
+      "attribution": "",
+      "evidence": "로그 분석 중",
+      "agreed": "합동리뷰 07-15",
+      "date": ""
+    }
+  ],
   "months": [
     "2026-06"
   ],

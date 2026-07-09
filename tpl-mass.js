@@ -95,6 +95,28 @@ function stepHead(no, title, q, chip, cls) {
   return `<div class="step-h"><div class="step-no">${no}</div><div class="tt"><h2>${esc(title)}</h2><div class="q">${esc(q)}</div></div><span class="chip ${cls}">${esc(chip)}</span></div>`;
 }
 
+/* 판정 대장 (관련/비관련 합동판정) — REPORT.xlsx 「판정대장」 시트. docs/CRITERIA.md §4.
+   양산 시범 평가의 에러분석은 무게중심이 '원인'에서 '판정'으로 이동한다 — 사후 재분류 금지. */
+function adjudicationPanel() {
+  const rows = DATA.adjudication || [];
+  if (!rows.length) return '';
+  const VB = { '관련': 'b-crit', '비관련': 'b-ok', '판정중': 'b-prog' };
+  const rel = rows.filter(r => r.verdict === '관련').length;
+  const pending = rows.filter(r => r.verdict === '판정중').length;
+  const limit = ((DATA.config || {}).acceptance || {}).errorLimit;
+  const tr = rows.map(r => `
+    <tr><td><b>${esc(r.id)}</b></td><td class="c">${esc(r.target)}</td>
+    <td class="c"><span class="badge ${VB[r.verdict] || 'b-wait'}">${esc(r.verdict)}</span></td>
+    <td>${esc(r.attribution || '—')}</td><td class="mini">${esc(r.evidence || '')}</td>
+    <td class="c">${esc(r.agreed || '')}</td><td class="c">${esc(r.date || '')}</td></tr>`).join('');
+  return `
+        <div class="panel mt">
+          <div class="ph"><h3>판정 대장 (관련/비관련 합동판정)</h3><span class="ps">사전 합의 규칙 · 증거 첨부 · 사후 재분류 금지 — docs/CRITERIA.md §4</span></div>
+          <div class="tbl-scroll"><table><tr><th>사건</th><th class="c">대상 에러</th><th class="c">판정</th><th>귀책 분류</th><th>증거</th><th class="c">합의</th><th class="c">판정일</th></tr>${tr}</table></div>
+          <div class="mini" style="margin-top:8px">관련 고장 <b style="color:var(--major)">${rel}건</b>${limit ? ` / 한도 ${limit}` : ''}${pending ? ` · 판정중 ${pending}건` : ''} · 비관련 판정 건도 시정 오너를 지정한다 (외생 요인 재발 방지)</div>
+        </div>`;
+}
+
 function renderSteps(C, m, f, acc, op) {
   const verifyCy = (C.acceptance || {}).verifyCycle || 200;
   const fracasH = T('steps.fracasH', []);
@@ -146,6 +168,7 @@ function renderSteps(C, m, f, acc, op) {
           <div class="panel"><div class="ph"><h3>${esc(T('steps.matrixTitle'))}</h3><span class="ps">${esc(T('steps.matrixSub'))}</span></div><div class="matrix">${grid}</div><div class="legend-row">${legend}</div></div>
           <div class="panel"><div class="ph"><h3>${esc(T('steps.recurTitle'))}</h3><span class="ps">${esc(T('steps.recurSub'))}</span></div><div class="stat-big"><b>${DATA.recurrence.count}</b><span>${esc(TT('steps.recurUnit', { rate: DATA.recurrence.rate }))}</span></div><div class="mini">${DATA.recurrence.items.map(it => esc(it.code) + '(' + it.count + ')').join(', ') || esc(T('steps.recurNone'))}</div>${(DATA.recurrence.cleared || []).length ? `<div class="mini" style="margin-top:6px;color:var(--green)">✅ ${esc(TT('steps.recurCleared', { list: DATA.recurrence.cleared.map(it => it.code).join(', ') }, '검증완료로 해제: {list}'))}</div>` : ''}<div class="mini" style="margin-top:6px">${esc(T('steps.recurWarn'))}</div></div>
         </div>
+        ${adjudicationPanel()}
       </div>
     </section>
 

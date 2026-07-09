@@ -21,7 +21,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_PATH = ROOT / "data" / "SEC_REPORT.xlsx"
+OUT_PATH = ROOT / "data" / "mgmt_template.xlsx"
 
 INK = "0F2E54"; NAVY = "1E4A7A"; SKY = "2E89D6"; SKY_SOFT = "EAF2FB"
 ZEBRA = "F5F9FE"; LINE = "C9DAEE"; WHITE = "FFFFFF"
@@ -117,9 +117,25 @@ def build_actions(wb):
     _rows(ws, 2 + len(ex), [[""] * len(cols)] * 14, len(cols))
 
 
+def build_adjudication(wb):
+    """판정대장 (양산 시범 평가~): 관련/비관련 합동판정 — 잣대·규칙은 docs/CRITERIA.md §4.
+    판정: 관련 / 비관련 / 판정중 · 합의상태: 합의완료 / 합동리뷰 예정(날짜)"""
+    ws = wb.create_sheet("판정대장")
+    ws.sheet_properties.tabColor = NAVY
+    cols = ["사건ID", "대상에러No", "판정", "귀책분류", "증거", "합의상태", "판정일"]
+    _header(ws, cols, [10, 12, 10, 18, 30, 16, 13])
+    ex = [
+        ["JD-01", 1, "관련", "설비 (SW)", "로그 + 재현시험", "합의완료", "2026-06-14"],
+        ["JD-02", 2, "비관련", "자재 (로트 불량)", "로트 검사성적서", "합의완료", "2026-06-18"],
+        ["JD-03", 3, "판정중", "", "로그 분석 중", "합동리뷰 07-15", ""],
+    ]
+    _rows(ws, 2, ex, len(cols), example=True, height=24)
+    _rows(ws, 2 + len(ex), [[""] * len(cols)] * 12, len(cols))
+
+
 def main():
     wb = Workbook(); wb.remove(wb.active)
-    build_guide(wb); build_codes(wb); build_actions(wb)
+    build_guide(wb); build_codes(wb); build_actions(wb); build_adjudication(wb)
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     wb.save(OUT_PATH)
     print(f"[mgmt] 생성 완료: {OUT_PATH.relative_to(ROOT)}")
