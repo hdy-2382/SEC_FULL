@@ -12,6 +12,7 @@ const PROJ_CACHE = {};         // pid → { data, cfg }
 
 const STAGE_LABEL = { poc: 'POC', pilot: 'Pilot', mass: '양산평가', spread: '확산', ops: '운영' };
 const STAGE_CHIP = { poc: 'st-poc', pilot: 'st-pilot', mass: 'st-mass', spread: 'st-spread', ops: 'st-ops' };
+const STAGE_COLOR = { poc: '#3F7CC4', pilot: '#B36F0A', mass: '#2F7A55', spread: '#7A4FB3', ops: '#5f6b7a' };
 
 function defaultPid() { return (REG && REG.projects && REG.projects[0] && REG.projects[0].id) || 'chem'; }
 function orgT(k, fb) { const v = REG && REG.org && REG.org[k]; return v == null ? (fb == null ? '' : fb) : v; }

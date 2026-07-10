@@ -52,27 +52,66 @@ function homeCard(e) {
   const pct = Math.max(0, Math.min(100, prog.pct != null ? prog.pct : 0));
   const gate = e.gate || {};
   const dd = ddayLabel(gate.reviewDate);
-  return `<div class="pcard" data-go="${esc(e.id)}">
+  const ddDays = dd.startsWith('D-') ? parseInt(dd.slice(2), 10) : (dd === 'D-DAY' ? 0 : -1);
+  const ddCls = ddDays >= 0 && ddDays <= 7 ? ' gate-soon' : '';
+  const sc = STAGE_COLOR[e.stage] || 'var(--line)';
+  return `<div class="pcard" data-go="${esc(e.id)}" style="border-top:3px solid ${esc(sc)}">
     <div class="ph"><b>${esc(e.name)}</b>${chip}</div>
     <div class="psub">${esc(meta)}${e.generatedAt ? ` · ${esc(orgT('cardUpdated', '갱신'))} ${esc(e.generatedAt.slice(0, 10))}` : ''}</div>
     <div class="kv">${kvHtml}</div>
-    <div class="rgauge"><div class="track"><i style="width:${pct}%"></i></div></div>
+    <div class="pgauge"><div class="track"><i style="width:${pct}%;background:${esc(sc)}"></i></div><span class="pc">${pct}%</span></div>
     ${tecopRow(e.tecop)}
     <div class="pfoot"><span>${e.stage === 'poc'
       ? `진행 이슈 ${((s.issueStats || {}).open != null) ? s.issueStats.open : '—'}건`
-      : (s.recur ? `재발 ${s.recur}건` : '재발 0건')}</span><span class="gate">${esc(gate.label || '게이트 리뷰')} ${esc(dd)}</span></div>
+      : (s.recur ? `재발 ${s.recur}건` : '재발 0건')}</span><span class="gate${ddCls}">${esc(gate.label || '게이트 리뷰')} ${esc(dd)}</span></div>
   </div>`;
 }
 
 function renderHome() {
   const proc = (REG && REG.org && REG.org.process) || {};
   const entries = (PORTFOLIO && PORTFOLIO.projects) || [];
+  const withData = entries.filter(e => e.hasData);
 
-  // ① 표준 프로세스 스트립 (기간 = 밝은 카드 · 심의 = 남색 카드)
-  const ladder = (proc.ladder || []).map(r => r.gate
-    ? `<div class="gt"><div class="stg">${r.stg}</div><div class="run">${r.run}</div><div class="env">${esc(r.env || '')}</div></div>`
-    : `<div class="rung"><div class="stg" style="color:${esc(r.color || 'var(--muted)')}">${esc(r.stg)}</div><div class="run">${esc(r.run)}</div><div class="env">${esc(r.env || '')}</div></div>`
-  ).join('<div class="ar">→</div>');
+  // ⓪ 히어로 — 전사 KPI를 상단 남색 밴드로 (한눈에 요약 → 아래로 상세)
+  const recSum = withData.reduce((a, e) => a + ((e.summary || {}).records || 0), 0);
+  const recurSum = withData.reduce((a, e) => a + ((e.summary || {}).recur || 0), 0);
+  const openSum = withData.reduce((a, e) => {
+    const st = (e.summary || {}).issueStats;
+    return a + (st && st.open != null ? st.open : 0);
+  }, 0);
+  const gates = entries.filter(e => e.gate && e.gate.reviewDate)
+    .map(e => ({ id: e.id, abbr: e.abbr, name: e.name, d: e.gate.reviewDate }))
+    .sort((a, b) => a.d < b.d ? -1 : 1);
+  const nextGate = gates.find(g => !ddayLabel(g.d).startsWith('D+')) || gates[0];
+  const heroStat = (k, v, sub, warn) => `<div class="hh-stat"><div class="k">${k}</div><div class="v${warn ? ' warn' : ''}">${v}</div><div class="s">${sub}</div></div>`;
+  const hero = `
+    <div class="home-hero">
+      <div class="hh-tx">
+        <div class="hh-eyebrow">${esc(orgT('procTag', '표준 프로세스'))} · ${esc(orgT('footNote', ''))}</div>
+        <h2>${esc(orgT('heroTitle', '전 과제, 하나의 잣대로'))}</h2>
+        <p>${orgT('heroSub', '고장 레코드는 <b>전 과제·전 단계 공통</b> — 단계가 올라도 배관은 하나, 화면(렌즈)만 바뀝니다.')}</p>
+      </div>
+      <div class="hh-stats">
+        ${heroStat(esc(orgT('kpiProjects', '등록 과제')), `${entries.length}<small>건</small>`, `${esc(orgT('kpiProjectsSub', '데이터 보유'))} ${withData.length}`)}
+        ${heroStat(esc(orgT('kpiRecords', '누적 레코드')), `${fmt(recSum)}<small>건</small>`, withData.map(e => `${esc(e.abbr)} ${((e.summary || {}).records || 0)}`).join(' · ') || '—')}
+        ${heroStat(esc(orgT('kpiOpen', '오픈 이슈')), `${fmt(openSum)}<small>건</small>`, esc(orgT('kpiOpenSub', '폐루프 미종결 — 전 과제')))}
+        ${heroStat(esc(orgT('kpiRecur', '재발')), `${recurSum}<small>건</small>`, esc(orgT('kpiRecurSub', '공통 KPI — 단계 불문')), recurSum > 0)}
+        ${heroStat(esc(orgT('kpiGate', '다음 게이트')), nextGate ? esc(ddayLabel(nextGate.d)) : '—', nextGate ? esc(nextGate.abbr + ' · ' + nextGate.d) : '—')}
+      </div>
+    </div>`;
+
+  // ① 표준 프로세스 스트립 — 각 단계 아래에 현재 그 단계에 있는 과제 배지 (살아있는 지도)
+  const chipsOf = key => entries.filter(e => e.stage === key).map(e =>
+    `<span class="lp-chip" data-go="${esc(e.id)}" style="--pc:${esc(STAGE_COLOR[key] || '#888')}" title="${esc(e.name)}">${esc(e.abbr)} ${esc(e.name.length > 9 ? e.name.slice(0, 8) + '…' : e.name)}</span>`).join('');
+  const ladder = (proc.ladder || []).map(r => {
+    if (r.gate) return `<div class="gt"><div class="stg">${r.stg}</div><div class="run">${r.run}</div><div class="env">${esc(r.env || '')}</div></div>`;
+    const chips = r.key ? chipsOf(r.key) : '';
+    return `<div class="rung${chips ? ' has-prj' : ''}" style="--rc:${esc(r.color || '#8a99ac')}">
+      <div class="stg" style="color:${esc(r.color || 'var(--muted)')}">${esc(r.stg)}</div>
+      <div class="run">${esc(r.run)}</div><div class="env">${esc(r.env || '')}</div>
+      <div class="lchips">${chips || `<span class="lp-none">${esc(orgT('ladderEmpty', '진행 과제 없음'))}</span>`}</div>
+    </div>`;
+  }).join('<div class="ar">→</div>');
   const principles = (proc.principles || []).map(p => `<span>${p}</span>`).join('');
   const gatecards = (proc.gates || []).map(g => `
     <div class="gatecard">
@@ -92,28 +131,12 @@ function renderHome() {
   // ② 과제 카드
   const cards = entries.map(homeCard).join('');
 
-  // ③ 전사 KPI
-  const withData = entries.filter(e => e.hasData);
-  const recSum = withData.reduce((a, e) => a + ((e.summary || {}).records || 0), 0);
-  const recurSum = withData.reduce((a, e) => a + ((e.summary || {}).recur || 0), 0);
-  const gates = entries.filter(e => e.gate && e.gate.reviewDate).map(e => ({ id: e.id, abbr: e.abbr, d: e.gate.reviewDate }))
-    .sort((a, b) => a.d < b.d ? -1 : 1);
-  const nextGate = gates.find(g => ddayLabel(g.d).startsWith('D-')) || gates[0];
-  const kpis = `
-    <div class="hkpis">
-      <div class="hkpi"><div class="k">${esc(orgT('kpiProjects', '등록 과제'))}</div><div class="v">${entries.length}<small>건</small></div><div class="sub">${esc(orgT('kpiProjectsSub', '데이터 보유'))} ${withData.length}</div></div>
-      <div class="hkpi"><div class="k">${esc(orgT('kpiRecords', '누적 고장/이슈 레코드'))}</div><div class="v">${fmt(recSum)}<small>건</small></div><div class="sub">${withData.map(e => `${esc(e.abbr)} ${((e.summary || {}).records || 0)}`).join(' · ') || '—'}</div></div>
-      <div class="hkpi"><div class="k">${esc(orgT('kpiRecur', '재발 (전 과제)'))}</div><div class="v"${recurSum ? ' style="color:var(--major)"' : ''}>${recurSum}<small>건</small></div><div class="sub">${esc(orgT('kpiRecurSub', '공통 KPI — 단계 불문'))}</div></div>
-      <div class="hkpi"><div class="k">${esc(orgT('kpiGate', '다음 게이트 리뷰'))}</div><div class="v">${nextGate ? esc(ddayLabel(nextGate.d)) : '—'}</div><div class="sub">${nextGate ? esc(nextGate.abbr + ' · ' + nextGate.d) : '—'}</div></div>
-    </div>`;
-
-  $('s-home').innerHTML = procBox + `
+  $('s-home').innerHTML = hero + procBox + `
     <section class="sbox">
       <div class="sbox-h"><span class="tag">${esc(orgT('cardsTag', '과제 현황'))}</span><h2>${esc(orgT('cardsTitle', '진행 중 과제'))} ${entries.length}${esc(orgT('cardsUnit', '건'))}</h2><span class="d">${esc(orgT('cardsDesc', '카드 클릭 → 과제 페이지'))}</span></div>
       <div class="pcards">${cards}</div>
-      ${kpis}
     </section>`;
 
-  document.querySelectorAll('#s-home .pcard[data-go]').forEach(c =>
-    c.addEventListener('click', () => { location.hash = '#/' + c.dataset.go; }));
+  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go]').forEach(c =>
+    c.addEventListener('click', ev => { ev.stopPropagation(); location.hash = '#/' + c.dataset.go; }));
 }

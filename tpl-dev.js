@@ -79,7 +79,7 @@ function devParetoPanel(withRecur) {
   return `
     <div class="panel">
       <div class="ph"><h3>고장모드 Pareto</h3><span class="ps">건수 순 · 누적 % — 수정개발 우선순위</span></div>
-      <table><tr><th>고장모드</th><th>건수</th><th class="r">누적</th></tr>${tr}</table>
+      <div class="tbl-scroll" style="max-height:300px"><table><tr><th>고장모드</th><th>건수</th><th class="r">누적</th></tr>${tr}</table></div>
     </div>`;
 }
 
@@ -186,20 +186,61 @@ function devFeedPanel() {
     <div class="feed">${items || '<div class="mini">기록 없음</div>'}</div></div>`;
 }
 
-/* [와이드 트랙] 심각도 분포 도넛 — records 기반 */
-function devSevPanel() {
+/* [와이드 트랙] 위험 매트릭스 (S×O) + 심각도 도넛 — 공통 레코드 기반, 전 템플릿 공통.
+   케미컬 pMatrix와 동일 조형: 고장모드별 발생도 밴드(드묾<3 ≤보통<6 ≤빈발) × 최고 심각도. */
+function devMatrixPanel() {
   const recs = DATA.records || [];
+  const SEV_RANK = { Critical: 3, Major: 2, Minor: 1 };
+  const by = {};
+  recs.forEach(r => {
+    const k = r.modeCode || r.mode || '(미분류)';
+    const o = by[k] || (by[k] = { name: r.mode || k, count: 0, sev: 'Minor' });
+    o.count++;
+    if ((SEV_RANK[r.severity] || 0) > (SEV_RANK[o.sev] || 0)) o.sev = r.severity;
+  });
+  const modes = Object.values(by).sort((a, b) => b.count - a.count);
+  const occ = n => n >= 6 ? '빈발' : n >= 3 ? '보통' : '드묾';
+  const mcell = {};
+  modes.forEach((m, i) => { (mcell[m.sev + '|' + occ(m.count)] = mcell[m.sev + '|' + occ(m.count)] || []).push(i + 1); });
+  const mrows = ['Critical', 'Major', 'Minor'], mcols = ['드묾', '보통', '빈발'];
+  const mcls = { High: 'm-h', Medium: 'm-m', Low: 'm-l' };
+  let mx = `<div class="lab"></div>` + mcols.map(c => `<div class="lab">${c}</div>`).join('');
+  mrows.forEach(rk => {
+    mx += `<div class="lab" style="color:${SEV_BAR[rk] || 'var(--muted)'}">${esc(sevLabel(rk))}</div>`;
+    mcols.forEach(ck => {
+      const p = PRIO[rk + '|' + ck], dots = (mcell[rk + '|' + ck] || []).map(n => `<span class="pt">${n}</span>`).join('');
+      mx += `<div class="cell ${mcls[p]}">${dots}</div>`;
+    });
+  });
+  const legend = modes.slice(0, 8).map((m, i) => `<span><b>${i + 1}</b>${esc(m.name)}</span>`).join('');
   const sd = { total: recs.length };
   recs.forEach(r => { if (r.severity) sd[r.severity] = (sd[r.severity] || 0) + 1; });
-  return `<div class="panel tight"><div class="ph"><h3>심각도 분포</h3><span class="ps">전수 ${sd.total}건 · 상위 심각도 미해결 0 = 게이트 항목</span></div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding:8px 0">
-      <div style="position:relative;width:104px;height:104px">${sevDonut(sd)}
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-size:22px;font-weight:800;color:var(--navy-deep)">${sd.total}</b><span style="font-size:9.5px;color:var(--muted)">총 이슈</span></div></div>
-      <div class="legend" style="min-width:120px">
-        <div class="li"><span class="sw" style="background:#C0392B"></span>${esc(sevLabel('Critical'))}<b>${sd.Critical || 0}</b></div>
-        <div class="li"><span class="sw" style="background:#E08600"></span>${esc(sevLabel('Major'))}<b>${sd.Major || 0}</b></div>
-        <div class="li"><span class="sw" style="background:#3F7CC4"></span>${esc(sevLabel('Minor'))}<b>${sd.Minor || 0}</b></div></div>
-    </div></div>`;
+  return `<div class="panel tight ovmx"><div class="ph"><h3>위험 매트릭스 · 심각도</h3><span class="ps">S×O 우선순위 — 발생도 밴드 × 최고 심각도 (공통 레코드)</span></div>
+    <div class="ovmx-row" style="display:flex;gap:12px;align-items:center">
+      <div style="flex:1;min-width:0"><div class="matrix">${mx}</div><div class="legend-row">${legend}</div></div>
+      <div class="ovmx-side" style="flex:none;display:flex;flex-direction:column;align-items:center;gap:9px;border-left:1px solid var(--line-soft);padding-left:14px">
+        <div style="position:relative;flex:none;width:104px;height:104px">${sevDonut(sd)}
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-size:22px;font-weight:800;color:var(--navy-deep)">${sd.total || 0}</b><span style="font-size:9.5px;color:var(--muted)">총 레코드</span></div></div>
+        <div class="legend" style="width:100%">
+          <div class="li"><span class="sw" style="background:#C0392B"></span>${esc(sevLabel('Critical'))}<b>${sd.Critical || 0}</b></div>
+          <div class="li"><span class="sw" style="background:#E08600"></span>${esc(sevLabel('Major'))}<b>${sd.Major || 0}</b></div>
+          <div class="li"><span class="sw" style="background:#3F7CC4"></span>${esc(sevLabel('Minor'))}<b>${sd.Minor || 0}</b></div></div></div></div></div>`;
+}
+
+/* 개발·운영 템플릿 차트 확대 모달 — 케미컬 openChart와 동일 UX */
+function openDevChart(kind) {
+  if (!DATA) return;
+  const REG9 = {
+    trend:  () => ({ t: '수렴 추이 — 누적 발견 vs 종결', h: pocTrendPanel({ wide: true }) }),
+    growth: () => ({ t: 'MCBF 성장곡선', h: pilotGrowthPanel({ bot: 396, vbH: 448 }) }),
+    ram:    () => ({ t: '월간 가동률 추이', h: (typeof opsRamTrendPanel === 'function') ? opsRamTrendPanel() : '' }),
+  };
+  const c = REG9[kind] && REG9[kind]();
+  if (!c || !c.h) return;
+  $('modal-title').textContent = c.t;
+  $('modal-body').innerHTML = `<div style="padding:4px 2px">${c.h}</div>`;
+  const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');
+  $('modal-back').classList.add('open');
 }
 
 /* [하단] 부서 협의 — config ui.overview.discussItems (케미컬과 동일 키·마크업, 재빌드 불필요) */
@@ -342,8 +383,8 @@ function pocTrendPanel(opt) {
   const dots = tr.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.found)}" r="3.5" fill="#2E89D6"><title>${t.week}주차 · 발견 ${t.found} · 종결 ${t.closed} · 오픈 ${t.found - t.closed}</title></circle>`
     + `<circle cx="${x(i)}" cy="${y(t.closed)}" r="3.5" fill="#3E9B6E"><title>${t.week}주차 · 종결 ${t.closed}</title></circle>`).join('');
   const last = tr[n - 1], open = last.found - last.closed;
-  return `<div class="panel${opt.wide ? ' tight ovchart' : ''}">
-    <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건 · 좁혀지는가</span></div>
+  return `<div class="panel${opt.wide ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('trend')" title="클릭하면 크게 보기"` : ''}>
+    <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건 · 좁혀지는가${opt.zoom ? ' ⤢' : ''}</span></div>
     <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 누적 발견 대 누적 종결">
       ${axis}<line x1="${left}" y1="${top}" x2="${left}" y2="${bot}" stroke="#C9DCEC"/>
       <polygon points="${area}" fill="#2E89D6" opacity="0.07"/>
@@ -366,7 +407,7 @@ function pocAbnormalPanel() {
   return `
     <div class="panel">
       <div class="ph"><h3>비정상 상황 평가 (Fault Injection)</h3><span class="ps">의도적 이상 주입 → 복구 거동 검증 · 첫 MTTR 측정 지점</span></div>
-      <table><tr><th>시나리오</th><th class="c">복구시간</th><th class="c">판정</th><th>비고</th></tr>${rows}</table>
+      <div class="tbl-scroll" style="max-height:300px"><table><tr><th>시나리오</th><th class="c">복구시간</th><th class="c">판정</th><th>비고</th></tr>${rows}</table></div>
     </div>`;
 }
 
@@ -453,8 +494,8 @@ function pilotGrowthPanel(opt) {
   const xlab = g.map((w, i) => `<text x="${x(i)}" y="${bot + 20}" font-size="13" fill="#6E7D90" text-anchor="middle">W${w.week}</text>`).join('');
   const last = g[g.length - 1];
   return `
-    <div class="panel${opt.vbH ? ' tight ovchart' : ''}">
-      <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy — 수정개발이 안정화로 이어지는지의 정량 증거</span></div>
+    <div class="panel${opt.vbH ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('growth')" title="클릭하면 크게 보기"` : ''}>
+      <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy — 안정화의 정량 증거${opt.zoom ? ' ⤢' : ''}</span></div>
       <svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 MCBF 성장곡선">
         ${target ? `<line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${left + 4}" y="${y(target) - 6}" font-size="12.5" fill="#B36F0A" font-weight="700">목표 ${fmt(target)}</text>` : ''}
         <line x1="${left}" y1="${bot}" x2="${right}" y2="${bot}" stroke="#C9DCEC"/>
@@ -482,24 +523,19 @@ function pilotRelBox() {
       </div></div></div></div>`;
 }
 
-/* 시정조치 규율 · 형상(버전) — 와이드 트랙용 패널 2개 */
-function pilotDisciplinePanels(C) {
-  const a = DATA.actionRate || {}, rec = DATA.recurrence || {};
+/* 형상(버전) 기록 — 와이드 트랙용. (시정조치 규율 수치는 신뢰성 도넛·폐루프에 이미 표시 — 중복 제거) */
+function pilotVersionPanel() {
   const vers = DATA.versions || [];
   const curVer = vers.length ? vers[vers.length - 1].ver : '—';
+  const a = DATA.actionRate || {};
   return `
-    <div class="panel">
-      <div class="ph"><h3>시정조치 규율</h3><span class="ps">모든 수정 → 검증 런 · 재발 추적</span></div>
-      <div class="stat-big"><b>${a.pct != null ? a.pct : '—'}%</b><span>검증마감 ${a.closed || 0}/${a.total || 0}</span></div>
-      <div class="prog-bar" style="height:10px"><i style="width:${a.pct || 0}%;background:var(--green)"></i></div>
-      <div class="mini mt">재발 <b style="color:${rec.count ? 'var(--major)' : 'var(--green)'}">${rec.count || 0}건</b>${(rec.items || []).length ? ' — ' + rec.items.map(it => `${esc(it.mode)}(${it.count})`).join(', ') + '. 게이트 전 마감 필수.' : ' — 없음'}</div>
-    </div>
     <div class="panel">
       <div class="ph"><h3>형상(버전) 기록</h3><span class="ps">고장 시점 버전 필수 — "구버전 고장" 입증 수단</span></div>
       <table>
         <tr><th style="width:90px">현재 SW</th><td><b>${esc(curVer)}</b></td></tr>
         <tr><th>버전 이력</th><td class="mini">${vers.map(v => `${esc(v.ver)} (${esc(v.date)})`).join(' → ') || '—'}</td></tr>
         <tr><th>동결 규칙</th><td class="mini">동결 후 변경 시 <b>300h 리셋</b> (docs/CRITERIA.md §3)</td></tr>
+        <tr><th>조치 검증마감</th><td class="mini"><b>${a.pct != null ? a.pct : '—'}%</b> (${a.closed || 0}/${a.total || 0}) — 원본은 상세 탭 「조치검증 대장」</td></tr>
       </table>
     </div>`;
 }
@@ -569,12 +605,12 @@ function renderPoc(C) {
     qbox: `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`,
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
-    aChart: pocTrendPanel({ wide: true }),
+    aChart: pocTrendPanel({ wide: true, zoom: true }),
     bTitle: '전수 4분류 → 폐루프 · 연결된 지표',
     bTop: pocFourwayBoard(),
     bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
-    cTitle: '고장 분석 · Pareto · 심각도 · 최근 알람',
-    cPanels: [devParetoPanel(true), devSevPanel(), devFeedPanel()],
+    cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
+    cPanels: [devMatrixPanel(), devParetoPanel(true), devFeedPanel()],
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
@@ -587,12 +623,12 @@ function renderPilot(C) {
     qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
-    aChart: pilotGrowthPanel({ bot: 396, vbH: 448 }),
+    aChart: pilotGrowthPanel({ bot: 396, vbH: 448, zoom: true }),
     bTitle: '신뢰성 입증 → 수렴 규율 · 연결된 지표',
     bTop: pilotRelBox(),
     bCharts: [devParetoPanel(true), fracasLoopPanel({ recurZeroGate: true })],
-    cTitle: '고장 분석 · 규율 · 형상 · 최근 알람',
-    cPanels: [pilotDisciplinePanels(C), devFeedPanel()],
+    cTitle: '고장 분석 · 위험 매트릭스 · 형상 · 최근 알람',
+    cPanels: [devMatrixPanel(), pilotVersionPanel(), devFeedPanel()],
   });
   $('s-steps').innerHTML = pilotSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }

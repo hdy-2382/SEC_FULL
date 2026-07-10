@@ -59,7 +59,7 @@ function spreadUnitPanel() {
   }).join('');
   return `<div class="panel tight">
     <div class="ph"><h3>호기별 퀄 현황</h3><span class="ps">동일 컴포넌트·축약 파라미터 — 호기별 SAT 런 (사전 확정)</span></div>
-    <table><tr><th>호기</th><th class="c">라인</th><th class="c">설치</th><th class="c">SAT</th><th>축약 런</th><th class="c">상태</th><th>비고</th></tr>${rows}</table>
+    <div class="tbl-scroll" style="max-height:420px"><table><tr><th>호기</th><th class="c">라인</th><th class="c">설치</th><th class="c">SAT</th><th>축약 런</th><th class="c">상태</th><th>비고</th></tr>${rows}</table></div>
   </div>`;
 }
 
@@ -100,7 +100,7 @@ function spreadUnitDistPanel() {
     <td style="width:110px"><div class="prog-bar"><i style="width:${Math.round(r.count / max * 100)}%"></i></div><span class="mini">${r.count}</span></td></tr>`).join('');
   return `<div class="panel">
     <div class="ph"><h3>호기별 층화</h3><span class="ps">특정 호기 집중 = 설치·시공/개체 병 · 고른 분포 = 설계·공통 병</span></div>
-    <table><tr><th>호기</th><th>이슈 건수</th></tr>${tr}</table>
+    <div class="tbl-scroll" style="max-height:300px"><table><tr><th>호기</th><th>이슈 건수</th></tr>${tr}</table></div>
   </div>`;
 }
 
@@ -164,7 +164,7 @@ function opsRamHero(C) {
 }
 
 /* [트랙 A 차트] 월간 RAM 추이 — 가동률(단일 축) + 목표선 */
-function opsRamTrendPanel() {
+function opsRamTrendPanel(opt) {
   const ms = (DATA.ram || {}).months || [];
   if (!ms.length) return '';
   const target = (DATA.ram || {}).availTarget || 98;
@@ -183,8 +183,8 @@ function opsRamTrendPanel() {
   const pts = ms.map((m, i) => `${x(i)},${y(m.avail)}`).join(' ');
   const dots = ms.map((m, i) => `<circle cx="${x(i)}" cy="${y(m.avail)}" r="${i === ms.length - 1 ? 5.5 : 4}" fill="#2E89D6"${i === ms.length - 1 ? ' stroke="#fff" stroke-width="1.5"' : ''}><title>${esc(String(m.month))} · 가동률 ${m.avail}% · MTBF ${m.mtbf}h · MTTR ${m.mttr}분</title></circle>`).join('');
   const last = ms[ms.length - 1];
-  return `<div class="panel tight ovchart">
-    <div class="ph"><h3>월간 가동률 추이</h3><span class="ps">상시 RAM — 목표 ${target}% · MTBF/MTTR은 상세 탭</span></div>
+  return `<div class="panel tight ovchart"${opt && opt.zoom ? ` onclick="openDevChart('ram')" title="클릭하면 크게 보기"` : ''}>
+    <div class="ph"><h3>월간 가동률 추이</h3><span class="ps">상시 RAM — 목표 ${target}% · MTBF/MTTR은 상세 탭${opt && opt.zoom ? ' ⤢' : ''}</span></div>
     <svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="월별 가동률 추이">
       ${axis}
       <line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/>
@@ -221,7 +221,7 @@ function opsCipPanel() {
   }).join('');
   return `<div class="panel">
     <div class="ph"><h3>CIP (개선과제)</h3><span class="ps">Pareto 상위 모드 → 개선 → 효과 검증 · 필드 고장모드는 차기 FMEA로 환류</span></div>
-    <table><tr><th>ID</th><th>과제</th><th class="c">대상 모드</th><th class="c">상태</th><th>효과</th></tr>${rows}</table>
+    <div class="tbl-scroll" style="max-height:300px"><table><tr><th>ID</th><th>과제</th><th class="c">대상 모드</th><th class="c">상태</th><th>효과</th></tr>${rows}</table></div>
   </div>`;
 }
 
@@ -291,8 +291,8 @@ function renderSpread(C) {
     bTitle: '원인계층 → 전 함대 리스크 · 연결된 지표',
     bTop: spreadLayerBoard(),
     bCharts: [fracasLoopPanel(), spreadUnitDistPanel()],
-    cTitle: '고장 분석 · Pareto · 심각도 · 최근 알람',
-    cPanels: [devParetoPanel(true), devSevPanel(), devFeedPanel()],
+    cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
+    cPanels: [devMatrixPanel(), devParetoPanel(true), devFeedPanel()],
   });
   $('s-steps').innerHTML = spreadSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
@@ -306,10 +306,10 @@ function renderOpsMode(C) {
     qbox: `이 단계의 질문: <b>“어떤 고장부터 없애는 게 경제적인가?”</b> — 알람은 자동 수집하고 <b>승격 기준을 넘은 건만 필드 FRACAS</b>로 관리. 우선순위는 건수가 아니라 <b>다운타임(비용) Pareto</b>가 정하고, 개선은 CIP로 닫고, 고장모드는 차기 과제 FMEA로 환류한다.`,
     aTitle: '운영 성과 → 월간 RAM · 연결된 지표',
     aHero: opsRamHero(C),
-    aChart: opsRamTrendPanel(),
+    aChart: opsRamTrendPanel({ zoom: true }),
     bTitle: '필드 FRACAS → 비용 우선순위 · 연결된 지표',
     bTop: opsDownParetoBoard(),
-    bCharts: [fracasLoopPanel(), devSevPanel()],
+    bCharts: [fracasLoopPanel(), devMatrixPanel()],
     cTitle: '고장 분석 · Pareto(건수) · CIP · 최근 알람',
     cPanels: [devParetoPanel(true), opsCipPanel(), devFeedPanel()],
   });
