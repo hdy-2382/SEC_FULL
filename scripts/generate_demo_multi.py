@@ -136,6 +136,15 @@ def gen_drum():
         ]},
         "project": {"name": "드럼 자동화 (POC)", "department": "인프라 기술팀", "team": "김OO, 박OO",
                     "startDate": "2026-06-05", "endDate": "2026-07-15"},
+        # 기술 개발(SW 완성도) — 케미컬과 동일 키 (한눈에 보기 하단 트랙)
+        "swModules": [
+            {"name": "비전 인식", "pct": 90, "group": "로봇"},
+            {"name": "체결 시퀀스", "pct": 80, "group": "로봇"},
+            {"name": "그리퍼 제어", "pct": 75, "group": "로봇"},
+            {"name": "PLC I/F", "pct": 60, "group": "상위시스템"},
+            {"name": "로그/리포트", "pct": 55, "group": "상위시스템"},
+            {"name": "안전 인터록", "pct": 100, "group": "환경"},
+        ],
         "lifecycle": [
             {"stage": "P1 타당성·평가항목 정의", "status": "done", "note": "FMEA 초판 · 판정기준서 v1 · 예상 ROI 산출"},
             {"stage": "P2 안전인증 컨셉미팅", "status": "done", "note": "위험원 12건 식별 → 설계 반영 합의 (06-12)"},
@@ -149,7 +158,18 @@ def gen_drum():
             "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
             "common": {"stDone": "완료", "stCurrent": "진행 중", "stTodo": "예정", "noteEmpty": "— 메모"},
             "overview": {"stageTitle": "POC 세부 단계", "stageCurrentPrefix": "현재: ",
-                         "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관"},
+                         "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관",
+                         # 부서 협의(케미컬과 동일 키 — 재빌드 불필요, config만 수정)
+                         "discussItems": [
+                             {"topic": "통신 재접속 로직 변경 후 재시험 일정 (비정상 FAIL 1건)", "tag": "긴급", "group": "안전"},
+                             {"topic": "과부하 정지 복구 시나리오 시험 (7/10)", "tag": "진행", "group": "안전"},
+                             {"topic": "편광 필터 설계 변경 — 고반사 드럼 오인식 (ISS-016)", "tag": "협의", "group": "운영"},
+                             {"topic": "드럼 림 변형품 파지 — 핑거 형상 변경 (ISS-017)", "tag": "검토", "group": "운영"},
+                             {"topic": "Pilot 가동 지표 정의 — 수혜부서 참여 요청", "tag": "협의", "group": "기타"},
+                         ],
+                         # 업무 목표 (사이드바 카드)
+                         "goalsMonth": "72h 무에러 완주 + 비정상 8/8 통과\n게이트 리뷰(7/15) 산출물 준비",
+                         "goalsWeek": "2차 시도 잔여 20h 완주\nISS-013 토크 암 보강 무발생 검증 마감"},
             "modal": {"title": "상세"},
         },
     })
@@ -246,6 +266,14 @@ def gen_sort():
         ]},
         "project": {"name": "분류 자동화 (Pilot)", "department": "인프라 기술팀", "team": "이OO, 김OO",
                     "startDate": "2026-05-25", "endDate": "2026-08-31"},
+        "swModules": [
+            {"name": "파지 제어", "pct": 85, "group": "로봇"},
+            {"name": "주행/오도메트리", "pct": 90, "group": "로봇"},
+            {"name": "분류 로직", "pct": 95, "group": "로봇"},
+            {"name": "컨베이어 I/F", "pct": 70, "group": "상위시스템"},
+            {"name": "관제 연동", "pct": 40, "group": "상위시스템"},
+            {"name": "충전 도킹", "pct": 80, "group": "환경"},
+        ],
         "lifecycle": [
             {"stage": "L1 가동 지표 정의", "status": "done", "note": "MCBF/MTTR/가동률 산식 확정 — 양산시범과 동일 산식"},
             {"stage": "L2 신뢰성 평가/검증 (TAAF)", "status": "current", "note": "반복운전→FRACAS→재운전 · 성장 추적"},
@@ -259,7 +287,16 @@ def gen_sort():
             "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
             "common": {"stDone": "완료", "stCurrent": "진행 중", "stTodo": "예정", "noteEmpty": "— 메모"},
             "overview": {"stageTitle": "Pilot 세부 단계", "stageCurrentPrefix": "현재: ",
-                         "stageSub": "L1→L4 · 게이트 통과 시 양산 시범 평가 이관"},
+                         "stageSub": "L1→L4 · 게이트 통과 시 양산 시범 평가 이관",
+                         "discussItems": [
+                             {"topic": "안전인증 심사 서류 보완 (~7/20)", "tag": "진행", "group": "안전"},
+                             {"topic": "임시 사용 안전 승인 갱신 — 야간 무인 런 포함 여부", "tag": "협의", "group": "안전"},
+                             {"topic": "그리퍼 Rev C 전수 적용 — 만성 재발(파지) 마감", "tag": "긴급", "group": "운영"},
+                             {"topic": "설계 동결(7/25) 전 변경 등급 × 재검증 매트릭스 합의", "tag": "협의", "group": "운영"},
+                             {"topic": "양산 시범 평가 계약 파라미터 초안 (수혜부서)", "tag": "검토", "group": "기타"},
+                         ],
+                         "goalsMonth": "설계 동결(7/25) → 무정지 300h 본 런 착수\n만성 재발(파지 실패) 마감",
+                         "goalsWeek": "그리퍼 Rev C 무발생 검증 완료\n안전인증 심사 서류 제출"},
             "modal": {"title": "상세"},
         },
     })

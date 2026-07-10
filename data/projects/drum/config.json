@@ -71,6 +71,38 @@
     "startDate": "2026-06-05",
     "endDate": "2026-07-15"
   },
+  "swModules": [
+    {
+      "name": "비전 인식",
+      "pct": 90,
+      "group": "로봇"
+    },
+    {
+      "name": "체결 시퀀스",
+      "pct": 80,
+      "group": "로봇"
+    },
+    {
+      "name": "그리퍼 제어",
+      "pct": 75,
+      "group": "로봇"
+    },
+    {
+      "name": "PLC I/F",
+      "pct": 60,
+      "group": "상위시스템"
+    },
+    {
+      "name": "로그/리포트",
+      "pct": 55,
+      "group": "상위시스템"
+    },
+    {
+      "name": "안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
   "lifecycle": [
     {
       "stage": "P1 타당성·평가항목 정의",
@@ -116,7 +148,36 @@
     "overview": {
       "stageTitle": "POC 세부 단계",
       "stageCurrentPrefix": "현재: ",
-      "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관"
+      "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관",
+      "discussItems": [
+        {
+          "topic": "통신 재접속 로직 변경 후 재시험 일정 (비정상 FAIL 1건)",
+          "tag": "긴급",
+          "group": "안전"
+        },
+        {
+          "topic": "과부하 정지 복구 시나리오 시험 (7/10)",
+          "tag": "진행",
+          "group": "안전"
+        },
+        {
+          "topic": "편광 필터 설계 변경 — 고반사 드럼 오인식 (ISS-016)",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "드럼 림 변형품 파지 — 핑거 형상 변경 (ISS-017)",
+          "tag": "검토",
+          "group": "운영"
+        },
+        {
+          "topic": "Pilot 가동 지표 정의 — 수혜부서 참여 요청",
+          "tag": "협의",
+          "group": "기타"
+        }
+      ],
+      "goalsMonth": "72h 무에러 완주 + 비정상 8/8 통과\n게이트 리뷰(7/15) 산출물 준비",
+      "goalsWeek": "2차 시도 잔여 20h 완주\nISS-013 토크 암 보강 무발생 검증 마감"
     },
     "modal": {
       "title": "상세"

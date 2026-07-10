@@ -445,10 +445,11 @@
 /* ── 템플릿① POC 관제 (tpl-dev renderPoc) — 스코프: .pocv ─────────────
    케미컬(한눈에 보기)의 prog-track/pt-h/kg-prog 문법을 재사용하고,
    POC 고유 컴포넌트(4분류 보드·구성 막대·폐루프·대장 칩)만 여기서 정의한다. */
-.pocv .poc-2col{display:grid;grid-template-columns:minmax(420px,1fr) 1fr;gap:18px;margin-bottom:18px}
-.pocv .poc-2col>.prog-track{display:flex;flex-direction:column;row-gap:12px}
-.pocv .poc-2col>.prog-track>.panel:last-child,.pocv .poc-2col>.prog-track>.kgroup:last-child{flex:1 1 auto}
-@media(max-width:1180px){.pocv .poc-2col{grid-template-columns:1fr}}
+/* 개발 템플릿 관제는 케미컬의 .ov-2col/.prog-track 골격을 그대로 사용 — 여기엔 POC/Pilot 고유 렌즈만 정의 */
+/* 종합 클리어 하단 박스: 개발 템플릿에선 placeholder(빗금)가 아니라 실제 내용(TECOP)을 담는다 — 상단 정렬·빗금 제거 */
+.pocv .exec-roi-body{justify-content:flex-start;align-items:flex-start;text-align:left;background:none;border:none;padding:4px 2px 0;min-height:0;font-style:normal}
+/* 게이트 기준 타일(5개)은 케미컬(8개)보다 적음 — 세로로 흩어지지 않게 상단 정렬 */
+.pocv .clr-list{align-content:flex-start;gap:9px}
 /* 무고장 런 히어로: pg-bar 위 리셋 마커 (rgauge .mark와 동일 조형) */
 .pocv .pg-bar-mk{position:relative;overflow:visible}
 .pocv .pg-bar-mk i{border-radius:6px 0 0 6px}

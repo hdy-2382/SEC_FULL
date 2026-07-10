@@ -1,9 +1,13 @@
 /* tpl-dev.js — 템플릿① 개발 (POC 모드 / Pilot 모드).
    진입점 renderDev(stage) — app.js의 renderData()가 stage(poc|pilot)에 따라 호출.
-   화면 구성은 design/mockup_multi.html의 과제 A(POC)·B(Pilot) 페이지를 따른다.
-   에러분석 접근(docs/PROCESS.md §3): POC=전수 4분류(통계 금지) · Pilot=추세(MCBF 성장·Pareto·재발 0). */
 
-/* 게이트 크리테리아 값의 자동 치환: config gate.criteria[].value가 "auto:run|growth|actions"면 빌드 데이터로 채움 */
+   페이지 골격은 케미컬(양산평가, tpl-mass renderOverview)과 동일하게 표준화한다:
+     [종합 클리어(게이트 기준)] [완주 진행 트랙 + 큰 차트] [신뢰성 트랙 + 보조 차트 2]
+     → 고장 분석 와이드(3패널) → 부서 협의 | 기술 개발 → 하위 탭(한눈에 보기 / 평가 상세 내역).
+   골격(배관)은 공통, 각 트랙에 올라가는 렌즈만 단계별(docs/PROCESS.md §3):
+     POC = 전수 4분류·수렴 추이·비정상 평가 / Pilot = MCBF 성장·시정조치 규율·형상. */
+
+/* 게이트 크리테리아 값의 자동 치환: config gate.criteria[].value가 "auto:..."면 빌드 데이터로 채움 */
 function devGateValue(v) {
   const run = DATA.run || {};
   if (v === 'auto:run') return `${fmt(run.cum)}/${fmt(run.target)}h`;
@@ -34,7 +38,7 @@ function devGatePanel(C) {
     </div>`;
 }
 
-/* 무고장 런 게이지 — 공통 컴포넌트 (파라미터만 단계별로 다름) */
+/* 무고장 런 게이지 — 공통 컴포넌트 (파라미터만 단계별로 다름). 상세 탭에서 사용 */
 function devRunPanel(C) {
   const run = DATA.run || {}, rc = C.run || {};
   const pct = Math.max(0, Math.min(100, run.pct || 0));
@@ -74,10 +78,7 @@ function devParetoPanel(withRecur) {
     </div>`;
 }
 
-/* ── POC 전용 (관제형 — 케미컬 tpl-mass의 '한눈에 보기' 구성을 따름) ──
-   프레임: ① 게이트까지의 거리(합의된 종점) ② 전수 4분류(컨셉 리스크 0 입증)
-   ③ 폐루프 FRACAS(조치는 '닫혔다') ④ 수렴 추이(누적 발견 vs 종결) ⑤ 이슈 대장. */
-
+/* ── 공통 유틸 (폐루프 상태·4분류 칩) ── */
 /* 폐루프 상태 버킷 (빌드 _status_bucket과 동일 규칙) */
 function pocStBucket(st) {
   st = st || '';
@@ -102,9 +103,28 @@ function c4Chip(c) {
   return k ? `<span class="c4 c4-${k}">${esc(c)}</span>` : esc(c || '—');
 }
 
-/* 무고장 런 히어로 (kg-prog 스타일) + 비정상 시나리오·게이트 리뷰 D-day 보조 스탯 */
-function pocRunHero(C) {
-  const run = DATA.run || {}, rc = C.run || {}, g = C.gate || {};
+/* ══════════ 공유 셸 (케미컬 renderOverview 문법) ══════════ */
+
+/* [트랙 0] 종합 클리어 — 게이트 통과 기준을 상태 타일로 (케미컬 tk-exec 형태) */
+function devClearTrack(C) {
+  const g = C.gate || {};
+  const ST = { pass: ['go', 100, '✓'], prog: ['warn', 55, '…'], fail: ['bad', 25, '!'], wait: ['todo', 10, '—'] };
+  const tiles = (g.criteria || []).map(c => {
+    const m = ST[c.status] || ST.prog;
+    return `<div class="clr-tile clr-${m[0]}"><div class="clr-top"><span class="clr-label">${esc((c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''))}<em>${esc(devGateValue(c.value || ''))}</em></span><span class="clr-num">${m[1] === 100 ? '✓' : m[2]}</span></div><div class="clr-gauge"><i style="width:${m[1]}%"></i></div></div>`;
+  }).join('');
+  const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
+  return `<div class="prog-track tk-exec"><div class="pt-h">종합 클리어 — 게이트 기준</div>
+    <div class="clr-list">${tiles}</div>
+    <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')} <b>${esc(dday || '—')}</b></div>
+      <div class="exec-roi-body" style="flex-direction:column;gap:9px">
+        <span class="mini">${esc(g.reviewDate || '—')} · 사전 확정 잣대 — 사후 변경 금지<br>고정 안건 TECOP</span>${tecopRow(C.tecop)}</div></div>
+  </div>`;
+}
+
+/* [트랙 A 상단] 무고장 런 히어로 (kg-prog) — 보조 스탯 2칸은 단계별 주입 */
+function devRunHero(C, stats) {
+  const run = DATA.run || {}, rc = C.run || {};
   const pct = Math.max(0, Math.min(100, run.pct || 0));
   const remain = Math.max(0, (run.target || 0) - (run.cum || 0));
   const resets = run.resets || [];
@@ -116,12 +136,8 @@ function pocRunHero(C) {
     const mpos = Math.min(97, attemptLen / (run.target || 1) * 100);
     mark = `<span class="pg-mark" style="left:${mpos}%" title="직전 시도: ${attemptLen}h 시점 리셋 (${esc(last.date || '')}) ${esc(last.note || '')}">↺</span>`;
   }
-  const abn = DATA.abnormal || [];
-  const abnPass = abn.filter(a => (a.verdict || '').includes('PASS')).length;
-  const abnFail = abn.filter(a => (a.verdict || '').includes('FAIL')).length;
-  const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>무고장 런 — ${esc(rc.criterion || '무에러')} ${fmt(run.target)}${esc(rc.unit || 'h')}</span><span class="pg-subh-note">환경 ${esc(rc.env || '—')} · 리셋 규칙 사전 확정</span></div>
+    <div class="pg-subh"><span>무고장 런 — ${esc(rc.criterion || '')}</span><span class="pg-subh-note">목표 ${fmt(run.target)}${esc(rc.unit || 'h')} · ${esc(rc.env || '—')}</span></div>
     <div class="pg-hero">
       <div class="pg-hero-main">
         <div class="pg-num"><b>${fmt(run.cum)}</b><span>/ ${fmt(run.target)}${esc(rc.unit || 'h')}${run.attempt > 1 ? ` · ${run.attempt}차 시도` : ''}</span></div>
@@ -130,14 +146,116 @@ function pocRunHero(C) {
       </div>
       <div class="pg-donut"><svg viewBox="0 0 42 42"><circle class="trk" cx="21" cy="21" r="15.9"/><circle class="arc" cx="21" cy="21" r="15.9" stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="25"/></svg><div class="pg-donut-ctr"><b>${Math.round(pct)}%</b></div></div>
     </div>
-    <div class="pg-stats">
-      <div class="pg-stat"><span class="pg-stat-k">비정상 시나리오 (Fault Injection)</span><span class="pg-stat-v">${abnPass}<small>/${abn.length} PASS</small></span>
-        <div class="pg-mini"><i style="width:${abn.length ? Math.round(abnPass / abn.length * 100) : 0}%;background:var(--sky)"></i></div>
-        <span class="pg-stat-s">${abnFail ? `FAIL ${abnFail}건 — 개선 후 재시험` : '미통과 없음 · 잔여는 일정 확정'}</span></div>
-      <div class="pg-stat"><span class="pg-stat-k">${esc(g.label || '게이트 리뷰')}</span><span class="pg-stat-v">${esc(dday || '—')}</span>
-        <span class="pg-stat-s">${esc(g.reviewDate || '—')} · 리셋은 실패가 아니라 <b>잣대가 지켜진다는 증거</b></span></div>
+    <div class="pg-stats">${stats.join('')}</div></div>`;
+}
+
+/* 보조 스탯 칸 3종 — POC: 비정상 / Pilot: 시정조치 검증마감 / 공통: 게이트 리뷰 D-day */
+function devStatAbnormal() {
+  const abn = DATA.abnormal || [];
+  const pass = abn.filter(a => (a.verdict || '').includes('PASS')).length;
+  const fail = abn.filter(a => (a.verdict || '').includes('FAIL')).length;
+  return `<div class="pg-stat"><span class="pg-stat-k">비정상 시나리오 (Fault Injection)</span><span class="pg-stat-v">${pass}<small>/${abn.length} PASS</small></span>
+    <div class="pg-mini"><i style="width:${abn.length ? Math.round(pass / abn.length * 100) : 0}%;background:var(--sky)"></i></div>
+    <span class="pg-stat-s">${fail ? `FAIL ${fail}건 — 개선 후 재시험` : '미통과 없음 · 잔여는 일정 확정'}</span></div>`;
+}
+function devStatActions() {
+  const a = DATA.actionRate || {};
+  return `<div class="pg-stat"><span class="pg-stat-k">시정조치 검증마감</span><span class="pg-stat-v">${a.pct != null ? a.pct : '—'}<small>% (${a.closed || 0}/${a.total || 0})</small></span>
+    <div class="pg-mini"><i style="width:${a.pct || 0}%;background:var(--green)"></i></div>
+    <span class="pg-stat-s">모든 수정 → 검증 런 · 무발생 확인 후 종결</span></div>`;
+}
+function devStatGate(C) {
+  const g = C.gate || {};
+  const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
+  return `<div class="pg-stat"><span class="pg-stat-k">${esc(g.label || '게이트 리뷰')}</span><span class="pg-stat-v">${esc(dday || '—')}</span>
+    <span class="pg-stat-s">${esc(g.reviewDate || '—')} · 리셋은 실패가 아니라 <b>잣대가 지켜진다는 증거</b></span></div>`;
+}
+
+/* [와이드 트랙] 최근 이슈/이벤트 피드 — 공통 레코드 스토어(records) 기반, 전 단계 동일 */
+function devFeedPanel() {
+  const recs = (DATA.records || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 8);
+  const items = recs.map(r => `<div class="it"><span class="badge ${SEV_BADGE[r.severity] || 'b-minor'}">${esc(r.id)}</span>
+    <div class="tp"><div class="t1">${esc(r.mode)}${r.recurLink ? ` <span class="rlink" title="재발 ↺ ${esc(r.recurLink)}">↺</span>` : ''}</div><div class="t2">${esc(r.detail || '')}</div></div>
+    <span class="dt">${esc(r.date || '')}<br>${esc(r.status || '')}</span></div>`).join('');
+  return `<div class="panel tight"><div class="ph"><h3>최근 이슈 / 이벤트</h3><span class="ps">공통 레코드 · 최신순</span><a class="more" href="#/${esc(CUR_PID || '')}/all">전체 대장 →</a></div>
+    <div class="feed">${items || '<div class="mini">기록 없음</div>'}</div></div>`;
+}
+
+/* [와이드 트랙] 심각도 분포 도넛 — records 기반 */
+function devSevPanel() {
+  const recs = DATA.records || [];
+  const sd = { total: recs.length };
+  recs.forEach(r => { if (r.severity) sd[r.severity] = (sd[r.severity] || 0) + 1; });
+  return `<div class="panel tight"><div class="ph"><h3>심각도 분포</h3><span class="ps">전수 ${sd.total}건 · 상위 심각도 미해결 0 = 게이트 항목</span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding:8px 0">
+      <div style="position:relative;width:104px;height:104px">${sevDonut(sd)}
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-size:22px;font-weight:800;color:var(--navy-deep)">${sd.total}</b><span style="font-size:9.5px;color:var(--muted)">총 이슈</span></div></div>
+      <div class="legend" style="min-width:120px">
+        <div class="li"><span class="sw" style="background:#C0392B"></span>${esc(sevLabel('Critical'))}<b>${sd.Critical || 0}</b></div>
+        <div class="li"><span class="sw" style="background:#E08600"></span>${esc(sevLabel('Major'))}<b>${sd.Major || 0}</b></div>
+        <div class="li"><span class="sw" style="background:#3F7CC4"></span>${esc(sevLabel('Minor'))}<b>${sd.Minor || 0}</b></div></div>
     </div></div>`;
 }
+
+/* [하단] 부서 협의 — config ui.overview.discussItems (케미컬과 동일 키·마크업, 재빌드 불필요) */
+function devDiscussPanel() {
+  const DTAG = { '긴급': 't-urgent', '검토': 't-review', '협의': 't-discuss', '진행': 't-review', '완료': 't-done', '보류': 't-hold' };
+  const arr = Array.isArray(T('overview.discussItems')) ? T('overview.discussItems') : [];
+  const groups = Array.isArray(T('overview.discGroups')) ? T('overview.discGroups') : ['안전', '운영', '기타'];
+  const item = it => `<li class="ovd-it">${it.tag ? `<span class="disc-tag ${DTAG[it.tag] || 't-discuss'}">${esc(it.tag)}</span>` : ''}<span class="ovd-t">${esc(it.topic || it.title || '')}</span></li>`;
+  const cols = groups.map(gr => {
+    const items = arr.filter(it => (it.group || groups[groups.length - 1]) === gr);
+    return `<div class="sw-col"><div class="sw-col-h">${esc(gr)}<span>${items.length}</span></div><ul class="ov-disc sw-col-body">${items.map(item).join('') || '<li class="ovd-empty">—</li>'}</ul></div>`;
+  }).join('');
+  return `<div class="panel tight"><div class="ph"><h3>${esc(T('overview.discussTitle', '협의 및 논의 필요'))}</h3><span class="ps" style="margin-left:auto">${arr.length}건</span></div><div class="sw-cols">${cols}</div></div>`;
+}
+
+/* [하단] 기술 개발 — config swModules (케미컬과 동일 키·마크업) */
+function devSwPanel(C) {
+  const groups = Array.isArray(T('overview.swGroups')) ? T('overview.swGroups') : ['로봇', '상위시스템', '환경'];
+  const bar = s => {
+    const col = s.pct >= 100 ? 'var(--green)' : s.pct >= 70 ? 'var(--sky)' : 'var(--major)';
+    return `<div class="mod"><span class="nm">${esc(s.name)}</span><div class="bar"><i style="width:${s.pct}%;background:${col}"></i></div><span class="pc">${s.pct}%</span></div>`;
+  };
+  const cols = groups.map(gr => {
+    const items = (C.swModules || []).filter(s => (s.group || groups[0]) === gr);
+    return `<div class="sw-col"><div class="sw-col-h">${esc(gr)}<span>${items.length}</span></div><div class="sw-col-body">${items.map(bar).join('') || '<div class="mini">—</div>'}</div></div>`;
+  }).join('');
+  return `<div class="panel tight"><div class="ph"><h3>${esc(T('overview.swTitle', '소프트웨어 완성도'))}</h3><span class="ps">${esc(T('overview.swSub', '모듈별 진행 — 담당 협의 기준'))}</span></div><div class="sw-cols">${cols}</div></div>`;
+}
+
+/* 페이지 타이틀 줄 */
+function devHead(stage, C) {
+  const prj = C.project || {}, g = C.gate || {};
+  const isPoc = stage === 'poc';
+  return `
+    <div class="ptitle">
+      <span class="stagechip ${STAGE_CHIP[stage]}">${esc(STAGE_LABEL[stage])}</span>
+      <span class="tmpl">템플릿 ① 개발 — ${isPoc ? 'POC' : 'Pilot'} 모드</span>
+      <span class="meta">PM <b>${esc((prj.team || '').split(',')[0] || '—')}</b> · 기간 <b>${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</b> · ${esc(g.label || '게이트 리뷰')} <b>${esc(g.reviewDate || '—')} ${esc(typeof ddayLabel === 'function' ? ddayLabel(g.reviewDate) : '')}</b></span>
+    </div>`;
+}
+
+/* 공유 셸 — 케미컬과 동일한 트랙 골격. slots(렌즈)만 단계별 주입 */
+function devShell(stage, C, s) {
+  return `
+    ${devHead(stage, C)}
+    <div class="pocv">
+      <div class="qbox">${s.qbox}</div>
+      <div class="ov-2col">
+        ${devClearTrack(C)}
+        <div class="prog-track tk-a"><div class="pt-h">${s.aTitle}</div>${s.aHero}${s.aChart}</div>
+        <div class="prog-track tk-b"><div class="pt-h">${s.bTitle}</div>${s.bTop}<div class="rel-charts">${s.bCharts.join('')}</div></div>
+      </div>
+      <div class="prog-track track-wide tk-c"><div class="pt-h">${s.cTitle}</div><div class="fault-grid">${s.cPanels.join('')}</div></div>
+      <div class="dev-2col">
+        <div class="prog-track tk-d"><div class="pt-h">부서 협의 및 기타사항</div>${devDiscussPanel()}</div>
+        <div class="prog-track tk-dev"><div class="pt-h">기술 개발</div>${devSwPanel(C)}</div>
+      </div>
+    </div>`;
+}
+
+/* ══════════ POC 렌즈 ══════════ */
 
 /* 전수 4분류 보드 — 컨셉 리스크 0이 히어로. "건수가 아니라 분류가 결론" */
 function pocFourwayBoard() {
@@ -164,12 +282,12 @@ function pocFourwayBoard() {
       ${tile(by.design, 'design')}${tile(by.impl, 'sw')}${tile(by.env, 'env')}
     </div>
     <div class="compo"><div class="sg sg-zero">컨셉 ${con.count}</div>${segs}</div>
-    <div class="mini mt">"에러가 많이 났다"가 아니라 <b>"아키텍처를 죽이는 에러는 없었다"</b>로 읽는다 — 랩에서 찾은 에러는 싸고, 라인에서 찾은 에러는 비싸다. 정직한 분류가 이 보고의 신뢰도를 결정.</div>
+    <div class="mini mt">"에러가 많이 났다"가 아니라 <b>"아키텍처를 죽이는 에러는 없었다"</b>로 읽는다 — 랩에서 찾은 에러는 싸고, 라인에서 찾은 에러는 비싸다.</div>
   </div>`;
 }
 
 /* 폐루프 FRACAS — 신규→조치중→검증중(무발생 감시)→종결 + 재발 시그널.
-   POC·Pilot 공용 컴포넌트 (배관은 전 단계 하나, 렌즈만 단계별 — 공통 레코드 스토어 DATA.records 기반) */
+   POC·Pilot 공용 컴포넌트 (배관은 전 단계 하나 — 공통 레코드 스토어 DATA.records 기반) */
 function fracasLoopPanel(opts) {
   opts = opts || {};
   const sd = DATA.statusDist || {}, rec = DATA.recurrence || {};
@@ -181,7 +299,7 @@ function fracasLoopPanel(opts) {
     ? `↺ 재발(만성) 모드 <b>${rec.count || 0}개</b> — 게이트 전 마감 필수(재발 0)${recItems ? ` · ${recItems}` : ''}`
     : `↺ 재발 모드 <b>${rec.count || 0}개</b> — 동일 고장모드 재출현 = 근본원인 미해결 신호 → 재분석 의무${recItems ? ` · ${recItems}` : ''}`;
   return `<div class="panel looppanel${opts.mt ? ' mt' : ''}">
-    <div class="ph"><h3>폐루프 FRACAS — 조치는 "했다"가 아니라 "닫혔다"</h3><span class="ps">종결 조건 = 조치 후 동일 모드 무발생 (docs/CRITERIA.md §5) · 전 단계 공통 배관</span></div>
+    <div class="ph"><h3>폐루프 FRACAS — 조치는 "했다"가 아니라 "닫혔다"</h3><span class="ps">종결 = 조치 후 동일 모드 무발생 (CRITERIA §5) · 전 단계 공통 배관</span></div>
     <div class="loopline">
       ${box('new', '신규', '대장 등록')}<span class="lar">→</span>
       ${box('acting', '조치중', '원인 가설·조치')}<span class="lar">→</span>
@@ -193,11 +311,14 @@ function fracasLoopPanel(opts) {
   </div>`;
 }
 
-/* 수렴 추이 — 누적 발견 vs 누적 종결. 두 선의 간격(오픈)이 좁혀지는 것이 '수렴하고 있다'의 그림 */
-function pocTrendPanel() {
+/* 수렴 추이 — 누적 발견 vs 누적 종결. opt.wide면 트랙 A용 대형 차트 */
+function pocTrendPanel(opt) {
+  opt = opt || {};
   const tr = DATA.trend || [];
   if (!tr.length) return '';
-  const top = 18, bot = 158, left = 40, right = 388, vbH = 196;
+  const W = opt.wide ? 1000 : 420;
+  const top = 20, bot = opt.wide ? 396 : 158, left = opt.wide ? 54 : 40, right = opt.wide ? 962 : 388;
+  const vbH = opt.wide ? 448 : 196;
   const yMax = niceCeil(Math.max(...tr.map(t => t.found), 1));
   const n = tr.length;
   const x = i => n === 1 ? (left + right) / 2 : left + (right - left) * i / (n - 1);
@@ -209,22 +330,22 @@ function pocTrendPanel() {
     axis += `<line x1="${left}" y1="${yy}" x2="${right}" y2="${yy}" stroke="${k === ticks ? '#C9DCEC' : '#EAF0F6'}"/>`;
     axis += `<text x="${left - 6}" y="${yy + 4}" font-size="11" fill="#8A99AC" text-anchor="end">${Math.round(v)}</text>`;
   }
-  const xaxis = tr.map((t, i) => `<text x="${x(i)}" y="${bot + 17}" font-size="11.5" fill="#5A6B7E" text-anchor="middle">${t.week}주차</text>`).join('');
+  const xaxis = tr.map((t, i) => `<text x="${x(i)}" y="${bot + 18}" font-size="11.5" fill="#5A6B7E" text-anchor="middle">${t.week}주차</text>`).join('');
   const pf = tr.map((t, i) => `${x(i)},${y(t.found)}`).join(' ');
   const pc = tr.map((t, i) => `${x(i)},${y(t.closed)}`).join(' ');
   const area = pf + ' ' + tr.slice().reverse().map((t, i) => `${x(n - 1 - i)},${y(t.closed)}`).join(' ');
-  const dots = tr.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.found)}" r="3" fill="#2E89D6"><title>${t.week}주차 · 발견 ${t.found} · 종결 ${t.closed} · 오픈 ${t.found - t.closed}</title></circle>`
-    + `<circle cx="${x(i)}" cy="${y(t.closed)}" r="3" fill="#3E9B6E"><title>${t.week}주차 · 종결 ${t.closed}</title></circle>`).join('');
+  const dots = tr.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.found)}" r="3.5" fill="#2E89D6"><title>${t.week}주차 · 발견 ${t.found} · 종결 ${t.closed} · 오픈 ${t.found - t.closed}</title></circle>`
+    + `<circle cx="${x(i)}" cy="${y(t.closed)}" r="3.5" fill="#3E9B6E"><title>${t.week}주차 · 종결 ${t.closed}</title></circle>`).join('');
   const last = tr[n - 1], open = last.found - last.closed;
-  return `<div class="panel">
+  return `<div class="panel${opt.wide ? ' tight ovchart' : ''}">
     <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건 · 좁혀지는가</span></div>
-    <svg viewBox="0 0 420 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 누적 발견 대 누적 종결">
+    <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 누적 발견 대 누적 종결">
       ${axis}<line x1="${left}" y1="${top}" x2="${left}" y2="${bot}" stroke="#C9DCEC"/>
       <polygon points="${area}" fill="#2E89D6" opacity="0.07"/>
       <polyline fill="none" stroke="#2E89D6" stroke-width="2.2" points="${pf}"/>
       <polyline fill="none" stroke="#3E9B6E" stroke-width="2.2" points="${pc}"/>${dots}
-      <text x="${x(n - 1) + 7}" y="${y(last.found) + 4}" font-size="12" font-weight="800" fill="#0F2E54">${last.found}</text>
-      <text x="${x(n - 1) + 7}" y="${y(last.closed) + 4}" font-size="12" font-weight="800" fill="#2f7a52">${last.closed}</text>
+      <text x="${x(n - 1) + 8}" y="${y(last.found) + 4}" font-size="12.5" font-weight="800" fill="#0F2E54">${last.found}</text>
+      <text x="${x(n - 1) + 8}" y="${y(last.closed) + 4}" font-size="12.5" font-weight="800" fill="#2f7a52">${last.closed}</text>
       ${xaxis}</svg>
     <div class="clegend"><span><i style="background:#2E89D6"></i>누적 발견</span><span><i style="background:#3E9B6E"></i>누적 종결</span><span class="mini">간격 = 오픈 이슈</span></div>
   </div>`;
@@ -259,16 +380,6 @@ function pocLedgerRows(list, full) {
   }).join('');
 }
 
-function pocLedgerPanel() {
-  const all = (DATA.issues || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-  const recent = all.slice(0, 7);
-  return `<div class="panel">
-    <div class="ph"><h3>이슈 대장 (FRACAS-lite · 필수 5필드)</h3><span class="ps">최근 ${recent.length}건 — 원인을 모르는 건도 상태로 존재한다</span>
-      <a class="more" href="#/${esc(CUR_PID || '')}/all">전체 ${all.length}건 → 평가 상세 내역</a></div>
-    <table><tr><th>ID</th><th class="c">발생</th><th>고장모드 (표준분류)</th><th class="c">4분류</th><th class="c">심각도</th><th class="c">재발</th><th class="c">상태</th><th class="c">상세</th></tr>${pocLedgerRows(recent, false)}</table>
-  </div>`;
-}
-
 /* 이슈 상세 모달 (POC 대장 전용 — DATA.issues 기반) */
 function openIssueModal(i) {
   const e = (DATA.issues || [])[i]; if (!e) return;
@@ -285,7 +396,7 @@ function openIssueModal(i) {
   $('modal-back').classList.add('open');
 }
 
-/* 상세 탭 (s-steps) — 원본 기록 전체: 이슈 대장 전수 · 런 기록 · 비정상 평가 */
+/* POC 상세 탭 (s-steps) — 원본 기록 전체: 대장 전수 · 런 기록 · 비정상 · 게이트/단계 */
 function pocSteps(C) {
   const all = (DATA.issues || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const runrows = (DATA.runlog || []).map(r =>
@@ -312,14 +423,21 @@ function pocSteps(C) {
       ${stepHead(3, '비정상 상황 평가', '의도적 이상 주입(Fault Injection) → 복구 거동 검증 — 게이트 필수 항목', devGateValue('auto:abnormal'), 'prog')}
       <div class="step-body">${pocAbnormalPanel()}</div>
     </section>
+    <section class="step" id="d4">
+      ${stepHead(4, '단계 진행 · 게이트 통과 기준', '사전 확정된 잣대 — 데이터 이후 변경·재해석 금지 (docs/CRITERIA.md)', `리뷰 ${(C.gate || {}).reviewDate || '—'}`, 'prog')}
+      <div class="step-body">${lifecycleStagePanel(C)}${devGatePanel(C)}</div>
+    </section>
   </div>`;
 }
 
-/* ── Pilot 전용 ── */
-function pilotGrowthPanel() {
+/* ══════════ Pilot 렌즈 ══════════ */
+
+/* MCBF 성장곡선 — opt로 트랙 A용 대형 사이즈 */
+function pilotGrowthPanel(opt) {
+  opt = opt || {};
   const g = DATA.growth || [], target = DATA.growthTarget || 0;
   if (!g.length) return '';
-  const top = 26, bot = 196, left = 64, right = 950, vbH = 236;
+  const top = 26, bot = opt.bot || 196, left = 64, right = 950, vbH = opt.vbH || 236;
   const yMax = niceCeil(Math.max(target, ...g.map(w => w.mcbf)) * 1.05);
   const y = v => bot - v / yMax * (bot - top);
   const x = i => g.length === 1 ? (left + right) / 2 : left + (right - left) * i / (g.length - 1);
@@ -329,7 +447,7 @@ function pilotGrowthPanel() {
   const xlab = g.map((w, i) => `<text x="${x(i)}" y="${bot + 20}" font-size="13" fill="#6E7D90" text-anchor="middle">W${w.week}</text>`).join('');
   const last = g[g.length - 1];
   return `
-    <div class="panel">
+    <div class="panel${opt.vbH ? ' tight ovchart' : ''}">
       <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy — 수정개발이 안정화로 이어지는지의 정량 증거</span></div>
       <svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 MCBF 성장곡선">
         ${target ? `<line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${left + 4}" y="${y(target) - 6}" font-size="12.5" fill="#B36F0A" font-weight="700">목표 ${fmt(target)}</text>` : ''}
@@ -342,6 +460,23 @@ function pilotGrowthPanel() {
     </div>`;
 }
 
+/* 신뢰성 입증 도넛 3종 — 성장·규율·재발 (케미컬 rel-box 형태) */
+function pilotRelBox() {
+  const g = DATA.growth || [], t = DATA.growthTarget || 0;
+  const cur = g.length ? g[g.length - 1].mcbf : 0;
+  const mp = t ? Math.min(100, Math.round(cur / t * 100)) : 0;
+  const a = DATA.actionRate || {}, rec = DATA.recurrence || {};
+  const cell = (donut, cls, label) => `<div class="rel-cell">${donut}<span class="pf ${cls}">${label}</span></div>`;
+  return `<div class="kgroup rel-box"><div class="rel-groups">
+    <div class="rel-grp"><div class="rel-grp-h">게이트 3잣대 — 성장 · 규율 · 재발</div>
+      <div class="rel-donuts g3">
+        ${cell(miniDonut(mp, mp >= 100 ? 'var(--green)' : 'var(--sky)', fmt(cur), 'MCBF 성장', `목표 ${fmt(t)}Cy`, 90), mp >= 100 ? 'pf-go' : 'pf-prog', mp >= 100 ? '충족' : '진행')}
+        ${cell(miniDonut(a.pct || 0, (a.pct || 0) >= 100 ? 'var(--green)' : 'var(--sky)', (a.pct != null ? a.pct : '—') + '%', '시정조치 검증마감', `${a.closed || 0}/${a.total || 0}`, 90), (a.pct || 0) >= 100 ? 'pf-go' : 'pf-prog', (a.pct || 0) >= 100 ? '충족' : '진행')}
+        ${cell(miniDonut(rec.count ? 33 : 100, rec.count ? 'var(--crit)' : 'var(--green)', (rec.count || 0) + '건', '재발(만성)', rec.count ? '게이트 전 마감 필수' : '없음', 90), rec.count ? 'pf-bad' : 'pf-go', rec.count ? '미달' : '충족')}
+      </div></div></div></div>`;
+}
+
+/* 시정조치 규율 · 형상(버전) — 와이드 트랙용 패널 2개 */
 function pilotDisciplinePanels(C) {
   const a = DATA.actionRate || {}, rec = DATA.recurrence || {};
   const vers = DATA.versions || [];
@@ -363,6 +498,7 @@ function pilotDisciplinePanels(C) {
     </div>`;
 }
 
+/* 고장 레코드 대장 — 공통 레코드 스토어(records)와 조인: 원인분류·재발·상태 */
 function pilotRecordsPanel() {
   const recs = DATA.records || [];
   const rows = (DATA.errors || []).map((e, i) => {
@@ -379,62 +515,85 @@ function pilotRecordsPanel() {
   return `
     <div class="panel">
       <div class="ph"><h3>고장 레코드 (공통 스키마)</h3><span class="ps">POC와 같은 대장이 이어진다 — Pilot부터 버전·무발생검증 <b>필수</b>, 원인분류는 4분류의 세분화 (docs/RECORD_SCHEMA.md)</span></div>
-      <div class="tbl-scroll"><table><tr><th>코드</th><th>고장모드</th><th class="c">원인분류</th><th>근본원인</th><th class="c">SW버전</th><th class="c">재발</th><th class="c">상태</th><th class="c">발생일</th><th class="c">상세</th></tr>${rows}</table></div>
+      <div class="tbl-scroll" style="max-height:460px"><table><tr><th>코드</th><th>고장모드</th><th class="c">원인분류</th><th>근본원인</th><th class="c">SW버전</th><th class="c">재발</th><th class="c">상태</th><th class="c">발생일</th><th class="c">상세</th></tr>${rows}</table></div>
     </div>`;
 }
 
-/* ── 진입점 ── */
-function devHead(stage, C) {
-  const prj = C.project || {}, g = C.gate || {};
-  const isPoc = stage === 'poc';
-  return `
-    <div class="ptitle">
-      <span class="stagechip ${STAGE_CHIP[stage]}">${esc(STAGE_LABEL[stage])}</span>
-      <span class="tmpl">템플릿 ① 개발 — ${isPoc ? 'POC' : 'Pilot'} 모드</span>
-      <span class="meta">PM <b>${esc((prj.team || '').split(',')[0] || '—')}</b> · 기간 <b>${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</b> · ${esc(g.label || '게이트 리뷰')} <b>${esc(g.reviewDate || '—')} ${esc(typeof ddayLabel === 'function' ? ddayLabel(g.reviewDate) : '')}</b></span>
-    </div>`;
-}
-
-/* POC 관제 — 케미컬(한눈에 보기)형 트랙 구성. 상세 기록은 pocSteps()가 '평가 상세 내역' 탭에 렌더 */
-function renderPoc(C) {
-  const qbox = `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`;
-  $('s-overview').innerHTML = `
-    ${devHead('poc', C)}
-    <div class="pocv">
-      <div class="qbox">${qbox}</div>
-      <div class="poc-2col">
-        <div class="prog-track tk-a"><div class="pt-h">게이트까지의 거리 — 사전에 합의된 종점</div>${pocRunHero(C)}${devGatePanel(C)}</div>
-        <div class="prog-track tk-b"><div class="pt-h">전수 4분류 — 컨셉 리스크 0 입증</div>${pocFourwayBoard()}${fracasLoopPanel()}</div>
+/* Pilot 상세 탭 (s-steps) — 레코드 전수 · 런/일일평가 · 시정조치 검증 · 게이트/단계 */
+function pilotSteps(C) {
+  const daily = (DATA.daily || []).map(d =>
+    `<tr><td>${esc((d.date || '').slice(5))}</td><td class="c">${fmt(d.total)}</td><td class="c">${d.errors ? `<b style="color:var(--crit)">${d.errors}</b>` : 0}</td><td class="c">${fmt(d.hours)}</td><td class="mini">${esc(d.notes || '')}</td></tr>`).join('');
+  const acts = (DATA.actions || []).map(a =>
+    `<tr><td><b>${esc(a.id || '')}</b></td><td class="c">${esc(a.code || '')}</td><td>${esc(a.action || '')}</td><td class="c">${esc(a.owner || '')}</td><td class="c">${esc(a.due || '')}</td>
+     <td class="c"><span class="badge ${RES_BADGE[a.status] || (String(a.status || '').includes('완료') ? 'b-ok' : 'b-prog')}">${esc(a.status || '—')}</span></td><td class="c">${esc(a.verifyStart || a.verifyStartDate || '—')}</td></tr>`).join('');
+  return `<div class="pocv">
+    <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">업체 일일평가·에러로그 + 관리 시트(조치검증) — Pilot부터 버전 필수</span></div>
+    <section class="step" id="d1">
+      ${stepHead(1, '고장 레코드 (전수)', '"우리는 수렴하고 있는가" — 모든 기록에 버전, 모든 수정에 검증 런', `${(DATA.errors || []).length}건`, 'prog')}
+      <div class="step-body">${pilotRecordsPanel()}
+        <div class="mini mt">재발(↺) = 동일 고장모드 재출현 (docs/CRITERIA.md §5) · 원인분류는 POC 4분류의 세분화 축 — 단계를 넘어 통계가 이어진다</div></div>
+    </section>
+    <section class="step" id="d2">
+      ${stepHead(2, '무정지 런 · 일일평가 기록', '에러 발생일 = 리셋 — 부분 인정 없음 · 런 시간은 장비 가동 시간 기준', `${(DATA.daily || []).length}일`, 'prog')}
+      <div class="step-body">
+        ${devRunPanel(C)}
+        <div class="panel mt"><div class="ph"><h3>일일평가 기록</h3><span class="ps">사이클·에러·가동시간 — 무정지 런과 MCBF의 원천 데이터</span></div>
+        <div class="tbl-scroll" style="max-height:380px"><table><tr><th>일자</th><th class="c">사이클</th><th class="c">에러</th><th class="c">가동(h)</th><th>비고</th></tr>${daily}</table></div></div>
       </div>
-      <div class="prog-track track-wide tk-c"><div class="pt-h">수렴의 증거 — 추이 · Pareto · 비정상 평가</div>
-        <div class="fault-grid">${pocTrendPanel()}${devParetoPanel(true)}${pocAbnormalPanel()}</div></div>
-      <div class="prog-track track-wide tk-d"><div class="pt-h">이슈 대장 — 사건이 아니라 누적으로</div>${pocLedgerPanel()}</div>
-    </div>`;
+    </section>
+    <section class="step" id="d3">
+      ${stepHead(3, '시정조치 검증 대장', '조치 후 동일 모드 무발생 확인 후에만 종결 — 폐루프의 원천 기록', devGateValue('auto:actions'), 'prog')}
+      <div class="step-body"><div class="panel">
+        <div class="ph"><h3>조치검증 (관리 시트)</h3><span class="ps">REPORT.xlsx 「조치검증」 — PM 작성</span></div>
+        <table><tr><th>조치ID</th><th class="c">대상코드</th><th>조치내용</th><th class="c">담당</th><th class="c">목표일</th><th class="c">상태</th><th class="c">검증시작</th></tr>${acts}</table>
+      </div></div>
+    </section>
+    <section class="step" id="d4">
+      ${stepHead(4, '단계 진행 · 게이트 통과 기준', '사전 확정된 잣대 — 데이터 이후 변경·재해석 금지 (docs/CRITERIA.md)', `리뷰 ${(C.gate || {}).reviewDate || '—'}`, 'prog')}
+      <div class="step-body">${lifecycleStagePanel(C)}${devGatePanel(C)}</div>
+    </section>
+  </div>`;
+}
+
+/* ══════════ 진입점 ══════════ */
+
+/* POC 관제 — 케미컬 골격 + POC 렌즈 */
+function renderPoc(C) {
+  $('s-overview').innerHTML = devShell('poc', C, {
+    qbox: `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`,
+    aTitle: '완주 진행 → 수렴 · 연결된 지표',
+    aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
+    aChart: pocTrendPanel({ wide: true }),
+    bTitle: '전수 4분류 → 폐루프 · 연결된 지표',
+    bTop: pocFourwayBoard(),
+    bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
+    cTitle: '고장 분석 · Pareto · 심각도 · 최근 알람',
+    cPanels: [devParetoPanel(true), devSevPanel(), devFeedPanel()],
+  });
   $('s-steps').innerHTML = pocSteps(C);
+  { const el = $('side-line'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+}
+
+/* Pilot 관제 — 같은 골격 + Pilot 렌즈 */
+function renderPilot(C) {
+  $('s-overview').innerHTML = devShell('pilot', C, {
+    qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
+    aTitle: '완주 진행 → 성장 · 연결된 지표',
+    aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
+    aChart: pilotGrowthPanel({ bot: 396, vbH: 448 }),
+    bTitle: '신뢰성 입증 → 수렴 규율 · 연결된 지표',
+    bTop: pilotRelBox(),
+    bCharts: [devParetoPanel(true), fracasLoopPanel({ recurZeroGate: true })],
+    cTitle: '고장 분석 · 규율 · 형상 · 최근 알람',
+    cPanels: [pilotDisciplinePanels(C), devFeedPanel()],
+  });
+  $('s-steps').innerHTML = pilotSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
 }
 
 function renderDev(stage) {
   const C = DATA.config || {};
-  if (stage === 'poc') return renderPoc(C);
-
-  const qbox = `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`;
-  $('s-overview').innerHTML = `
-    ${devHead(stage, C)}
-    <div class="sbox-h"><span class="tag">단계 진행</span><h2>${esc(T('overview.stageTitle', '세부 단계'))}</h2><span class="d">${esc(T('overview.stageSub', ''))}</span></div>
-    ${lifecycleStagePanel(C)}
-    ${devGatePanel(C)}
-    <div class="sbox-h mt"><span class="tag">신뢰성 트랙</span><h2>에러 분석 — Pilot 방식</h2><span class="d">개별 사건이 아니라 추세로 보고</span></div>
-    <div class="qbox">${qbox}</div>
-    <div class="grid g23">${pilotGrowthPanel()}${devParetoPanel(true)}</div>
-    <div class="grid g3 mt">${devRunPanel(C)}${pilotDisciplinePanels(C)}</div>
-    ${fracasLoopPanel({ mt: true, recurZeroGate: true })}
-    <div class="sbox-h mt"><span class="tag">기록</span><h2>레코드 (공통 스키마)</h2><span class="d">전 과제·전 단계 동일 컬럼 구조 — POC 대장이 그대로 이어진다</span></div>
-    ${pilotRecordsPanel()}`;
-
-  // 개발 템플릿(Pilot)에는 라인 레이아웃·월 스냅샷·상세 탭이 없음 — 이전 과제 잔상 제거
-  { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
-  $('s-steps').innerHTML = '';
+  return stage === 'poc' ? renderPoc(C) : renderPilot(C);
 }
