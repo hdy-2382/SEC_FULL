@@ -18,7 +18,7 @@
 - **빌드**: `python3 scripts/build_dashboard_json.py [--project <id>]` — config의 `stage`(poc|pilot|mass)로 분기. `_compute`(mass, SEC 원본)는 **무변경 유지**가 원칙, poc/pilot은 `_compute_poc`/`_compute_pilot`. 엑셀 파싱은 별칭 사전+헤더 자동탐지, DRM 시 xlwings 폴백(Windows+Excel).
 - **config.json 계약 파라미터**(errorLimit, acceptance 등)는 임의 변경 금지 — 로직/문의로 해결. `gate.criteria[].value`에 `auto:run|growth|actions` 쓰면 빌드값 자동 치환.
 
-## 현재 상태 (2026-07-09, 커밋 M0~M4)
+## 현재 상태 (2026-07-10, 커밋 M0~M5)
 
 | 과제 | stage | 데이터 |
 |---|---|---|
@@ -26,7 +26,11 @@
 | drum 드럼 자동화 | poc | 가상 (52/72h 런·이슈18·컨셉리스크0) |
 | sort 분류 자동화 | pilot | 가상 (MCBF 1,240/1,500·재발1) |
 
-**잔여 작업(M5)**: 운영 템플릿(tpl-ops.js, 확산/운영 2모드), 공개 배포 스크립트(SEC의 publish_public.sh 방식) 멀티과제 대응, drum·sort 실데이터 교체, GHE 리모트 연결(사용자 수행).
+- **리모트**: https://github.com/hdy-2382/SEC_FULL (origin/main, **PUBLIC**) — SEC 리포와 분리 개발.
+- **M5 (완료분)**: POC 관제형 템플릿(4분류 보드·폐루프·수렴 추이·이슈 대장 + `#/{pid}/all` 상세 탭),
+  **공통 레코드 스토어 `records[]`**(3단계 모두 RECORD_SCHEMA 형식 병기 — 배관은 하나, 화면 렌즈만 단계별),
+  단계별 필수 필드 검증(빌드 경고) + `--validate-stage` 이관 리허설, 폐루프 컴포넌트 POC·Pilot 공유(`.looppanel`).
+- **잔여 작업(M6)**: 운영 템플릿(tpl-ops.js, 확산/운영 2모드), 공개 배포 스크립트(SEC의 publish_public.sh 방식) 멀티과제 대응, drum·sort 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토.
 
 ## 검증 방법
 
