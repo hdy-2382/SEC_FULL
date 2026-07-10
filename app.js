@@ -10,8 +10,8 @@ let CUR_PID = null;            // 현재 과제 id
 let CUR_TAB = 'overview';      // 과제 내 탭 (overview | all | s1~s6)
 const PROJ_CACHE = {};         // pid → { data, cfg }
 
-const STAGE_LABEL = { poc: 'POC', pilot: 'Pilot', mass: '양산평가', ops: '운영' };
-const STAGE_CHIP = { poc: 'st-poc', pilot: 'st-pilot', mass: 'st-mass', ops: 'st-ops' };
+const STAGE_LABEL = { poc: 'POC', pilot: 'Pilot', mass: '양산평가', spread: '확산', ops: '운영' };
+const STAGE_CHIP = { poc: 'st-poc', pilot: 'st-pilot', mass: 'st-mass', spread: 'st-spread', ops: 'st-ops' };
 
 function defaultPid() { return (REG && REG.projects && REG.projects[0] && REG.projects[0].id) || 'chem'; }
 function orgT(k, fb) { const v = REG && REG.org && REG.org[k]; return v == null ? (fb == null ? '' : fb) : v; }
@@ -28,7 +28,7 @@ function buildNav() {
     const on = VIEW === 'project' && CUR_PID === p.id;
     const stg = e.stage ? `<span class="stage">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>` : '';
     html += `<a href="#/${esc(p.id)}"${on ? ' class="active"' : ''}><span class="st">${esc(p.abbr || '')}</span> ${esc(p.name)}${stg}</a>`;
-    if (on && ['mass', 'poc', 'pilot'].includes(e.stage || 'mass')) {
+    if (on && e.hasData !== false) {
       // 하위 탭 (한눈에 보기 / 평가 상세 내역) — 전 템플릿 공통 (케미컬 페이지 문법으로 표준화)
       html += `<a class="sub${CUR_TAB === 'overview' ? ' on' : ''}" href="#/${esc(p.id)}/overview"><span class="st">◉</span> ${esc(T('nav.overview', '한눈에 보기'))}</a>`;
       html += `<a class="sub${CUR_TAB !== 'overview' ? ' on' : ''}" href="#/${esc(p.id)}/all"><span class="st">▤</span> ${esc(T('nav.all', '평가 상세 내역'))}</a>`;
@@ -142,6 +142,7 @@ function openProject(pid, tab) {
 function renderData() {
   const stage = (DATA && DATA.config && DATA.config.stage) || 'mass';
   if ((stage === 'poc' || stage === 'pilot') && typeof renderDev === 'function') return renderDev(stage);
+  if ((stage === 'spread' || stage === 'ops') && typeof renderOps === 'function') return renderOps(stage);
   renderMass();
 }
 

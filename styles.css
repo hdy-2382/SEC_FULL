@@ -394,7 +394,7 @@
 .pcard-empty:hover{box-shadow:var(--shadow-sm);transform:none}
 .pcard .pcard-hint{font-size:11.5px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:14px 10px;text-align:center;margin-top:8px}
 .stagechip{font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.02em}
-.st-poc{background:#E5EFFA;color:#3F7CC4}.st-pilot{background:#FBEDD6;color:#B36F0A}.st-mass{background:#DDEEE2;color:#2F7A55}.st-ops{background:#EEE7F8;color:#7A4FB3}.st-none{background:#eee;color:#888}
+.st-poc{background:#E5EFFA;color:#3F7CC4}.st-pilot{background:#FBEDD6;color:#B36F0A}.st-mass{background:#DDEEE2;color:#2F7A55}.st-spread{background:#EEE7F8;color:#7A4FB3}.st-ops{background:#ececec;color:#5f6b7a}.st-none{background:#eee;color:#888}
 /* TECOP 신호등 */
 .tecop{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .tecop .tp{font-size:10.5px;font-weight:800;border-radius:16px;padding:3px 9px;cursor:default}
@@ -462,6 +462,8 @@
 .pocv .fwt .n small,.pocv .fwt .hero-n small{font-size:11px;color:var(--muted);font-weight:700;margin-left:2px}
 .pocv .fwt .m{font-size:10.5px;color:var(--muted);line-height:1.5}
 .pocv .fwt.risk{--tc:var(--crit)}.pocv .fwt.design{--tc:var(--sky)}.pocv .fwt.sw{--tc:var(--major)}.pocv .fwt.env{--tc:#2f8f6b}
+/* 확산/운영 — 원인계층 타일 (설계 히어로는 .risk 재사용) */
+.pocv .fwt.build{--tc:var(--major)}.pocv .fwt.install{--tc:#2f8f6b}.pocv .fwt.oper{--tc:#6E7D90}
 .pocv .fwt.hero{grid-column:1 / -1;display:flex;align-items:center;gap:14px;background:var(--green-soft);border-color:#bfe0cc}
 .pocv .fwt.hero.hero-bad{background:var(--crit-soft);border-color:#e5b8b0}
 .pocv .fwt.hero .hero-n{font-size:40px;font-weight:800;line-height:1;flex:none}
@@ -476,6 +478,9 @@
 .pocv .compo .sg-design{background:var(--sky)}
 .pocv .compo .sg-sw{background:var(--major)}.pocv .compo .sg-sw span{color:#4a3000}
 .pocv .compo .sg-env{background:#2f8f6b}
+.pocv .compo .sg-build{background:var(--major)}.pocv .compo .sg-build span{color:#4a3000}
+.pocv .compo .sg-install{background:#2f8f6b}
+.pocv .compo .sg-oper{background:#6E7D90}
 .pocv .compo .sg-zero{flex:0 0 74px;border:1.5px dashed var(--crit);color:var(--crit);font-size:10.5px;font-weight:800;background:transparent}
 /* 폐루프 FRACAS 파이프라인 — 전 단계 공용 컴포넌트 (스코프: .looppanel — POC·Pilot 공유) */
 .looppanel .loopline{display:flex;align-items:stretch;gap:7px}
@@ -495,5 +500,8 @@
 .pocv .c4-design{background:var(--minor-soft);color:#2E6DB0}
 .pocv .c4-sw{background:var(--major-soft);color:#B36A00}
 .pocv .c4-env{background:#E7F3ED;color:#25795a}
+.pocv .c4-build{background:var(--major-soft);color:#B36A00}
+.pocv .c4-install{background:#E7F3ED;color:#25795a}
+.pocv .c4-oper{background:#ECEFF3;color:#4d5c70}
 .panel .rlink{color:var(--crit);font-weight:800;font-size:11px;white-space:nowrap}   /* 재발 링크 — POC·Pilot 대장 공용 */
 @media print{.pcard{break-inside:avoid}.ladder{break-inside:avoid}}

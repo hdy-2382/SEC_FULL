@@ -40,6 +40,8 @@
   "projects": [
     { "id": "chem", "name": "케미컬 체결/반송 자동화", "abbr": "C", "order": 1 },
     { "id": "drum", "name": "드럼 자동화", "abbr": "D", "order": 2 },
-    { "id": "sort", "name": "분류 자동화", "abbr": "S", "order": 3 }
+    { "id": "sort", "name": "분류 자동화", "abbr": "S", "order": 3 },
+    { "id": "clean", "name": "크린룸 반송 자동화", "abbr": "K", "order": 4 },
+    { "id": "agv", "name": "물류 AMR", "abbr": "A", "order": 5 }
   ]
 }

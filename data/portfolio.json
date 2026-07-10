@@ -50,7 +50,7 @@
         "startDate": "2026-06-01",
         "endDate": "2026-09-30"
       },
-      "generatedAt": "2026-07-10T03:18:56Z",
+      "generatedAt": "2026-07-10T05:13:07Z",
       "summary": {
         "progress": {
           "cum": 49,
@@ -154,7 +154,7 @@
         "startDate": "2026-06-05",
         "endDate": "2026-07-15"
       },
-      "generatedAt": "2026-07-10T03:18:56Z",
+      "generatedAt": "2026-07-10T05:13:07Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -248,7 +248,7 @@
         "startDate": "2026-05-25",
         "endDate": "2026-08-31"
       },
-      "generatedAt": "2026-07-10T03:18:56Z",
+      "generatedAt": "2026-07-10T05:13:07Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -257,6 +257,202 @@
         },
         "records": 9,
         "recur": 1
+      }
+    },
+    {
+      "id": "clean",
+      "name": "크린룸 반송 자동화",
+      "abbr": "K",
+      "hasData": true,
+      "stage": "spread",
+      "run": {
+        "target": 48,
+        "unit": "호기",
+        "criterion": "축약 런",
+        "env": "각 적용 라인 (호기별 SAT)"
+      },
+      "gate": {
+        "reviewDate": "2026-07-31",
+        "label": "확산 완료 리뷰",
+        "criteria": [
+          {
+            "label": "① 호기별 퀄 (SAT+런)",
+            "value": "auto:fleet",
+            "status": "prog"
+          },
+          {
+            "label": "② 설계성 고장 0",
+            "value": "1건 — 보강 전개 중",
+            "status": "fail"
+          },
+          {
+            "label": "③ 가동지표 검증",
+            "value": "5/5 호기 (완료분)",
+            "status": "prog"
+          },
+          {
+            "label": "④ 기준 구성 동결",
+            "value": "승인 편차 1건",
+            "status": "pass"
+          },
+          {
+            "label": "⑤ 횡전개 문서",
+            "value": "설치 표준 v1.1",
+            "status": "pass"
+          }
+        ]
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "warn",
+          "note": "공진 이슈 — 전 함대 브래킷 보강 전개 중"
+        },
+        {
+          "k": "E",
+          "status": "ok",
+          "note": "확산 ROI — 투자심의 승인 조건 유지"
+        },
+        {
+          "k": "C",
+          "status": "ok",
+          "note": "호기 추가 발주 계약 정상"
+        },
+        {
+          "k": "O",
+          "status": "ok",
+          "note": "라인별 운영 인수 교육 3/4 완료"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "호기별 가동인증 일정 정상"
+        }
+      ],
+      "project": {
+        "name": "크린룸 반송 자동화 (확산)",
+        "department": "인프라 기술팀",
+        "team": "박OO, 정OO",
+        "startDate": "2026-05-10",
+        "endDate": "2026-08-31"
+      },
+      "generatedAt": "2026-07-10T05:13:07Z",
+      "summary": {
+        "progress": {
+          "cum": 5,
+          "target": 8,
+          "pct": 62.5
+        },
+        "records": 12,
+        "recur": 0,
+        "fleet": {
+          "total": 8,
+          "satDone": 6,
+          "qualified": 5,
+          "pct": 62.5
+        },
+        "issueStats": {
+          "total": 12,
+          "closed": 8,
+          "open": 4
+        }
+      }
+    },
+    {
+      "id": "agv",
+      "name": "물류 AMR",
+      "abbr": "A",
+      "hasData": true,
+      "stage": "ops",
+      "run": {
+        "target": 98,
+        "unit": "%",
+        "criterion": "가동률",
+        "env": "양산 라인 (12호기 함대)"
+      },
+      "gate": {
+        "reviewDate": "2026-07-31",
+        "label": "월간 RAM 리뷰",
+        "criteria": [
+          {
+            "label": "① 가동률 ≥98%",
+            "value": "auto:avail",
+            "status": "pass"
+          },
+          {
+            "label": "② MTBF 성장",
+            "value": "340h (+62% YTD)",
+            "status": "pass"
+          },
+          {
+            "label": "③ MTTR ≤10분",
+            "value": "9분",
+            "status": "pass"
+          },
+          {
+            "label": "④ 만성(재발) 마감",
+            "value": "2모드 — CIP 검증 중",
+            "status": "prog"
+          },
+          {
+            "label": "⑤ CIP 진행",
+            "value": "완료 2 · 진행 3",
+            "status": "prog"
+          }
+        ]
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "ok",
+          "note": "가동률 목표 달성 — CBM 전환 진행"
+        },
+        {
+          "k": "E",
+          "status": "ok",
+          "note": "다운타임 비용 월 -18% (CIP 효과)"
+        },
+        {
+          "k": "C",
+          "status": "ok",
+          "note": "유지보수 계약 갱신 완료"
+        },
+        {
+          "k": "O",
+          "status": "warn",
+          "note": "야간 비상 대응 훈련 1회 미실시"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "정기 안전점검 일정 정상"
+        }
+      ],
+      "project": {
+        "name": "물류 AMR (운영/관제)",
+        "department": "인프라 기술팀",
+        "team": "정OO, 한OO",
+        "startDate": "2026-01-01",
+        "endDate": "—"
+      },
+      "generatedAt": "2026-07-10T05:13:07Z",
+      "summary": {
+        "progress": {
+          "cum": 98.4,
+          "target": 98.0,
+          "pct": 100.0
+        },
+        "records": 10,
+        "recur": 2,
+        "ram": {
+          "avail": 98.4,
+          "target": 98.0
+        },
+        "issueStats": {
+          "total": 10,
+          "closed": 7,
+          "open": 3
+        }
       }
     }
   ]

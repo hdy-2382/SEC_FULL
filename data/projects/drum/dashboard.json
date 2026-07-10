@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T03:18:56Z",
+  "generatedAt": "2026-07-10T05:13:07Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -197,6 +197,8 @@
       "date": "2026-06-08",
       "closedDate": "2026-06-12",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "저조도에서 드럼 마킹 오인식 → 노출 파라미터 보정",
       "images": []
     },
@@ -209,6 +211,8 @@
       "date": "2026-06-09",
       "closedDate": "2026-06-13",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "토크 상한 파라미터 오설정 → 레시피 수정",
       "images": []
     },
@@ -221,6 +225,8 @@
       "date": "2026-06-09",
       "closedDate": "2026-06-11",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "임시 배선 간섭 (시험환경) — 정리 후 미재현",
       "images": []
     },
@@ -233,6 +239,8 @@
       "date": "2026-06-10",
       "closedDate": "2026-06-15",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "동일 모드 재발 — 역광 조건 한정 재현 → 조명 후드 1차 개선",
       "images": [],
       "recurOf": "ISS-001"
@@ -246,6 +254,8 @@
       "date": "2026-06-11",
       "closedDate": "2026-06-16",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "파지 좌표 오프셋 → 티칭 보정",
       "images": []
     },
@@ -258,6 +268,8 @@
       "date": "2026-06-12",
       "closedDate": "2026-06-14",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "랩 조명 교체 공사 영향 (시험환경) — 환경 복구 후 미재현",
       "images": [],
       "recurOf": "ISS-004"
@@ -271,6 +283,8 @@
       "date": "2026-06-13",
       "closedDate": "2026-06-19",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "PLC 핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
       "images": []
     },
@@ -283,6 +297,8 @@
       "date": "2026-06-14",
       "closedDate": "2026-06-18",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "토크 프로파일 과도구간 이탈 → 램프업 로직 수정",
       "images": [],
       "recurOf": "ISS-002"
@@ -296,6 +312,8 @@
       "date": "2026-06-15",
       "closedDate": "2026-06-17",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "버퍼 오버플로 → 플러시 주기 수정",
       "images": []
     },
@@ -308,6 +326,8 @@
       "date": "2026-06-16",
       "closedDate": "2026-06-20",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "급송 슈트 각도 미세 조정 (설계)",
       "images": []
     },
@@ -320,6 +340,8 @@
       "date": "2026-06-17",
       "closedDate": "2026-06-22",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "동일 모드 재발 — 접근 속도 프로파일 수정",
       "images": [],
       "recurOf": "ISS-005"
@@ -333,6 +355,8 @@
       "date": "2026-06-20",
       "closedDate": "",
       "verify": "38/50Cy",
+      "unit": "",
+      "downtime": "",
       "detail": "외란광 유입 각도 한정 재현 → 후드 연장 적용, 무발생 감시 중",
       "images": [],
       "recurOf": "ISS-006"
@@ -346,6 +370,8 @@
       "date": "2026-06-22",
       "closedDate": "",
       "verify": "41/50Cy",
+      "unit": "",
+      "downtime": "",
       "detail": "반력 편차로 상한 근접 — 토크 암 강성 보강(설계) 후 검증 런",
       "images": [],
       "recurOf": "ISS-008"
@@ -359,6 +385,8 @@
       "date": "2026-06-24",
       "closedDate": "",
       "verify": "45/50Cy",
+      "unit": "",
+      "downtime": "",
       "detail": "고속 구간 공진음 → 속도 프로파일 보정, 무발생 감시 중",
       "images": []
     },
@@ -371,6 +399,8 @@
       "date": "2026-06-30",
       "closedDate": "",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "체결 자세 편차 기인 추정 — 지그 재설계 협의 중",
       "images": [],
       "recurOf": "ISS-013"
@@ -384,6 +414,8 @@
       "date": "2026-07-01",
       "closedDate": "",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "고반사 드럼 한정 오인식 → 편광 필터 설계 검토 중",
       "images": [],
       "recurOf": "ISS-012"
@@ -397,6 +429,8 @@
       "date": "2026-07-03",
       "closedDate": "",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "드럼 림 변형품 파지 불가 → 핑거 형상 변경 설계 진행",
       "images": [],
       "recurOf": "ISS-011"
@@ -410,6 +444,8 @@
       "date": "2026-07-04",
       "closedDate": "",
       "verify": "",
+      "unit": "",
+      "downtime": "",
       "detail": "로그 폭주 시 지연 재현 → 로그 레벨 조정 적용 중",
       "images": [],
       "recurOf": "ISS-007"
@@ -485,7 +521,8 @@
       "closedDate": "2026-06-12",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-002",
@@ -506,7 +543,8 @@
       "closedDate": "2026-06-13",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-003",
@@ -527,7 +565,8 @@
       "closedDate": "2026-06-11",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-004",
@@ -548,7 +587,8 @@
       "closedDate": "2026-06-15",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-005",
@@ -569,7 +609,8 @@
       "closedDate": "2026-06-16",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-006",
@@ -590,7 +631,8 @@
       "closedDate": "2026-06-14",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-007",
@@ -611,7 +653,8 @@
       "closedDate": "2026-06-19",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-008",
@@ -632,7 +675,8 @@
       "closedDate": "2026-06-18",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-009",
@@ -653,7 +697,8 @@
       "closedDate": "2026-06-17",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-010",
@@ -674,7 +719,8 @@
       "closedDate": "2026-06-20",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-011",
@@ -695,7 +741,8 @@
       "closedDate": "2026-06-22",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-012",
@@ -716,7 +763,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-013",
@@ -737,7 +785,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-014",
@@ -758,7 +807,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-015",
@@ -779,7 +829,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-016",
@@ -800,7 +851,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-017",
@@ -821,7 +873,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     },
     {
       "id": "ISS-018",
@@ -842,7 +895,8 @@
       "closedDate": "",
       "images": [],
       "verdict": "",
-      "unit": ""
+      "unit": "",
+      "downtime": ""
     }
   ],
   "metrics": {

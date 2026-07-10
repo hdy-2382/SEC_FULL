@@ -18,19 +18,24 @@
 - **빌드**: `python3 scripts/build_dashboard_json.py [--project <id>]` — config의 `stage`(poc|pilot|mass)로 분기. `_compute`(mass, SEC 원본)는 **무변경 유지**가 원칙, poc/pilot은 `_compute_poc`/`_compute_pilot`. 엑셀 파싱은 별칭 사전+헤더 자동탐지, DRM 시 xlwings 폴백(Windows+Excel).
 - **config.json 계약 파라미터**(errorLimit, acceptance 등)는 임의 변경 금지 — 로직/문의로 해결. `gate.criteria[].value`에 `auto:run|growth|actions` 쓰면 빌드값 자동 치환.
 
-## 현재 상태 (2026-07-10, 커밋 M0~M5)
+## 현재 상태 (2026-07-10, 커밋 M0~M6)
 
 | 과제 | stage | 데이터 |
 |---|---|---|
 | chem 케미컬 체결/반송 | mass | SEC 샘플 사본 (실데이터는 SEC 리포에 있음 — 주의) |
 | drum 드럼 자동화 | poc | 가상 (52/72h 런·이슈18·컨셉리스크0) |
 | sort 분류 자동화 | pilot | 가상 (MCBF 1,240/1,500·재발1) |
+| clean 크린룸 반송 | spread | 가상 (호기 퀄 5/8·설계성 1건 에스컬레이션) |
+| agv 물류 AMR | ops | 가상 (가동률 98.4%·다운타임 Pareto·CIP 5) |
 
 - **리모트**: https://github.com/hdy-2382/SEC_FULL (origin/main, **PUBLIC**) — SEC 리포와 분리 개발.
-- **M5 (완료분)**: POC 관제형 템플릿(4분류 보드·폐루프·수렴 추이·이슈 대장 + `#/{pid}/all` 상세 탭),
-  **공통 레코드 스토어 `records[]`**(3단계 모두 RECORD_SCHEMA 형식 병기 — 배관은 하나, 화면 렌즈만 단계별),
-  단계별 필수 필드 검증(빌드 경고) + `--validate-stage` 이관 리허설, 폐루프 컴포넌트 POC·Pilot 공유(`.looppanel`).
-- **잔여 작업(M6)**: 운영 템플릿(tpl-ops.js, 확산/운영 2모드), 공개 배포 스크립트(SEC의 publish_public.sh 방식) 멀티과제 대응, drum·sort 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토.
+- **M5**: POC 관제형 템플릿 + **공통 레코드 스토어 `records[]`**(전 단계 RECORD_SCHEMA 형식 병기 —
+  배관은 하나, 화면 렌즈만 단계별) + 단계별 필수 필드 검증·`--validate-stage` 이관 리허설.
+- **M6**: POC·Pilot·확산·운영 관제를 케미컬 골격(공유 셸 `devShell`, tpl-dev.js)으로 표준화.
+  tpl-ops.js(확산=원인계층·호기퀄·층화 / 운영=월간 RAM·다운타임 Pareto·CIP) — 5단계 사다리 전체 커버.
+  공개 배포 `scripts/publish_public.sh`(화이트리스트·`--exclude`·gh-pages) — **실행(발행)은 사용자 수행**.
+- **잔여 작업(M7)**: drum·sort·clean·agv 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토,
+  인증(이관·투자심의) 체크리스트 뷰 — Known Issues Register = records 오픈 건 필터.
 
 ## 검증 방법
 

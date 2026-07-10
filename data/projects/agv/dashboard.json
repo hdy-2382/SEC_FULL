@@ -1,0 +1,800 @@
+{
+  "generatedAt": "2026-07-10T05:13:07Z",
+  "source": "물류AMR운영_샘플.xlsx",
+  "config": {
+    "stage": "ops",
+    "acceptance": {
+      "availTargetPct": 98.0
+    },
+    "run": {
+      "target": 98,
+      "unit": "%",
+      "criterion": "가동률",
+      "env": "양산 라인 (12호기 함대)"
+    },
+    "tecop": [
+      {
+        "k": "T",
+        "status": "ok",
+        "note": "가동률 목표 달성 — CBM 전환 진행"
+      },
+      {
+        "k": "E",
+        "status": "ok",
+        "note": "다운타임 비용 월 -18% (CIP 효과)"
+      },
+      {
+        "k": "C",
+        "status": "ok",
+        "note": "유지보수 계약 갱신 완료"
+      },
+      {
+        "k": "O",
+        "status": "warn",
+        "note": "야간 비상 대응 훈련 1회 미실시"
+      },
+      {
+        "k": "P",
+        "status": "ok",
+        "note": "정기 안전점검 일정 정상"
+      }
+    ],
+    "gate": {
+      "reviewDate": "2026-07-31",
+      "label": "월간 RAM 리뷰",
+      "criteria": [
+        {
+          "label": "① 가동률 ≥98%",
+          "value": "auto:avail",
+          "status": "pass"
+        },
+        {
+          "label": "② MTBF 성장",
+          "value": "340h (+62% YTD)",
+          "status": "pass"
+        },
+        {
+          "label": "③ MTTR ≤10분",
+          "value": "9분",
+          "status": "pass"
+        },
+        {
+          "label": "④ 만성(재발) 마감",
+          "value": "2모드 — CIP 검증 중",
+          "status": "prog"
+        },
+        {
+          "label": "⑤ CIP 진행",
+          "value": "완료 2 · 진행 3",
+          "status": "prog"
+        }
+      ]
+    },
+    "project": {
+      "name": "물류 AMR (운영/관제)",
+      "department": "인프라 기술팀",
+      "team": "정OO, 한OO",
+      "startDate": "2026-01-01",
+      "endDate": "—"
+    },
+    "swModules": [
+      {
+        "name": "알람 자동 수집",
+        "pct": 100,
+        "group": "상위시스템"
+      },
+      {
+        "name": "CBM 모델 (모터 전류)",
+        "pct": 60,
+        "group": "상위시스템"
+      },
+      {
+        "name": "월간 RAM 자동 리포트",
+        "pct": 80,
+        "group": "상위시스템"
+      },
+      {
+        "name": "함대 SW 배포 (OTA)",
+        "pct": 90,
+        "group": "로봇"
+      },
+      {
+        "name": "비상 대응 매트릭스",
+        "pct": 100,
+        "group": "환경"
+      }
+    ],
+    "lifecycle": [
+      {
+        "stage": "O1 통합관제·알람 수집",
+        "status": "done",
+        "note": "알람 자동수집 — 승격 기준 확정"
+      },
+      {
+        "stage": "O2 비상 대응 체계",
+        "status": "done",
+        "note": "에스컬레이션 매트릭스 · 훈련 3/4"
+      },
+      {
+        "stage": "O3 PM → CBM 전환",
+        "status": "current",
+        "note": "모터 전류 추세 모델 시범 (CIP-05)"
+      },
+      {
+        "stage": "O4 CIP · FMEA 환류",
+        "status": "current",
+        "note": "필드 고장모드 → 차기 과제 FMEA 반영"
+      }
+    ],
+    "ui": {
+      "app": {
+        "title": "물류 AMR — 운영/관제",
+        "brandLogo": "물",
+        "brandName": "물류 AMR<br>운영/관제",
+        "evalDateLabel": "평가일",
+        "printBtn": "PDF 리포트",
+        "footBrand": "필드 FRACAS + 다운타임 Pareto + CIP",
+        "updatedPrefix": "업데이트 "
+      },
+      "nav": {
+        "overview": "한눈에 보기",
+        "all": "평가 상세 내역"
+      },
+      "common": {
+        "stDone": "완료",
+        "stCurrent": "진행 중",
+        "stTodo": "예정",
+        "noteEmpty": "— 메모"
+      },
+      "overview": {
+        "stageTitle": "운영/관제 체계",
+        "stageCurrentPrefix": "현재: ",
+        "stageSub": "O1→O4 · 필드 고장모드는 차기 과제 FMEA로 환류",
+        "discussItems": [
+          {
+            "topic": "야간 비상 대응 훈련 일정 (미실시 1회)",
+            "tag": "긴급",
+            "group": "안전"
+          },
+          {
+            "topic": "승강 모터 냉각 팬 — 전 함대 확대 적용 여부",
+            "tag": "협의",
+            "group": "운영"
+          },
+          {
+            "topic": "CBM 전환 범위 — 구동부 추가 검토",
+            "tag": "검토",
+            "group": "운영"
+          },
+          {
+            "topic": "차기 과제 FMEA 환류 회의 (7월)",
+            "tag": "진행",
+            "group": "기타"
+          }
+        ],
+        "goalsMonth": "가동률 98.5% 유지\n만성 2모드 CIP 검증 마감",
+        "goalsWeek": "AGV-12 무발생 감시 18/30일\n비상 대응 훈련 4차 실시"
+      },
+      "modal": {
+        "title": "상세"
+      }
+    }
+  },
+  "issues": [
+    {
+      "id": "FLD-001",
+      "mode": "경로 계획 교착",
+      "severity": "Major",
+      "cause4": "설계",
+      "status": "종결",
+      "date": "2026-01-22",
+      "closedDate": "2026-02-05",
+      "verify": "",
+      "unit": "AGV-07",
+      "downtime": "360",
+      "detail": "교차로 데드락 — SW v2.1 패치 전 함대 배포",
+      "images": []
+    },
+    {
+      "id": "FLD-002",
+      "mode": "승강 모터 과열",
+      "severity": "Major",
+      "cause4": "제작·조립",
+      "status": "종결",
+      "date": "2026-02-14",
+      "closedDate": "2026-02-20",
+      "verify": "",
+      "unit": "AGV-03",
+      "downtime": "480",
+      "detail": "냉각 유로 막힘 — 방열 구조 개선",
+      "images": []
+    },
+    {
+      "id": "FLD-003",
+      "mode": "충전 도킹 실패",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "종결",
+      "date": "2026-03-08",
+      "closedDate": "2026-03-12",
+      "verify": "",
+      "unit": "AGV-02",
+      "downtime": "120",
+      "detail": "도킹 마커 오염 — 청소 주기 단축 + 가이드 형상 개선(CIP-01)",
+      "images": []
+    },
+    {
+      "id": "FLD-004",
+      "mode": "리프트 센서 오검지",
+      "severity": "Minor",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-03-27",
+      "closedDate": "2026-04-02",
+      "verify": "",
+      "unit": "AGV-05",
+      "downtime": "60",
+      "detail": "센서 브래킷 유격 — 시공 표준 개정",
+      "images": []
+    },
+    {
+      "id": "FLD-005",
+      "mode": "통신 음영 정지",
+      "severity": "Major",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-04-15",
+      "closedDate": "2026-04-25",
+      "verify": "",
+      "unit": "AGV-09",
+      "downtime": "240",
+      "detail": "AP 음영 맵 반영 — AP 증설 + 경로 회피(CIP-03)",
+      "images": []
+    },
+    {
+      "id": "FLD-006",
+      "mode": "팔레트 인식 실패",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "종결",
+      "date": "2026-05-04",
+      "closedDate": "2026-05-06",
+      "verify": "",
+      "unit": "AGV-01",
+      "downtime": "75",
+      "detail": "랩핑 반사 — 노출 프로파일 추가",
+      "images": []
+    },
+    {
+      "id": "FLD-007",
+      "mode": "충전 도킹 실패",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "종결",
+      "date": "2026-05-19",
+      "closedDate": "2026-05-22",
+      "verify": "",
+      "unit": "AGV-11",
+      "downtime": "90",
+      "detail": "동일 모드 재발 — 가이드 개선판 적용 전 호기",
+      "images": [],
+      "recurOf": "FLD-003"
+    },
+    {
+      "id": "FLD-008",
+      "mode": "승강 모터 과열",
+      "severity": "Major",
+      "cause4": "제작·조립",
+      "status": "검증중",
+      "date": "2026-06-02",
+      "closedDate": "",
+      "verify": "18/30일",
+      "unit": "AGV-12",
+      "downtime": "150",
+      "detail": "동일 모드 재발 — 냉각 팬 추가(CIP-02) 무발생 감시",
+      "images": [],
+      "recurOf": "FLD-002"
+    },
+    {
+      "id": "FLD-009",
+      "mode": "타이어 마모 슬립",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "검증중",
+      "date": "2026-06-10",
+      "closedDate": "",
+      "verify": "600/1,000Cy",
+      "unit": "AGV-04",
+      "downtime": "45",
+      "detail": "고부하 구간 마모 가속 — 소재 변경(CIP-04) 검증",
+      "images": []
+    },
+    {
+      "id": "FLD-010",
+      "mode": "비상정지 오탐",
+      "severity": "Minor",
+      "cause4": "설치·시공",
+      "status": "조치중",
+      "date": "2026-06-24",
+      "closedDate": "",
+      "verify": "",
+      "unit": "AGV-06",
+      "downtime": "30",
+      "detail": "라이트커튼 정렬 편차 — 재정렬 및 원인 분석 중",
+      "images": []
+    }
+  ],
+  "metrics": {
+    "progress": {
+      "cum": 98.4,
+      "target": 98.0,
+      "pct": 100.0
+    }
+  },
+  "ram": {
+    "months": [
+      {
+        "month": "2026-01",
+        "avail": 96.2,
+        "mtbf": 210.0,
+        "mttr": 18.0,
+        "downtime": 26.4,
+        "alarms": 420,
+        "promoted": 6
+      },
+      {
+        "month": "2026-02",
+        "avail": 96.9,
+        "mtbf": 240.0,
+        "mttr": 15.0,
+        "downtime": 21.8,
+        "alarms": 388,
+        "promoted": 4
+      },
+      {
+        "month": "2026-03",
+        "avail": 97.4,
+        "mtbf": 265.0,
+        "mttr": 13.0,
+        "downtime": 18.2,
+        "alarms": 356,
+        "promoted": 3
+      },
+      {
+        "month": "2026-04",
+        "avail": 97.8,
+        "mtbf": 290.0,
+        "mttr": 12.0,
+        "downtime": 15.1,
+        "alarms": 330,
+        "promoted": 3
+      },
+      {
+        "month": "2026-05",
+        "avail": 98.1,
+        "mtbf": 315.0,
+        "mttr": 10.0,
+        "downtime": 12.6,
+        "alarms": 302,
+        "promoted": 2
+      },
+      {
+        "month": "2026-06",
+        "avail": 98.4,
+        "mtbf": 340.0,
+        "mttr": 9.0,
+        "downtime": 9.8,
+        "alarms": 280,
+        "promoted": 2
+      }
+    ],
+    "current": {
+      "month": "2026-06",
+      "avail": 98.4,
+      "mtbf": 340.0,
+      "mttr": 9.0,
+      "downtime": 9.8,
+      "alarms": 280,
+      "promoted": 2
+    },
+    "availTarget": 98.0
+  },
+  "alarms": {
+    "total": 2076,
+    "promoted": 20,
+    "rate": 1.0
+  },
+  "downPareto": [
+    {
+      "mode": "승강 모터 과열",
+      "minutes": 630,
+      "cumPct": 38
+    },
+    {
+      "mode": "경로 계획 교착",
+      "minutes": 360,
+      "cumPct": 60
+    },
+    {
+      "mode": "통신 음영 정지",
+      "minutes": 240,
+      "cumPct": 75
+    },
+    {
+      "mode": "충전 도킹 실패",
+      "minutes": 210,
+      "cumPct": 87
+    },
+    {
+      "mode": "팔레트 인식 실패",
+      "minutes": 75,
+      "cumPct": 92
+    },
+    {
+      "mode": "리프트 센서 오검지",
+      "minutes": 60,
+      "cumPct": 95
+    },
+    {
+      "mode": "타이어 마모 슬립",
+      "minutes": 45,
+      "cumPct": 98
+    },
+    {
+      "mode": "비상정지 오탐",
+      "minutes": 30,
+      "cumPct": 100
+    }
+  ],
+  "cip": [
+    {
+      "id": "CIP-01",
+      "topic": "충전 도킹 가이드 형상 개선",
+      "target": "충전 도킹 실패",
+      "status": "완료",
+      "effect": "도킹 실패 월 5→1건"
+    },
+    {
+      "id": "CIP-02",
+      "topic": "승강부 냉각 팬 추가",
+      "target": "승강 모터 과열",
+      "status": "검증중",
+      "effect": "과열 정지 재발 차단"
+    },
+    {
+      "id": "CIP-03",
+      "topic": "AP 음영 맵 기반 경로 회피",
+      "target": "통신 음영 정지",
+      "status": "완료",
+      "effect": "음영 정지 0건 (2개월)"
+    },
+    {
+      "id": "CIP-04",
+      "topic": "타이어 소재 변경 (고부하 구간)",
+      "target": "타이어 마모 슬립",
+      "status": "진행",
+      "effect": "교체 주기 2배 연장"
+    },
+    {
+      "id": "CIP-05",
+      "topic": "PM → CBM 전환 (모터 전류 추세)",
+      "target": "승강 모터 과열",
+      "status": "진행",
+      "effect": "계획 정지 30% 축소"
+    }
+  ],
+  "causeLayer": [
+    {
+      "key": "design",
+      "label": "① 설계",
+      "count": 1,
+      "closed": 1
+    },
+    {
+      "key": "build",
+      "label": "② 제작·조립",
+      "count": 2,
+      "closed": 1
+    },
+    {
+      "key": "install",
+      "label": "③ 설치·시공",
+      "count": 3,
+      "closed": 2
+    },
+    {
+      "key": "oper",
+      "label": "④ 운영·환경",
+      "count": 4,
+      "closed": 3
+    }
+  ],
+  "pareto": [
+    {
+      "mode": "승강 모터 과열",
+      "count": 2,
+      "cumPct": 20
+    },
+    {
+      "mode": "충전 도킹 실패",
+      "count": 2,
+      "cumPct": 40
+    },
+    {
+      "mode": "경로 계획 교착",
+      "count": 1,
+      "cumPct": 50
+    },
+    {
+      "mode": "리프트 센서 오검지",
+      "count": 1,
+      "cumPct": 60
+    },
+    {
+      "mode": "통신 음영 정지",
+      "count": 1,
+      "cumPct": 70
+    },
+    {
+      "mode": "팔레트 인식 실패",
+      "count": 1,
+      "cumPct": 80
+    },
+    {
+      "mode": "타이어 마모 슬립",
+      "count": 1,
+      "cumPct": 90
+    },
+    {
+      "mode": "비상정지 오탐",
+      "count": 1,
+      "cumPct": 100
+    }
+  ],
+  "recurrence": {
+    "count": 2,
+    "items": [
+      {
+        "mode": "승강 모터 과열",
+        "count": 2
+      },
+      {
+        "mode": "충전 도킹 실패",
+        "count": 2
+      }
+    ]
+  },
+  "issueStats": {
+    "total": 10,
+    "closed": 7,
+    "open": 3
+  },
+  "records": [
+    {
+      "id": "FLD-001",
+      "mode": "경로 계획 교착",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설계",
+      "status": "종결",
+      "date": "2026-01-22",
+      "time": "",
+      "cycle": null,
+      "detail": "교차로 데드락 — SW v2.1 패치 전 함대 배포",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-02-05",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-07",
+      "downtime": "360"
+    },
+    {
+      "id": "FLD-002",
+      "mode": "승강 모터 과열",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "제작·조립",
+      "status": "종결",
+      "date": "2026-02-14",
+      "time": "",
+      "cycle": null,
+      "detail": "냉각 유로 막힘 — 방열 구조 개선",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-02-20",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-03",
+      "downtime": "480"
+    },
+    {
+      "id": "FLD-003",
+      "mode": "충전 도킹 실패",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "종결",
+      "date": "2026-03-08",
+      "time": "",
+      "cycle": null,
+      "detail": "도킹 마커 오염 — 청소 주기 단축 + 가이드 형상 개선(CIP-01)",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-03-12",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-02",
+      "downtime": "120"
+    },
+    {
+      "id": "FLD-004",
+      "mode": "리프트 센서 오검지",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-03-27",
+      "time": "",
+      "cycle": null,
+      "detail": "센서 브래킷 유격 — 시공 표준 개정",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-04-02",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-05",
+      "downtime": "60"
+    },
+    {
+      "id": "FLD-005",
+      "mode": "통신 음영 정지",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-04-15",
+      "time": "",
+      "cycle": null,
+      "detail": "AP 음영 맵 반영 — AP 증설 + 경로 회피(CIP-03)",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-04-25",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-09",
+      "downtime": "240"
+    },
+    {
+      "id": "FLD-006",
+      "mode": "팔레트 인식 실패",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "종결",
+      "date": "2026-05-04",
+      "time": "",
+      "cycle": null,
+      "detail": "랩핑 반사 — 노출 프로파일 추가",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-05-06",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-01",
+      "downtime": "75"
+    },
+    {
+      "id": "FLD-007",
+      "mode": "충전 도킹 실패",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "종결",
+      "date": "2026-05-19",
+      "time": "",
+      "cycle": null,
+      "detail": "동일 모드 재발 — 가이드 개선판 적용 전 호기",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "FLD-003",
+      "closedDate": "2026-05-22",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-11",
+      "downtime": "90"
+    },
+    {
+      "id": "FLD-008",
+      "mode": "승강 모터 과열",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "제작·조립",
+      "status": "검증중",
+      "date": "2026-06-02",
+      "time": "",
+      "cycle": null,
+      "detail": "동일 모드 재발 — 냉각 팬 추가(CIP-02) 무발생 감시",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "18/30일",
+      "recurLink": "FLD-002",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-12",
+      "downtime": "150"
+    },
+    {
+      "id": "FLD-009",
+      "mode": "타이어 마모 슬립",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "검증중",
+      "date": "2026-06-10",
+      "time": "",
+      "cycle": null,
+      "detail": "고부하 구간 마모 가속 — 소재 변경(CIP-04) 검증",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "600/1,000Cy",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-04",
+      "downtime": "45"
+    },
+    {
+      "id": "FLD-010",
+      "mode": "비상정지 오탐",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "설치·시공",
+      "status": "조치중",
+      "date": "2026-06-24",
+      "time": "",
+      "cycle": null,
+      "detail": "라이트커튼 정렬 편차 — 재정렬 및 원인 분석 중",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "AGV-06",
+      "downtime": "30"
+    }
+  ],
+  "statusDist": {
+    "new": 0,
+    "acting": 1,
+    "verifying": 2,
+    "closed": 7
+  }
+}

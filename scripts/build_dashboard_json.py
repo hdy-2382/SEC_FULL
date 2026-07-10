@@ -114,8 +114,40 @@ ISSUE_FIELD_ALIASES = {
     # 종결일·무발생검증은 POC 선택 필드 — 있으면 수렴 추이·폐루프 표시에 사용 (docs/RECORD_SCHEMA.md §1)
     "closedDate": ["종결일", "종결날짜"],
     "verify":   ["무발생검증", "무발생", "검증진행"],
+    # 확산/운영: 호기/라인(함대 층화)·다운타임(비용 Pareto) — 해당 단계 필수 (docs/RECORD_SCHEMA.md #14)
+    "unit":     ["호기", "호기/라인"],
+    "downtime": ["다운타임(분)", "다운타임"],
     "detail":   ["상세", "내용"],
     "images":   ["사진", "이미지"],
+}
+# 확산: 호기별 양산 퀄 (설치→SAT→축약 무고장 런)
+UNIT_FIELD_ALIASES = {
+    "unit":      ["호기"],
+    "line":      ["라인"],
+    "installDate": ["설치일"],
+    "sat":       ["sat", "sat판정"],
+    "runH":      ["축약런", "런h", "축약런(h)"],
+    "runTarget": ["목표(h)", "목표h", "목표"],
+    "status":    ["상태"],
+    "notes":     ["비고"],
+}
+# 운영: 월간 RAM 지표 (통합관제 산출)
+MONTHLY_FIELD_ALIASES = {
+    "month":    ["월", "month"],
+    "avail":    ["가동률", "가동률(%)"],
+    "mtbf":     ["mtbf", "mtbf(h)"],
+    "mttr":     ["mttr", "mttr(분)", "mttr(m)"],
+    "downtime": ["다운타임(h)", "다운타임"],
+    "alarms":   ["알람수", "알람"],
+    "promoted": ["승격수", "fracas승격", "승격"],
+}
+# 운영: CIP (개선과제)
+CIP_FIELD_ALIASES = {
+    "id":     ["cipid", "cip", "id"],
+    "topic":  ["과제", "개선과제", "주제"],
+    "target": ["대상모드", "대상"],
+    "status": ["상태"],
+    "effect": ["기대효과", "효과"],
 }
 RUN_FIELD_ALIASES = {
     "date":   ["일자", "날짜", "평가일"],
@@ -135,6 +167,9 @@ ERRORS_SHEET_KEYWORDS = ["에러로그", "에러", "error"]
 ISSUES_SHEET_KEYWORDS = ["이슈로그", "이슈", "issue"]
 RUNLOG_SHEET_KEYWORDS = ["런기록", "런로그", "run"]
 ABN_SHEET_KEYWORDS    = ["비정상평가", "비정상", "abnormal"]
+UNITQ_SHEET_KEYWORDS  = ["호기퀄", "호기", "unitqual"]
+MONTHLY_SHEET_KEYWORDS = ["월간지표", "월간", "monthly"]
+CIP_SHEET_KEYWORDS    = ["cip", "개선과제", "개선"]
 
 
 def _norm(s) -> str:
@@ -1037,8 +1072,8 @@ RECORD_REQUIRED = {
     "pilot": ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer"],
     "mass":  ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer",
               "images", "verdict"],
-    "ops":   ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer",
-              "images", "verdict", "unit"],
+    "spread": ["id", "mode", "severity", "cause", "status", "date", "detail", "unit"],
+    "ops":   ["id", "mode", "severity", "cause", "status", "date", "detail", "unit"],
 }
 RECORD_FIELD_LABEL = {
     "id": "ID", "mode": "고장모드", "severity": "심각도", "cause": "원인분류", "status": "상태",
@@ -1064,7 +1099,8 @@ def _records_from_issues(issues: list[dict]) -> list[dict]:
             "swVer": "", "hwVer": "",
             "verify": i.get("verify") or "", "recurLink": i.get("recurOf") or "",
             "closedDate": i.get("closedDate") or "",
-            "images": i.get("images") or [], "verdict": "", "unit": "",
+            "images": i.get("images") or [], "verdict": "",
+            "unit": i.get("unit") or "", "downtime": i.get("downtime") or "",
         })
     return recs
 
@@ -1345,6 +1381,122 @@ def _compute_pilot(daily: list[dict], errors: list[dict], config: dict,
     }
 
 
+# ── 단계별 계산: 확산 (원인계층·호기별 층화 — 설계성 고장은 전 함대 리스크) ──
+CAUSE_LAYER_MAP = [
+    ("design",  "① 설계",       ["설계"]),
+    ("build",   "② 제작·조립",  ["제작", "조립"]),
+    ("install", "③ 설치·시공",  ["설치", "시공"]),
+    ("oper",    "④ 운영·환경",  ["운영", "환경", "조작"]),
+]
+
+
+def _num(v, default=0.0) -> float:
+    try:
+        return float(str(v).replace(",", "").replace("%", ""))
+    except (TypeError, ValueError):
+        return default
+
+
+def _annotate_issue_recur(issues: list[dict]):
+    """동일 고장모드 선행 레코드 ID(recurOf) 주입 — POC와 동일 규칙 (CRITERIA §5)."""
+    seen: dict[str, str] = {}
+    for i in sorted(issues, key=lambda x: (x.get("date") or "9999", x.get("id") or "")):
+        m = i.get("mode") or ""
+        if m and m in seen:
+            i["recurOf"] = seen[m]
+        if m:
+            seen[m] = i.get("id") or ""
+
+
+def _cause_layer(issues: list[dict]) -> list[dict]:
+    out = []
+    for key, label, kws in CAUSE_LAYER_MAP:
+        subset = [i for i in issues
+                  if any(kw in _norm(i.get("cause4") or "") for kw in [_norm(k) for k in kws])]
+        closed = sum(1 for i in subset if (i.get("status") or "") in CLOSED_STATUSES)
+        out.append({"key": key, "label": label, "count": len(subset), "closed": closed})
+    return out
+
+
+def _compute_spread(issues: list[dict], units: list[dict], config: dict) -> dict:
+    _annotate_issue_recur(issues)
+    for u in units:
+        u["runH"] = _num(u.get("runH"))
+        u["runTarget"] = _num(u.get("runTarget")) or _num((config.get("run") or {}).get("target")) or 48
+    sat_done = sum(1 for u in units if "PASS" in str(u.get("sat") or "").upper())
+    run_done = sum(1 for u in units if u["runH"] >= u["runTarget"] and "PASS" in str(u.get("sat") or "").upper())
+    total = len(units)
+    fleet = {"total": total, "satDone": sat_done, "qualified": run_done,
+             "pct": round(run_done / total * 100, 1) if total else 0}
+    # 호기별 이슈 층화 (어느 호기에 몰리는가 — "이 호기만의 병" 판별)
+    unit_dist: dict[str, int] = {}
+    for i in issues:
+        u = i.get("unit") or "(미기재)"
+        unit_dist[u] = unit_dist.get(u, 0) + 1
+    layers = _cause_layer(issues)
+    design_open = [i for i in issues
+                   if any(kw in _norm(i.get("cause4") or "") for kw in ["설계"])]
+    records = _records_from_issues(issues)
+    return {
+        "metrics": {"progress": {"cum": run_done, "target": total, "pct": fleet["pct"]}},
+        "fleet": fleet, "units": units,
+        "causeLayer": layers,
+        "escalations": [{"id": i.get("id"), "mode": i.get("mode"), "status": i.get("status"),
+                         "detail": i.get("detail")} for i in design_open],
+        "unitDist": [{"unit": k, "count": v} for k, v in sorted(unit_dist.items())],
+        "pareto": _pareto(issues, "mode"),
+        "recurrence": _recur_by_mode(issues, "mode"),
+        "issueStats": {"total": len(issues),
+                       "closed": sum(1 for i in issues if (i.get("status") or "") in CLOSED_STATUSES),
+                       "open": sum(1 for i in issues if (i.get("status") or "") not in CLOSED_STATUSES)},
+        "records": records,
+        "statusDist": _status_dist_of(records),
+    }
+
+
+# ── 단계별 계산: 운영/관제 (월간 RAM · 알람→FRACAS 승격 · 다운타임 Pareto · CIP) ──
+def _compute_ops(issues: list[dict], monthly: list[dict], cip: list[dict], config: dict) -> dict:
+    _annotate_issue_recur(issues)
+    months = []
+    for m in monthly:
+        months.append({"month": str(m.get("month") or ""), "avail": _num(m.get("avail")),
+                       "mtbf": _num(m.get("mtbf")), "mttr": _num(m.get("mttr")),
+                       "downtime": _num(m.get("downtime")),
+                       "alarms": int(_num(m.get("alarms"))), "promoted": int(_num(m.get("promoted")))})
+    cur = months[-1] if months else {}
+    acc = config.get("acceptance") or {}
+    avail_target = _num(acc.get("availTargetPct"), 98.0)
+    alarms_total = sum(m["alarms"] for m in months)
+    promoted_total = sum(m["promoted"] for m in months)
+    # 다운타임 Pareto — "어떤 고장부터 없애는 게 경제적인가" (건수가 아니라 손실 시간 순)
+    down_by: dict[str, float] = {}
+    for i in issues:
+        down_by[i.get("mode") or "(미분류)"] = down_by.get(i.get("mode") or "(미분류)", 0) + _num(i.get("downtime"))
+    down_total = sum(down_by.values()) or 1
+    down_pareto, cumv = [], 0.0
+    for mode, mins in sorted(down_by.items(), key=lambda kv: -kv[1]):
+        cumv += mins
+        down_pareto.append({"mode": mode, "minutes": round(mins), "cumPct": round(cumv / down_total * 100)})
+    records = _records_from_issues(issues)
+    return {
+        "metrics": {"progress": {"cum": cur.get("avail", 0), "target": avail_target,
+                                 "pct": round(min(100.0, cur.get("avail", 0) / avail_target * 100), 1) if avail_target else 0}},
+        "ram": {"months": months, "current": cur, "availTarget": avail_target},
+        "alarms": {"total": alarms_total, "promoted": promoted_total,
+                   "rate": round(promoted_total / alarms_total * 100, 1) if alarms_total else 0},
+        "downPareto": down_pareto,
+        "cip": cip,
+        "causeLayer": _cause_layer(issues),
+        "pareto": _pareto(issues, "mode"),
+        "recurrence": _recur_by_mode(issues, "mode"),
+        "issueStats": {"total": len(issues),
+                       "closed": sum(1 for i in issues if (i.get("status") or "") in CLOSED_STATUSES),
+                       "open": sum(1 for i in issues if (i.get("status") or "") not in CLOSED_STATUSES)},
+        "records": records,
+        "statusDist": _status_dist_of(records),
+    }
+
+
 def build_project(pid: str):
     _set_project(pid)
     config = _load_config()
@@ -1353,6 +1505,10 @@ def build_project(pid: str):
         return _build_poc(pid, config)
     if stage == "pilot":
         return _build_pilot(pid, config)
+    if stage == "spread":
+        return _build_spread(pid, config)
+    if stage == "ops":
+        return _build_ops(pid, config)
     return _build_mass(pid, config)
 
 
@@ -1380,6 +1536,37 @@ def _build_poc(pid: str, config: dict):
     _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
                f"무고장 런 {computed['run']['cum']}/{computed['run']['target']}h, "
                f"비정상 {len(abnormal)}건")
+
+
+def _build_spread(pid: str, config: dict):
+    src = _pick_latest_xlsx()
+    print(f"[build:{pid}] 입력 파일: {src.name} (stage=spread)")
+    sheets = _load_all_sheets(src)
+    issues = _parse_generic(_pick_sheet(sheets, ISSUES_SHEET_KEYWORDS), ISSUE_FIELD_ALIASES, "id")
+    units  = _parse_generic(_pick_sheet(sheets, UNITQ_SHEET_KEYWORDS), UNIT_FIELD_ALIASES, "unit")
+    computed = _compute_spread(issues, units, config)
+    _validate_records(computed["records"], "spread")
+    out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
+           "issues": issues, **computed}
+    f = computed["fleet"]
+    _write_out(pid, out, f"호기 {f['total']} (퀄 완료 {f['qualified']}), 이슈 {len(issues)}, "
+               f"설계성 {len(computed['escalations'])}건")
+
+
+def _build_ops(pid: str, config: dict):
+    src = _pick_latest_xlsx()
+    print(f"[build:{pid}] 입력 파일: {src.name} (stage=ops)")
+    sheets = _load_all_sheets(src)
+    issues  = _parse_generic(_pick_sheet(sheets, ISSUES_SHEET_KEYWORDS), ISSUE_FIELD_ALIASES, "id")
+    monthly = _parse_generic(_pick_sheet(sheets, MONTHLY_SHEET_KEYWORDS), MONTHLY_FIELD_ALIASES, "month")
+    cip     = _parse_generic(_pick_sheet(sheets, CIP_SHEET_KEYWORDS), CIP_FIELD_ALIASES, "id")
+    computed = _compute_ops(issues, monthly, cip, config)
+    _validate_records(computed["records"], "ops")
+    out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
+           "issues": issues, **computed}
+    ram = computed["ram"]["current"]
+    _write_out(pid, out, f"월간지표 {len(monthly)}개월, 필드 FRACAS {len(issues)}건, "
+               f"가동률 {ram.get('avail', '—')}%, CIP {len(cip)}건")
 
 
 def _build_pilot(pid: str, config: dict):
@@ -1469,6 +1656,13 @@ def _portfolio_summary(stage: str, out: dict) -> dict:
         s["concept"] = next((f.get("count") for f in fw if f.get("key") == "concept"), None)
     else:
         s["recur"] = (out.get("recurrence") or {}).get("count")
+    if stage == "spread":
+        s["fleet"] = out.get("fleet")
+        s["issueStats"] = out.get("issueStats")
+    if stage == "ops":
+        ram = out.get("ram") or {}
+        s["ram"] = {"avail": (ram.get("current") or {}).get("avail"), "target": ram.get("availTarget")}
+        s["issueStats"] = out.get("issueStats")
     if stage == "mass":
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")

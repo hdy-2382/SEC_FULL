@@ -1,0 +1,176 @@
+{
+  "stage": "spread",
+  "run": {
+    "target": 48,
+    "unit": "호기",
+    "criterion": "축약 런",
+    "env": "각 적용 라인 (호기별 SAT)"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "warn",
+      "note": "공진 이슈 — 전 함대 브래킷 보강 전개 중"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "확산 ROI — 투자심의 승인 조건 유지"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "호기 추가 발주 계약 정상"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "라인별 운영 인수 교육 3/4 완료"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "호기별 가동인증 일정 정상"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-07-31",
+    "label": "확산 완료 리뷰",
+    "criteria": [
+      {
+        "label": "① 호기별 퀄 (SAT+런)",
+        "value": "auto:fleet",
+        "status": "prog"
+      },
+      {
+        "label": "② 설계성 고장 0",
+        "value": "1건 — 보강 전개 중",
+        "status": "fail"
+      },
+      {
+        "label": "③ 가동지표 검증",
+        "value": "5/5 호기 (완료분)",
+        "status": "prog"
+      },
+      {
+        "label": "④ 기준 구성 동결",
+        "value": "승인 편차 1건",
+        "status": "pass"
+      },
+      {
+        "label": "⑤ 횡전개 문서",
+        "value": "설치 표준 v1.1",
+        "status": "pass"
+      }
+    ]
+  },
+  "project": {
+    "name": "크린룸 반송 자동화 (확산)",
+    "department": "인프라 기술팀",
+    "team": "박OO, 정OO",
+    "startDate": "2026-05-10",
+    "endDate": "2026-08-31"
+  },
+  "swModules": [
+    {
+      "name": "반송 제어 (동결 v2.3)",
+      "pct": 100,
+      "group": "로봇"
+    },
+    {
+      "name": "호기 파라미터 셋",
+      "pct": 85,
+      "group": "로봇"
+    },
+    {
+      "name": "관제 연동",
+      "pct": 90,
+      "group": "상위시스템"
+    },
+    {
+      "name": "설치 자동 점검 스크립트",
+      "pct": 70,
+      "group": "상위시스템"
+    },
+    {
+      "name": "라인별 안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
+  "lifecycle": [
+    {
+      "stage": "S1 기준 구성 동결",
+      "status": "done",
+      "note": "승인 편차만 예외 — 변경관리 절차"
+    },
+    {
+      "stage": "S2 호기 설치·SAT",
+      "status": "current",
+      "note": "8호기 중 SAT 6 통과 · 1 진행 · 1 설치중"
+    },
+    {
+      "stage": "S3 축약 무고장 런 (48h)",
+      "status": "current",
+      "note": "5호기 통과 · 6호기 재개 대기"
+    },
+    {
+      "stage": "S4 가동지표 검증·횡전개",
+      "status": "todo",
+      "note": "완료 호기부터 순차 — 설치 표준 개정"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "크린룸 반송 — 확산",
+      "brandLogo": "크",
+      "brandName": "크린룸 반송<br>확산",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "원인계층 + 호기별 층화",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "확산 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "S1→S4 · 호기별 양산 퀄 (설치→SAT→축약 런)",
+      "discussItems": [
+        {
+          "topic": "브래킷 보강 — 전 함대 리스크 전개 계획 승인 (CIS-001)",
+          "tag": "긴급",
+          "group": "안전"
+        },
+        {
+          "topic": "접지 보강 표준 — 신규 라인 시공 사양 반영",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "8호기 설치 일정 — 라인 정지 슬롯 협의",
+          "tag": "진행",
+          "group": "운영"
+        },
+        {
+          "topic": "운영 인수 교육 4차 (L4)",
+          "tag": "검토",
+          "group": "기타"
+        }
+      ],
+      "goalsMonth": "6호기 재개 → 8/8 퀄 완료\n설계성(공진) 보강 전 함대 전개",
+      "goalsWeek": "7호기 SAT 완료\n전원 노이즈 무발생 감시 마감"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

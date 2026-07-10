@@ -22,6 +22,11 @@ function devGateValue(v) {
     const fail = abn.filter(a => (a.verdict || '').includes('FAIL')).length;
     return `${pass}/${abn.length} PASS${fail ? ` · ${fail} 재시험` : ''}`;
   }
+  if (v === 'auto:fleet') { const f = DATA.fleet || {}; return `${f.qualified || 0}/${f.total || 0} 호기`; }
+  if (v === 'auto:avail') {
+    const r = DATA.ram || {}, cur = r.current || {};
+    return `${cur.avail != null ? cur.avail : '—'}% / 목표 ${r.availTarget != null ? r.availTarget : '—'}%`;
+  }
   return v;
 }
 
@@ -236,10 +241,10 @@ function devHead(stage, C) {
     </div>`;
 }
 
-/* 공유 셸 — 케미컬과 동일한 트랙 골격. slots(렌즈)만 단계별 주입 */
+/* 공유 셸 — 케미컬과 동일한 트랙 골격. slots(렌즈)만 단계별 주입 (s.head로 타이틀 줄 교체 가능 — tpl-ops) */
 function devShell(stage, C, s) {
   return `
-    ${devHead(stage, C)}
+    ${s.head || devHead(stage, C)}
     <div class="pocv">
       <div class="qbox">${s.qbox}</div>
       <div class="ov-2col">
@@ -390,6 +395,7 @@ function openIssueModal(i) {
     <div class="ed-meta"><span><b>발생일</b> ${esc(e.date || '—')}</span><span><b>심각도</b> ${esc(sevLabel(e.severity))}</span>
     <span><b>원인분류</b> ${esc(e.cause4 || '—')}</span><span><b>상태</b> ${esc(e.status || '—')}</span>
     ${e.closedDate ? `<span><b>종결일</b> ${esc(e.closedDate)}</span>` : ''}${e.verify ? `<span><b>무발생 검증</b> ${esc(e.verify)}</span>` : ''}
+    ${e.unit ? `<span><b>호기</b> ${esc(e.unit)}</span>` : ''}${e.downtime ? `<span><b>다운타임</b> ${esc(e.downtime)}분</span>` : ''}
     ${e.recurOf ? `<span><b>재발</b> ↺ ${esc(e.recurOf)} 동일 모드 — 재분석 의무</span>` : ''}</div>
     <div class="ed-block"><div class="ed-lbl">상세</div><div class="ed-txt">${esc(e.detail) || '—'}</div></div>
     ${imgs ? `<div class="ed-block"><div class="ed-lbl">사진</div><div class="ed-imgs">${imgs}</div></div>` : ''}`;

@@ -26,3 +26,4 @@ scripts/publish_public.sh
 
 # 디자인 미리보기 산출물 (목업 HTML은 추적)
 design/_*.png
+.public_dist/

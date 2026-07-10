@@ -1,0 +1,852 @@
+{
+  "generatedAt": "2026-07-10T05:13:07Z",
+  "source": "크린룸확산_샘플.xlsx",
+  "config": {
+    "stage": "spread",
+    "run": {
+      "target": 48,
+      "unit": "호기",
+      "criterion": "축약 런",
+      "env": "각 적용 라인 (호기별 SAT)"
+    },
+    "tecop": [
+      {
+        "k": "T",
+        "status": "warn",
+        "note": "공진 이슈 — 전 함대 브래킷 보강 전개 중"
+      },
+      {
+        "k": "E",
+        "status": "ok",
+        "note": "확산 ROI — 투자심의 승인 조건 유지"
+      },
+      {
+        "k": "C",
+        "status": "ok",
+        "note": "호기 추가 발주 계약 정상"
+      },
+      {
+        "k": "O",
+        "status": "ok",
+        "note": "라인별 운영 인수 교육 3/4 완료"
+      },
+      {
+        "k": "P",
+        "status": "ok",
+        "note": "호기별 가동인증 일정 정상"
+      }
+    ],
+    "gate": {
+      "reviewDate": "2026-07-31",
+      "label": "확산 완료 리뷰",
+      "criteria": [
+        {
+          "label": "① 호기별 퀄 (SAT+런)",
+          "value": "auto:fleet",
+          "status": "prog"
+        },
+        {
+          "label": "② 설계성 고장 0",
+          "value": "1건 — 보강 전개 중",
+          "status": "fail"
+        },
+        {
+          "label": "③ 가동지표 검증",
+          "value": "5/5 호기 (완료분)",
+          "status": "prog"
+        },
+        {
+          "label": "④ 기준 구성 동결",
+          "value": "승인 편차 1건",
+          "status": "pass"
+        },
+        {
+          "label": "⑤ 횡전개 문서",
+          "value": "설치 표준 v1.1",
+          "status": "pass"
+        }
+      ]
+    },
+    "project": {
+      "name": "크린룸 반송 자동화 (확산)",
+      "department": "인프라 기술팀",
+      "team": "박OO, 정OO",
+      "startDate": "2026-05-10",
+      "endDate": "2026-08-31"
+    },
+    "swModules": [
+      {
+        "name": "반송 제어 (동결 v2.3)",
+        "pct": 100,
+        "group": "로봇"
+      },
+      {
+        "name": "호기 파라미터 셋",
+        "pct": 85,
+        "group": "로봇"
+      },
+      {
+        "name": "관제 연동",
+        "pct": 90,
+        "group": "상위시스템"
+      },
+      {
+        "name": "설치 자동 점검 스크립트",
+        "pct": 70,
+        "group": "상위시스템"
+      },
+      {
+        "name": "라인별 안전 인터록",
+        "pct": 100,
+        "group": "환경"
+      }
+    ],
+    "lifecycle": [
+      {
+        "stage": "S1 기준 구성 동결",
+        "status": "done",
+        "note": "승인 편차만 예외 — 변경관리 절차"
+      },
+      {
+        "stage": "S2 호기 설치·SAT",
+        "status": "current",
+        "note": "8호기 중 SAT 6 통과 · 1 진행 · 1 설치중"
+      },
+      {
+        "stage": "S3 축약 무고장 런 (48h)",
+        "status": "current",
+        "note": "5호기 통과 · 6호기 재개 대기"
+      },
+      {
+        "stage": "S4 가동지표 검증·횡전개",
+        "status": "todo",
+        "note": "완료 호기부터 순차 — 설치 표준 개정"
+      }
+    ],
+    "ui": {
+      "app": {
+        "title": "크린룸 반송 — 확산",
+        "brandLogo": "크",
+        "brandName": "크린룸 반송<br>확산",
+        "evalDateLabel": "평가일",
+        "printBtn": "PDF 리포트",
+        "footBrand": "원인계층 + 호기별 층화",
+        "updatedPrefix": "업데이트 "
+      },
+      "nav": {
+        "overview": "한눈에 보기",
+        "all": "평가 상세 내역"
+      },
+      "common": {
+        "stDone": "완료",
+        "stCurrent": "진행 중",
+        "stTodo": "예정",
+        "noteEmpty": "— 메모"
+      },
+      "overview": {
+        "stageTitle": "확산 세부 단계",
+        "stageCurrentPrefix": "현재: ",
+        "stageSub": "S1→S4 · 호기별 양산 퀄 (설치→SAT→축약 런)",
+        "discussItems": [
+          {
+            "topic": "브래킷 보강 — 전 함대 리스크 전개 계획 승인 (CIS-001)",
+            "tag": "긴급",
+            "group": "안전"
+          },
+          {
+            "topic": "접지 보강 표준 — 신규 라인 시공 사양 반영",
+            "tag": "협의",
+            "group": "운영"
+          },
+          {
+            "topic": "8호기 설치 일정 — 라인 정지 슬롯 협의",
+            "tag": "진행",
+            "group": "운영"
+          },
+          {
+            "topic": "운영 인수 교육 4차 (L4)",
+            "tag": "검토",
+            "group": "기타"
+          }
+        ],
+        "goalsMonth": "6호기 재개 → 8/8 퀄 완료\n설계성(공진) 보강 전 함대 전개",
+        "goalsWeek": "7호기 SAT 완료\n전원 노이즈 무발생 감시 마감"
+      },
+      "modal": {
+        "title": "상세"
+      }
+    }
+  },
+  "issues": [
+    {
+      "id": "CIS-001",
+      "mode": "반송 암 공진 진동",
+      "severity": "Major",
+      "cause4": "설계",
+      "status": "조치중",
+      "date": "2026-07-02",
+      "closedDate": "",
+      "verify": "",
+      "unit": "6호기",
+      "downtime": "",
+      "detail": "고속 구간 공진 — 설계성 판정, 전 함대 브래킷 보강 설계 전개 중 (에스컬레이션)",
+      "images": []
+    },
+    {
+      "id": "CIS-002",
+      "mode": "케이블 체결 불량",
+      "severity": "Minor",
+      "cause4": "제작·조립",
+      "status": "종결",
+      "date": "2026-05-16",
+      "closedDate": "2026-05-18",
+      "verify": "",
+      "unit": "2호기",
+      "downtime": "",
+      "detail": "하네스 체결 토크 미달 — 조립 체크리스트 개정",
+      "images": []
+    },
+    {
+      "id": "CIS-003",
+      "mode": "베어링 프리로드 편차",
+      "severity": "Major",
+      "cause4": "제작·조립",
+      "status": "종결",
+      "date": "2026-05-30",
+      "closedDate": "2026-06-05",
+      "verify": "",
+      "unit": "4호기",
+      "downtime": "",
+      "detail": "제작 로트 편차 — 수입검사 항목 추가",
+      "images": []
+    },
+    {
+      "id": "CIS-004",
+      "mode": "커넥터 미압착",
+      "severity": "Minor",
+      "cause4": "제작·조립",
+      "status": "종결",
+      "date": "2026-06-12",
+      "closedDate": "2026-06-14",
+      "verify": "",
+      "unit": "5호기",
+      "downtime": "",
+      "detail": "압착 불량 1건 — 전수 재확인",
+      "images": []
+    },
+    {
+      "id": "CIS-005",
+      "mode": "레일 수평도 초과",
+      "severity": "Major",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-05-13",
+      "closedDate": "2026-05-15",
+      "verify": "",
+      "unit": "1호기",
+      "downtime": "",
+      "detail": "수평도 0.8mm 초과 — 재시공 후 SAT 재수행",
+      "images": []
+    },
+    {
+      "id": "CIS-006",
+      "mode": "통신 음영 끊김",
+      "severity": "Major",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-05-27",
+      "closedDate": "2026-06-02",
+      "verify": "",
+      "unit": "3호기",
+      "downtime": "",
+      "detail": "AP 음영 구간 — AP 1식 증설",
+      "images": []
+    },
+    {
+      "id": "CIS-007",
+      "mode": "간섭물 미철거",
+      "severity": "Minor",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-06-10",
+      "closedDate": "2026-06-11",
+      "verify": "",
+      "unit": "5호기",
+      "downtime": "",
+      "detail": "가설 브래킷 잔존 — 시공 인수 체크리스트 보완",
+      "images": []
+    },
+    {
+      "id": "CIS-008",
+      "mode": "전원 노이즈 트립",
+      "severity": "Major",
+      "cause4": "설치·시공",
+      "status": "검증중",
+      "date": "2026-06-24",
+      "closedDate": "",
+      "verify": "12/20일",
+      "unit": "7호기",
+      "downtime": "",
+      "detail": "접지 불량 추정 — 접지 보강 후 무발생 감시",
+      "images": []
+    },
+    {
+      "id": "CIS-009",
+      "mode": "티칭 기준점 상이",
+      "severity": "Minor",
+      "cause4": "설치·시공",
+      "status": "종결",
+      "date": "2026-06-25",
+      "closedDate": "2026-06-27",
+      "verify": "",
+      "unit": "7호기",
+      "downtime": "",
+      "detail": "호기 간 기준점 관리 표준 반영",
+      "images": []
+    },
+    {
+      "id": "CIS-010",
+      "mode": "이물 유입 오검지",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "종결",
+      "date": "2026-06-16",
+      "closedDate": "2026-06-18",
+      "verify": "",
+      "unit": "3호기",
+      "downtime": "",
+      "detail": "크린룸 파티클 이벤트 — 센서 임계 재설정",
+      "images": []
+    },
+    {
+      "id": "CIS-011",
+      "mode": "수동 개입 절차 미준수",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "조치중",
+      "date": "2026-06-30",
+      "closedDate": "",
+      "verify": "",
+      "unit": "4호기",
+      "downtime": "",
+      "detail": "인터록 해제 절차 위반 — 운영 SOP 재교육",
+      "images": []
+    },
+    {
+      "id": "CIS-012",
+      "mode": "온습도 경보 정지",
+      "severity": "Minor",
+      "cause4": "운영·환경",
+      "status": "조치중",
+      "date": "2026-07-06",
+      "closedDate": "",
+      "verify": "",
+      "unit": "6호기",
+      "downtime": "",
+      "detail": "공조 이벤트 연동 정지 — 재기동 조건 협의",
+      "images": []
+    }
+  ],
+  "metrics": {
+    "progress": {
+      "cum": 5,
+      "target": 8,
+      "pct": 62.5
+    }
+  },
+  "fleet": {
+    "total": 8,
+    "satDone": 6,
+    "qualified": 5,
+    "pct": 62.5
+  },
+  "units": [
+    {
+      "unit": "1호기",
+      "line": "L1",
+      "installDate": "2026-05-12",
+      "sat": "PASS",
+      "runH": 48.0,
+      "runTarget": 48.0,
+      "status": "퀄 완료",
+      "notes": ""
+    },
+    {
+      "unit": "2호기",
+      "line": "L1",
+      "installDate": "2026-05-14",
+      "sat": "PASS",
+      "runH": 48.0,
+      "runTarget": 48.0,
+      "status": "퀄 완료",
+      "notes": ""
+    },
+    {
+      "unit": "3호기",
+      "line": "L2",
+      "installDate": "2026-05-26",
+      "sat": "PASS",
+      "runH": 48.0,
+      "runTarget": 48.0,
+      "status": "퀄 완료",
+      "notes": ""
+    },
+    {
+      "unit": "4호기",
+      "line": "L2",
+      "installDate": "2026-05-28",
+      "sat": "PASS",
+      "runH": 48.0,
+      "runTarget": 48.0,
+      "status": "퀄 완료",
+      "notes": ""
+    },
+    {
+      "unit": "5호기",
+      "line": "L3",
+      "installDate": "2026-06-09",
+      "sat": "PASS",
+      "runH": 48.0,
+      "runTarget": 48.0,
+      "status": "퀄 완료",
+      "notes": ""
+    },
+    {
+      "unit": "6호기",
+      "line": "L3",
+      "installDate": "2026-06-11",
+      "sat": "PASS",
+      "runH": 31.0,
+      "runTarget": 48.0,
+      "status": "런 진행",
+      "notes": "공진 이슈(CIS-001) 보강 후 재개"
+    },
+    {
+      "unit": "7호기",
+      "line": "L4",
+      "installDate": "2026-06-23",
+      "sat": "진행",
+      "runH": 0.0,
+      "runTarget": 48.0,
+      "status": "SAT 진행",
+      "notes": ""
+    },
+    {
+      "unit": "8호기",
+      "line": "L4",
+      "installDate": "2026-07-02",
+      "sat": "—",
+      "runH": 0.0,
+      "runTarget": 48.0,
+      "status": "설치 중",
+      "notes": ""
+    }
+  ],
+  "causeLayer": [
+    {
+      "key": "design",
+      "label": "① 설계",
+      "count": 1,
+      "closed": 0
+    },
+    {
+      "key": "build",
+      "label": "② 제작·조립",
+      "count": 3,
+      "closed": 3
+    },
+    {
+      "key": "install",
+      "label": "③ 설치·시공",
+      "count": 5,
+      "closed": 4
+    },
+    {
+      "key": "oper",
+      "label": "④ 운영·환경",
+      "count": 3,
+      "closed": 1
+    }
+  ],
+  "escalations": [
+    {
+      "id": "CIS-001",
+      "mode": "반송 암 공진 진동",
+      "status": "조치중",
+      "detail": "고속 구간 공진 — 설계성 판정, 전 함대 브래킷 보강 설계 전개 중 (에스컬레이션)"
+    }
+  ],
+  "unitDist": [
+    {
+      "unit": "1호기",
+      "count": 1
+    },
+    {
+      "unit": "2호기",
+      "count": 1
+    },
+    {
+      "unit": "3호기",
+      "count": 2
+    },
+    {
+      "unit": "4호기",
+      "count": 2
+    },
+    {
+      "unit": "5호기",
+      "count": 2
+    },
+    {
+      "unit": "6호기",
+      "count": 2
+    },
+    {
+      "unit": "7호기",
+      "count": 2
+    }
+  ],
+  "pareto": [
+    {
+      "mode": "반송 암 공진 진동",
+      "count": 1,
+      "cumPct": 8
+    },
+    {
+      "mode": "케이블 체결 불량",
+      "count": 1,
+      "cumPct": 17
+    },
+    {
+      "mode": "베어링 프리로드 편차",
+      "count": 1,
+      "cumPct": 25
+    },
+    {
+      "mode": "커넥터 미압착",
+      "count": 1,
+      "cumPct": 33
+    },
+    {
+      "mode": "레일 수평도 초과",
+      "count": 1,
+      "cumPct": 42
+    },
+    {
+      "mode": "통신 음영 끊김",
+      "count": 1,
+      "cumPct": 50
+    },
+    {
+      "mode": "간섭물 미철거",
+      "count": 1,
+      "cumPct": 58
+    },
+    {
+      "mode": "전원 노이즈 트립",
+      "count": 1,
+      "cumPct": 67
+    },
+    {
+      "mode": "티칭 기준점 상이",
+      "count": 1,
+      "cumPct": 75
+    },
+    {
+      "mode": "이물 유입 오검지",
+      "count": 1,
+      "cumPct": 83
+    },
+    {
+      "mode": "수동 개입 절차 미준수",
+      "count": 1,
+      "cumPct": 92
+    },
+    {
+      "mode": "온습도 경보 정지",
+      "count": 1,
+      "cumPct": 100
+    }
+  ],
+  "recurrence": {
+    "count": 0,
+    "items": []
+  },
+  "issueStats": {
+    "total": 12,
+    "closed": 8,
+    "open": 4
+  },
+  "records": [
+    {
+      "id": "CIS-001",
+      "mode": "반송 암 공진 진동",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설계",
+      "status": "조치중",
+      "date": "2026-07-02",
+      "time": "",
+      "cycle": null,
+      "detail": "고속 구간 공진 — 설계성 판정, 전 함대 브래킷 보강 설계 전개 중 (에스컬레이션)",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "6호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-002",
+      "mode": "케이블 체결 불량",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "제작·조립",
+      "status": "종결",
+      "date": "2026-05-16",
+      "time": "",
+      "cycle": null,
+      "detail": "하네스 체결 토크 미달 — 조립 체크리스트 개정",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-05-18",
+      "images": [],
+      "verdict": "",
+      "unit": "2호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-003",
+      "mode": "베어링 프리로드 편차",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "제작·조립",
+      "status": "종결",
+      "date": "2026-05-30",
+      "time": "",
+      "cycle": null,
+      "detail": "제작 로트 편차 — 수입검사 항목 추가",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-05",
+      "images": [],
+      "verdict": "",
+      "unit": "4호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-004",
+      "mode": "커넥터 미압착",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "제작·조립",
+      "status": "종결",
+      "date": "2026-06-12",
+      "time": "",
+      "cycle": null,
+      "detail": "압착 불량 1건 — 전수 재확인",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-14",
+      "images": [],
+      "verdict": "",
+      "unit": "5호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-005",
+      "mode": "레일 수평도 초과",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-05-13",
+      "time": "",
+      "cycle": null,
+      "detail": "수평도 0.8mm 초과 — 재시공 후 SAT 재수행",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-05-15",
+      "images": [],
+      "verdict": "",
+      "unit": "1호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-006",
+      "mode": "통신 음영 끊김",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-05-27",
+      "time": "",
+      "cycle": null,
+      "detail": "AP 음영 구간 — AP 1식 증설",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-02",
+      "images": [],
+      "verdict": "",
+      "unit": "3호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-007",
+      "mode": "간섭물 미철거",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-06-10",
+      "time": "",
+      "cycle": null,
+      "detail": "가설 브래킷 잔존 — 시공 인수 체크리스트 보완",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-11",
+      "images": [],
+      "verdict": "",
+      "unit": "5호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-008",
+      "mode": "전원 노이즈 트립",
+      "modeCode": "",
+      "severity": "Major",
+      "cause": "설치·시공",
+      "status": "검증중",
+      "date": "2026-06-24",
+      "time": "",
+      "cycle": null,
+      "detail": "접지 불량 추정 — 접지 보강 후 무발생 감시",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "12/20일",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "7호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-009",
+      "mode": "티칭 기준점 상이",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "설치·시공",
+      "status": "종결",
+      "date": "2026-06-25",
+      "time": "",
+      "cycle": null,
+      "detail": "호기 간 기준점 관리 표준 반영",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-27",
+      "images": [],
+      "verdict": "",
+      "unit": "7호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-010",
+      "mode": "이물 유입 오검지",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "종결",
+      "date": "2026-06-16",
+      "time": "",
+      "cycle": null,
+      "detail": "크린룸 파티클 이벤트 — 센서 임계 재설정",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "2026-06-18",
+      "images": [],
+      "verdict": "",
+      "unit": "3호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-011",
+      "mode": "수동 개입 절차 미준수",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "조치중",
+      "date": "2026-06-30",
+      "time": "",
+      "cycle": null,
+      "detail": "인터록 해제 절차 위반 — 운영 SOP 재교육",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "4호기",
+      "downtime": ""
+    },
+    {
+      "id": "CIS-012",
+      "mode": "온습도 경보 정지",
+      "modeCode": "",
+      "severity": "Minor",
+      "cause": "운영·환경",
+      "status": "조치중",
+      "date": "2026-07-06",
+      "time": "",
+      "cycle": null,
+      "detail": "공조 이벤트 연동 정지 — 재기동 조건 협의",
+      "action": "",
+      "swVer": "",
+      "hwVer": "",
+      "verify": "",
+      "recurLink": "",
+      "closedDate": "",
+      "images": [],
+      "verdict": "",
+      "unit": "6호기",
+      "downtime": ""
+    }
+  ],
+  "statusDist": {
+    "new": 0,
+    "acting": 3,
+    "verifying": 1,
+    "closed": 8
+  }
+}
