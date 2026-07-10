@@ -117,6 +117,48 @@ function adjudicationPanel() {
         </div>`;
 }
 
+/* Known Issues Register — 인증(이관·투자심의) 준비: 오픈 건 전건 처분 (docs/PROCESS.md §2.4).
+   공통 레코드 스토어(records)의 미종결 건 필터 + 처분대장(REPORT.xlsx 「처분대장」) 조인.
+   심의는 새 데이터를 만들지 않는다 — 이 대장이 그대로 이관 안건이 된다. */
+function kirPanel() {
+  const recs = (DATA.records || []).filter(r => pocStBucket(r.status) !== 'closed');
+  const dispos = DATA.dispositions || [];
+  const norm = s => String(s || '').toLowerCase().replace(/\s+/g, '');
+  const dOf = r => dispos.find(d => {
+    const t = norm(d.target);
+    return t && (t === norm(r.id) || (r.modeCode && t === norm(r.modeCode)));
+  });
+  const dcls = s => {
+    s = String(s || '').toLowerCase();
+    return s.includes('carry') || s.includes('이관') ? 'b-major'
+      : s.includes('waiver') || s.includes('수용') ? 'b-prog'
+      : s.includes('종결') ? 'b-ok' : 'b-wait';
+  };
+  let assigned = 0;
+  const rows = recs.map(r => {
+    const d = dOf(r);
+    if (d) assigned++;
+    return `<tr><td><b>${esc(r.id)}</b></td><td>${r.modeCode ? esc(r.modeCode) + ' · ' : ''}${esc(r.mode)}</td>
+      <td class="c"><span class="badge ${SEV_BADGE[r.severity] || 'b-minor'}">${esc(sevLabel(r.severity))}</span></td>
+      <td class="c"><span class="badge ${POC_ST_BADGE[pocStBucket(r.status)]}">${esc(r.status || '—')}</span></td>
+      <td class="c">${esc(r.verify || '—')}</td>
+      <td class="c">${esc(r.verdict || '—')}</td>
+      <td class="c">${d ? `<span class="badge ${dcls(d.dispo)}">${esc(d.dispo)}</span>` : '<span class="badge b-crit">처분 미정</span>'}</td>
+      <td class="mini">${d ? esc(d.reason || '') : ''}</td>
+      <td class="c">${d ? esc(d.due || '—') : '—'}</td><td class="c">${d ? esc(d.owner || '—') : '—'}</td><td class="c">${d ? esc(d.agreed || '—') : '—'}</td></tr>`;
+  }).join('');
+  const pending = recs.length - assigned;
+  return {
+    open: recs.length, pending,
+    html: `
+    <div class="panel">
+      <div class="ph"><h3>Known Issues Register (단일본)</h3><span class="ps">공통 레코드의 오픈 건 필터 + 처분대장 조인 — 별도 문서를 만들지 않는다</span></div>
+      <div class="tbl-scroll" style="max-height:340px"><table><tr><th>ID</th><th>고장모드</th><th class="c">심각도</th><th class="c">상태</th><th class="c">무발생</th><th class="c">판정</th><th class="c">처분</th><th>사유·조건</th><th class="c">기한</th><th class="c">오너</th><th class="c">합의</th></tr>${rows || '<tr><td colspan="11" class="mini c">오픈 건 없음 — 전건 종결</td></tr>'}</table></div>
+      <div class="mini" style="margin-top:8px">오픈 <b>${recs.length}건</b> · 처분 확정 <b style="color:var(--green)">${assigned}</b> (종결예정/carry-over/waiver) · 처분 미정 <b style="color:${pending ? 'var(--crit)' : 'var(--green)'}">${pending}</b> — 미정 0건 + 기한·오너 서명 완비가 이관심의 상정 조건</div>
+    </div>`,
+  };
+}
+
 function renderSteps(C, m, f, acc, op) {
   const verifyCy = (C.acceptance || {}).verifyCycle || 200;
   const fracasH = T('steps.fracasH', []);
@@ -152,6 +194,7 @@ function renderSteps(C, m, f, acc, op) {
   const errlog = DATA.errors.map((e, i) => `<tr><td><b>${esc(e.code)}</b></td><td>${esc(e.type)}<br><span class="mini">${esc((e.cause || '').slice(0, 30))}</span></td><td class="c">${esc(e.owner_sec || e.owner || '')}</td><td class="c"><button class="btn" style="padding:4px 9px" onclick="openModal(${i})">${esc(T('steps.errlogBtn'))}</button></td></tr>`).join('');
   const flow = T('steps.flow', []);
   const flowHtml = flow.map((s, i) => `<span class="b${i === flow.length - 1 ? ' last' : ''}">${esc(s)}</span>`).join('<span class="ar">→</span>');
+  const kir = kirPanel();   // 인증 준비 — 공통 레코드 오픈 건 + 처분대장
 
   return `
     <div class="sbox-h"><span class="tag">${esc(T('steps.tag'))}</span><h2>${esc(T('steps.title'))}</h2><span class="d">${esc(T('steps.desc'))}</span></div>
@@ -197,6 +240,11 @@ function renderSteps(C, m, f, acc, op) {
           <div class="panel"><div class="ph"><h3>${esc(T('steps.errlogTitle'))}</h3><span class="badge b-prog" style="margin-left:8px">${esc(T('steps.errlogBadge'))}</span></div><div class="psub">${esc(T('steps.errlogSub'))}</div><div class="tbl-scroll"><table><tr>${errlogH.map((h, i) => i === 0 || i === 1 ? `<th>${esc(h)}</th>` : `<th class="c">${esc(h)}</th>`).join('')}</tr>${errlog}</table></div></div>
         </div>
       </div>
+    </section>
+
+    <section class="step" id="s7">
+      ${stepHead(7, '인증 준비 — Known Issues Register', '남은 결점을 어떤 조건으로 안고 가는가 — 심의는 새 데이터가 아니라 기존 증거를 심사하는 이벤트', `오픈 ${kir.open}건 · 미정 ${kir.pending}`, kir.pending ? 'prog' : 'pass')}
+      <div class="step-body">${kir.html}</div>
     </section>`;
 }
 

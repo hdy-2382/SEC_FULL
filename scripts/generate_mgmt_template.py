@@ -133,9 +133,26 @@ def build_adjudication(wb):
     _rows(ws, 2 + len(ex), [[""] * len(cols)] * 12, len(cols))
 
 
+def build_disposition(wb):
+    """처분대장 (인증 준비 — 이관·투자심의 전): 오픈 건 전건 처분 후 인수인계.
+    처분: 종결예정 / carry-over(조건부 이관) / waiver(위험수용) · 기한·오너 서명 필수 — docs/PROCESS.md §2.4.
+    대상ID: 레코드 ID(E-001) 또는 코드(ERR-001) — Known Issues Register가 오픈 건과 자동 조인한다."""
+    ws = wb.create_sheet("처분대장")
+    ws.sheet_properties.tabColor = NAVY
+    cols = ["처분ID", "대상ID", "처분", "사유", "기한", "오너", "합의"]
+    _header(ws, cols, [10, 12, 14, 44, 13, 12, 16])
+    ex = [
+        ["DSP-01", "ERR-002", "carry-over", "재발 원인 규명 중 — 운영 초기 집중 모니터링 조건부 이관", "2026-08-15", "양희두", "이관심의 상정"],
+        ["DSP-02", "ERR-001", "종결예정", "무발생 검증 진행 중 — 심의 전 종결 예상", "2026-07-30", "김현일", "합의완료"],
+        ["DSP-03", "ERR-005", "waiver", "경미·자가복구 — 위험수용, 월간 모니터링 조건", "—", "박영희", "합의완료"],
+    ]
+    _rows(ws, 2, ex, len(cols), example=True, height=24)
+    _rows(ws, 2 + len(ex), [[""] * len(cols)] * 12, len(cols))
+
+
 def main():
     wb = Workbook(); wb.remove(wb.active)
-    build_guide(wb); build_codes(wb); build_actions(wb); build_adjudication(wb)
+    build_guide(wb); build_codes(wb); build_actions(wb); build_adjudication(wb); build_disposition(wb)
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     wb.save(OUT_PATH)
     print(f"[mgmt] 생성 완료: {OUT_PATH.relative_to(ROOT)}")

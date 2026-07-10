@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T05:13:07Z",
+  "generatedAt": "2026-07-10T05:27:10Z",
   "source": "양산평가_샘플.xlsx",
   "config": {
     "stage": "mass",
@@ -1526,6 +1526,35 @@
       "evidence": "로그 분석 중",
       "agreed": "합동리뷰 07-15",
       "date": ""
+    }
+  ],
+  "dispositions": [
+    {
+      "id": "DSP-01",
+      "target": "ERR-002",
+      "dispo": "carry-over",
+      "reason": "그립 실패 재발 원인 규명 중 — 운영 초기 집중 모니터링 조건부 이관",
+      "due": "2026-08-15",
+      "owner": "양OO",
+      "agreed": "이관심의 상정"
+    },
+    {
+      "id": "DSP-02",
+      "target": "ERR-001",
+      "dispo": "종결예정",
+      "reason": "카메라 버퍼 조치 무발생 검증 진행 중 — 심의 전 종결 예상",
+      "due": "2026-07-30",
+      "owner": "김OO",
+      "agreed": "합의완료"
+    },
+    {
+      "id": "DSP-03",
+      "target": "ERR-005",
+      "dispo": "waiver",
+      "reason": "경미·자가복구(센서 노이즈) — 위험수용, 월간 모니터링 조건",
+      "due": "—",
+      "owner": "박OO",
+      "agreed": "합의완료"
     }
   ],
   "months": [
