@@ -28,8 +28,8 @@ function buildNav() {
     const on = VIEW === 'project' && CUR_PID === p.id;
     const stg = e.stage ? `<span class="stage">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>` : '';
     html += `<a href="#/${esc(p.id)}"${on ? ' class="active"' : ''}><span class="st">${esc(p.abbr || '')}</span> ${esc(p.name)}${stg}</a>`;
-    if (on && (e.stage || 'mass') === 'mass') {
-      // 실증 템플릿 하위 탭 (한눈에 보기 / 평가 상세 내역)
+    if (on && ['mass', 'poc'].includes(e.stage || 'mass')) {
+      // 하위 탭 (한눈에 보기 / 평가 상세 내역) — 실증(mass)·개발 POC 템플릿 공통
       html += `<a class="sub${CUR_TAB === 'overview' ? ' on' : ''}" href="#/${esc(p.id)}/overview"><span class="st">◉</span> ${esc(T('nav.overview', '한눈에 보기'))}</a>`;
       html += `<a class="sub${CUR_TAB !== 'overview' ? ' on' : ''}" href="#/${esc(p.id)}/all"><span class="st">▤</span> ${esc(T('nav.all', '평가 상세 내역'))}</a>`;
     }

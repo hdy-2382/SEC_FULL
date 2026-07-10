@@ -196,7 +196,8 @@ def build_errors_sheet(wb: Workbook, pilot: bool = False):
               "삼성 담당자", "업체 담당자"]
     widths = [6, 14, 10, 10, 12, 18, 44, 34, 44, 13, 13, 13]
     if pilot:
-        cols += ["SW버전", "HW버전"]; widths += [11, 11]
+        # 원인분류: 근본원인 축 (설계/부품/제작·조립/SW/시험환경·자재/운영·조작) — POC 4분류의 세분화 (docs/RECORD_SCHEMA.md §3)
+        cols += ["원인분류", "SW버전", "HW버전"]; widths += [14, 11, 11]
     cols += ["상세설명", "사진(파일명)"]; widths += [54, 26]
     _style_header(ws, cols, widths)
 
@@ -205,7 +206,7 @@ def build_errors_sheet(wb: Workbook, pilot: bool = False):
     ex2 = [2, "2026-06-17", "11:08", 953, "ERR-002", "그리퍼 그립 실패", "부품 표면 마찰계수 편차로 그리핑 실패, 자동 정지",
            "부품 표면 코팅 편차 추정", "그리퍼 압력 +5% 조정, 표면 사전검사 추가", "정상복귀", "김현일", "홍길동"]
     if pilot:
-        ex1 += ["v0.9.1", "Rev B"]; ex2 += ["v0.9.2", "Rev B"]
+        ex1 += ["SW", "v0.9.1", "Rev B"]; ex2 += ["부품", "v0.9.2", "Rev B"]
     ex1 += ["현장 조도 320→210 LUX 급감 구간에서 반복. 노출 보정 후 재현 안 됨. (분석 리포트 별첨)", "ERR-001_1.jpg, ERR-001_2.jpg"]
     ex2 += ["코팅 로트 편차로 마찰계수 0.40→0.28. 압력 상향으로 해결.", "ERR-002_grip.png"]
     _example_rows(ws, 2, [ex1, ex2], len(cols), height=42)
@@ -216,14 +217,14 @@ def build_errors_sheet(wb: Workbook, pilot: bool = False):
 def build_issues_sheet(wb: Workbook):
     ws = wb.create_sheet("이슈로그")
     ws.sheet_properties.tabColor = NAVY
-    cols   = ["이슈ID", "고장모드", "심각도", "원인분류", "상태", "발생일", "상세", "사진(파일명)"]
-    widths = [10, 20, 10, 14, 10, 14, 48, 26]
+    cols   = ["이슈ID", "고장모드", "심각도", "원인분류", "상태", "발생일", "종결일", "무발생검증", "상세", "사진(파일명)"]
+    widths = [10, 20, 10, 14, 10, 14, 14, 12, 48, 26]
     _style_header(ws, cols, widths)
     _example_rows(ws, 2, [
-        ["ISS-001", "비전 오인식", "Major", "구현(SW)", "종결", "2026-06-08",
-         "픽업 좌표 인식 실패 — 노출 보정으로 해결", "← 예시. 원인분류: 컨셉 리스크/설계/구현(SW)/시험환경"],
-        ["ISS-002", "체결 토크 이탈", "Critical", "설계", "조치중", "2026-06-10",
-         "토크 상한 이탈 — 프로파일 재설계 진행", ""],
+        ["ISS-001", "비전 오인식", "Major", "구현(SW)", "종결", "2026-06-08", "2026-06-12", "",
+         "픽업 좌표 인식 실패 — 노출 보정으로 해결", "← 예시. 원인분류: 컨셉 리스크/설계/구현(SW)/시험환경 · 종결일·무발생검증(n/목표Cy)은 선택"],
+        ["ISS-002", "체결 토크 이탈", "Critical", "설계", "검증중", "2026-06-10", "", "41/50Cy",
+         "토크 상한 이탈 — 프로파일 재설계 후 무발생 감시", ""],
     ], len(cols), height=30)
     _blank_rows(ws, 4, 18, len(cols), height=22)
 

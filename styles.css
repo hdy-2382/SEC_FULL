@@ -441,4 +441,58 @@
 .req{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:800;vertical-align:1px;margin-left:3px}
 .req.must{background:#EAF2FB;color:var(--sky)}.req.opt{background:#ececec;color:#999}
 .tmpl{font-size:10.5px;font-weight:800;background:#0F2E54;color:#9fd0ff;border-radius:6px;padding:3px 9px;letter-spacing:.03em}
+
+/* ── 템플릿① POC 관제 (tpl-dev renderPoc) — 스코프: .pocv ─────────────
+   케미컬(한눈에 보기)의 prog-track/pt-h/kg-prog 문법을 재사용하고,
+   POC 고유 컴포넌트(4분류 보드·구성 막대·폐루프·대장 칩)만 여기서 정의한다. */
+.pocv .poc-2col{display:grid;grid-template-columns:minmax(420px,1fr) 1fr;gap:18px;margin-bottom:18px}
+.pocv .poc-2col>.prog-track{display:flex;flex-direction:column;row-gap:12px}
+.pocv .poc-2col>.prog-track>.panel:last-child,.pocv .poc-2col>.prog-track>.kgroup:last-child{flex:1 1 auto}
+@media(max-width:1180px){.pocv .poc-2col{grid-template-columns:1fr}}
+/* 무고장 런 히어로: pg-bar 위 리셋 마커 (rgauge .mark와 동일 조형) */
+.pocv .pg-bar-mk{position:relative;overflow:visible}
+.pocv .pg-bar-mk i{border-radius:6px 0 0 6px}
+.pocv .pg-mark{position:absolute;top:-5px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--crit-soft);border:2px solid var(--rust);color:var(--rust);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:default;z-index:1}
+/* 4분류 보드 — 컨셉 리스크 히어로 + 3분류 타일 */
+.pocv .fw-board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:2px}
+.pocv .fwt{border:1px solid var(--line-soft);border-top:3px solid var(--tc,var(--line));border-radius:10px;background:var(--card-alt);padding:10px 12px}
+.pocv .fwt .t{font-size:11px;font-weight:800;color:var(--muted)}
+.pocv .fwt .n{font-size:23px;font-weight:800;color:var(--navy-deep);margin:2px 0 1px}
+.pocv .fwt .n small,.pocv .fwt .hero-n small{font-size:11px;color:var(--muted);font-weight:700;margin-left:2px}
+.pocv .fwt .m{font-size:10.5px;color:var(--muted);line-height:1.5}
+.pocv .fwt.risk{--tc:var(--crit)}.pocv .fwt.design{--tc:var(--sky)}.pocv .fwt.sw{--tc:var(--major)}.pocv .fwt.env{--tc:#2f8f6b}
+.pocv .fwt.hero{grid-column:1 / -1;display:flex;align-items:center;gap:14px;background:var(--green-soft);border-color:#bfe0cc}
+.pocv .fwt.hero.hero-bad{background:var(--crit-soft);border-color:#e5b8b0}
+.pocv .fwt.hero .hero-n{font-size:40px;font-weight:800;line-height:1;flex:none}
+.pocv .fwt.hero .hero-n.ok{color:var(--green)}.pocv .fwt.hero .hero-n.bad{color:var(--crit)}
+.pocv .fwt.hero .hero-tx{min-width:0}
+.pocv .fwt.hero .m{font-size:11.5px;color:var(--ink-soft)}
+.pocv .fw-badge{margin-left:auto;flex:none;font-size:10px;font-weight:800;background:var(--green);color:#fff;border-radius:20px;padding:3px 10px;letter-spacing:.02em}
+/* 이슈 구성 막대 — 컨셉 칸은 점선(비어 있음 자체가 결론) */
+.pocv .compo{display:flex;gap:2px;height:26px;margin-top:11px}
+.pocv .compo .sg{display:flex;align-items:center;justify-content:center;min-width:0;border-radius:5px}
+.pocv .compo .sg span{font-size:10.5px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
+.pocv .compo .sg-design{background:var(--sky)}
+.pocv .compo .sg-sw{background:var(--major)}.pocv .compo .sg-sw span{color:#4a3000}
+.pocv .compo .sg-env{background:#2f8f6b}
+.pocv .compo .sg-zero{flex:0 0 74px;border:1.5px dashed var(--crit);color:var(--crit);font-size:10.5px;font-weight:800;background:transparent}
+/* 폐루프 FRACAS 파이프라인 — 전 단계 공용 컴포넌트 (스코프: .looppanel — POC·Pilot 공유) */
+.looppanel .loopline{display:flex;align-items:stretch;gap:7px}
+.looppanel .loopline .lp{flex:1;min-width:0;border:1px solid var(--line-soft);border-radius:10px;background:var(--card-alt);padding:9px 8px;text-align:center}
+.looppanel .loopline .lp .n{font-size:22px;font-weight:800;color:var(--navy-deep);line-height:1.1}
+.looppanel .loopline .lp .t{font-size:11.5px;font-weight:800;color:var(--ink-soft);margin-top:2px}
+.looppanel .loopline .lp .s{font-size:9.5px;color:var(--muted);margin-top:2px}
+.looppanel .loopline .lp-verifying{border-color:#bcd6f0;background:var(--sky-soft)}
+.looppanel .loopline .lp-verifying .n{color:var(--sky)}
+.looppanel .loopline .lp-closed{border-color:#bfe0cc;background:var(--green-soft)}
+.looppanel .loopline .lp-closed .n{color:var(--green)}
+.looppanel .loopline .lar{align-self:center;color:var(--muted);font-weight:800;flex:none}
+.looppanel .loopret{margin-top:10px;font-size:11.5px;font-weight:700;color:var(--crit);border-top:1px dashed var(--line);padding-top:9px}
+/* 4분류 칩 · 재발 링크 (대장) */
+.pocv .c4{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.pocv .c4-risk{background:var(--crit-soft);color:var(--crit)}
+.pocv .c4-design{background:var(--minor-soft);color:#2E6DB0}
+.pocv .c4-sw{background:var(--major-soft);color:#B36A00}
+.pocv .c4-env{background:#E7F3ED;color:#25795a}
+.panel .rlink{color:var(--crit);font-weight:800;font-size:11px;white-space:nowrap}   /* 재발 링크 — POC·Pilot 대장 공용 */
 @media print{.pcard{break-inside:avoid}.ladder{break-inside:avoid}}

@@ -84,6 +84,9 @@ ERROR_FIELD_ALIASES = {
     "type":   ["유형", "타입", "type"],
     "detail": ["상세", "상세내용", "detail"],
     "cause":  ["원인", "cause"],
+    # Pilot~: 근본원인 분류 축 (설계/부품/제작·조립/SW/시험환경·자재/운영·조작) — 선택 컬럼.
+    #   POC 4분류의 상위호환 세분화 (docs/RECORD_SCHEMA.md §3). 공통 레코드 스토어의 cause 로 매핑.
+    "cause_class": ["원인분류", "근본원인분류"],
     "action": ["조치", "조치사항", "action"],
     "result": ["결과", "조치결과", "result"],
     # 삼성 담당자 / 업체 담당자 — 둘 다 "담당"을 포함하므로 구체적인 후보를 먼저 둔다.
@@ -108,6 +111,9 @@ ISSUE_FIELD_ALIASES = {
     "cause4":   ["원인분류", "4분류", "분류"],
     "status":   ["상태"],
     "date":     ["발생일", "일자"],
+    # 종결일·무발생검증은 POC 선택 필드 — 있으면 수렴 추이·폐루프 표시에 사용 (docs/RECORD_SCHEMA.md §1)
+    "closedDate": ["종결일", "종결날짜"],
+    "verify":   ["무발생검증", "무발생", "검증진행"],
     "detail":   ["상세", "내용"],
     "images":   ["사진", "이미지"],
 }
@@ -357,6 +363,7 @@ def _parse_errors(rows: list[list]) -> list[dict]:
             "type":      _cell_to_str(_safe_idx(row, cmap.get("type"))),
             "detail":    _cell_to_str(_safe_idx(row, cmap.get("detail"))),
             "cause":     _cell_to_str(_safe_idx(row, cmap.get("cause"))),
+            "cause_class": _cell_to_str(_safe_idx(row, cmap.get("cause_class"))),
             "action":    _cell_to_str(_safe_idx(row, cmap.get("action"))),
             "result":    _cell_to_str(_safe_idx(row, cmap.get("result"))),
             "owner_sec": _cell_to_str(_safe_idx(row, cmap.get("owner_sec"))),
@@ -1020,6 +1027,136 @@ FOURWAY_MAP = [
 CLOSED_STATUSES = ("종결", "완료", "검증완료")
 
 
+# ── 공통 레코드 스토어 (docs/RECORD_SCHEMA.md §1 — 3원칙 ①의 구현) ──────
+# 전 과제·전 단계 공통 형식의 records[] 를 dashboard.json 에 병기한다.
+#   · 배관(수집→분류→폐루프→재발 링크)은 전 단계 하나, 화면(렌즈)만 단계별.
+#   · 단계가 올라도 스키마는 같고 '필수 필드'만 늘어난다 — 검증은 경고(빌드 차단 없음).
+#   · 이관 리허설: --validate-stage <상위 단계> 로 현 대장을 다음 단계 잣대로 사전 점검.
+RECORD_REQUIRED = {
+    "poc":   ["id", "mode", "severity", "cause", "status"],
+    "pilot": ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer"],
+    "mass":  ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer",
+              "images", "verdict"],
+    "ops":   ["id", "mode", "severity", "cause", "status", "date", "cycle", "detail", "swVer",
+              "images", "verdict", "unit"],
+}
+RECORD_FIELD_LABEL = {
+    "id": "ID", "mode": "고장모드", "severity": "심각도", "cause": "원인분류", "status": "상태",
+    "date": "발생일", "cycle": "누적Cy", "detail": "상세", "swVer": "SW버전",
+    "images": "증거(사진)", "verdict": "판정(관련/비관련)", "unit": "호기/라인",
+}
+# 무발생검증(#10)·재발링크(#11)는 파생/조건부 필드라 공란 검증 대상에서 제외한다:
+#   재발 링크는 선행 레코드가 있을 때만 존재하고, 무발생검증은 '검증중' 상태에서만 의미가 있다.
+#   (검증중인데 무발생검증이 비면 아래 _validate_records 가 별도로 경고)
+
+
+def _records_from_issues(issues: list[dict]) -> list[dict]:
+    """POC 이슈로그 → 공통 레코드. (recurOf 는 _compute_poc 가 주입한 값을 승계)"""
+    recs = []
+    for i in issues:
+        recs.append({
+            "id": i.get("id") or "", "mode": i.get("mode") or "", "modeCode": "",
+            "severity": i.get("severity") or "",
+            "cause": i.get("cause4") or "",          # 단계 축: POC 4분류
+            "status": i.get("status") or "",
+            "date": i.get("date") or "", "time": "", "cycle": None,
+            "detail": i.get("detail") or "", "action": "",
+            "swVer": "", "hwVer": "",
+            "verify": i.get("verify") or "", "recurLink": i.get("recurOf") or "",
+            "closedDate": i.get("closedDate") or "",
+            "images": i.get("images") or [], "verdict": "", "unit": "",
+        })
+    return recs
+
+
+def _records_from_errors(errors: list[dict], codes: list[dict],
+                         actions: list[dict], adjud: list[dict] | None = None) -> list[dict]:
+    """Pilot·양산 에러로그 → 공통 레코드. errors 순서를 유지한다(프론트 인덱스 정렬용).
+    상태는 코드별 조치검증(검증완료→종결/검증중/조치중)에서 유도 — 화면 Top5 '현황'과 동일 근사."""
+    sev_of = {c.get("code"): c.get("severity") for c in (codes or [])}
+    act_of: dict = {}
+    for a in (actions or []):
+        act_of.setdefault(a.get("code"), a)
+    verd_of: dict = {}
+    for r in (adjud or []):
+        verd_of[_norm(str(r.get("target") or ""))] = r.get("verdict") or ""
+    recs = []
+    for e in errors:
+        a = act_of.get(e.get("code")) or {}
+        vr = str(a.get("verifyResult") or a.get("status") or "")
+        if "검증완료" in vr or vr in CLOSED_STATUSES:
+            status = "종결"
+        elif "재발" in vr:
+            status = "재분석"
+        elif "검증" in vr:
+            status = "검증중"
+        elif e.get("action") or a:
+            status = "조치중"
+        else:
+            status = "신규"
+        verify = ""
+        if a.get("noFailCycles") is not None and a.get("verifyTarget"):
+            verify = f"{a['noFailCycles']}/{a['verifyTarget']}Cy"
+        no = e.get("no")
+        rid = f"E-{no:03d}" if isinstance(no, int) and no else str(no or "")
+        verdict = verd_of.get(_norm(str(no or ""))) or verd_of.get(_norm(e.get("code") or ""), "")
+        recs.append({
+            "id": rid, "mode": e.get("type") or "", "modeCode": e.get("code") or "",
+            "severity": sev_of.get(e.get("code")) or "",
+            "cause": e.get("cause_class") or "",     # 단계 축: 근본원인 분류 (선택 컬럼)
+            "causeText": e.get("cause") or "",
+            "status": status,
+            "date": e.get("date") or "", "time": e.get("time") or "", "cycle": e.get("cycle"),
+            "detail": e.get("detail") or "", "action": e.get("action") or "",
+            "swVer": e.get("sw_ver") or "", "hwVer": e.get("hw_ver") or "",
+            "verify": verify, "recurLink": "", "closedDate": "",
+            "images": e.get("images") or [], "verdict": verdict, "unit": e.get("unit") or "",
+        })
+    _annotate_recur_links(recs)
+    return recs
+
+
+def _annotate_recur_links(records: list[dict]):
+    """동일 고장모드 선행 레코드 ID 주입 (재발 = 동일 모드 재출현, docs/CRITERIA.md §5)."""
+    seen: dict[str, str] = {}
+    for r in sorted(records, key=lambda x: (x.get("date") or "9999", str(x.get("id") or ""))):
+        k = r.get("modeCode") or r.get("mode") or ""
+        if k and k in seen and not r.get("recurLink"):
+            r["recurLink"] = seen[k]
+        if k:
+            seen[k] = r.get("id") or ""
+
+
+def _status_dist_of(records: list[dict]) -> dict:
+    dist = {"new": 0, "acting": 0, "verifying": 0, "closed": 0}
+    for r in records:
+        dist[_status_bucket(r.get("status"))] += 1
+    return dist
+
+
+def _validate_records(records: list[dict], stage: str, tag: str = "") -> list[str]:
+    """단계별 필수 필드 충족 검증 — 필드별 미충족 건수를 경고 한 줄로 집계.
+    반환: 경고 문자열 리스트 (이관 리허설 리포트에서 재사용)."""
+    req = RECORD_REQUIRED.get(stage) or RECORD_REQUIRED["poc"]
+    gaps = []
+    for f in req:
+        missing = [r for r in records
+                   if not (len(r.get(f) or []) if f == "images" else str(r.get(f) or "").strip())]
+        if missing:
+            ids = ", ".join(str(m.get("id") or "?") for m in missing[:3])
+            gaps.append(f"{RECORD_FIELD_LABEL.get(f, f)} 없음 {len(missing)}건 ({ids}{' …' if len(missing) > 3 else ''})")
+    if stage != "poc":
+        nover = [r for r in records if _status_bucket(r.get("status")) == "verifying" and not r.get("verify")]
+        if nover:
+            gaps.append(f"검증중인데 무발생검증(n/목표) 미기재 {len(nover)}건")
+    label = tag or f"{stage} 잣대"
+    for g in gaps:
+        print(f"[build] ⚠ 레코드 검증({label}): {g}")
+    if not gaps and tag:
+        print(f"[build] ✓ 레코드 검증({label}): 필수 필드 전 건 충족")
+    return gaps
+
+
 def _pareto(items: list[dict], key: str) -> list[dict]:
     """고장모드별 건수 내림차순 + 누적% (수정개발 우선순위)."""
     counts: dict[str, int] = {}
@@ -1063,6 +1200,55 @@ def _recur_by_mode(items: list[dict], key: str) -> dict:
     return {"count": len(recur), "items": recur}
 
 
+def _status_bucket(s: str) -> str:
+    """이슈 상태 → 폐루프 4상태 (신규→조치중→검증중→종결). 표기가 흔들려도 포함어로 흡수."""
+    s = (s or "").strip()
+    if s in CLOSED_STATUSES:
+        return "closed"
+    if "검증" in s:
+        return "verifying"
+    if "조치" in s or "분석" in s or "진행" in s:
+        return "acting"
+    return "new"
+
+
+def _poc_trend(issues: list[dict]) -> list[dict]:
+    """주차별 누적 발견 vs 누적 종결 (월요일 시작) — '수렴하고 있다'의 그림.
+    종결일 없는 종결 건은 마지막 주에 계상하고 경고한다 (추이 총계 = issueStats와 일치 보장)."""
+    def monday(dstr: str):
+        dt = datetime.strptime(dstr, "%Y-%m-%d").date()
+        return dt - timedelta(days=dt.weekday())
+
+    dated = [i for i in issues if i.get("date")]
+    if not dated:
+        return []
+    closed_issues = [i for i in issues if _status_bucket(i.get("status")) == "closed"]
+    no_cdate = sum(1 for i in closed_issues if not i.get("closedDate"))
+    if no_cdate:
+        print(f"[build] ⚠ 종결 이슈 {no_cdate}건에 종결일 없음 — 수렴 추이의 마지막 주에 계상")
+    all_dates = [i["date"] for i in dated] + [i["closedDate"] for i in closed_issues if i.get("closedDate")]
+    w0, w1 = min(map(monday, all_dates)), max(map(monday, all_dates))
+    weeks = []
+    w = w0
+    while w <= w1:
+        weeks.append(w)
+        w += timedelta(days=7)
+    found_by: dict = {}
+    closed_by: dict = {}
+    for i in dated:
+        k = monday(i["date"])
+        found_by[k] = found_by.get(k, 0) + 1
+    for i in closed_issues:
+        k = monday(i["closedDate"]) if i.get("closedDate") else weeks[-1]
+        closed_by[k] = closed_by.get(k, 0) + 1
+    out, cf, cc = [], 0, 0
+    for n, w in enumerate(weeks):
+        cf += found_by.get(w, 0)
+        cc += closed_by.get(w, 0)
+        out.append({"week": n + 1, "weekStart": w.isoformat(), "found": cf, "closed": cc})
+    return out
+
+
 def _compute_poc(issues: list[dict], runlog: list[dict], abnormal: list[dict], config: dict) -> dict:
     run_cfg = config.get("run") or {}
     target = float(run_cfg.get("target") or 72)
@@ -1077,6 +1263,21 @@ def _compute_poc(issues: list[dict], runlog: list[dict], abnormal: list[dict], c
     if mapped < len(issues):   # 분류 누락분은 시험환경이 아니라 별도 표기 대신 구현으로 오해 없게 카운트만 경고
         print(f"[build] ⚠ 이슈 {len(issues) - mapped}건의 원인분류가 4분류에 매칭되지 않음")
     closed_total = sum(1 for i in issues if (i.get("status") or "") in CLOSED_STATUSES)
+
+    # 재발 링크: 동일 고장모드 선행 레코드 ID 주입 (재발 정의 = 동일 모드 재출현, docs/CRITERIA.md §5)
+    seen_mode: dict[str, str] = {}
+    for i in sorted(issues, key=lambda x: (x.get("date") or "9999", x.get("id") or "")):
+        m = i.get("mode") or ""
+        if m and m in seen_mode:
+            i["recurOf"] = seen_mode[m]
+        if m:
+            seen_mode[m] = i.get("id") or ""
+
+    # 폐루프 상태 분포 (신규/조치중/검증중/종결)
+    status_dist = {"new": 0, "acting": 0, "verifying": 0, "closed": 0}
+    for i in issues:
+        status_dist[_status_bucket(i.get("status"))] += 1
+
     return {
         "metrics": {"progress": {"cum": run["cum"], "target": run["target"], "pct": run["pct"]}},
         "run": run,
@@ -1084,6 +1285,8 @@ def _compute_poc(issues: list[dict], runlog: list[dict], abnormal: list[dict], c
         "pareto": _pareto(issues, "mode"),
         "recurrence": _recur_by_mode(issues, "mode"),
         "issueStats": {"total": len(issues), "closed": closed_total, "open": len(issues) - closed_total},
+        "statusDist": status_dist,
+        "trend": _poc_trend(issues),
         "abnormal": abnormal,
     }
 
@@ -1170,8 +1373,10 @@ def _build_poc(pid: str, config: dict):
     runlog   = _parse_generic(_pick_sheet(sheets, RUNLOG_SHEET_KEYWORDS), RUN_FIELD_ALIASES, "date")
     abnormal = _parse_generic(_pick_sheet(sheets, ABN_SHEET_KEYWORDS), ABN_FIELD_ALIASES, "scenario")
     computed = _compute_poc(issues, runlog, abnormal, config)
+    records = _records_from_issues(issues)   # _compute_poc 이후 (recurOf 주입 승계)
+    _validate_records(records, "poc")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
-           "issues": issues, "runlog": runlog, **computed}
+           "issues": issues, "runlog": runlog, "records": records, **computed}
     _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
                f"무고장 런 {computed['run']['cum']}/{computed['run']['target']}h, "
                f"비정상 {len(abnormal)}건")
@@ -1185,8 +1390,11 @@ def _build_pilot(pid: str, config: dict):
     errors = _parse_errors(errors_rows)
     codes, actions, _adjud = _load_mgmt()   # 판정대장은 양산 시범 평가부터 사용
     computed = _compute_pilot(daily, errors, config, codes, actions)
+    records = _records_from_errors(errors, codes, actions)
+    _validate_records(records, "pilot")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
-           "codes": codes, "daily": daily, "errors": errors, "actions": actions, **computed}
+           "codes": codes, "daily": daily, "errors": errors, "actions": actions,
+           "records": records, "statusDist": _status_dist_of(records), **computed}
     g = computed["growth"]
     _write_out(pid, out, f"daily {len(daily)}, errors {len(errors)}, "
                f"MCBF {g[-1]['mcbf'] if g else '—'}/{computed.get('growthTarget') or '—'}, "
@@ -1218,6 +1426,11 @@ def _build_mass(pid: str, config: dict):
         cM = _compute(dM, eM, config, codes, actions, now=now)
         snapshots[mo] = {**cM, "daily": dM, "errors": eM}
 
+    # 공통 레코드 스토어 — 조치검증 판정이 붙은 computed["actions"] 를 사용 (무발생 진행 포함).
+    #   _compute(양산, SEC 원본)는 무변경 — records 는 그 산출물을 읽어 병기만 한다.
+    records = _records_from_errors(errors, codes, computed.get("actions") or actions, adjud)
+    _validate_records(records, "mass")
+
     out = {
         "generatedAt": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source":      src.name,
@@ -1226,6 +1439,8 @@ def _build_mass(pid: str, config: dict):
         "daily":       daily,
         "errors":      errors,
         **computed,
+        "records":     records,
+        "statusDist":  _status_dist_of(records),
         "adjudication": adjud,   # 판정대장 (관련/비관련 합동판정 — docs/CRITERIA.md §4)
         "months":      months,
         "snapshots":   snapshots,
@@ -1299,6 +1514,9 @@ def main():
     import argparse
     ap = argparse.ArgumentParser(description="과제별 엑셀 → dashboard.json (+ 전사 portfolio.json)")
     ap.add_argument("--project", help="과제 id (data/projects/<id>). 생략 시 데이터가 있는 전 과제 빌드")
+    ap.add_argument("--validate-stage", choices=["poc", "pilot", "mass", "ops"],
+                    help="이관 리허설: 빌드된 공통 레코드(records)를 지정 단계의 필수 필드 잣대로 재검증 "
+                         "— 단계 이관 전 '대장이 다음 단계 잣대를 견디는가' 사전 점검")
     args = ap.parse_args()
 
     reg = _load_registry()
@@ -1313,6 +1531,19 @@ def main():
     for pid in pids:
         build_project(pid)
     write_portfolio()
+
+    if args.validate_stage:
+        for pid in pids:
+            path = PROJECTS_ROOT / pid / "dashboard.json"
+            if not path.exists():
+                continue
+            out = json.loads(path.read_text(encoding="utf-8"))
+            recs = out.get("records") or []
+            cur = (out.get("config") or {}).get("stage", "mass")
+            print(f"\n[리허설:{pid}] 현 단계 {cur} 대장(레코드 {len(recs)}건)을 "
+                  f"'{args.validate_stage}' 잣대로 검증:")
+            _validate_records(recs, args.validate_stage,
+                              tag=f"이관 리허설 {cur}→{args.validate_stage}")
 
 
 if __name__ == "__main__":
