@@ -1690,6 +1690,8 @@ def _portfolio_summary(stage: str, out: dict) -> dict:
         ram = out.get("ram") or {}
         s["ram"] = {"avail": (ram.get("current") or {}).get("avail"), "target": ram.get("availTarget")}
         s["issueStats"] = out.get("issueStats")
+    # 폐루프 상태 분포 — 홈 카드의 '에러 진행'(종결률 스택바)용, 전 단계 공통 배관
+    s["statusDist"] = out.get("statusDist")
     if stage == "mass":
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")
@@ -1717,6 +1719,18 @@ def write_portfolio():
             entry["tecop"] = cfg.get("tecop")
             prj = cfg.get("project") or {}
             entry["project"] = {k: prj.get(k) for k in ("name", "department", "team", "startDate", "endDate")}
+            # 홈 카드의 '개발 진행'용: 세부 단계 위치 + SW 완성도 평균
+            lc = cfg.get("lifecycle") or []
+            if lc:
+                cur_i = next((i for i, st in enumerate(lc) if st.get("status") == "current"), None)
+                entry["lifecycle"] = {
+                    "total": len(lc),
+                    "pos": (cur_i + 1) if cur_i is not None else sum(1 for st in lc if st.get("status") == "done"),
+                    "current": next((st.get("stage") for st in lc if st.get("status") == "current"), ""),
+                }
+            sw = cfg.get("swModules") or []
+            if sw:
+                entry["swAvg"] = round(sum(_num(m.get("pct")) for m in sw) / len(sw))
         if dash_path.exists():
             out = json.loads(dash_path.read_text(encoding="utf-8"))
             entry["hasData"] = True

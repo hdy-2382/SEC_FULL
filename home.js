@@ -55,11 +55,24 @@ function homeCard(e) {
   const ddDays = dd.startsWith('D-') ? parseInt(dd.slice(2), 10) : (dd === 'D-DAY' ? 0 : -1);
   const ddCls = ddDays >= 0 && ddDays <= 7 ? ' gate-soon' : '';
   const sc = STAGE_COLOR[e.stage] || 'var(--line)';
+  // 개발 진행(세부 단계·SW 완성도) + 에러 진행(폐루프 종결률) — 최종 목표 게이지와 별도로 명시
+  const lc = e.lifecycle || null;
+  const devRow = lc ? `<div class="mrow"><span class="mk">개발</span>
+      <span class="mtx">단계 <b>${lc.pos}/${lc.total}</b> · ${esc(lc.current || '—')}</span>
+      ${e.swAvg != null ? `<span class="mv">SW ${e.swAvg}%</span>` : ''}</div>` : '';
+  const sd = s.statusDist || null;
+  const sdTotal = sd ? (sd.new || 0) + (sd.acting || 0) + (sd.verifying || 0) + (sd.closed || 0) : 0;
+  const seg = (n, col) => n ? `<i style="flex:${n};background:${col}"></i>` : '';
+  const loopRow = sdTotal ? `<div class="mrow"><span class="mk">폐루프</span>
+      <div class="mbar" title="종결 ${sd.closed} · 검증중 ${sd.verifying} · 조치중 ${sd.acting} · 신규 ${sd.new}">
+        ${seg(sd.closed, 'var(--green)')}${seg(sd.verifying, 'var(--sky)')}${seg(sd.acting, 'var(--major)')}${seg(sd.new, 'var(--crit)')}</div>
+      <span class="mv">종결 ${sd.closed}/${sdTotal}</span></div>` : '';
   return `<div class="pcard" data-go="${esc(e.id)}" style="border-top:3px solid ${esc(sc)}">
     <div class="ph"><b>${esc(e.name)}</b>${chip}</div>
     <div class="psub">${esc(meta)}${e.generatedAt ? ` · ${esc(orgT('cardUpdated', '갱신'))} ${esc(e.generatedAt.slice(0, 10))}` : ''}</div>
     <div class="kv">${kvHtml}</div>
     <div class="pgauge"><div class="track"><i style="width:${pct}%;background:${esc(sc)}"></i></div><span class="pc">${pct}%</span></div>
+    ${devRow}${loopRow}
     ${tecopRow(e.tecop)}
     <div class="pfoot"><span>${e.stage === 'poc'
       ? `진행 이슈 ${((s.issueStats || {}).open != null) ? s.issueStats.open : '—'}건`
@@ -72,31 +85,42 @@ function renderHome() {
   const entries = (PORTFOLIO && PORTFOLIO.projects) || [];
   const withData = entries.filter(e => e.hasData);
 
-  // ⓪ 히어로 — 전사 KPI를 상단 남색 밴드로 (한눈에 요약 → 아래로 상세)
-  const recSum = withData.reduce((a, e) => a + ((e.summary || {}).records || 0), 0);
-  const recurSum = withData.reduce((a, e) => a + ((e.summary || {}).recur || 0), 0);
-  const openSum = withData.reduce((a, e) => {
-    const st = (e.summary || {}).issueStats;
-    return a + (st && st.open != null ? st.open : 0);
-  }, 0);
+  // ⓪ 히어로 — 합산 KPI는 두지 않는다: 단계마다 숫자의 의미가 달라(POC 이슈=발굴 성과 vs 운영 이슈=손실)
+  //    전사로 의미 있는 두 가지만 — 게이트 리뷰 일정(순수 일정)과 주의 신호(기준 미달·TECOP 주의).
   const gates = entries.filter(e => e.gate && e.gate.reviewDate)
-    .map(e => ({ id: e.id, abbr: e.abbr, name: e.name, d: e.gate.reviewDate }))
+    .map(e => ({ id: e.id, abbr: e.abbr, name: e.name, d: e.gate.reviewDate, label: (e.gate.label || '게이트 리뷰') }))
     .sort((a, b) => a.d < b.d ? -1 : 1);
-  const nextGate = gates.find(g => !ddayLabel(g.d).startsWith('D+')) || gates[0];
-  const heroStat = (k, v, sub, warn) => `<div class="hh-stat"><div class="k">${k}</div><div class="v${warn ? ' warn' : ''}">${v}</div><div class="s">${sub}</div></div>`;
+  const gateRows = gates.slice(0, 5).map(g => {
+    const dd = ddayLabel(g.d);
+    const days = dd.startsWith('D-') ? parseInt(dd.slice(2), 10) : (dd === 'D-DAY' ? 0 : -1);
+    return `<div class="hg-row${days >= 0 && days <= 7 ? ' soon' : ''}" data-go="${esc(g.id)}">
+      <span class="d">${esc(dd)}</span><span class="nm">${esc(g.abbr)} ${esc(g.name)}</span><span class="dt">${esc(g.label)} · ${esc(g.d.slice(5))}</span></div>`;
+  }).join('');
+  const alerts = [];
+  entries.forEach(e => {
+    ((e.gate || {}).criteria || []).forEach(c => {
+      if (c.status !== 'fail') return;
+      const nm = (c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
+      const val = c.value && !String(c.value).startsWith('auto:') ? ` — ${c.value}` : '';
+      alerts.push({ id: e.id, abbr: e.abbr, t: `${nm}${val} (기준 미달)`, cls: 'bad' });
+    });
+    (e.tecop || []).forEach(t => {
+      if (t.status === 'warn' || t.status === 'risk') alerts.push({ id: e.id, abbr: e.abbr, t: `${t.k} — ${t.note || '주의'}`, cls: 'warn' });
+    });
+  });
+  const alertChips = alerts.slice(0, 8).map(a =>
+    `<span class="al-chip ${a.cls}" data-go="${esc(a.id)}" title="${esc(a.t)}"><b>${esc(a.abbr)}</b>${esc(a.t.length > 22 ? a.t.slice(0, 21) + '…' : a.t)}</span>`).join('');
   const hero = `
     <div class="home-hero">
       <div class="hh-tx">
         <div class="hh-eyebrow">${esc(orgT('procTag', '표준 프로세스'))} · ${esc(orgT('footNote', ''))}</div>
-        <h2>${esc(orgT('heroTitle', '전 과제, 하나의 잣대로'))}</h2>
-        <p>${orgT('heroSub', '고장 레코드는 <b>전 과제·전 단계 공통</b> — 단계가 올라도 배관은 하나, 화면(렌즈)만 바뀝니다.')}</p>
+        <h2>${esc(orgT('heroTitle', '배관은 하나, 질문은 단계별'))}</h2>
+        <p>${orgT('heroSub', '고장 레코드 <b>형식</b>은 전 과제·전 단계 공통(추적성) — 판단 잣대와 화면은 단계별 질문에 맞춥니다. 전사 합산 숫자 대신 <b>일정과 주의 신호</b>만 모아 봅니다.')}</p>
       </div>
-      <div class="hh-stats">
-        ${heroStat(esc(orgT('kpiProjects', '등록 과제')), `${entries.length}<small>건</small>`, `${esc(orgT('kpiProjectsSub', '데이터 보유'))} ${withData.length}`)}
-        ${heroStat(esc(orgT('kpiRecords', '누적 레코드')), `${fmt(recSum)}<small>건</small>`, withData.map(e => `${esc(e.abbr)} ${((e.summary || {}).records || 0)}`).join(' · ') || '—')}
-        ${heroStat(esc(orgT('kpiOpen', '오픈 이슈')), `${fmt(openSum)}<small>건</small>`, esc(orgT('kpiOpenSub', '폐루프 미종결 — 전 과제')))}
-        ${heroStat(esc(orgT('kpiRecur', '재발')), `${recurSum}<small>건</small>`, esc(orgT('kpiRecurSub', '공통 KPI — 단계 불문')), recurSum > 0)}
-        ${heroStat(esc(orgT('kpiGate', '다음 게이트')), nextGate ? esc(ddayLabel(nextGate.d)) : '—', nextGate ? esc(nextGate.abbr + ' · ' + nextGate.d) : '—')}
+      <div class="hh-right">
+        <div class="hh-box"><div class="k">${esc(orgT('heroGates', '게이트 리뷰 일정'))} — ${gates.length}건</div>${gateRows || '<div class="hg-row"><span class="nm">예정 없음</span></div>'}</div>
+        <div class="hh-box"><div class="k">${esc(orgT('heroAlerts', '주의 신호'))} — 기준 미달 ${alerts.filter(a => a.cls === 'bad').length} · TECOP 주의 ${alerts.filter(a => a.cls === 'warn').length}</div>
+          <div class="hh-alert-chips">${alertChips || '<span class="al-chip">주의 신호 없음</span>'}</div></div>
       </div>
     </div>`;
 
@@ -137,6 +161,6 @@ function renderHome() {
       <div class="pcards">${cards}</div>
     </section>`;
 
-  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go]').forEach(c =>
+  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go], #s-home .hg-row[data-go], #s-home .al-chip[data-go]').forEach(c =>
     c.addEventListener('click', ev => { ev.stopPropagation(); location.hash = '#/' + c.dataset.go; }));
 }

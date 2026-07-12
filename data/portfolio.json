@@ -50,7 +50,13 @@
         "startDate": "2026-06-01",
         "endDate": "2026-09-30"
       },
-      "generatedAt": "2026-07-10T05:27:10Z",
+      "lifecycle": {
+        "total": 6,
+        "pos": 4,
+        "current": "양산평가 1차"
+      },
+      "swAvg": 81,
+      "generatedAt": "2026-07-12T22:31:19Z",
       "summary": {
         "progress": {
           "cum": 49,
@@ -59,6 +65,12 @@
         },
         "records": 7,
         "recur": 3,
+        "statusDist": {
+          "new": 0,
+          "acting": 6,
+          "verifying": 1,
+          "closed": 0
+        },
         "errorBudget": {
           "used": 2,
           "limit": 3,
@@ -154,7 +166,13 @@
         "startDate": "2026-06-05",
         "endDate": "2026-07-15"
       },
-      "generatedAt": "2026-07-10T05:27:10Z",
+      "lifecycle": {
+        "total": 4,
+        "pos": 4,
+        "current": "P4 사외 72h 무에러 + 비정상 평가"
+      },
+      "swAvg": 77,
+      "generatedAt": "2026-07-12T22:31:19Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -167,7 +185,13 @@
           "closed": 11,
           "open": 7
         },
-        "concept": 0
+        "concept": 0,
+        "statusDist": {
+          "new": 0,
+          "acting": 4,
+          "verifying": 3,
+          "closed": 11
+        }
       }
     },
     {
@@ -248,7 +272,13 @@
         "startDate": "2026-05-25",
         "endDate": "2026-08-31"
       },
-      "generatedAt": "2026-07-10T05:27:10Z",
+      "lifecycle": {
+        "total": 4,
+        "pos": 2,
+        "current": "L2 신뢰성 평가/검증 (TAAF)"
+      },
+      "swAvg": 77,
+      "generatedAt": "2026-07-12T22:31:19Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -256,7 +286,13 @@
           "pct": 40.3
         },
         "records": 9,
-        "recur": 1
+        "recur": 1,
+        "statusDist": {
+          "new": 0,
+          "acting": 0,
+          "verifying": 4,
+          "closed": 5
+        }
       }
     },
     {
@@ -336,7 +372,13 @@
         "startDate": "2026-05-10",
         "endDate": "2026-08-31"
       },
-      "generatedAt": "2026-07-10T05:27:10Z",
+      "lifecycle": {
+        "total": 4,
+        "pos": 2,
+        "current": "S2 호기 설치·SAT"
+      },
+      "swAvg": 89,
+      "generatedAt": "2026-07-12T22:31:19Z",
       "summary": {
         "progress": {
           "cum": 5,
@@ -355,6 +397,12 @@
           "total": 12,
           "closed": 8,
           "open": 4
+        },
+        "statusDist": {
+          "new": 0,
+          "acting": 3,
+          "verifying": 1,
+          "closed": 8
         }
       }
     },
@@ -435,7 +483,13 @@
         "startDate": "2026-01-01",
         "endDate": "—"
       },
-      "generatedAt": "2026-07-10T05:27:10Z",
+      "lifecycle": {
+        "total": 4,
+        "pos": 3,
+        "current": "O3 PM → CBM 전환"
+      },
+      "swAvg": 86,
+      "generatedAt": "2026-07-12T22:31:19Z",
       "summary": {
         "progress": {
           "cum": 98.4,
@@ -452,6 +506,12 @@
           "total": 10,
           "closed": 7,
           "open": 3
+        },
+        "statusDist": {
+          "new": 0,
+          "acting": 1,
+          "verifying": 2,
+          "closed": 7
         }
       }
     }

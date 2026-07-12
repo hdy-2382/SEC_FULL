@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T05:27:10Z",
+  "generatedAt": "2026-07-12T22:31:19Z",
   "source": "양산평가_샘플.xlsx",
   "config": {
     "stage": "mass",
@@ -1071,7 +1071,7 @@
     "recentWindow": {
       "weeks": 4,
       "fromDate": "2026-06-15",
-      "toDate": "2026-07-10",
+      "toDate": "2026-07-12",
       "cycles": 89,
       "errors": 7,
       "rate": 7.9,
@@ -1678,7 +1678,7 @@
         "recentWindow": {
           "weeks": 4,
           "fromDate": "2026-06-15",
-          "toDate": "2026-07-10",
+          "toDate": "2026-07-12",
           "cycles": 89,
           "errors": 7,
           "rate": 7.9,

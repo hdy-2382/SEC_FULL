@@ -361,14 +361,21 @@
 .home-hero h2{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em;margin-bottom:5px}
 .home-hero p{font-size:12px;color:#b9cbe4;line-height:1.55;max-width:34em}
 .home-hero p b{color:#9ecbff}
-.home-hero .hh-stats{display:grid;grid-template-columns:repeat(5,minmax(96px,1fr));gap:9px;flex:1.4}
-.home-hero .hh-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px 13px}
-.home-hero .hh-stat .k{font-size:10.5px;font-weight:700;color:#9fb6d4}
-.home-hero .hh-stat .v{font-size:22px;font-weight:800;color:#fff;line-height:1.2;margin:2px 0 1px}
-.home-hero .hh-stat .v small{font-size:11px;color:#9fb6d4;font-weight:700;margin-left:1px}
-.home-hero .hh-stat .v.warn{color:#ffb45e}
-.home-hero .hh-stat .s{font-size:9.5px;color:#8ba3c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:1180px){.home-hero{flex-direction:column;align-items:stretch}.home-hero .hh-stats{grid-template-columns:repeat(3,1fr)}}
+.home-hero .hh-right{flex:1.6;display:grid;grid-template-columns:1.1fr 1fr;gap:10px;min-width:0}
+.home-hero .hh-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px 13px;min-width:0}
+.home-hero .hh-box .k{font-size:10.5px;font-weight:800;color:#9fb6d4;letter-spacing:.04em;margin-bottom:7px}
+.home-hero .hg-row{display:flex;gap:8px;align-items:baseline;font-size:11px;color:#c9d8ec;padding:2.5px 0;cursor:pointer;border-radius:6px}
+.home-hero .hg-row:hover{background:rgba(255,255,255,.05)}
+.home-hero .hg-row .d{font-weight:800;color:#fff;min-width:42px;font-variant-numeric:tabular-nums}
+.home-hero .hg-row.soon .d{color:#ff9d7e}
+.home-hero .hg-row .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-hero .hg-row .dt{margin-left:auto;color:#8ba3c4;font-size:9.5px;white-space:nowrap}
+.home-hero .hh-alert-chips{display:flex;flex-wrap:wrap;gap:5px}
+.home-hero .al-chip{font-size:10px;font-weight:700;border-radius:20px;padding:3px 9px;background:rgba(255,255,255,.08);color:#dce7f5;border:1px solid rgba(255,255,255,.12);cursor:pointer;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-hero .al-chip b{color:#fff;margin-right:4px}
+.home-hero .al-chip.bad{background:rgba(214,84,60,.24);border-color:rgba(255,140,110,.38);color:#ffc9b8}
+.home-hero .al-chip.warn{background:rgba(224,134,0,.20);border-color:rgba(255,190,90,.32);color:#ffdfae}
+@media(max-width:1180px){.home-hero{flex-direction:column;align-items:stretch}.home-hero .hh-right{grid-template-columns:1fr}}
 
 .ladder{display:flex;align-items:stretch;gap:7px;flex-wrap:wrap;padding:2px}
 .ladder .rung{flex:1;min-width:148px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column}
@@ -406,6 +413,14 @@
 .pcard .pgauge .track i{display:block;height:100%;border-radius:6px}
 .pcard .pgauge .pc{font-size:11px;font-weight:800;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
 .pcard .pfoot .gate.gate-soon{color:var(--crit);font-weight:800}
+/* 카드 미니 로우 — 개발 진행(단계·SW) / 에러 진행(폐루프 스택바) */
+.pcard .mrow{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:10.5px;color:var(--muted)}
+.pcard .mrow .mk{flex:none;width:36px;font-weight:800;letter-spacing:.02em}
+.pcard .mrow .mtx{flex:1;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .mrow .mtx b{color:var(--navy-deep)}
+.pcard .mrow .mbar{flex:1;display:flex;height:7px;border-radius:4px;overflow:hidden;gap:1px;background:var(--line-soft)}
+.pcard .mrow .mbar i{display:block;height:100%}
+.pcard .mrow .mv{flex:none;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 .pcard .ph{display:flex;align-items:center;gap:8px;margin-bottom:2px}
 .pcard .ph b{font-size:13.5px;color:var(--navy-deep)}
 .pcard .ph .stagechip{margin-left:auto}
