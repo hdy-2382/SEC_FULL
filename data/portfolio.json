@@ -56,7 +56,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 81,
-      "generatedAt": "2026-07-12T23:01:15Z",
+      "generatedAt": "2026-07-12T23:08:49Z",
       "summary": {
         "progress": {
           "cum": 49,
@@ -172,7 +172,7 @@
         "current": "P4 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-12T23:01:15Z",
+      "generatedAt": "2026-07-12T23:08:49Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -278,7 +278,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-12T23:01:15Z",
+      "generatedAt": "2026-07-12T23:08:49Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -292,6 +292,95 @@
           "acting": 0,
           "verifying": 4,
           "closed": 5
+        }
+      }
+    },
+    {
+      "id": "pack",
+      "name": "팔레타이저",
+      "abbr": "P",
+      "hasData": true,
+      "stage": "mass",
+      "run": {
+        "target": 360,
+        "unit": "Cy",
+        "criterion": "무정지 · 관련 고장만",
+        "env": "사내 (공정 연결)"
+      },
+      "gate": {
+        "reviewDate": "2026-08-28",
+        "label": "가동인증"
+      },
+      "tecop": [
+        {
+          "k": "T",
+          "status": "warn",
+          "note": "PAL-001 재발 — 흡착부 증설 검증 전"
+        },
+        {
+          "k": "E",
+          "status": "ok",
+          "note": "투자심의 입력용 실증치 축적 중"
+        },
+        {
+          "k": "C",
+          "status": "ok",
+          "note": "유지보수 계약 조건 합의"
+        },
+        {
+          "k": "O",
+          "status": "ok",
+          "note": "수혜부서 합동판정 참여 정상"
+        },
+        {
+          "k": "P",
+          "status": "ok",
+          "note": "설치 상태 위험성 평가 완료"
+        }
+      ],
+      "project": {
+        "name": "팔레타이저 (양산 시범 평가)",
+        "department": "인프라 기술팀",
+        "team": "정OO, 양OO",
+        "startDate": "2026-06-08",
+        "endDate": "2026-08-31"
+      },
+      "lifecycle": {
+        "total": 6,
+        "pos": 4,
+        "current": "양산평가 1차"
+      },
+      "swAvg": 82,
+      "generatedAt": "2026-07-12T23:08:49Z",
+      "summary": {
+        "progress": {
+          "cum": 91,
+          "target": 360,
+          "pct": 25.3
+        },
+        "records": 5,
+        "recur": 1,
+        "statusDist": {
+          "new": 0,
+          "acting": 0,
+          "verifying": 3,
+          "closed": 2
+        },
+        "errorBudget": {
+          "used": 1,
+          "limit": 3,
+          "resets": 1,
+          "lifetimeErrors": 5,
+          "dailyAvg": 0.21,
+          "weeklyAvg": 1.25
+        },
+        "mtbf": {
+          "current": 360,
+          "target": 100
+        },
+        "acceptance": {
+          "passed": 1,
+          "total": 5
         }
       }
     },
@@ -378,7 +467,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 89,
-      "generatedAt": "2026-07-12T23:01:15Z",
+      "generatedAt": "2026-07-12T23:08:49Z",
       "summary": {
         "progress": {
           "cum": 5,
@@ -489,7 +578,7 @@
         "current": "O3 PM → CBM 전환"
       },
       "swAvg": 86,
-      "generatedAt": "2026-07-12T23:01:15Z",
+      "generatedAt": "2026-07-12T23:08:49Z",
       "summary": {
         "progress": {
           "cum": 98.4,

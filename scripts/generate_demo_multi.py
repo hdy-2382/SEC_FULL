@@ -11,6 +11,7 @@ generate_demo_multi.py
 from __future__ import annotations
 
 import json
+import shutil
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -528,6 +529,131 @@ def gen_agv():
     print(f"[demo] agv(운영): 월간지표 {len(monthly)}개월 · 필드 FRACAS {len(issues)}건 · CIP {len(cip)}건")
 
 
+# ══════════════════════════ 팔레타이저 (양산 시범 평가 — 순수 가상) ══════════════════════════
+def gen_pack():
+    """양산 시범 평가(mass) 템플릿의 순수 가상 데모 — chem은 SEC 샘플 사본이라 시연이 조심스러움.
+    config는 chem을 복제해 과제 고유 문구만 치환한다 (계약 파라미터·ui 구조 = 표준 그대로)."""
+    pid = "pack"
+    (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
+    (PROJECTS / pid / "errors").mkdir(exist_ok=True)
+
+    # 일일평가 24일 (주 6일 × 4주 · 일 15Cy = 계약 360Cy) — 에러일 3일(5건), 연속성공은 에러일 리셋
+    days, d = [], date(2026, 6, 8)
+    while len(days) < 24:
+        if d.weekday() < 6:
+            days.append(d)
+        d += timedelta(days=1)
+    err_at = {5: 2, 11: 1, 17: 2}   # 날짜 인덱스 → 에러 건수 (합 5)
+    daily_rows, err_cycles = [], []
+    streak = cum = 0
+    for i, dt in enumerate(days):
+        e = err_at.get(i, 0)
+        streak = 0 if e else streak + 15
+        for k in range(e):
+            err_cycles.append((dt, cum + 7 + k * 4))
+        cum += 15
+        daily_rows.append((dt.isoformat(), 2, "팔레트 적재·반송 반복 운전", 15, e, streak,
+                           "에러 발생 — 연속 리셋" if e else ""))
+
+    # 에러로그 5건 — PAL-001 재발 1회 포함 (원인분류 = 근본원인 축)
+    err_defs = [
+        ("PAL-001", "파렛 파지 낙하", "흡착 그리퍼 진공 저하로 고중량 박스 낙하", "진공 패드 마모", "부품",
+         "패드 교체 주기 단축 + 진공압 모니터링", "v1.0.2"),
+        ("PAL-002", "비전 오인식", "혼적 파렛 상단 박스 좌표 오인식", "저조도 구간 노출 부적합", "SW",
+         "노출 프로파일 보정", "v1.0.2"),
+        ("PAL-001", "파렛 파지 낙하", "동일 모드 재발 — 고중량 박스 한정 재현", "흡착력 설계 여유 부족", "설계",
+         "그리퍼 흡착부 증설 설계 진행", "v1.0.3"),
+        ("PAL-003", "적재 경로 간섭", "3단 적재 시 기둥 간섭 근접 정지", "경로 마진 설정 과소", "SW",
+         "경로 플래너 마진 재설정", "v1.0.3"),
+        ("PAL-004", "컨베이어 I/F 타임아웃", "출하 컨베이어 핸드셰이크 지연", "PLC 응답 타임아웃 과소", "SW",
+         "타임아웃 로직 변경", "v1.0.3"),
+    ]
+    error_rows = [
+        (i + 1, dt.isoformat(), f"{9 + i * 2}:{15 + i * 7 % 40:02d}", cyc,
+         code, mode, det, cause, cls, act, "정상복귀", "양OO", "업체 정OO", sw, "Rev A", "", "")
+        for i, ((dt, cyc), (code, mode, det, cause, cls, act, sw)) in enumerate(zip(err_cycles, err_defs))
+    ]
+
+    wb = Workbook(); wb.remove(wb.active)
+    _sheet(wb, "안내", ["양산 시범 평가 보고 — 일일평가(사이클·에러·연속성공) + 에러로그. 판정·처분은 REPORT.xlsx(PM). docs/RECORD_SCHEMA.md"], [])
+    _sheet(wb, "일일평가", ["평가일", "입실인원", "주평가내용", "일일평가", "일일에러", "연속성공", "비고"], daily_rows)
+    _sheet(wb, "에러로그", ["No", "발생일", "시각", "회차", "코드", "유형", "상세", "원인", "원인분류", "조치", "결과",
+                          "삼성 담당자", "업체 담당자", "SW버전", "HW버전", "상세설명", "사진(파일명)"], error_rows)
+    wb.save(PROJECTS / pid / "raw" / "팔레타이저_샘플.xlsx")
+
+    # 관리 엑셀 (PM): 코드마스터 · 조치검증 · 판정대장 · 처분대장
+    wb2 = Workbook(); wb2.remove(wb2.active)
+    _sheet(wb2, "코드마스터", ["코드", "유형", "등급", "설명"], [
+        ("PAL-001", "파렛 파지 낙하", "Critical", "흡착 파지 실패로 박스 낙하 — 안전 관련"),
+        ("PAL-002", "비전 오인식", "Major", "팔레트/박스 좌표 인식 오류"),
+        ("PAL-003", "적재 경로 간섭", "Major", "적재 경로 상 구조물 간섭 근접"),
+        ("PAL-004", "컨베이어 I/F 타임아웃", "Minor", "출하 설비 인터페이스 응답 지연"),
+    ])
+    _sheet(wb2, "조치검증", ["조치ID", "대상코드", "조치내용", "담당", "목표일", "상태", "검증시작(날짜/Cycle)"], [
+        ("A-001", "PAL-001", "그리퍼 흡착부 증설 + 패드 주기 단축", "정OO", "2026-07-20", "진행중", 262),
+        ("A-002", "PAL-002", "노출 프로파일 보정 (v1.0.2)", "양OO", "2026-06-20", "완료", "2026-06-15"),
+        ("A-003", "PAL-003", "경로 플래너 마진 재설정", "양OO", "2026-07-05", "완료", "2026-06-30"),
+        ("A-004", "PAL-004", "핸드셰이크 타임아웃 로직 변경", "정OO", "2026-07-05", "검증완료", "2026-06-30"),
+    ])
+    _sheet(wb2, "판정대장", ["사건ID", "대상에러No", "판정", "귀책분류", "증거", "합의상태", "판정일"], [
+        ("JD-01", 1, "관련", "설비 (부품)", "진공압 로그 + 재현시험", "합의완료", "2026-06-16"),
+        ("JD-02", 2, "관련", "설비 (SW)", "영상 + 조도 로그", "합의완료", "2026-06-17"),
+        ("JD-03", 3, "관련", "설비 (설계)", "재현시험 (고중량 한정)", "합의완료", "2026-06-24"),
+        ("JD-04", 4, "관련", "설비 (SW)", "경로 로그", "합의완료", "2026-07-01"),
+        ("JD-05", 5, "판정중", "", "PLC 로그 분석 중 — 자재/설비 판별", "합동리뷰 07-16", ""),
+    ])
+    _sheet(wb2, "처분대장", ["처분ID", "대상ID", "처분", "사유", "기한", "오너", "합의"], [
+        ("DSP-01", "PAL-003", "종결예정", "마진 재설정 후 무발생 검증 중 — 심의 전 종결 예상", "2026-08-10", "양OO", "합의완료"),
+        ("DSP-02", "PAL-004", "waiver", "경미·타임아웃 재설정으로 해소 — 위험수용, 월간 모니터링", "—", "정OO", "합의완료"),
+    ])
+    wb2.save(PROJECTS / pid / "REPORT.xlsx")
+
+    # config: chem 표준 config 복제 후 과제 고유 문구만 치환 (계약 파라미터·화면 구조는 표준 그대로)
+    cfg = json.loads((PROJECTS / "chem" / "config.json").read_text(encoding="utf-8"))
+    for k in ("_stage_readme", "_swModules_readme", "_ui_readme", "_edit_guide"):
+        cfg.pop(k, None)
+    cfg["project"] = {"name": "팔레타이저 (양산 시범 평가)", "department": "인프라 기술팀",
+                      "team": "정OO, 양OO", "startDate": "2026-06-08", "endDate": "2026-08-31"}
+    cfg["gate"] = {"reviewDate": "2026-08-28", "label": "가동인증"}
+    cfg["tecop"] = [
+        {"k": "T", "status": "warn", "note": "PAL-001 재발 — 흡착부 증설 검증 전"},
+        {"k": "E", "status": "ok", "note": "투자심의 입력용 실증치 축적 중"},
+        {"k": "C", "status": "ok", "note": "유지보수 계약 조건 합의"},
+        {"k": "O", "status": "ok", "note": "수혜부서 합동판정 참여 정상"},
+        {"k": "P", "status": "ok", "note": "설치 상태 위험성 평가 완료"},
+    ]
+    cfg["swModules"] = [
+        {"name": "비전 인식", "pct": 95, "group": "로봇"},
+        {"name": "적재 패턴 플래너", "pct": 90, "group": "로봇"},
+        {"name": "흡착 그리퍼 제어", "pct": 80, "group": "로봇"},
+        {"name": "WMS 연동", "pct": 70, "group": "상위시스템"},
+        {"name": "리포트 연동", "pct": 60, "group": "상위시스템"},
+        {"name": "안전 인터록", "pct": 100, "group": "환경"},
+    ]
+    cfg["ui"]["app"].update({"title": "팔레타이저 — 양산 시범 평가", "brandLogo": "팔",
+                             "brandName": "팔레타이저<br>양산 시범 평가"})
+    ov = cfg["ui"].setdefault("overview", {})
+    ov.update({
+        "goalsMonth": "연속 360Cy 완주 재도전 — PAL-001 마감\n판정중 1건(JD-05) 합동리뷰",
+        "goalsWeek": "흡착부 증설 검증 런 개시\n출하 I/F 재시험",
+        "discussItems": [
+            {"topic": "PAL-001 흡착부 증설 — 검증 런 일정", "tag": "긴급", "group": "안전"},
+            {"topic": "JD-05 합동리뷰 (7/16) — 자재/설비 판별", "tag": "협의", "group": "운영"},
+            {"topic": "가동인증 산출물 체크리스트 사전 점검", "tag": "검토", "group": "기타"},
+        ],
+        "lineCaption": "현재 평가 <b>적재 셀 2 · {cum}/{target}</b> · 셀 1 통과 · 출하 I/F 연동 대기",
+    })
+    _write_config(pid, cfg)
+    # 라인 레이아웃 이미지: chem 샘플 재사용 (없어도 동작 — onerror 처리)
+    src_img = PROJECTS / "chem" / "assets" / "line_layout.png"
+    if src_img.exists():
+        (PROJECTS / pid / "assets").mkdir(exist_ok=True)
+        shutil.copy(src_img, PROJECTS / pid / "assets" / "line_layout.png")
+    n_err = sum(r[4] for r in daily_rows)
+    assert n_err == len(error_rows), f"정합성 위반: 일일에러 합 {n_err} ≠ 에러로그 {len(error_rows)}"
+    print(f"[demo] pack(양산평가): daily {len(daily_rows)}일 · 에러 {len(error_rows)}건 · 판정 5 · 처분 2 (정합 확인)")
+
+
 # ══════════════════════════ 용접 협동로봇 (개발 중 — 평가 착수 전) ══════════════════════════
 def gen_weld():
     """config만 생성 (평가 엑셀 없음) — 순수 개발(제작) 기간의 과제.
@@ -585,6 +711,7 @@ def gen_weld():
 if __name__ == "__main__":
     gen_drum()
     gen_sort()
+    gen_pack()
     gen_clean()
     gen_agv()
     gen_weld()

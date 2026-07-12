@@ -1,0 +1,534 @@
+{
+  "stage": "mass",
+  "run": {
+    "target": 360,
+    "unit": "Cy",
+    "criterion": "무정지 · 관련 고장만",
+    "env": "사내 (공정 연결)"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "warn",
+      "note": "PAL-001 재발 — 흡착부 증설 검증 전"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "투자심의 입력용 실증치 축적 중"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "유지보수 계약 조건 합의"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "수혜부서 합동판정 참여 정상"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "설치 상태 위험성 평가 완료"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-08-28",
+    "label": "가동인증"
+  },
+  "project": {
+    "name": "팔레타이저 (양산 시범 평가)",
+    "department": "인프라 기술팀",
+    "team": "정OO, 양OO",
+    "startDate": "2026-06-08",
+    "endDate": "2026-08-31"
+  },
+  "acceptance": {
+    "targetCycle": 360,
+    "errorLimit": 3,
+    "mtbfTargetCycle": 100,
+    "confidenceLevel": 0.8,
+    "recurrenceLimit": 0,
+    "verifyCycle": 200,
+    "criticalOpenLimit": 0,
+    "errRateTargetPct": 5,
+    "successRateTargetPct": 95,
+    "successRateWarnPct": 85
+  },
+  "lifecycle": [
+    {
+      "stage": "POC",
+      "status": "done",
+      "note": "개념 검증 완료"
+    },
+    {
+      "stage": "Pilot",
+      "status": "done",
+      "note": "파일럿 라인 검증"
+    },
+    {
+      "stage": "양산성 평가",
+      "status": "done",
+      "note": "양산성 확인"
+    },
+    {
+      "stage": "양산평가 1차",
+      "status": "current",
+      "note": "360 Cycle 평가 진행"
+    },
+    {
+      "stage": "양산평가 2차",
+      "status": "todo",
+      "note": ""
+    },
+    {
+      "stage": "양산대응",
+      "status": "todo",
+      "note": ""
+    }
+  ],
+  "line": {
+    "layoutImage": "data/projects/chem/assets/line_layout.png",
+    "stations": [
+      {
+        "name": "설비 1",
+        "role": "픽업",
+        "status": "pass"
+      },
+      {
+        "name": "설비 2",
+        "role": "이송",
+        "status": "pass"
+      },
+      {
+        "name": "설비 3",
+        "role": "적재",
+        "status": "current"
+      },
+      {
+        "name": "설비 4",
+        "role": "검사·반송",
+        "status": "wait"
+      }
+    ]
+  },
+  "swModules": [
+    {
+      "name": "비전 인식",
+      "pct": 95,
+      "group": "로봇"
+    },
+    {
+      "name": "적재 패턴 플래너",
+      "pct": 90,
+      "group": "로봇"
+    },
+    {
+      "name": "흡착 그리퍼 제어",
+      "pct": 80,
+      "group": "로봇"
+    },
+    {
+      "name": "WMS 연동",
+      "pct": 70,
+      "group": "상위시스템"
+    },
+    {
+      "name": "리포트 연동",
+      "pct": 60,
+      "group": "상위시스템"
+    },
+    {
+      "name": "안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "팔레타이저 — 양산 시범 평가",
+      "brandLogo": "팔",
+      "brandName": "팔레타이저<br>양산 시범 평가",
+      "printBtn": "PDF 리포트",
+      "footBrand": "FRACAS + 신뢰성 성장",
+      "evalDateLabel": "평가일",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "_overview_readme": "아래 overview 블록은 '한눈에 보기(관제)' + 왼쪽 사이드바 전용 글자입니다. 여기만 고치면 새로고침 시 바로 반영됩니다(재빌드 불필요). {중괄호}는 자동으로 채워지는 값이니 그대로 두세요. <b>..</b> 태그는 강조이므로 유지하면 됩니다. '평가 상세 내역' 화면 글자는 steps 블록에서 수정합니다.",
+    "overview": {
+      "_overview_readme": "이 overview 블록 = '한눈에 보기(관제)' + '왼쪽 사이드바' 전체 편집 지점입니다. 화면 위→아래 순서(_box_overview_00~06)로 정렬돼 있어, 위에서부터 순서대로 값만 고치면 새로고침 시 바로 반영됩니다(재빌드 불필요). {중괄호}=자동값, <b>..</b>=강조 태그는 유지하세요. clearItems/top5H/swGroups 등 배열은 항목 추가·삭제·순서변경 자유. '평가 상세 내역' 화면 글자는 steps 블록에서 수정.",
+      "_box_overview_00_side": "───── 00 사이드바 (업무 목표 · 설비 레이아웃) — 왼쪽 세로 ─────",
+      "goalsTitle": "업무 목표",
+      "goalsMonthLabel": "이번 달",
+      "goalsMonth": "연속 360Cy 완주 재도전 — PAL-001 마감\n판정중 1건(JD-05) 합동리뷰",
+      "goalsWeekLabel": "이번 주",
+      "goalsWeek": "흡착부 증설 검증 런 개시\n출하 I/F 재시험",
+      "lineTitle": "설비 평가 진행 (라인 레이아웃)",
+      "lineSub": "SEQUENTIAL STATION TEST",
+      "lineCaption": "현재 평가 <b>적재 셀 2 · {cum}/{target}</b> · 셀 1 통과 · 출하 I/F 연동 대기",
+      "lineImageHeight": 300,
+      "lineImageFit": "contain",
+      "lineZoomHint": "클릭하면 크게 보기",
+      "monthTitle": "기준 월 (누적)",
+      "monthAll": "전체",
+      "_box_overview_01_clr": "───── 01 종합 클리어 (좌측 세로) · status: go(초록✓)/warn(주황·n)/bad(빨강·n)/todo(회색—) · gauge 0~100 주관% · n 뱃지 ─────",
+      "trkExecLabel": "종합 클리어",
+      "clearItems": [
+        {
+          "label": "양산평가 1차",
+          "sub": "유휴설비",
+          "status": "warn",
+          "gauge": 60,
+          "n": 2
+        },
+        {
+          "label": "양산평가 2차",
+          "sub": "양산설비",
+          "status": "todo",
+          "gauge": 15,
+          "n": 0
+        },
+        {
+          "label": "양산대응",
+          "sub": "",
+          "status": "todo",
+          "gauge": 0,
+          "n": 0
+        },
+        {
+          "label": "신뢰성 분석",
+          "sub": "",
+          "status": "warn",
+          "gauge": 45,
+          "n": 1
+        },
+        {
+          "label": "에러 조치",
+          "sub": "",
+          "status": "warn",
+          "gauge": 70,
+          "n": 3
+        },
+        {
+          "label": "기술 개발",
+          "sub": "",
+          "status": "go",
+          "gauge": 100,
+          "n": 0
+        },
+        {
+          "label": "부서 협의",
+          "sub": "",
+          "status": "warn",
+          "gauge": 50,
+          "n": 2
+        },
+        {
+          "label": "기타 사항",
+          "sub": "",
+          "status": "warn",
+          "gauge": 20,
+          "n": 1
+        }
+      ],
+      "execRoiTitle": "ROI",
+      "execRoiHint": "투자 대비 효과 (개념) · 추후 입력",
+      "_box_overview_02_prog": "───── 02 완주 진행 → 성장 (tk-a) ─────",
+      "trkProgLabel": "완주 진행 → 성장 · 연결된 지표",
+      "gateDone": "달성",
+      "gateProg": "진행 중",
+      "kgProgress": "평가 진행 · 성공",
+      "kpiProgress": "평가 진행률",
+      "kpiProgressSub": "{cum}/{target} Cycle",
+      "kpiProgressTag": "진행",
+      "kpiSuccess": "성공률",
+      "kpiSuccessSub": "성공 {success} · 실패 {errors}",
+      "kpiSuccessTagGo": "양호",
+      "kpiSuccessTagWarn": "관찰",
+      "gateShort": "계약 · 연속 {target}Cy · 에러 {limit}회",
+      "gateRemain": "남은 <b>{n}</b> Cycle",
+      "gateBudget": "Error Budget",
+      "ebudReset": "한도 초과 리셋 {n}회 · 누적 에러 {total}건",
+      "ebudNoReset": "리셋 없음 · 누적 에러 {total}건",
+      "growthTitle": "주차별 연속 추이",
+      "growthSub": "목표 0→{target} 곡선",
+      "growthLgCum": "누적 연속",
+      "growthLgReset": "리셋",
+      "growthLgTarget": "목표",
+      "_box_overview_03_rel": "───── 03 신뢰성 입증 → 안정화 (tk-b) ─────",
+      "trkRelLabel": "신뢰성 입증 → 안정화 추세 · 연결된 지표",
+      "opTitle": "운용 신뢰도",
+      "kgReliability": "신뢰성 입증 (MTBF·신뢰수준)",
+      "kgQuality": "에러 · 재발",
+      "relGrpQuality": "결함 · 품질",
+      "relGrpReliab": "신뢰성 입증",
+      "kpiErrRate": "최근 에러율",
+      "kpiErrRateSub": "목표 <{tgt}% · 에러 {errors}/{cycles}Cy",
+      "kpiErrRateTagGo": "충족",
+      "kpiErrRateTagBad": "초과",
+      "kpiRecur": "재발",
+      "kpiRecurSub": "재발률 {rate}% · 목표 0",
+      "kpiRecurTagGo": "없음",
+      "kpiRecurTagBad": "발생",
+      "kpiOpenCrit": "미해결 Critical",
+      "kpiOpenCritSub": "종결률 {rate}% · 목표 0",
+      "kpiMtbf": "MTBF",
+      "kpiMtbfSub": "평균 고장간 Cycle",
+      "kpiMtbfTagGo": "충족",
+      "kpiMtbfTagWarn": "성장중",
+      "kpiConf": "입증 신뢰수준",
+      "kpiConfSub": "목표 {lv}% · 무고장 {cyc}Cy",
+      "kpiConfTagGo": "입증",
+      "kpiConfTagProg": "진행",
+      "stSuffice": "충족",
+      "stUnmet": "미달",
+      "stProg": "진행",
+      "errTitle": "기간별 에러율 안정화",
+      "errSub": "막대=실측·선=평균",
+      "errLgRate": "기간 에러율",
+      "errLgAvg": "누적 평균",
+      "stabTitle": "시스템 안정성 추이",
+      "stabSub": "에러율↓ MTBF↑",
+      "stabLgErr": "에러율(좌%)",
+      "stabLgMtbf": "MTBF(우)",
+      "_donutBands_readme": "도넛 색(초록/주황/빨강) 경계입니다. 값만 고치고 새로고침하면 반영(재빌드 불필요). errRate/mtbf/conf 숫자 = '목표의 몇 배'. 에러율(낮을수록 좋음): 목표 초과~목표×badMult=주황, 그 이상=빨강. MTBF·신뢰수준(높을수록 좋음): 목표 미달~목표×warnMult=주황, 그 미만=빨강. progress(진행률 도넛) = 진행 %기준: goAt% 이상=초록, warnAt%~goAt%=주황, warnAt% 미만=빨강. (재발·미해결은 목표 0이라 0=초록·1건+=빨강 단계, 조절 대상 아님)",
+      "donutBands": {
+        "errRate": {
+          "badMult": 3
+        },
+        "mtbf": {
+          "warnMult": 0.5
+        },
+        "conf": {
+          "warnMult": 0.6
+        },
+        "progress": {
+          "warnAt": 33,
+          "goAt": 66
+        }
+      },
+      "_box_overview_04_fault": "───── 04 고장 분석 · 위험 매트릭스 · Top5 · 알람 (tk-c) ─────",
+      "trkFaultLabel": "고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람",
+      "matrixTitle": "위험 매트릭스 · 심각도 분포",
+      "matrixSub": "S×O 우선순위 + 등급 분포",
+      "matrixTotal": "총 고장",
+      "occRare": "드묾",
+      "occMid": "보통",
+      "occHigh": "빈발",
+      "top5Title": "빈발 고장 Top 5",
+      "top5Sub": "등급·재발",
+      "top5H": [
+        "코드",
+        "유형",
+        "건수",
+        "등급",
+        "재발",
+        "현황"
+      ],
+      "recurBadge": "재발",
+      "feedTitle": "최근 알람 / 이벤트",
+      "feedSub": "최신순",
+      "feedEmpty": "기록 없음",
+      "_box_overview_05_dev": "───── 05 개발 현황 하단 (부서 협의 · 기술 개발) 1:1 ─────",
+      "trkDiscussLabel": "부서 협의 및 기타사항",
+      "discussTitle": "협의 및 논의 필요",
+      "discussBadge": "{n}건",
+      "discussItems": [
+        {
+          "topic": "PAL-001 흡착부 증설 — 검증 런 일정",
+          "tag": "긴급",
+          "group": "안전"
+        },
+        {
+          "topic": "JD-05 합동리뷰 (7/16) — 자재/설비 판별",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "가동인증 산출물 체크리스트 사전 점검",
+          "tag": "검토",
+          "group": "기타"
+        }
+      ],
+      "discussEmpty": "논의 필요 항목 없음",
+      "discGroups": [
+        "안전",
+        "운영",
+        "기타"
+      ],
+      "trkTechLabel": "기술 개발",
+      "swTitle": "소프트웨어 완성도",
+      "swSub": "🟢완료 🔵진행 🟠미흡",
+      "swGroups": [
+        "로봇",
+        "상위시스템",
+        "환경"
+      ],
+      "_box_overview_06_stage": "───── 06 개발 단계 (상단 스텝퍼 + 🔍 팝업) ─────",
+      "lcTitle": "개발 단계",
+      "lcMore": "개발 진행 단계 상세",
+      "lcDone": "완료",
+      "lcCurrent": "진행 중",
+      "lcTodo": "예정",
+      "stageTitle": "개발 진행 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "DEVELOPMENT STAGE · 전체 {n}단계 중 현재 위치"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "_acceptance_readme": "양산 합격기준 리스트입니다. 여기 criteria 배열의 순서·라벨·표시여부만 고치고 새로고침하면 반영됩니다(재빌드 불필요). 각 항목의 id 가 계산된 기준과 매칭되면 값·판정(충족/미달/진행)은 데이터에서 자동으로 채워지고, label 로 화면 문구만 바꿉니다. 사용 가능한 id: complete(완주) · mtbf(MTBF·신뢰수준) · openCritical(미해결 Critical) · recur(재발) · verifyClose(전 결함 검증종결). 항목을 빼면 그 기준이 숨겨지고, 순서를 바꾸면 표시 순서가 바뀝니다. id 없이 label/value/status(pass|fail|prog)만 적으면 자동계산 없이 직접 관리하는 수동 항목이 됩니다.",
+    "acceptance": {
+      "criteria": [
+        {
+          "id": "complete",
+          "label": "완주 (연속 목표 Cycle)"
+        },
+        {
+          "id": "mtbf",
+          "label": "MTBF · 신뢰수준"
+        },
+        {
+          "id": "openCritical",
+          "label": "미해결 Critical = 0"
+        },
+        {
+          "id": "recur",
+          "label": "동일 에러 재발 ≤ 0"
+        },
+        {
+          "id": "verifyClose",
+          "label": "전 결함 검증종결"
+        }
+      ]
+    },
+    "steps": {
+      "_box_steps_01": "───── 00 헤더 · 공통 판정 라벨 ─────",
+      "tag": "신뢰성 입증 흐름",
+      "title": "6단계로 \"신뢰성 있게 쓸 수 있나\" 입증",
+      "desc": "🛡 Track 2 근거 · 합격은 위 요약에서 추적",
+      "_box_steps_03": "───── STEP2 결함관리(FRACAS)·고장프로파일 ─────",
+      "s2Title": "결함관리 (FRACAS) · 고장 프로파일",
+      "s2Q": "모든 결함이 폐쇄루프로 닫혔는가 / 무엇이 얼마나 나쁜가?",
+      "s2Chip": "폐쇄루프 추적",
+      "flow": [
+        "고장 보고",
+        "근본원인 분석",
+        "시정조치",
+        "무발생 검증",
+        "종결"
+      ],
+      "fracasH": [
+        "코드",
+        "유형",
+        "조치내용",
+        "무발생 검증({verify}Cy)",
+        "상태"
+      ],
+      "top5Title": "빈발 고장 Top 5 (코드 기준)",
+      "top5Sub": "자주 나는 고장 순 · 등급·재발",
+      "top5H": [
+        "코드",
+        "유형",
+        "건수",
+        "빈도",
+        "등급"
+      ],
+      "matrixTitle": "위험 매트릭스 (S×O)",
+      "matrixSub": "RPN 없이 우선순위 자동",
+      "recurTitle": "재발 현황",
+      "recurSub": "같은 코드 재출현 (자동)",
+      "recurUnit": "건 · {rate}%",
+      "recurNone": "재발 없음",
+      "recurCleared": "검증완료로 해제: {list}",
+      "recurWarn": "⚠️ 조치 후 재발 = 근본원인 미해결 신호",
+      "_box_steps_04": "───── 차트 설정 (한눈에 보기 그래프 공용: 목표곡선·y축·범례 / errRateBin·recentWeeks·recentMinCycles 는 빌드 스크립트가 사용 — 지우지 말 것) ─────",
+      "targetCurve": "linear",
+      "targetCurveNames": {
+        "linear": "선형",
+        "quad": "2차 곡선",
+        "cubic": "3차 곡선"
+      },
+      "yAxisMax": 400,
+      "growthTargetLabel": "목표 {v} ({curve})",
+      "errRateBin": "week",
+      "recentWeeks": 4,
+      "recentMinCycles": 20,
+      "_box_steps_06": "───── STEP5 미해결 0 종결 ─────",
+      "s5Title": "미해결 0 종결",
+      "s5Q": "알려진 결함이 모두 검증 종결됐는가?",
+      "s5Chip": "미해결 조치 {open}건 · Critical {crit}",
+      "s5OpenCritTitle": "미해결 Critical",
+      "s5OpenCritSub": "종료 시 0 필요",
+      "s5OpenCritMet": "✓ 충족",
+      "s5OpenCritUnmet": "⚠️ 미충족",
+      "s5OpenActTitle": "미해결 조치",
+      "s5OpenActSub": "진행중 + 검증중",
+      "s5ClosedTitle": "검증 종결률",
+      "s5ClosedSub": "Critical·Major 대비",
+      "s5ActTitle": "조치 관리 (Action Items)",
+      "s5ActBadge": "전체 표",
+      "s5ActSub": "유지 데이터: SEC_REPORT.xlsx 「조치검증」",
+      "s5ActH": [
+        "ID",
+        "조치 항목",
+        "대상",
+        "담당",
+        "목표일",
+        "상태",
+        "검증",
+        "진행률"
+      ],
+      "_box_steps_07": "───── STEP6 기록(근거) ─────",
+      "s6Title": "기록 (근거)",
+      "s6Q": "판정의 원천 기록이 보존·추적 가능한가?",
+      "s6Chip": "git 추적",
+      "s6Integrity": "🔒 <b>데이터 무결성</b> git 버전관리 · 단일 출처 · 판정 재현 가능",
+      "s6Source": "원천: {source}",
+      "dailyTitle": "일자별 평가 기록",
+      "dailySub": "DAILY LOG · 업체 일일평가",
+      "dailyH": [
+        "평가일",
+        "평가",
+        "에러",
+        "연속",
+        "비고"
+      ],
+      "errlogTitle": "에러 상세 로그",
+      "errlogBadge": "사진 모달",
+      "errlogSub": "INCIDENT DETAILS · 원인·조치·사진 (＋상세)",
+      "errlogH": [
+        "코드",
+        "유형 / 원인",
+        "담당",
+        "상세"
+      ],
+      "errlogBtn": "＋상세"
+    },
+    "modal": {
+      "_box_modal_01": "───── 01 에러 상세 모달 (이 박스 글자는 여기서 수정) ─────",
+      "title": "에러 상세",
+      "titleFull": "에러 상세 · {code} (No.{no})",
+      "occur": "발생",
+      "cycle": "회차",
+      "type": "유형",
+      "owner": "담당",
+      "ownerVal": "삼성 {sec} / 업체 {vendor}",
+      "detail": "상세",
+      "cause": "원인",
+      "action": "조치",
+      "detailMore": "상세설명",
+      "images": "현장 사진",
+      "imgMissing": "이미지 없음: {fn}",
+      "errorLoad": "데이터를 불러오지 못했습니다 (data/dashboard.json). 로컬에서는 HTTP 서버로 여세요."
+    }
+  }
+}
