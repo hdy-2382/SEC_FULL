@@ -418,8 +418,10 @@
 .stagechip{font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.02em}
 .st-poc{background:#E5EFFA;color:#3F7CC4}.st-pilot{background:#FBEDD6;color:#B36F0A}.st-mass{background:#DDEEE2;color:#2F7A55}.st-spread{background:#EEE7F8;color:#7A4FB3}.st-ops{background:#ececec;color:#5f6b7a}.st-none{background:#eee;color:#888}
 /* TECOP 신호등 */
-.tecop{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tecop{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.tecop .tk{font-size:9.5px;font-weight:800;color:var(--muted);letter-spacing:.05em;margin-right:1px;cursor:help}
 .tecop .tp{font-size:10.5px;font-weight:800;border-radius:16px;padding:3px 9px;cursor:default}
+.pcard .buildchip{font-size:9.5px;font-weight:800;color:#fff;background:#5b7ea8;border-radius:20px;padding:2.5px 8px}
 .tecop .tp.ok{background:var(--green-soft);color:var(--green)}
 .tecop .tp.warn{background:var(--major-soft);color:var(--major)}
 .tecop .tp.risk{background:var(--crit-soft);color:var(--crit)}

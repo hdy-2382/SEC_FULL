@@ -11,11 +11,53 @@ function ddayLabel(dateStr) {
   return diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `D+${-diff}`;
 }
 
-function tecopRow(tecop) {
+/* TECOP 리스크 렌즈 — T기술 E경제 C계약 O조직 P안전 (게이트 리뷰 고정 안건).
+   withLabel=true면 행 앞에 '리스크' 라벨 (홈 카드용 — 맥락 없이도 읽히게) */
+const TECOP_KO = { T: '기술', E: '경제', C: '계약', O: '조직', P: '안전' };
+function tecopRow(tecop, withLabel) {
   const CLS = { ok: 'ok', warn: 'warn', risk: 'risk', bad: 'risk' };
   const LB = { ok: '양호', warn: '주의', risk: '리스크' };
-  return `<div class="tecop">${(tecop || []).map(t =>
-    `<span class="tp ${CLS[t.status] || 'ok'}" title="${esc(t.note || '')}">${esc(t.k)} ${esc(LB[CLS[t.status] || 'ok'])}</span>`).join('')}</div>`;
+  const chips = (tecop || []).map(t => {
+    const ko = TECOP_KO[t.k] || t.k;
+    return `<span class="tp ${CLS[t.status] || 'ok'}" title="${esc(t.k)}(${esc(ko)}) — ${esc(t.note || '')}">${esc(ko)} ${esc(LB[CLS[t.status] || 'ok'])}</span>`;
+  }).join('');
+  return `<div class="tecop">${withLabel ? '<span class="tk" title="게이트 리뷰 고정 안건 — TECOP 리스크 렌즈">리스크</span>' : ''}${chips}</div>`;
+}
+
+/* 개발(제작) 단계 카드 — 평가 데이터가 아직 없는 과제: config devPlan(마일스톤·기간·평가 착수)으로
+   "무엇을 언제까지 만들고, 지금 어디까지 왔나"를 보여준다. 평가 지표(런·폐루프)는 무의미하므로 대체. */
+function homeBuildCard(e, chip, meta) {
+  const dp = e.devPlan || {};
+  const items = dp.items || [];
+  const done = items.filter(it => (it.pct || 0) >= 100).length;
+  const avg = items.length ? Math.round(items.reduce((a, it) => a + (it.pct || 0), 0) / items.length) : 0;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const overdue = items.filter(it => (it.pct || 0) < 100 && it.due && parseYMD(it.due) < today).length;
+  // 일정 경과율 (계획 기간 대비 오늘)
+  let elapsed = null;
+  if (dp.start && dp.end) {
+    const s = parseYMD(dp.start), en = parseYMD(dp.end);
+    elapsed = Math.max(0, Math.min(100, Math.round((today - s) / (en - s) * 100)));
+  }
+  const cur = items.find(it => (it.pct || 0) < 100);
+  const sc = STAGE_COLOR[e.stage] || 'var(--line)';
+  const evalDd = dp.evalStart ? ddayLabel(dp.evalStart) : '';
+  // 진행이 일정보다 뒤지면 주의색
+  const lag = elapsed != null && avg < elapsed - 10;
+  return `<div class="pcard" data-go="${esc(e.id)}" style="border-top:3px solid ${esc(sc)}">
+    <div class="ph"><b>${esc(e.name)}</b><span class="buildchip">개발 중</span>${chip}</div>
+    <div class="psub">${esc(meta)}${dp.label ? ` · ${esc(dp.label)}` : ''}</div>
+    <div class="kv">
+      <div><div class="k">개발 진척 (계획 ${dp.end ? esc(dp.end.slice(5)) : '—'}까지)</div><div class="v"${lag ? ' style="color:var(--major)"' : ''}>${avg}<small>% · 일정 경과 ${elapsed != null ? elapsed : '—'}%</small></div></div>
+      <div><div class="k">마일스톤</div><div class="v">${done}<small>/${items.length} 완료</small></div></div>
+      <div><div class="k">지연</div><div class="v"${overdue ? ' style="color:var(--crit)"' : ' style="color:var(--green)"'}>${overdue}<small>건</small></div></div>
+    </div>
+    <div class="pgauge"><div class="track"><i style="width:${avg}%;background:${esc(sc)}"></i></div><span class="pc">${avg}%</span></div>
+    ${cur ? `<div class="mrow"><span class="mk">진행</span><span class="mtx">${esc(cur.name)} <b>${cur.pct || 0}%</b>${cur.due ? ` · ~${esc(cur.due.slice(5))}` : ''}</span></div>` : ''}
+    ${dp.evalStart ? `<div class="mrow"><span class="mk">다음</span><span class="mtx">평가 착수 <b>${esc(dp.evalStart)}</b> — ${esc(dp.evalLabel || (e.run || {}).criterion || '무고장 런')}</span></div>` : ''}
+    ${tecopRow(e.tecop, true)}
+    <div class="pfoot"><span>개발 단계 — 평가 데이터 없음 (착수 후 자동 전환)</span><span class="gate">${dp.evalStart ? `평가 착수 ${esc(evalDd)}` : '착수일 미정'}</span></div>
+  </div>`;
 }
 
 /* 과제 카드 — 단계별 헤드라인 kv 3개 + 진행 게이지 + 3트랙/TECOP */
@@ -23,6 +65,7 @@ function homeCard(e) {
   const chip = `<span class="stagechip ${STAGE_CHIP[e.stage] || 'st-none'}">${esc(STAGE_LABEL[e.stage] || '등록됨')}</span>`;
   const prj = e.project || {};
   const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.startDate ? `${prj.startDate} ~` : ''].filter(Boolean).join(' · ');
+  if (!e.hasData && e.devPlan) return homeBuildCard(e, chip, meta);
   if (!e.hasData) {
     return `<div class="pcard pcard-empty" data-go="${esc(e.id)}">
       <div class="ph"><b>${esc(e.name)}</b>${chip}</div>
@@ -73,7 +116,7 @@ function homeCard(e) {
     <div class="kv">${kvHtml}</div>
     <div class="pgauge"><div class="track"><i style="width:${pct}%;background:${esc(sc)}"></i></div><span class="pc">${pct}%</span></div>
     ${devRow}${loopRow}
-    ${tecopRow(e.tecop)}
+    ${tecopRow(e.tecop, true)}
     <div class="pfoot"><span>${e.stage === 'poc'
       ? `진행 이슈 ${((s.issueStats || {}).open != null) ? s.issueStats.open : '—'}건`
       : (s.recur ? `재발 ${s.recur}건` : '재발 0건')}</span><span class="gate${ddCls}">${esc(gate.label || '게이트 리뷰')} ${esc(dd)}</span></div>

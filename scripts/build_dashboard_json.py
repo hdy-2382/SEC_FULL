@@ -1719,6 +1719,9 @@ def write_portfolio():
             entry["tecop"] = cfg.get("tecop")
             prj = cfg.get("project") or {}
             entry["project"] = {k: prj.get(k) for k in ("name", "department", "team", "startDate", "endDate")}
+            # 개발(제작) 단계 계획 — 평가 데이터가 없는 과제의 홈 카드가 이걸로 진척을 표시
+            if cfg.get("devPlan"):
+                entry["devPlan"] = cfg["devPlan"]
             # 홈 카드의 '개발 진행'용: 세부 단계 위치 + SW 완성도 평균
             lc = cfg.get("lifecycle") or []
             if lc:
@@ -1764,7 +1767,11 @@ def main():
         if not pids:
             raise SystemExit("빌드할 과제가 없습니다 (data/projects/<id>/config.json 필요)")
     for pid in pids:
-        build_project(pid)
+        try:
+            build_project(pid)
+        except SystemExit as ex:
+            # 개발(제작) 단계 과제: config만 있고 평가 엑셀이 아직 없음 — 정상 (홈 카드는 devPlan으로 표시)
+            print(f"[build:{pid}] 스킵 — {ex}")
     write_portfolio()
 
     if args.validate_stage:

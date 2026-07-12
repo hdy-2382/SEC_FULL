@@ -528,9 +528,64 @@ def gen_agv():
     print(f"[demo] agv(운영): 월간지표 {len(monthly)}개월 · 필드 FRACAS {len(issues)}건 · CIP {len(cip)}건")
 
 
+# ══════════════════════════ 용접 협동로봇 (개발 중 — 평가 착수 전) ══════════════════════════
+def gen_weld():
+    """config만 생성 (평가 엑셀 없음) — 순수 개발(제작) 기간의 과제.
+    홈 카드는 devPlan(마일스톤·일정·평가 착수 예정)으로 '무엇을 언제까지, 지금 어디까지'를 표시한다."""
+    pid = "weld"
+    _write_config(pid, {
+        "stage": "poc",
+        "run": {"target": 72, "unit": "h", "criterion": "무에러", "env": "사외 랩"},
+        "project": {"name": "용접 협동로봇 (개발 중)", "department": "인프라 기술팀", "team": "한OO, 최OO",
+                    "startDate": "2026-06-01", "endDate": "2026-11-30"},
+        # 개발(제작) 계획 — 평가 데이터가 생기기 전 카드의 단일 출처
+        "devPlan": {
+            "label": "설계·제작 (평가 착수 전)",
+            "start": "2026-06-01", "end": "2026-09-01",
+            "evalStart": "2026-09-08", "evalLabel": "사외 72h 무에러 + 비정상 평가",
+            "items": [
+                {"name": "요구사양·컨셉 설계", "due": "2026-06-20", "pct": 100},
+                {"name": "FMEA 초판·판정기준서 v1", "due": "2026-07-05", "pct": 100},
+                {"name": "본체·토치부 상세 설계", "due": "2026-07-25", "pct": 60},
+                {"name": "지그·시제 제작", "due": "2026-08-10", "pct": 25},
+                {"name": "제어 SW 프레임", "due": "2026-08-20", "pct": 30},
+                {"name": "사외 랩 셋업·시운전", "due": "2026-09-01", "pct": 0},
+            ],
+        },
+        "tecop": [
+            {"k": "T", "status": "warn", "note": "토치 냉각 설계 검증 전 — 시제에서 확인"},
+            {"k": "E", "status": "ok", "note": "타당성 분석 완료 — 예상 ROI 산출"},
+            {"k": "C", "status": "ok", "note": "개발 계약 체결 완료"},
+            {"k": "O", "status": "ok", "note": "수혜부서 요구사양 합의"},
+            {"k": "P", "status": "warn", "note": "용접 흄 안전 컨셉 미팅 예정 (7/22)"},
+        ],
+        "gate": {"reviewDate": "2026-09-08", "label": "평가 착수 리뷰(DR)", "criteria": [
+            {"label": "① 상세 설계 승인", "value": "60%", "status": "prog"},
+            {"label": "② FMEA·판정기준서", "value": "v1 확정", "status": "pass"},
+            {"label": "③ 시제 제작", "value": "25%", "status": "prog"},
+            {"label": "④ 안전 컨셉 합의", "value": "미팅 7/22", "status": "wait"},
+            {"label": "⑤ 랩 셋업", "value": "9/1 예정", "status": "wait"},
+        ]},
+        "lifecycle": [
+            {"stage": "P1 타당성·평가항목 정의", "status": "done", "note": "FMEA 초판 · 판정기준서 v1"},
+            {"stage": "P2 설계·제작", "status": "current", "note": "상세 설계 60% · 시제 25%"},
+            {"stage": "P3 기성능 평가/검증", "status": "todo", "note": "시제 완성 후"},
+            {"stage": "P4 사외 72h 무에러 + 비정상 평가", "status": "todo", "note": "9/8 착수 예정"},
+        ],
+        "ui": {
+            "app": {"title": "용접 협동로봇 — 개발 중", "brandLogo": "용", "brandName": "용접 협동로봇<br>개발 중",
+                    "evalDateLabel": "평가일", "printBtn": "PDF 리포트",
+                    "footBrand": "설계·제작 — 평가 착수 전", "updatedPrefix": "업데이트 "},
+            "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
+        },
+    })
+    print("[demo] weld(개발 중): config만 생성 — 평가 착수 전 (devPlan 카드)")
+
+
 if __name__ == "__main__":
     gen_drum()
     gen_sort()
     gen_clean()
     gen_agv()
+    gen_weld()
     print("[demo] 완료 — python3 scripts/build_dashboard_json.py 로 빌드하세요")
