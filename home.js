@@ -85,44 +85,19 @@ function renderHome() {
   const entries = (PORTFOLIO && PORTFOLIO.projects) || [];
   const withData = entries.filter(e => e.hasData);
 
-  // ⓪ 히어로 — 합산 KPI는 두지 않는다: 단계마다 숫자의 의미가 달라(POC 이슈=발굴 성과 vs 운영 이슈=손실)
-  //    전사로 의미 있는 두 가지만 — 게이트 리뷰 일정(순수 일정)과 주의 신호(기준 미달·TECOP 주의).
+  // 상단 요약 밴드는 두지 않는다 — 과제 5건 규모에선 카드가 곧 요약이고, 게이트 D-day·TECOP는
+  // 카드 안에 이미 있다. 최소 신호(가장 임박한 게이트·기준 미달 수)만 과제 현황 헤더에 한 줄로.
   const gates = entries.filter(e => e.gate && e.gate.reviewDate)
-    .map(e => ({ id: e.id, abbr: e.abbr, name: e.name, d: e.gate.reviewDate, label: (e.gate.label || '게이트 리뷰') }))
+    .map(e => ({ id: e.id, abbr: e.abbr, d: e.gate.reviewDate }))
     .sort((a, b) => a.d < b.d ? -1 : 1);
-  const gateRows = gates.slice(0, 5).map(g => {
-    const dd = ddayLabel(g.d);
-    const days = dd.startsWith('D-') ? parseInt(dd.slice(2), 10) : (dd === 'D-DAY' ? 0 : -1);
-    return `<div class="hg-row${days >= 0 && days <= 7 ? ' soon' : ''}" data-go="${esc(g.id)}">
-      <span class="d">${esc(dd)}</span><span class="nm">${esc(g.abbr)} ${esc(g.name)}</span><span class="dt">${esc(g.label)} · ${esc(g.d.slice(5))}</span></div>`;
-  }).join('');
-  const alerts = [];
-  entries.forEach(e => {
-    ((e.gate || {}).criteria || []).forEach(c => {
-      if (c.status !== 'fail') return;
-      const nm = (c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
-      const val = c.value && !String(c.value).startsWith('auto:') ? ` — ${c.value}` : '';
-      alerts.push({ id: e.id, abbr: e.abbr, t: `${nm}${val} (기준 미달)`, cls: 'bad' });
-    });
-    (e.tecop || []).forEach(t => {
-      if (t.status === 'warn' || t.status === 'risk') alerts.push({ id: e.id, abbr: e.abbr, t: `${t.k} — ${t.note || '주의'}`, cls: 'warn' });
-    });
-  });
-  const alertChips = alerts.slice(0, 8).map(a =>
-    `<span class="al-chip ${a.cls}" data-go="${esc(a.id)}" title="${esc(a.t)}"><b>${esc(a.abbr)}</b>${esc(a.t.length > 22 ? a.t.slice(0, 21) + '…' : a.t)}</span>`).join('');
-  const hero = `
-    <div class="home-hero">
-      <div class="hh-tx">
-        <div class="hh-eyebrow">${esc(orgT('procTag', '표준 프로세스'))} · ${esc(orgT('footNote', ''))}</div>
-        <h2>${esc(orgT('heroTitle', '배관은 하나, 질문은 단계별'))}</h2>
-        <p>${orgT('heroSub', '고장 레코드 <b>형식</b>은 전 과제·전 단계 공통(추적성) — 판단 잣대와 화면은 단계별 질문에 맞춥니다. 전사 합산 숫자 대신 <b>일정과 주의 신호</b>만 모아 봅니다.')}</p>
-      </div>
-      <div class="hh-right">
-        <div class="hh-box"><div class="k">${esc(orgT('heroGates', '게이트 리뷰 일정'))} — ${gates.length}건</div>${gateRows || '<div class="hg-row"><span class="nm">예정 없음</span></div>'}</div>
-        <div class="hh-box"><div class="k">${esc(orgT('heroAlerts', '주의 신호'))} — 기준 미달 ${alerts.filter(a => a.cls === 'bad').length} · TECOP 주의 ${alerts.filter(a => a.cls === 'warn').length}</div>
-          <div class="hh-alert-chips">${alertChips || '<span class="al-chip">주의 신호 없음</span>'}</div></div>
-      </div>
-    </div>`;
+  const nextGate = gates.find(g => !ddayLabel(g.d).startsWith('D+')) || gates[0];
+  const failN = entries.reduce((a, e) =>
+    a + (((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length), 0);
+  const cardsNote = [
+    nextGate ? `다음 게이트 <b>${esc(nextGate.abbr)} ${esc(ddayLabel(nextGate.d))}</b>` : '',
+    failN ? `<b style="color:var(--crit)">기준 미달 ${failN}건</b>` : '',
+    esc(orgT('cardsDesc', '카드 클릭 → 과제 페이지')),
+  ].filter(Boolean).join(' · ');
 
   // ① 표준 프로세스 스트립 — 각 단계 아래에 현재 그 단계에 있는 과제 배지 (살아있는 지도)
   const chipsOf = key => entries.filter(e => e.stage === key).map(e =>
@@ -155,12 +130,12 @@ function renderHome() {
   // ② 과제 카드
   const cards = entries.map(homeCard).join('');
 
-  $('s-home').innerHTML = hero + procBox + `
+  $('s-home').innerHTML = procBox + `
     <section class="sbox">
-      <div class="sbox-h"><span class="tag">${esc(orgT('cardsTag', '과제 현황'))}</span><h2>${esc(orgT('cardsTitle', '진행 중 과제'))} ${entries.length}${esc(orgT('cardsUnit', '건'))}</h2><span class="d">${esc(orgT('cardsDesc', '카드 클릭 → 과제 페이지'))}</span></div>
+      <div class="sbox-h"><span class="tag">${esc(orgT('cardsTag', '과제 현황'))}</span><h2>${esc(orgT('cardsTitle', '진행 중 과제'))} ${entries.length}${esc(orgT('cardsUnit', '건'))}</h2><span class="d">${cardsNote}</span></div>
       <div class="pcards">${cards}</div>
     </section>`;
 
-  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go], #s-home .hg-row[data-go], #s-home .al-chip[data-go]').forEach(c =>
+  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go]').forEach(c =>
     c.addEventListener('click', ev => { ev.stopPropagation(); location.hash = '#/' + c.dataset.go; }));
 }
