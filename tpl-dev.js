@@ -479,9 +479,11 @@ function pocTrendPanel(opt) {
   opt = opt || {};
   const tr = DATA.trend || [];
   if (!tr.length) return '';
-  const W = opt.wide ? 1000 : 420;
-  const top = 20, bot = opt.bot || (opt.wide ? 396 : 158), left = opt.wide ? 54 : 40, right = opt.wide ? 962 : 388;
-  const vbH = opt.vbH || (opt.wide ? 448 : 196);
+  // narrow = 관제 트랙 A 슬롯용: 실표시 폭(~300px)에 맞춘 뷰박스 → 확대 없이 글자가 원크기로 보임
+  const W = opt.narrow ? 320 : (opt.wide ? 1000 : 420);
+  const top = 20, bot = opt.bot || (opt.narrow ? 226 : opt.wide ? 396 : 158),
+    left = opt.narrow ? 36 : (opt.wide ? 54 : 40), right = opt.narrow ? 294 : (opt.wide ? 962 : 388);
+  const vbH = opt.vbH || (opt.narrow ? 280 : opt.wide ? 448 : 196);
   const yMax = niceCeil(Math.max(...tr.map(t => t.found), 1));
   const n = tr.length;
   const x = i => n === 1 ? (left + right) / 2 : left + (right - left) * i / (n - 1);
@@ -493,14 +495,15 @@ function pocTrendPanel(opt) {
     axis += `<line x1="${left}" y1="${yy}" x2="${right}" y2="${yy}" stroke="${k === ticks ? '#C9DCEC' : '#EAF0F6'}"/>`;
     axis += `<text x="${left - 6}" y="${yy + 4}" font-size="11" fill="#8A99AC" text-anchor="end">${Math.round(v)}</text>`;
   }
-  const xaxis = tr.map((t, i) => `<text x="${x(i)}" y="${bot + 18}" font-size="11.5" fill="#5A6B7E" text-anchor="middle">${t.week}주차</text>`).join('');
+  const kx = Math.max(1, Math.ceil(n / (opt.narrow ? 6 : 12)));   // narrow일 땐 x라벨 솎아내기
+  const xaxis = tr.map((t, i) => (i % kx && i !== n - 1) ? '' : `<text x="${x(i)}" y="${bot + 18}" font-size="11.5" fill="#5A6B7E" text-anchor="middle">${t.week}주차</text>`).join('');
   const pf = tr.map((t, i) => `${x(i)},${y(t.found)}`).join(' ');
   const pc = tr.map((t, i) => `${x(i)},${y(t.closed)}`).join(' ');
   const area = pf + ' ' + tr.slice().reverse().map((t, i) => `${x(n - 1 - i)},${y(t.closed)}`).join(' ');
   const dots = tr.map((t, i) => `<circle cx="${x(i)}" cy="${y(t.found)}" r="3.5" fill="#2E89D6"><title>${t.week}주차 · 발견 ${t.found} · 종결 ${t.closed} · 오픈 ${t.found - t.closed}</title></circle>`
     + `<circle cx="${x(i)}" cy="${y(t.closed)}" r="3.5" fill="#3E9B6E"><title>${t.week}주차 · 종결 ${t.closed}</title></circle>`).join('');
   const last = tr[n - 1], open = last.found - last.closed;
-  return `<div class="panel${opt.wide ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('trend')" title="클릭하면 크게 보기"` : ''}>
+  return `<div class="panel${(opt.wide || opt.narrow) ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('trend')" title="클릭하면 크게 보기"` : ''}>
     <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건 · 좁혀지는가${opt.zoom ? ' ⤢' : ''}</span></div>
     <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 누적 발견 대 누적 종결">
       ${axis}<line x1="${left}" y1="${top}" x2="${left}" y2="${bot}" stroke="#C9DCEC"/>
@@ -601,19 +604,23 @@ function pilotGrowthPanel(opt) {
   opt = opt || {};
   const g = DATA.growth || [], target = DATA.growthTarget || 0;
   if (!g.length) return '';
-  const top = 26, bot = opt.bot || 196, left = 64, right = 950, vbH = opt.vbH || 236;
+  // narrow = 관제 트랙 A 슬롯용 뷰박스(실표시 폭 근접 → 글자 원크기)
+  const W = opt.narrow ? 320 : 1000;
+  const top = 26, bot = opt.bot || (opt.narrow ? 226 : 196), left = opt.narrow ? 40 : 64,
+    right = opt.narrow ? 300 : 950, vbH = opt.vbH || (opt.narrow ? 280 : 236);
   const yMax = niceCeil(Math.max(target, ...g.map(w => w.mcbf)) * 1.05);
   const y = v => bot - v / yMax * (bot - top);
   const x = i => g.length === 1 ? (left + right) / 2 : left + (right - left) * i / (g.length - 1);
   const pts = g.map((w, i) => `${x(i)},${y(w.mcbf)}`).join(' ');
   const dots = g.map((w, i) => `<circle cx="${x(i)}" cy="${y(w.mcbf)}" r="${i === g.length - 1 ? 5.5 : 4}" fill="#2E89D6"${i === g.length - 1 ? ' stroke="#fff" stroke-width="1.5"' : ''}><title>W${w.week} · MCBF ${fmt(w.mcbf)}</title></circle>`).join('');
   const vers = (DATA.versions || []);
-  const xlab = g.map((w, i) => `<text x="${x(i)}" y="${bot + 20}" font-size="13" fill="#6E7D90" text-anchor="middle">W${w.week}</text>`).join('');
+  const kx = Math.max(1, Math.ceil(g.length / (opt.narrow ? 7 : 14)));
+  const xlab = g.map((w, i) => (i % kx && i !== g.length - 1) ? '' : `<text x="${x(i)}" y="${bot + 20}" font-size="13" fill="#6E7D90" text-anchor="middle">W${w.week}</text>`).join('');
   const last = g[g.length - 1];
   return `
-    <div class="panel${opt.vbH ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('growth')" title="클릭하면 크게 보기"` : ''}>
+    <div class="panel${(opt.vbH || opt.narrow) ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('growth')" title="클릭하면 크게 보기"` : ''}>
       <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy — 안정화의 정량 증거${opt.zoom ? ' ⤢' : ''}</span></div>
-      <svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 MCBF 성장곡선">
+      <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 MCBF 성장곡선">
         ${target ? `<line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${left + 4}" y="${y(target) - 6}" font-size="12.5" fill="#B36F0A" font-weight="700">목표 ${fmt(target)}</text>` : ''}
         <line x1="${left}" y1="${bot}" x2="${right}" y2="${bot}" stroke="#C9DCEC"/>
         <g font-size="11" fill="#9aa9bb" text-anchor="end"><text x="${left - 8}" y="${bot + 4}">0</text><text x="${left - 8}" y="${y(yMax) + 8}">${fmt(yMax)}</text></g>
@@ -706,7 +713,7 @@ function renderPoc(C) {
     qbox: `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`,
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
-    aChart: pocTrendPanel({ wide: true, zoom: true, bot: 840, vbH: 900 }),
+    aChart: pocTrendPanel({ narrow: true, zoom: true }),
     bTitle: '전수 4분류 → 폐루프 · 연결된 지표',
     bTop: pocFourwayBoard(),
     bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
@@ -724,7 +731,7 @@ function renderPilot(C) {
     qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
-    aChart: pilotGrowthPanel({ bot: 840, vbH: 900, zoom: true }),
+    aChart: pilotGrowthPanel({ narrow: true, zoom: true, bot: 150, vbH: 200 }),   // Pilot은 히어로가 높아 차트 슬롯이 낮음 — 납작 뷰박스
     bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
     bTop: devClassBoard('pilot'),
     bCharts: [fracasLoopPanel({ recurZeroGate: true }), devParetoPanel(true)],

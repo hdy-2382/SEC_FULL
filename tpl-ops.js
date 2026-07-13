@@ -169,7 +169,11 @@ function opsRamTrendPanel(opt) {
   const ms = (DATA.ram || {}).months || [];
   if (!ms.length) return '';
   const target = (DATA.ram || {}).availTarget || 98;
-  const top = 22, bot = (opt && opt.bot) || 396, left = 56, right = 962, vbH = (opt && opt.vbH) || 448;
+  // narrow = 관제 트랙 A 슬롯용 뷰박스(실표시 폭 근접 → 글자 원크기)
+  opt = opt || {};
+  const W = opt.narrow ? 320 : 1000;
+  const top = 22, bot = opt.bot || (opt.narrow ? 224 : 396), left = opt.narrow ? 44 : 56,
+    right = opt.narrow ? 300 : 962, vbH = opt.vbH || (opt.narrow ? 280 : 448);
   const vals = ms.map(m => m.avail);
   const yMin = Math.floor(Math.min(...vals, target) - 1), yMax = Math.ceil(Math.max(...vals, target) + 0.5);
   const x = i => ms.length === 1 ? (left + right) / 2 : left + (right - left) * i / (ms.length - 1);
@@ -186,7 +190,7 @@ function opsRamTrendPanel(opt) {
   const last = ms[ms.length - 1];
   return `<div class="panel tight ovchart"${opt && opt.zoom ? ` onclick="openDevChart('ram')" title="클릭하면 크게 보기"` : ''}>
     <div class="ph"><h3>월간 가동률 추이</h3><span class="ps">상시 RAM — 목표 ${target}% · MTBF/MTTR은 상세 탭${opt && opt.zoom ? ' ⤢' : ''}</span></div>
-    <svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="월별 가동률 추이">
+    <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="월별 가동률 추이">
       ${axis}
       <line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/>
       <text x="${right - 4}" y="${y(target) - 7}" font-size="12.5" fill="#B36F0A" font-weight="700" text-anchor="end">목표 ${target}%</text>
@@ -307,7 +311,7 @@ function renderOpsMode(C) {
     qbox: `이 단계의 질문: <b>“어떤 고장부터 없애는 게 경제적인가?”</b> — 알람은 자동 수집하고 <b>승격 기준을 넘은 건만 필드 FRACAS</b>로 관리. 우선순위는 건수가 아니라 <b>다운타임(비용) Pareto</b>가 정하고, 개선은 CIP로 닫고, 고장모드는 차기 과제 FMEA로 환류한다.`,
     aTitle: '운영 성과 → 월간 RAM · 연결된 지표',
     aHero: opsRamHero(C),
-    aChart: opsRamTrendPanel({ zoom: true, bot: 840, vbH: 900 }),
+    aChart: opsRamTrendPanel({ zoom: true, narrow: true }),
     bTitle: '필드 FRACAS → 비용 우선순위 · 연결된 지표',
     bTop: opsDownParetoBoard(),
     bCharts: [fracasLoopPanel(), devMatrixPanel()],

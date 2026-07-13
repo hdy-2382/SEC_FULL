@@ -284,7 +284,7 @@
   .pocv .ov-2col .fw-board{flex:1 1 auto;align-content:stretch}
   .pocv .ov-2col .fwt:not(.hero){display:flex;flex-direction:column;min-height:0}
   .pocv .ov-2col .fwt:not(.hero) .m{margin-top:auto;padding-top:4px}
-  .pocv .ov-2col .tk-a>.kgroup{flex:1 0 auto}   /* 2열: 남는 높이는 히어로 1 : 차트·표 2 — 히어로는 축소 금지 */
+  .pocv .ov-2col .tk-a>.kgroup{flex:0 0 auto}   /* 2열: 히어로는 내용 크기 고정 — 남는 높이는 전부 차트·표가 */
   .pocv .ov-2col .tk-exec>.clr-list{flex:0 0 auto}
   .pocv .ov-2col .tk-a>.panel{flex:2 1 auto}
   .pocv .ov-2col .tk-a .panel>.tbl-scroll{min-height:170px!important}   /* 표형 슬롯(호기별 퀄 등) 최소 3행 보장 */

@@ -94,7 +94,10 @@ function weekRange(s, endStr) {
 function weeklyChart(weekly, target, opt) {
   opt = opt || {};
   const C = (DATA && DATA.config) || {}, proj = C.project || {};
-  const top = 16, bot = opt.bot || 188, left = 50, right = 986, vbH = opt.vbH || 244;
+  // narrow = 관제 트랙 A 슬롯용 뷰박스(실표시 폭 근접 → 글자 원크기)
+  const W = opt.narrow ? 320 : 1000;
+  const top = 16, bot = opt.bot || (opt.narrow ? 226 : 188), left = opt.narrow ? 34 : 50,
+    right = opt.narrow ? 306 : 986, vbH = opt.vbH || (opt.narrow ? 280 : 244);
   // x축: 평가기간 전체를 주차로 분할, 데이터 주차를 weekStart로 슬롯 매핑
   const slots = weekAxis(proj.startDate, proj.endDate, weekly.length || 1);
   const nSlots = Math.max(slots.length, weekly.length, 1);
@@ -123,11 +126,13 @@ function weeklyChart(weekly, target, opt) {
     const p = i / 60;
     return `${(left + (right - left) * p).toFixed(1)},${y(target * Math.pow(p, K)).toFixed(1)}`;
   }).join(' ');
-  // x축 라벨: "N주차" + 그 아래 "(시작-끝)" 날짜 범위
+  // x축 라벨: "N주차" + 그 아래 "(시작-끝)" 날짜 범위 (narrow는 라벨 솎아내고 날짜 생략)
+  const kx = Math.max(1, Math.ceil(nSlots / (opt.narrow ? 6 : 14)));
   let xaxis = '';
   slots.forEach((s, i) => {
+    if (opt.narrow && i % kx && i !== nSlots - 1) return;
     xaxis += `<text x="${cx(i)}" y="${bot + 22}" font-size="13" font-weight="600" fill="#3D4F63" text-anchor="middle">${i + 1}주차</text>`;
-    xaxis += `<text x="${cx(i)}" y="${bot + 39}" font-size="9.5" fill="#8A99AC" text-anchor="middle">${esc(weekRange(s, proj.endDate))}</text>`;
+    if (!opt.narrow) xaxis += `<text x="${cx(i)}" y="${bot + 39}" font-size="9.5" fill="#8A99AC" text-anchor="middle">${esc(weekRange(s, proj.endDate))}</text>`;
   });
   // 막대(누적연속=빨강, 슬롯 중앙 정렬) + 리셋 ✕
   let bars = '';
@@ -140,7 +145,7 @@ function weeklyChart(weekly, target, opt) {
     }
   });
   const curveName = (T('steps.targetCurveNames', {})[curve]) || curve;
-  return `<svg viewBox="0 0 1000 ${vbH}" style="width:100%;height:auto;display:block">
+  return `<svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block">
     <defs><clipPath id="wkclip"><rect x="${left}" y="${top - 2}" width="${right - left}" height="${bot - top + 2}"/></clipPath></defs>
     ${yaxis}
     <polyline fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="6 5" points="${ramp}" clip-path="url(#wkclip)"/>
