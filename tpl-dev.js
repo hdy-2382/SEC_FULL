@@ -94,13 +94,17 @@ function pocStBucket(st) {
 }
 const POC_ST_BADGE = { closed: 'b-ok', verifying: 'b-prog', acting: 'b-wait', new: 'b-crit' };
 
-/* 4분류 → 칩 클래스 (FOURWAY_MAP 키워드와 동일 규칙) */
+/* 원인분류 → 칩 클래스 (전 단계 축 공통 — 카테고리당 색 1:1 고정, styles.css 팔레트와 동일 키) */
 function c4Key(c) {
   const s = String(c || '').toLowerCase();
   if (s.includes('컨셉')) return 'risk';
   if (s.includes('설계')) return 'design';
+  if (s.includes('부품')) return 'parts';
+  if (s.includes('제작') || s.includes('조립')) return 'build';
+  if (s.includes('설치') || s.includes('시공')) return 'install';
   if (s.includes('구현') || s.includes('sw') || s.includes('버그')) return 'sw';
-  if (s.includes('환경') || s.includes('시험')) return 'env';
+  if (s.includes('환경') || s.includes('시험') || s.includes('자재')) return 'env';
+  if (s.includes('운영') || s.includes('조작')) return 'oper';
   return '';
 }
 function c4Chip(c) {
@@ -341,9 +345,10 @@ function devShell(stage, C, s) {
 function pocFourwayBoard() {
   const fw = DATA.fourway || [], st = DATA.issueStats || {};
   const by = {}; fw.forEach(f => { by[f.key] = f; });
-  const con = by.concept || { count: 0, label: '① 컨셉 리스크' };
+  const nm9 = s => String(s || '').replace(/^[①②③④⑤]\s*/, '');
+  const con = by.concept || { count: 0, label: '컨셉 리스크' };
   const ok = con.count === 0;
-  const tile = (f, cls) => f ? `<div class="fwt ${cls}"><div class="t">${esc(f.label)}</div><div class="n">${f.count}<small>건</small></div><div class="m">종결 ${f.closed} · 진행 ${f.count - f.closed}</div></div>` : '';
+  const tile = (f, cls) => f ? `<div class="fwt ${cls}"><div class="t">${esc(nm9(f.label))}</div><div class="n">${f.count}<small>건</small></div><div class="m">종결 ${f.closed} · 진행 ${f.count - f.closed}</div></div>` : '';
   const SEG_SHORT = { design: '설계', impl: 'SW', env: '환경' };
   const segs = ['design', 'impl', 'env'].map(k => {
     const f = by[k]; if (!f || !f.count) return '';
@@ -355,7 +360,7 @@ function pocFourwayBoard() {
     <div class="fw-board">
       <div class="fwt risk hero${ok ? '' : ' hero-bad'}">
         <div class="hero-n ${ok ? 'ok' : 'bad'}">${con.count}<small>건</small></div>
-        <div class="hero-tx"><div class="t">${esc(con.label)}</div>
+        <div class="hero-tx"><div class="t">${esc(nm9(con.label))}</div>
           <div class="m">${ok ? '이 아키텍처로 해결 불가한 병 — <b>0건 유지가 POC의 결론</b>' : '<b>⚠ 컨셉 재검토 필요</b> — 즉시 게이트 보류'}</div></div>
         ${ok ? '<span class="fw-badge">POC의 성적표</span>' : ''}
       </div>
@@ -379,8 +384,9 @@ const CAUSE6 = [
   ['env', '시험환경·자재', ['시험', '환경', '자재']],
   ['oper', '운영·조작', ['운영', '조작']],
 ];
-const CAUSE6_TILE = { design: 'design', parts: 'build', build: 'install', sw: 'sw', env: 'env', oper: 'oper' };
-const CAUSE6_SEG = { design: 'sg-design', parts: 'sg-build', build: 'sg-install', sw: 'sg-sw', env: 'sg-env', oper: 'sg-oper' };
+// 카테고리 키 = 타일/세그 클래스 (색 1:1 고정 — styles.css 카테고리 팔레트와 동일 키)
+const CAUSE6_TILE = { design: 'design', parts: 'parts', build: 'build', sw: 'sw', env: 'env', oper: 'oper' };
+const CAUSE6_SEG = { design: 'sg-design', parts: 'sg-parts', build: 'sg-build', sw: 'sg-sw', env: 'sg-env', oper: 'sg-oper' };
 
 function devClassBoard(stage) {
   if (stage === 'poc') return pocFourwayBoard();

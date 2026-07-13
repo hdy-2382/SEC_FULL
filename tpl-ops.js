@@ -67,9 +67,10 @@ function spreadUnitPanel() {
 function spreadLayerBoard() {
   const layers = DATA.causeLayer || [], st = DATA.issueStats || {};
   const by = {}; layers.forEach(l => { by[l.key] = l; });
-  const des = by.design || { count: 0, label: '① 설계' };
+  const nm9 = s => String(s || '').replace(/^[①②③④⑤]\s*/, '');
+  const des = by.design || { count: 0, label: '설계' };
   const ok = des.count === 0;
-  const tile = (l, cls) => l ? `<div class="fwt ${cls}"><div class="t">${esc(l.label)}</div><div class="n">${l.count}<small>건</small></div><div class="m">종결 ${l.closed} · 진행 ${l.count - l.closed}</div></div>` : '';
+  const tile = (l, cls) => l ? `<div class="fwt ${cls}"><div class="t">${esc(nm9(l.label))}</div><div class="n">${l.count}<small>건</small></div><div class="m">종결 ${l.closed} · 진행 ${l.count - l.closed}</div></div>` : '';
   const SEG = { build: ['sg-build', '제작·조립'], install: ['sg-install', '설치·시공'], oper: ['sg-oper', '운영·환경'] };
   const segs = ['build', 'install', 'oper'].map(k => {
     const l = by[k]; if (!l || !l.count) return '';
@@ -80,7 +81,7 @@ function spreadLayerBoard() {
     <div class="fw-board">
       <div class="fwt risk hero${ok ? '' : ' hero-bad'}">
         <div class="hero-n ${ok ? 'ok' : 'bad'}">${des.count}<small>건</small></div>
-        <div class="hero-tx"><div class="t">${esc(des.label)} — 전 함대 리스크</div>
+        <div class="hero-tx"><div class="t">${esc(nm9(des.label))} — 전 함대 리스크</div>
           <div class="m">${ok ? '설계성 고장 없음 — 잔여는 호기 국소 이슈' : '<b>⚠ 즉시 에스컬레이션</b> — 전 호기 개선 전개 · 완료까지 확산 게이트 보류'}</div></div>
         ${ok ? '<span class="fw-badge">확산의 성적표</span>' : ''}
       </div>
