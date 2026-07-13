@@ -234,9 +234,11 @@
   .dev-2col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
   .dev-2col>.prog-track>.panel{flex:1 1 auto}
   .prog-track.tk-exec{--tk:#2f8f83;--tk-soft:#e7f4f1}
-  /* 종합 클리어 — 좁은 세로 1열: 상태 타일(글자+게이지) + ROI 자리. subgrid로 오른쪽 박스와 높이 정렬 */
-  .tk-exec .clr-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-content:space-between}
-  .tk-exec .clr-tile{--clr:#9aa9bb;--clr-soft:#eef2f6;display:flex;flex-direction:column;gap:5px;padding:6px 10px 7px;border-radius:10px;background:var(--card);border:1px solid var(--line-soft);border-left:3px solid var(--clr);box-shadow:0 1px 2px rgba(20,51,92,.04)}
+  /* 종합 클리어 — 좁은 세로 1열: 상태 타일(글자+게이지) + 게이트 카드. subgrid로 오른쪽 박스와 높이 정렬.
+     타일은 남는 높이를 나눠 갖는다(stretch) — 박스 안 여백 없이 꽉 차게 */
+  .tk-exec .clr-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-content:stretch;grid-auto-rows:1fr}
+  .tk-exec .clr-tile:nth-child(odd):last-child{grid-column:1 / -1}   /* 홀수 개면 마지막 타일이 전폭 */
+  .tk-exec .clr-tile{--clr:#9aa9bb;--clr-soft:#eef2f6;display:flex;flex-direction:column;justify-content:space-between;gap:5px;min-height:0;padding:8px 10px 9px;border-radius:10px;background:var(--card);border:1px solid var(--line-soft);border-left:3px solid var(--clr);box-shadow:0 1px 2px rgba(20,51,92,.04)}
   .tk-exec .clr-go{--clr:var(--green);--clr-soft:var(--green-soft)}
   .tk-exec .clr-warn{--clr:var(--major);--clr-soft:var(--major-soft)}
   .tk-exec .clr-bad{--clr:var(--crit);--clr-soft:var(--crit-soft)}
@@ -247,9 +249,21 @@
   .tk-exec .clr-num{flex:none;min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:var(--clr-soft);color:var(--clr);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
   .tk-exec .clr-gauge{height:5px;border-radius:4px;background:var(--line-soft);overflow:hidden}
   .tk-exec .clr-gauge i{display:block;height:100%;border-radius:4px;background:var(--clr)}
-  .tk-exec .exec-roi{display:flex;flex-direction:column;gap:9px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 15px}
-  .tk-exec .exec-roi-h{font-size:13px;font-weight:800;color:var(--navy-deep)}
-  .tk-exec .exec-roi-body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;min-height:60px;border:1.5px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px;font-weight:600;padding:12px;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(20,51,92,.02) 10px,rgba(20,51,92,.02) 20px)}
+  .tk-exec .exec-roi{display:flex;flex-direction:column;gap:0;min-height:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 15px}
+  .tk-exec .exec-roi-h{font-size:13px;font-weight:800;color:var(--navy-deep);padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+  /* 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행 리스트 (남는 높이를 행이 나눠 갖는다) */
+  .tk-exec .exr-dday{text-align:center;padding:12px 0 11px;border-bottom:1px dashed var(--line)}
+  .tk-exec .exr-dday b{display:block;font-size:36px;font-weight:800;color:var(--navy-deep);line-height:1.1}
+  .tk-exec .exr-dday span{font-size:12px;color:var(--muted);font-weight:600}
+  .tk-exec .exr-note{font-size:10.5px;color:var(--muted);font-weight:600;text-align:center;padding:8px 0 6px;line-height:1.45}
+  .tk-exec .exr-tecop{flex:1;display:flex;flex-direction:column;min-height:0;margin-top:2px}
+  .tk-exec .exr-th{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;padding:2px 0 5px}
+  .tk-exec .exr-row{flex:1;display:flex;align-items:center;gap:8px;border-top:1px solid var(--line-soft);padding:5px 0;min-height:0}
+  .tk-exec .exr-k{flex:none;width:32px;font-size:12px;font-weight:800;color:var(--navy-deep)}
+  .tk-exec .exr-st{flex:none;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:10px;background:var(--green-soft);color:var(--green)}
+  .tk-exec .exr-st.warn{background:var(--major-soft);color:var(--major)}
+  .tk-exec .exr-st.risk{background:var(--crit-soft);color:var(--crit)}
+  .tk-exec .exr-n{flex:1;min-width:0;font-size:11px;color:var(--muted);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
   /* 한눈에 보기: 바깥 큰 박스(.sbox 크롬) 제거 — 트랙 박스만 보이게 */
   #s-overview.sbox{background:none;border:none;box-shadow:none;padding:0;margin-bottom:0}
   .prog-track .pt-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;letter-spacing:.01em;color:var(--navy-deep);padding:15px 2px 12px;border-bottom:1px solid rgba(20,51,92,.07)}
@@ -257,6 +271,21 @@
   .prog-track .kgroup,.prog-track .panel{margin:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:15px 17px}
   .prog-track>.panel.ovchart,.prog-track>.rel-charts{flex:1 1 auto}   /* 남는 높이는 차트 영역이 흡수 → 두 트랙 높이 정렬 */
   .prog-track .rel-charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+  /* ── 박스 꽉 채우기: 관제 3열·고장분석 그리드에서 남는 높이를 내용이 흡수 ──
+     짧은 블록은 늘리고(타일·루프 stretch, 히어로 세로 중앙), 긴 표는 칸 높이에 맞춰 스크롤 */
+  .pocv .ov-2col .kgroup{display:flex;flex-direction:column;min-height:0}
+  .pocv .ov-2col .kg-prog .pg-hero{flex:1 1 auto}
+  .pocv .ov-2col .kg-prog .pg-stats{margin-top:auto}
+  .pocv .ov-2col .fw-board{flex:1 1 auto;align-content:stretch}
+  .pocv .ov-2col .fwt:not(.hero){display:flex;flex-direction:column;min-height:0}
+  .pocv .ov-2col .fwt:not(.hero) .m{margin-top:auto;padding-top:4px}
+  .pocv .ov-2col .panel,.pocv .fault-grid .panel{display:flex;flex-direction:column;min-height:0}
+  .pocv .ov-2col .panel>.tbl-scroll,.pocv .fault-grid .panel>.tbl-scroll{flex:1 1 0;min-height:0;max-height:none!important}
+  .pocv .ov-2col .panel.ovchart>svg,.pocv .fault-grid .panel.ovchart>svg{flex:1 1 auto;min-height:0}
+  .pocv .ov-2col .looppanel .loopline{flex:1 1 auto}
+  .pocv .looppanel .loopline .lp{display:flex;flex-direction:column;justify-content:center}
+  .pocv .ov-2col .looppanel .loopret{margin-top:auto}
+  .pocv .ov-2col .panel>.mini.mt:last-child,.pocv .fault-grid .panel>.mini.mt:last-child{margin-top:auto;padding-top:8px}
   /* 하단 전체폭 트랙 (고장 분석 / 개발 현황) */
   .prog-track.track-wide{margin-bottom:18px}
   .prog-track .fault-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}

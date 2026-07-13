@@ -126,11 +126,18 @@ function devClearTrack(C, opts) {
     return `<div class="clr-tile clr-${m[0]}"><div class="clr-top"><span class="clr-label">${esc(String(c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''))}<em>${esc(devGateValue(String(c.value == null ? '' : c.value)))}</em></span><span class="clr-num">${m[1] === 100 ? '✓' : m[2]}</span></div><div class="clr-gauge"><i style="width:${m[1]}%"></i></div></div>`;
   }).join('');
   const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
+  // 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행(상태·비고). 남는 높이를 행이 나눠 갖는다
+  const TCLS = { ok: '', warn: 'warn', risk: 'risk', bad: 'risk' }, TLB = { '': '양호', warn: '주의', risk: '리스크' };
+  const trows = (C.tecop || []).map(t => {
+    const cls = TCLS[t.status] || '';
+    return `<div class="exr-row"><span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span><span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span></div>`;
+  }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     <div class="clr-list">${tiles}</div>
-    <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')} <b>${esc(dday || '—')}</b></div>
-      <div class="exec-roi-body" style="flex-direction:column;gap:9px">
-        <span class="mini">${esc(g.reviewDate || '—')} · 사전 확정 잣대 — 사후 변경 금지<br>고정 안건 TECOP</span>${tecopRow(C.tecop)}</div></div>
+    <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}</div>
+      <div class="exr-dday"><b>${esc(dday || '—')}</b><span>${esc(g.reviewDate || '일정 미정')}</span></div>
+      <div class="exr-note">사전 확정 잣대 — 사후 변경 금지 · 리셋은 실패가 아니라 잣대가 지켜진다는 증거</div>
+      <div class="exr-tecop"><div class="exr-th">고정 안건 — TECOP 리스크</div>${trows || '<div class="mini">TECOP 미기재</div>'}</div></div>
   </div>`;
 }
 
@@ -473,8 +480,8 @@ function pocTrendPanel(opt) {
   const tr = DATA.trend || [];
   if (!tr.length) return '';
   const W = opt.wide ? 1000 : 420;
-  const top = 20, bot = opt.wide ? 396 : 158, left = opt.wide ? 54 : 40, right = opt.wide ? 962 : 388;
-  const vbH = opt.wide ? 448 : 196;
+  const top = 20, bot = opt.bot || (opt.wide ? 396 : 158), left = opt.wide ? 54 : 40, right = opt.wide ? 962 : 388;
+  const vbH = opt.vbH || (opt.wide ? 448 : 196);
   const yMax = niceCeil(Math.max(...tr.map(t => t.found), 1));
   const n = tr.length;
   const x = i => n === 1 ? (left + right) / 2 : left + (right - left) * i / (n - 1);
@@ -699,7 +706,7 @@ function renderPoc(C) {
     qbox: `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`,
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
-    aChart: pocTrendPanel({ wide: true, zoom: true }),
+    aChart: pocTrendPanel({ wide: true, zoom: true, bot: 840, vbH: 900 }),
     bTitle: '전수 4분류 → 폐루프 · 연결된 지표',
     bTop: pocFourwayBoard(),
     bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
@@ -717,7 +724,7 @@ function renderPilot(C) {
     qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
-    aChart: pilotGrowthPanel({ bot: 396, vbH: 448, zoom: true }),
+    aChart: pilotGrowthPanel({ bot: 840, vbH: 900, zoom: true }),
     bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
     bTop: devClassBoard('pilot'),
     bCharts: [fracasLoopPanel({ recurZeroGate: true }), devParetoPanel(true)],
