@@ -195,8 +195,59 @@ function renderGuide() {
     </div>
   </div>
 
-  <!-- ⑥ 판정·심의 -->
-  <div class="sbox-h mt"><span class="tag">⑥</span><h2>판정·심의 도구</h2><span class="d">공정 연결 이후 — 원인보다 판정</span></div>
+  <!-- ⑥ 어휘 운영 — 업체와 만들고 단계와 함께 키운다 -->
+  <div class="sbox-h mt"><span class="tag">⑥</span><h2>고장모드 어휘·분류의 운영 — 업체와 만들고, 단계와 함께 키운다</h2><span class="d">자유 텍스트 금지 · 추가는 이벤트 · 세분화는 허용, 재분류는 금지</span></div>
+
+  <div class="panel">
+    <div class="ph"><h3>축의 성장 지도 — 4분류가 어떻게 세분화되는가</h3><span class="ps">축은 교체되지 않는다 — 기존 레코드는 매핑표로 일괄 세분화 (재해석 아님)</span></div>
+    <div class="tbl-scroll" style="max-height:none"><table>
+      <tr><th>POC — 4분류</th><th class="c">→</th><th>Pilot·양산 — 근본원인 6분류</th><th class="c">→</th><th>확산·운영 — 원인계층</th><th>비고</th></tr>
+      <tr><td><span class="c4 c4-risk">컨셉 리스크</span></td><td class="c">→</td><td colspan="3" style="color:var(--muted)"><b>소멸</b> — POC 게이트에서 0건 입증이 통과 조건 (남아 있으면 이관 불가 · 컨셉 재검토)</td><td>4분류에만 존재하는 축</td></tr>
+      <tr><td><span class="c4 c4-design">설계 개선</span></td><td class="c">→</td><td><span class="c4 c4-design">설계</span> <span class="c4 c4-build">부품</span> <span class="c4 c4-build">제작·조립</span></td><td class="c">→</td><td><span class="c4 c4-design">설계</span> <span class="c4 c4-build">제작·조립</span></td><td>"도면의 병"과 "만들다 생긴 병"이 갈라진다</td></tr>
+      <tr><td><span class="c4 c4-sw">구현(SW) 버그</span></td><td class="c">→</td><td><span class="c4 c4-sw">SW</span></td><td class="c">→</td><td><span class="c4 c4-design">설계</span></td><td>확산부터 SW 결함 = 전 함대 리스크(설계성) 취급</td></tr>
+      <tr><td><span class="c4 c4-env">시험환경 요인</span></td><td class="c">→</td><td><span class="c4 c4-env">시험환경·자재</span></td><td class="c">→</td><td><span class="c4 c4-oper">운영·환경</span></td><td>공정 연결 후엔 판정대장(귀책)과 조인</td></tr>
+      <tr><td style="color:var(--muted)">— (없음)</td><td class="c">→</td><td><span class="c4 c4-oper">운영·조작</span> <span class="mini">(Pilot 신설)</span></td><td class="c">→</td><td><span class="c4 c4-oper">운영·환경</span> <span class="c4 c4-install">설치·시공</span> <span class="mini">(확산 신설)</span></td><td>사람·현장 기인이 정식 축으로 승격</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel mt">
+    <div class="ph"><h3>단계별 운영 절차 — 누가 무엇을 하는가</h3><span class="ps">어휘는 PM 혼자의 것도, 업체 혼자의 것도 아니다 — 합의된 언어</span></div>
+    <div class="tbl-scroll" style="max-height:none"><table>
+      <tr><th style="width:110px">시점</th><th>업체</th><th>PM</th><th>합동으로 정하는 것 · 산출물</th></tr>
+      <tr><td><b>POC 착수</b><br><span class="mini">P2 · 미팅 1회</span></td>
+        <td>개발 경험 기반 고장모드 후보 제안</td>
+        <td>유사 과제 어휘 지참 (선배 과제 FMEA 환류분)</td>
+        <td><b>어휘 v1 확정 (10~20개)</b> — 명칭·정의·4분류 기준 문장 합의 → 코드마스터 초안 · 판정기준서 v1. 완벽할 필요 없음 — 시작이 중요</td></tr>
+      <tr><td><b>POC 운영 중</b><br><span class="mini">데일리→주간</span></td>
+        <td>이슈로그 5필드 기록 — <b>모드는 어휘에서 선택</b>(자유 텍스트 금지), 새 유형은 '모드 후보'로 표기</td>
+        <td>4분류 승인 · 컨셉 리스크 여부 판단(설계 리더와)</td>
+        <td>주간 어휘 리뷰 — <b>추가는 버전 이벤트</b>(v1.0→v1.1, 소급 재분류 없음). "매번 새 에러"가 "기존 모드 재발 vs 신규 모드"로 갈라진다</td></tr>
+      <tr><td><b>Pilot 이관</b><br><span class="mini">게이트 직후</span></td>
+        <td>—</td>
+        <td>중복 모드 통합 정리안 작성</td>
+        <td><b>정식 코드 부여</b>(SRT-01…) + 등급(심각도) 확정 + <b>4→6분류 매핑표 확정</b> — 기존 레코드는 매핑으로 일괄 세분화(재분류 아님). 이후 어휘 변경은 변경관리</td></tr>
+      <tr><td><b>Pilot 운영</b></td>
+        <td>에러로그에 코드 선택 + <b>SW/HW 버전 필수</b></td>
+        <td>조치검증 시트 관리 · 무발생 검증 종결 판정</td>
+        <td>재발(동일 코드 재출현) 시 재분석 리뷰 — 게이트 전 만성 0 마감</td></tr>
+      <tr><td><b>양산 시범</b></td>
+        <td>기록 지속 + 증거 첨부(로그·영상)</td>
+        <td>판정대장 운영</td>
+        <td>관련/비관련 <b>합동판정</b>(사전 합의 귀책 기준) — 어휘는 사실상 동결</td></tr>
+      <tr><td><b>확산·운영</b></td>
+        <td>(관제) 알람 자동 수집 — 승격 기준 통과 건만 코드 부여</td>
+        <td>원인계층 재그룹 리포트 · CIP</td>
+        <td>신규 필드 고장모드 → <b>차기 과제 FMEA로 환류</b> — 다음 과제의 어휘 v1이 여기서 출발</td></tr>
+    </table></div>
+    <div class="grid g3 mt">
+      <div class="gd-note"><b>규칙 1 — 자유 텍스트 금지.</b> 모드는 어휘에서 고른다. 같은 병이 다른 이름으로 흩어지는 순간 재발 추적이 죽는다.</div>
+      <div class="gd-note"><b>규칙 2 — 추가는 이벤트.</b> 새 모드는 언제든 환영하되 어휘 버전을 올리는 <b>의도적 행위</b>로. 몰래 늘어난 어휘는 관리가 아니다.</div>
+      <div class="gd-note"><b>규칙 3 — 세분화 O, 재분류 X.</b> 축이 커질 때 기존 레코드는 사전 확정된 매핑표로만 옮긴다. 임의 재분류 = 통계 신뢰 붕괴 (CRITERIA §4와 같은 원리).</div>
+    </div>
+  </div>
+
+  <!-- ⑦ 판정·심의 -->
+  <div class="sbox-h mt"><span class="tag">⑦</span><h2>판정·심의 도구</h2><span class="d">공정 연결 이후 — 원인보다 판정</span></div>
   <div class="grid g2">
     <div class="panel">
       <div class="ph"><h3>관련/비관련 합동판정 (판정대장)</h3></div>
@@ -230,8 +281,8 @@ function renderGuide() {
     </div>
   </div>
 
-  <!-- ⑦ 한 장 요약 -->
-  <div class="sbox-h mt"><span class="tag">⑦</span><h2>한 장 요약 — 단계 × 지표 매핑</h2><span class="d">온보딩은 이 표 하나로</span></div>
+  <!-- ⑧ 한 장 요약 -->
+  <div class="sbox-h mt"><span class="tag">⑧</span><h2>한 장 요약 — 단계 × 지표 매핑</h2><span class="d">온보딩은 이 표 하나로</span></div>
   <div class="panel">
     <div class="tbl-scroll" style="max-height:none"><table>
       <tr><th>단계</th><th>핵심 질문</th><th>주 지표 / 장치</th><th>금지 · 주의</th></tr>
@@ -246,8 +297,8 @@ function renderGuide() {
     </table></div>
   </div>
 
-  <!-- ⑧ 데이터 출처 -->
-  <div class="sbox-h mt"><span class="tag">⑧</span><h2>데이터 출처 맵</h2><span class="d">"이 숫자 어디서 왔어?"의 즉답</span></div>
+  <!-- ⑨ 데이터 출처 -->
+  <div class="sbox-h mt"><span class="tag">⑨</span><h2>데이터 출처 맵</h2><span class="d">"이 숫자 어디서 왔어?"의 즉답</span></div>
   <div class="panel">
     <div class="tbl-scroll" style="max-height:none"><table>
       <tr><th>지표</th><th>원천 시트 / 필드</th><th>빌드 키</th></tr>

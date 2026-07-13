@@ -519,14 +519,14 @@
 .looppanel .loopline .lar{align-self:center;color:var(--muted);font-weight:800;flex:none}
 .looppanel .loopret{margin-top:10px;font-size:11.5px;font-weight:700;color:var(--crit);border-top:1px dashed var(--line);padding-top:9px}
 /* 4분류 칩 · 재발 링크 (대장) */
-.pocv .c4{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.pocv .c4-risk{background:var(--crit-soft);color:var(--crit)}
-.pocv .c4-design{background:var(--minor-soft);color:#2E6DB0}
-.pocv .c4-sw{background:var(--major-soft);color:#B36A00}
-.pocv .c4-env{background:#E7F3ED;color:#25795a}
-.pocv .c4-build{background:var(--major-soft);color:#B36A00}
-.pocv .c4-install{background:#E7F3ED;color:#25795a}
-.pocv .c4-oper{background:#ECEFF3;color:#4d5c70}
+.pocv .c4,.guidev .c4{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.pocv .c4-risk,.guidev .c4-risk{background:var(--crit-soft);color:var(--crit)}
+.pocv .c4-design,.guidev .c4-design{background:var(--minor-soft);color:#2E6DB0}
+.pocv .c4-sw,.guidev .c4-sw{background:var(--major-soft);color:#B36A00}
+.pocv .c4-env,.guidev .c4-env{background:#E7F3ED;color:#25795a}
+.pocv .c4-build,.guidev .c4-build{background:var(--major-soft);color:#B36A00}
+.pocv .c4-install,.guidev .c4-install{background:#E7F3ED;color:#25795a}
+.pocv .c4-oper,.guidev .c4-oper{background:#ECEFF3;color:#4d5c70}
 .panel .rlink{color:var(--crit);font-weight:800;font-size:11px;white-space:nowrap}   /* 재발 링크 — POC·Pilot 대장 공용 */
 /* ── 지표 핸드북 페이지 (#/guide, guide.js) — 스코프: .guidev ── */
 .guidev{padding-bottom:30px}
