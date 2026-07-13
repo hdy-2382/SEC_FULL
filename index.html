@@ -27,6 +27,7 @@
     </div>
 
     <div id="s-home"></div>
+    <div id="s-guide" style="display:none"></div>
     <section id="s-overview" class="sbox" style="display:none"></section>
     <div class="sbox sbox-steps" id="s-steps" style="display:none"></div>
   </main>
@@ -43,7 +44,7 @@
 
 <!-- 캐시 우회: 수정 후 새로고침만 해도 JS가 바로 반영됨. 로드 순서 고정: core → 템플릿 → 홈 → app(라우터) -->
 <script>
-  ['core.js', 'tpl-mass.js', 'tpl-dev.js', 'tpl-ops.js', 'home.js', 'app.js'].forEach(function (f) {
+  ['core.js', 'tpl-mass.js', 'tpl-dev.js', 'tpl-ops.js', 'guide.js', 'home.js', 'app.js'].forEach(function (f) {
     document.write('<script src="' + f + '?t=' + Date.now() + '"><\/script>');
   });
 </script>

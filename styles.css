@@ -528,4 +528,21 @@
 .pocv .c4-install{background:#E7F3ED;color:#25795a}
 .pocv .c4-oper{background:#ECEFF3;color:#4d5c70}
 .panel .rlink{color:var(--crit);font-weight:800;font-size:11px;white-space:nowrap}   /* 재발 링크 — POC·Pilot 대장 공용 */
+/* ── 지표 핸드북 페이지 (#/guide, guide.js) — 스코프: .guidev ── */
+.guidev{padding-bottom:30px}
+.guidev .panel p{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin:0 0 9px}
+.guidev .panel p:last-child{margin-bottom:0}
+.guidev .panel code{font-family:ui-monospace,Consolas,monospace;font-size:11px;background:var(--card-alt);border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px;color:var(--navy-deep)}
+.guidev .grid.g2,.guidev .grid.g3{align-items:stretch}
+.guidev .grid>.panel{height:100%}
+.guidev .gd-tag{display:inline-block;font-size:9.5px;font-weight:800;border-radius:20px;padding:2px 8px;letter-spacing:.03em;vertical-align:1px;margin-right:2px}
+.guidev .gd-tag.orig{background:#E5EFFA;color:#2E6DB0}
+.guidev .gd-tag.ours{background:var(--green-soft);color:var(--green)}
+.guidev .gd-tag.warn{background:var(--crit-soft);color:var(--crit)}
+.guidev .gd-formula{font-family:ui-monospace,Consolas,monospace;font-size:19px;font-weight:700;color:var(--navy-deep);background:var(--sky-soft);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;margin:4px 0 10px}
+.guidev .gd-note{background:var(--card-alt);border:1px solid var(--line-soft);border-left:3px solid var(--sky);border-radius:9px;padding:10px 13px;font-size:12px;color:var(--ink-soft);line-height:1.65}
+.guidev .panel.gd-hl{border-color:#bcd6f0;background:linear-gradient(180deg,#f6faff,var(--card))}
+.guidev table td{vertical-align:top;line-height:1.55}
+.guidev .grid.g2.mt,.guidev .grid.g3.mt{margin-top:12px}
+
 @media print{.pcard{break-inside:avoid}.ladder{break-inside:avoid}}

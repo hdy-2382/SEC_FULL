@@ -23,6 +23,7 @@ function portfolioEntry(pid) {
 /* ── 사이드 내비: 홈 + 과제 목록(단계 배지) + 활성 과제의 하위 탭 ── */
 function buildNav() {
   let html = `<a href="#/home"${VIEW === 'home' ? ' class="active"' : ''}><span class="st">▦</span> ${esc(orgT('homeLabel', '한눈에 보기'))}</a>`;
+  html += `<a href="#/guide"${VIEW === 'guide' ? ' class="active"' : ''}><span class="st">✎</span> ${esc(orgT('guideLabel', '지표 핸드북'))}</a>`;
   html += `<div class="t">${esc(orgT('navProjects', '과제 (표준 템플릿)'))}</div>`;
   ((REG && REG.projects) || []).forEach(p => {
     const e = portfolioEntry(p.id) || {};
@@ -41,7 +42,7 @@ function buildNav() {
 /* ── 정적 셸(브랜드·제목·내비) 텍스트 주입 — 홈/과제 모드 분기 ── */
 function applyShellText() {
   const set = (id, prop, val) => { const el = $(id); if (el) el[prop] = val; };
-  if (VIEW === 'home') {
+  if (VIEW === 'home' || VIEW === 'guide') {
     document.title = orgT('title', document.title);
     set('brand-logo', 'textContent', orgT('brandLogo', 'R'));
     set('brand-name', 'innerHTML', orgT('brandName', ''));
@@ -63,7 +64,7 @@ function applyShellText() {
     { const fu = $('foot-updated'); if (fu) fu.textContent = T('app.updatedPrefix') + evalDate; }
     const sg = $('side-goals'); if (sg) sg.innerHTML = buildSideGoals();
   }
-  set('print-btn', 'textContent', VIEW === 'home' ? orgT('printBtn', 'PDF 리포트') : T('app.printBtn', 'PDF 리포트'));
+  set('print-btn', 'textContent', VIEW === 'project' ? T('app.printBtn', 'PDF 리포트') : orgT('printBtn', 'PDF 리포트'));
   const nav = $('nav'); if (nav) nav.innerHTML = buildNav();
 }
 
@@ -74,6 +75,7 @@ const SIDE_PANELS = ['side-goals', 'side-line', 'side-months'];
 function showHome() {
   VIEW = 'home'; CUR_PID = null;
   $('s-home').style.display = '';
+  { const g = $('s-guide'); if (g) g.style.display = 'none'; }
   TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = 'none'; });
   SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
   { const tb = $('topbar-lc'); if (tb) { tb.style.display = 'none'; } }
@@ -83,10 +85,24 @@ function showHome() {
   scrollTo(0, 0);
 }
 
+/* 지표 핸드북 (#/guide) — 정적 설명 페이지 (guide.js renderGuide) */
+function showGuide() {
+  VIEW = 'guide'; CUR_PID = null;
+  $('s-home').style.display = 'none';
+  { const g = $('s-guide'); if (g) g.style.display = ''; }
+  TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = 'none'; });
+  SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
+  { const tb = $('topbar-lc'); if (tb) { tb.style.display = 'none'; } }
+  applyShellText();
+  if (typeof renderGuide === 'function') renderGuide();
+  scrollTo(0, 0);
+}
+
 /* 과제 내 탭 표시 (구 showOnly — 실증 템플릿의 관제/상세/스텝 필터) */
 function showProjectTab(tab) {
   CUR_TAB = tab || 'overview';
   $('s-home').style.display = 'none';
+  { const g = $('s-guide'); if (g) g.style.display = 'none'; }
   if (CUR_TAB === 'all' || CUR_TAB === 's-steps') {
     showAllSections();
   } else if (/^s[1-6]$/.test(CUR_TAB)) {
@@ -134,6 +150,7 @@ function openProject(pid, tab) {
     const e = portfolioEntry(pid);
     const nm = e ? e.name : pid;
     $('s-home').style.display = 'none';
+    { const g = $('s-guide'); if (g) g.style.display = 'none'; }
     TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = (t === 's-overview') ? '' : 'none'; });
     $('s-overview').innerHTML = `<div class="banner" style="margin:16px 0">『${esc(nm)}』 ${esc(orgT('noDataMsg', '데이터가 아직 없습니다 — 과제 폴더(config·엑셀) 구성 후 빌드하세요.'))}<br><span class="mini">${esc(err.message)}</span></div>`;
   });
@@ -153,6 +170,7 @@ function parseHash() {
   if (h.startsWith('#/')) {
     const seg = h.slice(2).split('/');
     if (!seg[0] || seg[0] === 'home') return { view: 'home' };
+    if (seg[0] === 'guide') return { view: 'guide' };
     return { view: 'project', pid: seg[0], tab: seg[1] || 'overview' };
   }
   // 레거시 해시 (#s-overview · #all · #s1~#s6) → 첫 과제로 (구 북마크·인쇄 흐름 보호)
@@ -163,6 +181,7 @@ function parseHash() {
 function route() {
   const r = parseHash();
   if (r.view === 'home') showHome();
+  else if (r.view === 'guide') showGuide();
   else if (VIEW === 'project' && CUR_PID === r.pid) showProjectTab(r.tab);   // 같은 과제 내 탭 전환 — 재마운트 없음
   else openProject(r.pid, r.tab);
 }
