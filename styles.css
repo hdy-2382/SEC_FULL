@@ -219,7 +219,9 @@
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:60;cursor:zoom-out}
   .lightbox.open{display:flex}.lightbox img{max-width:92vw;max-height:92vh;border-radius:6px}
   /* 관제 2열: 왼쪽 진행 트랙 / 오른쪽 신뢰성 트랙. subgrid로 헤더·KPI박스·차트 행을 트랙 간 등높이 정렬 */
-  .ov-2col{display:grid;grid-template-columns:minmax(290px,0.86fr) minmax(260px,1fr) 2fr;grid-template-rows:auto auto 1fr;gap:18px;margin-bottom:18px}
+  .ov-2col{display:grid;grid-template-columns:minmax(290px,0.86fr) minmax(260px,1fr) 2fr;grid-template-rows:auto auto minmax(0,1fr);gap:18px;margin-bottom:18px}
+  /* 관제 3열 존 높이 통일 — 확산 템플릿 기준(710px). 단계별 내용 차이는 내부 flex·스크롤이 흡수 */
+  @media(min-width:1181px){.pocv .ov-2col{height:710px}}
   .ov-2col>.prog-track{grid-row:1 / span 3}   /* 3열 등높이 */
   /* 행(subgrid) 공유는 3열(분류 보드/폐루프)만 — 1·2열은 위→아래 자연 배치.
      타일·히어로가 3열 높이에 끌려 비대해지지 않고, 남는 높이는 게이트 카드·차트가 흡수 */
@@ -282,7 +284,8 @@
   .pocv .ov-2col .fw-board{flex:1 1 auto;align-content:stretch}
   .pocv .ov-2col .fwt:not(.hero){display:flex;flex-direction:column;min-height:0}
   .pocv .ov-2col .fwt:not(.hero) .m{margin-top:auto;padding-top:4px}
-  .pocv .ov-2col .tk-a>.kgroup{flex:1 1 auto}   /* 2열: 남는 높이는 히어로 1 : 차트·표 2 */
+  .pocv .ov-2col .tk-a>.kgroup{flex:1 0 auto}   /* 2열: 남는 높이는 히어로 1 : 차트·표 2 — 히어로는 축소 금지 */
+  .pocv .ov-2col .tk-exec>.clr-list{flex:0 0 auto}
   .pocv .ov-2col .tk-a>.panel{flex:2 1 auto}
   .pocv .ov-2col .tk-a .panel>.tbl-scroll{min-height:170px!important}   /* 표형 슬롯(호기별 퀄 등) 최소 3행 보장 */
   .pocv .ov-2col .panel,.pocv .fault-grid .panel{display:flex;flex-direction:column;min-height:0}
@@ -290,6 +293,9 @@
   .pocv .ov-2col .panel.ovchart>svg,.pocv .fault-grid .panel.ovchart>svg{flex:1 1 auto;min-height:0}
   .pocv .looppanel .loopline .lp{display:flex;flex-direction:column;justify-content:center}
   .pocv .ov-2col .looppanel .loopret{margin-top:auto}
+  .pocv .ov-2col .looppanel>.mini.mt,.pocv .ov-2col .looppanel .loopret{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* 감시 목록·재발 노트 1줄 클램프 (상세는 Pareto·보드 히어로에) */
+  .pocv .ov-2col .rel-charts .panel{overflow:hidden}   /* 눌릴 때 다음 트랙 침범 방지 */
+  .pocv .tbl-scroll.nowrap table{white-space:nowrap}   /* 좁은 칸 표: 글자 세로 깨짐 대신 가로 스크롤 */
   .pocv .ov-2col .panel>.mini.mt:last-child,.pocv .fault-grid .panel>.mini.mt:last-child{margin-top:auto;padding-top:8px}
   /* 하단 전체폭 트랙 (고장 분석 / 개발 현황) */
   .prog-track.track-wide{margin-bottom:18px}
@@ -526,9 +532,9 @@
 .pocv .pg-mark{position:absolute;top:-5px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--crit-soft);border:2px solid var(--rust);color:var(--rust);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:default;z-index:1}
 /* 4분류 보드 — 컨셉 리스크 히어로 + 3분류 타일 */
 .pocv .fw-board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:2px}
-.pocv .fwt{border:1px solid var(--line-soft);border-top:3px solid var(--tc,var(--line));border-radius:10px;background:var(--card-alt);padding:10px 12px}
+.pocv .fwt{border:1px solid var(--line-soft);border-top:3px solid var(--tc,var(--line));border-radius:10px;background:var(--card-alt);padding:8px 11px}
 .pocv .fwt .t{font-size:11px;font-weight:800;color:var(--muted)}
-.pocv .fwt .n{font-size:23px;font-weight:800;color:var(--navy-deep);margin:2px 0 1px}
+.pocv .fwt .n{font-size:21px;font-weight:800;color:var(--navy-deep);margin:2px 0 1px}
 .pocv .fwt .n small,.pocv .fwt .hero-n small{font-size:11px;color:var(--muted);font-weight:700;margin-left:2px}
 .pocv .fwt .m{font-size:10.5px;color:var(--muted);line-height:1.5}
 /* 카테고리 → 색 1:1 고정 (전 단계·전 컴포넌트 공통 — 보드 타일·구성 막대·칩이 같은 색) */
@@ -542,7 +548,7 @@
 .pocv .fwt.oper{--tc:#6E7D90}     /* 운영·조작/환경 */
 .pocv .fwt.hero{grid-column:1 / -1;display:flex;align-items:center;gap:14px;background:var(--green-soft);border-color:#bfe0cc}
 .pocv .fwt.hero.hero-bad{background:var(--crit-soft);border-color:#e5b8b0}
-.pocv .fwt.hero .hero-n{font-size:40px;font-weight:800;line-height:1;flex:none}
+.pocv .fwt.hero .hero-n{font-size:34px;font-weight:800;line-height:1;flex:none}
 .pocv .fwt.hero .hero-n.ok{color:var(--green)}.pocv .fwt.hero .hero-n.bad{color:var(--crit)}
 .pocv .fwt.hero .hero-tx{min-width:0}
 .pocv .fwt.hero .m{font-size:11.5px;color:var(--ink-soft)}
@@ -561,8 +567,8 @@
 .pocv .compo .sg-zero{flex:0 0 74px;border:1.5px dashed var(--crit);color:var(--crit);font-size:10.5px;font-weight:800;background:transparent}
 /* 폐루프 FRACAS 파이프라인 — 전 단계 공용 컴포넌트 (스코프: .looppanel — POC·Pilot 공유) */
 .looppanel .loopline{display:flex;align-items:stretch;gap:7px}
-.looppanel .loopline .lp{flex:1;min-width:0;border:1px solid var(--line-soft);border-radius:10px;background:var(--card-alt);padding:9px 8px;text-align:center}
-.looppanel .loopline .lp .n{font-size:22px;font-weight:800;color:var(--navy-deep);line-height:1.1}
+.looppanel .loopline .lp{flex:1;min-width:0;border:1px solid var(--line-soft);border-radius:10px;background:var(--card-alt);padding:7px 7px;text-align:center}
+.looppanel .loopline .lp .n{font-size:19px;font-weight:800;color:var(--navy-deep);line-height:1.1}
 .looppanel .loopline .lp .t{font-size:11.5px;font-weight:800;color:var(--ink-soft);margin-top:2px}
 .looppanel .loopline .lp .s{font-size:9.5px;color:var(--muted);margin-top:2px}
 .looppanel .loopline .lp-verifying{border-color:#bcd6f0;background:var(--sky-soft)}
