@@ -7,7 +7,7 @@
 - **표준 프로세스**: 개발(POC→Pilot) → 양산 시범 평가 → 인증(이관심의+투자심의) → 양산 적용(확산·운영/관제). 실증 사다리: 사외 72h 무에러 → 사내(공정연결 없이) 무정지 300h → 사내(공정연결) 무정지 1개월 → 라인별 SAT 런. 상세: [docs/PROCESS.md](docs/PROCESS.md)
 - **3원칙**: ① 고장 레코드 스키마는 전 과제·전 단계 공통 ② 기간엔 단계 템플릿(개발/실증/운영)·심의엔 체크리스트 ③ 판정 잣대·리셋 규칙은 데이터 이전 확정 (사후 변경 금지)
 - **단계별 에러분석**: POC=전수 4분류(통계 금지) / Pilot=추세(MCBF 성장·Pareto·재발0·버전 필수) / 양산시범=관련·비관련 합동판정(판정대장) / 인증=열린 건 처분(carry-over·waiver) / 확산=원인계층(설계vs제작·설치) / 운영=필드 FRACAS+CIP
-- 잣대 정의(무에러/무정지/어시스트, 리셋 규칙): [docs/CRITERIA.md](docs/CRITERIA.md) · 레코드 필드: [docs/RECORD_SCHEMA.md](docs/RECORD_SCHEMA.md)
+- 잣대 정의(무에러/무정지/어시스트, 리셋 규칙): [docs/CRITERIA.md](docs/CRITERIA.md) · 레코드 필드: [docs/RECORD_SCHEMA.md](docs/RECORD_SCHEMA.md) · 지표 원리·산식·적용법(FRACAS·TECOP·성장곡선 등): [docs/METRICS.md](docs/METRICS.md)
 
 ## 아키텍처
 

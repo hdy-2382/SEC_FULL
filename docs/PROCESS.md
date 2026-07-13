@@ -1,7 +1,7 @@
 # 로봇 개발·적용 표준 프로세스
 
 부서 로봇 자동화 과제(인프라 현장 수작업 대체)의 표준 개발 단계와 단계별 보고·에러분석 체계를 정의한다.
-이 문서의 단계 구조가 웹 대시보드의 템플릿 선택 기준이며, 판정 잣대의 세부는 [CRITERIA.md](CRITERIA.md), 기록 형식은 [RECORD_SCHEMA.md](RECORD_SCHEMA.md)를 따른다.
+이 문서의 단계 구조가 웹 대시보드의 템플릿 선택 기준이며, 판정 잣대의 세부는 [CRITERIA.md](CRITERIA.md), 기록 형식은 [RECORD_SCHEMA.md](RECORD_SCHEMA.md), 각 지표의 원리·산식·적용법은 [METRICS.md](METRICS.md)를 따른다.
 
 ## 1. 단계 체인
 
