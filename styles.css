@@ -571,5 +571,20 @@
 .guidev .gp-ar{align-self:center;color:var(--muted);font-weight:800;flex:none;font-size:12px}
 .guidev .gp-gate{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;color:var(--ink-soft)}
 .guidev .gp-gate b{color:var(--navy-deep)}
+/* ⑥ 분류 판단 트리 */
+.guidev .gd-tree{display:flex;flex-direction:column;gap:0}
+.guidev .gd-tree .tr-start{font-size:11px;font-weight:700;color:var(--navy-deep);background:var(--sky-soft);border:1px solid var(--line);border-radius:8px;padding:7px 11px;margin-bottom:7px}
+.guidev .gd-tree .tr-q{display:flex;gap:8px;align-items:stretch}
+.guidev .gd-tree .tr-q .q{flex:1.2;min-width:0;background:var(--card-alt);border:1px solid var(--line-soft);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--ink-soft);line-height:1.5}
+.guidev .gd-tree .br{flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:8px;padding:6px 9px}
+.guidev .gd-tree .br em{font-style:normal;font-size:9.5px;color:var(--muted);line-height:1.4;flex-basis:100%}
+.guidev .gd-tree .yn{font-size:9px;font-weight:800;color:#fff;background:var(--green);border-radius:8px;padding:1.5px 7px;flex:none}
+.guidev .gd-tree .yn.else{background:#6E7D90}
+.guidev .gd-tree .tr-no{font-size:9.5px;font-weight:800;color:var(--muted);padding:3px 0 3px 14px}
+.guidev .gd-tree .tr-else{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border:1px solid var(--line-soft);border-radius:8px;padding:7px 10px;background:var(--card-alt)}
+.guidev .gd-tree .tr-else em{font-style:normal;font-size:9.5px;color:var(--muted);flex-basis:100%}
+/* ⑥ 한 모드의 일생 — gp-step 재사용(단계색 배지) */
+.guidev .panel .gp-steps .gp-step i{background:var(--sc,#8a99ac)}
+.guidev .panel .gp-steps .gp-step.hl{background:color-mix(in srgb,var(--sc,#8a99ac) 8%,var(--card));border-color:color-mix(in srgb,var(--sc,#8a99ac) 35%,var(--line-soft))}
 
 @media print{.pcard{break-inside:avoid}.ladder{break-inside:avoid}}

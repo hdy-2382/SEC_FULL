@@ -272,7 +272,44 @@ function renderGuide() {
   <!-- ⑥ 어휘 운영 — 업체와 만들고 단계와 함께 키운다 -->
   <div class="sbox-h mt"><span class="tag">⑥</span><h2>고장모드 어휘·분류의 운영 — 업체와 만들고, 단계와 함께 키운다</h2><span class="d">자유 텍스트 금지 · 추가는 이벤트 · 세분화는 허용, 재분류는 금지</span></div>
 
-  <div class="panel">
+  <div class="grid g2">
+    <div class="panel">
+      <div class="ph"><h3>판단 트리 A — POC 4분류: 이 에러는 어느 칸인가</h3><span class="ps">기록 시점에 순서대로 묻는다 — 위에서부터, 처음 YES에서 멈춤</span></div>
+      <div class="gd-tree">
+        <div class="tr-start">에러 발생 → 어휘에서 고장모드 선택 <span class="mini">(없으면 '후보'로 등록 — 주간 리뷰에서 어휘 추가)</span></div>
+        <div class="tr-q"><div class="q"><b>Q1.</b> 이 아키텍처(컨셉)로는 해결이 <b>불가능</b>한 병인가?<br><span class="mini">예: 방식 자체가 요구 정밀도·택트에 물리적으로 못 미침</span></div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-risk">컨셉 리스크</span><em>즉시 게이트 보류 · 컨셉 재검토 — 0건 유지가 POC의 결론</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-q"><div class="q"><b>Q2.</b> 장비 <b>밖</b> 요인인가? <span class="mini">(랩 환경·지그·자재·조작 실수)</span></div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-env">시험환경 요인</span><em>장비의 병이 아님 — 단, 환경 재발 방지 조치는 기록</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-q"><div class="q"><b>Q3.</b> 코드·파라미터 수정<b>만으로</b> 해결되는가?</div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-sw">구현(SW) 버그</span><em>가장 많고 가장 싼 범주 — 랩에서 잡을수록 이득</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-else"><span class="yn else">나머지</span><span class="c4 c4-design">설계 개선</span><em>구조·기구·부품 변경 필요 — Pilot에서 설계/부품/제작·조립으로 세분</em></div>
+      </div>
+      <div class="mini mt">분류는 업체 제안 → PM 승인. <b>컨셉 리스크 판단만은 PM+설계 리더</b> — 정직한 분류가 이 보고의 신뢰도를 결정한다.</div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>판단 트리 B — 확산 원인계층: 전 함대의 병인가</h3><span class="ps">같은 질문 순서 — 호기별 층화 데이터가 판단을 돕는다</span></div>
+      <div class="gd-tree">
+        <div class="tr-start">호기에서 고장 발생 → 동일 모드 코드 선택 <span class="mini">(호기/라인 필수 기록)</span></div>
+        <div class="tr-q"><div class="q"><b>Q1.</b> 같은 조건이면 <b>다른 호기에서도 재현</b>되는 병인가?<br><span class="mini">단서: 호기별 층화가 고른 분포 · SW 결함 포함</span></div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-design">설계</span><em><b>전 함대 리스크 — 즉시 에스컬레이션</b> · 전개 완료까지 확산 게이트 보류</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-q"><div class="q"><b>Q2.</b> 이 호기의 <b>설치·시공 상태</b> 기인인가? <span class="mini">(수평도·배선·접지·AP 음영·티칭)</span></div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-install">설치·시공</span><em>해당 호기 국소 조치 + 시공 표준 개정(횡전개)</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-q"><div class="q"><b>Q3.</b> 이 <b>개체만의 제작 편차</b>인가? <span class="mini">(부품 로트·조립 산포)</span></div>
+          <div class="br"><span class="yn">YES</span><span class="c4 c4-build">제작·조립</span><em>개체 수리 + 수입검사·조립 체크리스트 보강</em></div></div>
+        <div class="tr-no">NO ↓</div>
+        <div class="tr-else"><span class="yn else">나머지</span><span class="c4 c4-oper">운영·환경</span><em>운영 절차·환경 이벤트 — SOP·모니터링으로 대응</em></div>
+      </div>
+      <div class="mini mt">호기별 층화(특정 호기 집중 vs 고른 분포)가 Q1의 <b>데이터 단서</b> — 감이 아니라 분포로 판단한다.</div>
+    </div>
+  </div>
+
+  <div class="panel mt">
     <div class="ph"><h3>축의 성장 지도 — 4분류가 어떻게 세분화되는가</h3><span class="ps">축은 교체되지 않는다 — 기존 레코드는 매핑표로 일괄 세분화 (재해석 아님)</span></div>
     <div class="tbl-scroll" style="max-height:none"><table>
       <tr><th>POC — 4분류</th><th class="c">→</th><th>Pilot·양산 — 근본원인 6분류</th><th class="c">→</th><th>확산·운영 — 원인계층</th><th>비고</th></tr>
@@ -282,6 +319,19 @@ function renderGuide() {
       <tr><td><span class="c4 c4-env">시험환경 요인</span></td><td class="c">→</td><td><span class="c4 c4-env">시험환경·자재</span></td><td class="c">→</td><td><span class="c4 c4-oper">운영·환경</span></td><td>공정 연결 후엔 판정대장(귀책)과 조인</td></tr>
       <tr><td style="color:var(--muted)">— (없음)</td><td class="c">→</td><td><span class="c4 c4-oper">운영·조작</span> <span class="mini">(Pilot 신설)</span></td><td class="c">→</td><td><span class="c4 c4-oper">운영·환경</span> <span class="c4 c4-install">설치·시공</span> <span class="mini">(확산 신설)</span></td><td>사람·현장 기인이 정식 축으로 승격</td></tr>
     </table></div>
+  </div>
+
+  <div class="panel mt">
+    <div class="ph"><h3>한 모드의 일생 — "그리퍼 파지 실패"가 단계를 관통하는 여정</h3><span class="ps">어휘 하나가 어떻게 기록·세분화·판정·개선·환류되는지 — 실제 데모 데이터 기준</span></div>
+    <div class="gp-steps">
+      <div class="gp-step" style="--sc:#3F7CC4"><i>POC</i><b>어휘 등록 · 4분류</b><span>P2 미팅에서 어휘 v1에 "그리퍼 파지 실패" 등재 → ISS-010 기록 · 4분류 <b>설계</b> · 재발 ↺ 2회 → 재분석</span></div><span class="gp-ar">→</span>
+      <div class="gp-step" style="--sc:#B36F0A"><i>Pilot</i><b>코드 승격 · 세분화</b><span>정식 코드 <b>SRT-01</b> · 등급 Major · 근본원인 <b>부품</b>(코팅 로트 편차)으로 세분 → Rev C 교체 → 무발생 검증 감시</span></div><span class="gp-ar">→</span>
+      <div class="gp-step" style="--sc:#2F7A55"><i>양산</i><b>합동판정</b><span>공정 연결 후 재출현 → 판정대장 JD: <b>관련(설비·부품)</b> 합의 · 증거(로그+재현시험) 첨부 · Error Budget 차감</span></div><span class="gp-ar">→</span>
+      <div class="gp-step" style="--sc:#8a99ac"><i>인증</i><b>처분</b><span>심의 시점 미종결이면 KIR에서 처분 — 예: <b>carry-over</b>(운영 초기 집중 모니터링 조건) + 기한·오너 서명</span></div><span class="gp-ar">→</span>
+      <div class="gp-step" style="--sc:#5f6b7a"><i>운영</i><b>비용 우선순위 · CIP</b><span>필드 재발 시 다운타임 집계 → Pareto 상위면 <b>CIP</b>(가이드 형상 개선) → 효과 검증(월 5→1건)</span></div><span class="gp-ar">→</span>
+      <div class="gp-step hl" style="--sc:#3F7CC4"><i>차기 과제</i><b>FMEA 환류 ↩</b><span>"파지 실패" 어휘·원인·대책이 다음 과제 P2의 <b>출발 어휘</b>가 된다 — 조직 학습의 누적</span></div>
+    </div>
+    <div class="mini mt">같은 이름(모드)·같은 형식(레코드)이 유지되기 때문에 이 여정 전체가 <b>추적 가능</b>하다 — 어느 단계에서도 "이 병의 역사"를 한 줄로 꿸 수 있다.</div>
   </div>
 
   <div class="panel mt">
