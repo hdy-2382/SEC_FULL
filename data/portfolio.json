@@ -83,7 +83,7 @@
         "current": "P4 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-13T03:17:24Z",
+      "generatedAt": "2026-07-13T23:19:22Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -108,7 +108,12 @@
           "Major": 7,
           "Minor": 9
         },
-        "openCritical": 1
+        "openCritical": 1,
+        "causeDist": {
+          "sw": 9,
+          "env": 3,
+          "design": 6
+        }
       }
     },
     {
@@ -195,7 +200,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-13T03:17:24Z",
+      "generatedAt": "2026-07-13T23:19:22Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -215,7 +220,12 @@
           "Major": 6,
           "Minor": 3
         },
-        "openCritical": 0
+        "openCritical": 0,
+        "causeDist": {
+          "design": 3,
+          "parts": 3,
+          "sw": 3
+        }
       }
     },
     {
@@ -274,7 +284,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-13T03:17:24Z",
+      "generatedAt": "2026-07-13T23:19:22Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -295,6 +305,11 @@
           "Minor": 3
         },
         "openCritical": 0,
+        "causeDist": {
+          "env": 1,
+          "oper": 2,
+          "parts": 1
+        },
         "errorBudget": {
           "used": 0,
           "limit": 3,
@@ -396,7 +411,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-13T03:17:24Z",
+      "generatedAt": "2026-07-13T23:19:22Z",
       "summary": {
         "progress": {
           "cum": 4,
@@ -427,7 +442,12 @@
           "Major": 2,
           "Minor": 4
         },
-        "openCritical": 0
+        "openCritical": 0,
+        "causeDist": {
+          "oper": 2,
+          "install": 3,
+          "build": 1
+        }
       }
     }
   ]

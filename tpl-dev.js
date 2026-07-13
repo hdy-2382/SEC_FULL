@@ -103,8 +103,8 @@ function c4Key(c) {
   if (s.includes('제작') || s.includes('조립')) return 'build';
   if (s.includes('설치') || s.includes('시공')) return 'install';
   if (s.includes('구현') || s.includes('sw') || s.includes('버그')) return 'sw';
+  if (s.includes('운영') || s.includes('조작')) return 'oper';   // '운영·환경'은 oper — 환경보다 먼저
   if (s.includes('환경') || s.includes('시험') || s.includes('자재')) return 'env';
-  if (s.includes('운영') || s.includes('조작')) return 'oper';
   return '';
 }
 function c4Chip(c) {

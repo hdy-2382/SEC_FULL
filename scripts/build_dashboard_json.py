@@ -1669,6 +1669,29 @@ def _build_mass(pid: str, config: dict):
           f"신뢰수준 {m['confidence']['currentPct']}%, 합격 {computed['acceptance']['passed']}/5)")
 
 
+def _cause_key(c) -> str:
+    """원인분류 → 정준 키 (프론트 c4Key와 동일 규칙 — 홈 분류 구성 바용)."""
+    s = str(c or "")
+    sl = s.lower()
+    if "컨셉" in s:
+        return "concept"
+    if "설계" in s:
+        return "design"
+    if "부품" in s:
+        return "parts"
+    if "제작" in s or "조립" in s:
+        return "build"
+    if "설치" in s or "시공" in s:
+        return "install"
+    if "구현" in s or "sw" in sl or "버그" in s:
+        return "sw"
+    if "운영" in s or "조작" in s:   # '운영·환경'은 oper (확산 layerKey와 동일) — 환경보다 먼저
+        return "oper"
+    if "환경" in s or "시험" in s or "자재" in s:
+        return "env"
+    return "etc"
+
+
 def _portfolio_summary(stage: str, out: dict) -> dict:
     """홈(포트폴리오) 카드용 요약 — 단계별로 헤드라인 수치만 추린다."""
     m = out.get("metrics", {}) or {}
@@ -1703,6 +1726,12 @@ def _portfolio_summary(stage: str, out: dict) -> dict:
             open_crit += 1
     s["sevDist"] = sev_d
     s["openCritical"] = open_crit
+    # 원인분류 분포 — 홈 깔때기의 '분류 구성 바'(단계마다 병의 종류가 어떻게 바뀌는가)용
+    cause_d: dict = {}
+    for r in (out.get("records") or []):
+        k = _cause_key(r.get("cause"))
+        cause_d[k] = cause_d.get(k, 0) + 1
+    s["causeDist"] = cause_d
     if stage == "mass":
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")
