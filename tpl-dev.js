@@ -332,6 +332,76 @@ function pocFourwayBoard() {
   </div>`;
 }
 
+/* 발굴 이슈 분류 보드 — 전 단계 동일 템플릿: [단계 결론 히어로] + 축 타일 + 구성 막대.
+   축과 히어로만 단계별 (docs/PROCESS.md §3):
+     POC  = 4분류 · 히어로 "컨셉 리스크 0" (이 아키텍처로 가도 되는가)
+     Pilot = 근본원인 6분류 · 히어로 "만성(재발) 0" (수렴하는가)
+     양산  = 근본원인 6분류 · 히어로 "관련 고장 ≤ 한도" (계약 기준 이내인가) */
+const CAUSE6 = [
+  ['design', '설계', ['설계']],
+  ['parts', '부품', ['부품']],
+  ['build', '제작·조립', ['제작', '조립']],
+  ['sw', 'SW', ['sw', '구현', '버그']],
+  ['env', '시험환경·자재', ['시험', '환경', '자재']],
+  ['oper', '운영·조작', ['운영', '조작']],
+];
+const CAUSE6_TILE = { design: 'design', parts: 'build', build: 'install', sw: 'sw', env: 'env', oper: 'oper' };
+const CAUSE6_SEG = { design: 'sg-design', parts: 'sg-build', build: 'sg-install', sw: 'sg-sw', env: 'sg-env', oper: 'sg-oper' };
+
+function devClassBoard(stage) {
+  if (stage === 'poc') return pocFourwayBoard();
+  const recs = DATA.records || [];
+  const rows = CAUSE6.map(([key, label, kws]) => {
+    const subset = recs.filter(r => {
+      const s = String(r.cause || '').toLowerCase();
+      return kws.some(k => s.includes(k));
+    });
+    return { key, label, count: subset.length,
+             closed: subset.filter(r => pocStBucket(r.status) === 'closed').length };
+  });
+  const mapped = rows.reduce((a, r) => a + r.count, 0);
+  const unclass = recs.length - mapped;
+  // 단계 결론 히어로
+  let hero;
+  if (stage === 'mass') {
+    // 계약 관점: 에러 버짓(현 완주 시도, 관련 고장만 차감) — 한도 도달 = 리셋
+    const eb = (DATA.metrics || {}).errorBudget || {};
+    const rel = (DATA.adjudication || []).filter(j => j.verdict === '관련').length;
+    const limit = eb.limit != null ? eb.limit : ((DATA.config || {}).acceptance || {}).errorLimit;
+    const used = eb.used != null ? eb.used : rel;
+    const ok = limit == null || used < limit;
+    hero = { n: used, small: limit != null ? `/${limit} (현 시도)` : '건', ok, label: '에러 버짓 — 관련 고장만 차감',
+             desc: ok ? `잔여 <b>${limit != null ? limit - used : '—'}회</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회 — 판정 합의제(비관련 제외)`
+                      : `<b>⚠ 한도 도달 — 완주 리셋</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회`,
+             badge: '양산평가의 성적표' };
+  } else {
+    const rec = DATA.recurrence || {};
+    const ok = !rec.count;
+    const items = (rec.items || []).map(it => `${esc(it.mode || it.type || it.code || '')}(${it.count})`).join(', ');
+    hero = { n: rec.count || 0, small: '개 모드', ok, label: '만성(재발) 고장',
+             desc: ok ? '동일 모드 재출현 없음 — <b>수렴의 증거</b>' : `<b>게이트 전 마감 필수(재발 0)</b> · ${items}`,
+             badge: 'Pilot의 성적표' };
+  }
+  const tile = r =>
+    `<div class="fwt ${CAUSE6_TILE[r.key]}"><div class="t">${esc(r.label)}</div><div class="n">${r.count}<small>건</small></div><div class="m">종결 ${r.closed} · 진행 ${r.count - r.closed}</div></div>`;
+  const segs = rows.filter(r => r.count).map(r =>
+    `<div class="sg ${CAUSE6_SEG[r.key]}" style="flex:${r.count}"><span>${esc(r.label)} ${r.count}</span></div>`).join('')
+    + (unclass ? `<div class="sg sg-oper" style="flex:${unclass};opacity:.55"><span>미분류 ${unclass}</span></div>` : '');
+  return `<div class="kgroup kg-prog">
+    <div class="pg-subh"><span>발굴 이슈 분류 — 근본원인 6분류</span><span class="pg-subh-note">${recs.length}건 전수 · 4분류의 세분화 축${unclass ? ` · <b style="color:var(--major)">미분류 ${unclass}</b>` : ''}</span></div>
+    <div class="fw-board">
+      <div class="fwt risk hero${hero.ok ? '' : ' hero-bad'}">
+        <div class="hero-n ${hero.ok ? 'ok' : 'bad'}">${hero.n}<small>${hero.small}</small></div>
+        <div class="hero-tx"><div class="t">${esc(hero.label)}</div><div class="m">${hero.desc}</div></div>
+        ${hero.ok ? `<span class="fw-badge">${esc(hero.badge)}</span>` : ''}
+      </div>
+      ${rows.map(tile).join('')}
+    </div>
+    <div class="compo">${segs || '<div class="mini">기록 없음</div>'}</div>
+    <div class="mini mt">분류는 기록 시점에 판단 트리(지표 핸드북 ⑥)로 — 자유 텍스트 금지 · 세분화는 매핑표로만${unclass ? ' · <b>미분류는 에러로그 「원인분류」 컬럼 기재로 해소</b>' : ''}</div>
+  </div>`;
+}
+
 /* 폐루프 FRACAS — 신규→조치중→검증중(무발생 감시)→종결 + 재발 시그널.
    POC·Pilot 공용 컴포넌트 (배관은 전 단계 하나 — 공통 레코드 스토어 DATA.records 기반) */
 function fracasLoopPanel(opts) {
@@ -340,7 +410,7 @@ function fracasLoopPanel(opts) {
   const box = (k, label, sub) => `<div class="lp lp-${k}"><div class="n">${sd[k] || 0}</div><div class="t">${label}</div><div class="s">${sub}</div></div>`;
   const verifying = (DATA.records || []).filter(r => pocStBucket(r.status) === 'verifying' && r.verify);
   const vlist = verifying.map(r => `<b>${esc(r.id)}</b> ${esc(r.verify)}`).join(' · ');
-  const recItems = (rec.items || []).map(it => `${esc(it.mode)}(${it.count})`).join(', ');
+  const recItems = (rec.items || []).map(it => `${esc(it.mode || it.type || it.code || '')}(${it.count})`).join(', ');
   const recNote = opts.recurZeroGate
     ? `↺ 재발(만성) 모드 <b>${rec.count || 0}개</b> — 게이트 전 마감 필수(재발 0)${recItems ? ` · ${recItems}` : ''}`
     : `↺ 재발 모드 <b>${rec.count || 0}개</b> — 동일 고장모드 재출현 = 근본원인 미해결 신호 → 재분석 의무${recItems ? ` · ${recItems}` : ''}`;
@@ -507,23 +577,7 @@ function pilotGrowthPanel(opt) {
     </div>`;
 }
 
-/* 신뢰성 입증 도넛 3종 — 성장·규율·재발 (케미컬 rel-box 형태) */
-function pilotRelBox() {
-  const g = DATA.growth || [], t = DATA.growthTarget || 0;
-  const cur = g.length ? g[g.length - 1].mcbf : 0;
-  const mp = t ? Math.min(100, Math.round(cur / t * 100)) : 0;
-  const a = DATA.actionRate || {}, rec = DATA.recurrence || {};
-  const cell = (donut, cls, label) => `<div class="rel-cell">${donut}<span class="pf ${cls}">${label}</span></div>`;
-  return `<div class="kgroup rel-box"><div class="rel-groups">
-    <div class="rel-grp"><div class="rel-grp-h">게이트 3잣대 — 성장 · 규율 · 재발</div>
-      <div class="rel-donuts g3">
-        ${cell(miniDonut(mp, mp >= 100 ? 'var(--green)' : 'var(--sky)', fmt(cur), 'MCBF 성장', `목표 ${fmt(t)}Cy`, 90), mp >= 100 ? 'pf-go' : 'pf-prog', mp >= 100 ? '충족' : '진행')}
-        ${cell(miniDonut(a.pct || 0, (a.pct || 0) >= 100 ? 'var(--green)' : 'var(--sky)', (a.pct != null ? a.pct : '—') + '%', '시정조치 검증마감', `${a.closed || 0}/${a.total || 0}`, 90), (a.pct || 0) >= 100 ? 'pf-go' : 'pf-prog', (a.pct || 0) >= 100 ? '충족' : '진행')}
-        ${cell(miniDonut(rec.count ? 33 : 100, rec.count ? 'var(--crit)' : 'var(--green)', (rec.count || 0) + '건', '재발(만성)', rec.count ? '게이트 전 마감 필수' : '없음', 90), rec.count ? 'pf-bad' : 'pf-go', rec.count ? '미달' : '충족')}
-      </div></div></div></div>`;
-}
-
-/* 형상(버전) 기록 — 와이드 트랙용. (시정조치 규율 수치는 신뢰성 도넛·폐루프에 이미 표시 — 중복 제거) */
+/* 형상(버전) 기록 — 와이드 트랙용. (시정조치 규율 수치는 히어로 보조스탯·폐루프에 이미 표시 — 중복 제거) */
 function pilotVersionPanel() {
   const vers = DATA.versions || [];
   const curVer = vers.length ? vers[vers.length - 1].ver : '—';
@@ -624,8 +678,8 @@ function renderPilot(C) {
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
     aChart: pilotGrowthPanel({ bot: 396, vbH: 448, zoom: true }),
-    bTitle: '신뢰성 입증 → 수렴 규율 · 연결된 지표',
-    bTop: pilotRelBox(),
+    bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
+    bTop: devClassBoard('pilot'),
     bCharts: [devParetoPanel(true), fracasLoopPanel({ recurZeroGate: true })],
     cTitle: '고장 분석 · 위험 매트릭스 · 형상 · 최근 알람',
     cPanels: [devMatrixPanel(), pilotVersionPanel(), devFeedPanel()],

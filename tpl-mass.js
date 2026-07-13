@@ -467,6 +467,9 @@ function renderOverview(C, m, f, acc, op) {
       <div class="prog-track tk-b"><div class="pt-h">${esc(O('trkRelLabel', '신뢰성 입증 → 안정화 추세 · 연결된 지표'))}<span class="badge ${opBadge}" style="margin-left:auto">${esc(O('opTitle', '운용 신뢰도'))} ${esc(grade)}</span></div>${kRelBox}<div class="rel-charts">${pErr}${pStab}</div></div>
     </div>
     <div class="prog-track track-wide tk-c"><div class="pt-h">${esc(O('trkFaultLabel', '고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람'))}</div><div class="fault-grid">${pMatrix}${pTop5}${pFeed}</div></div>
+    ${(typeof devClassBoard === 'function' && (DATA.records || []).length) ? `
+    <div class="prog-track track-wide tk-b"><div class="pt-h">${esc(O('trkFracasLabel', '발굴 이슈 분류 → 폐루프 — 공통 FRACAS 트랙 (전 단계 동일 템플릿)'))}</div>
+      <div class="pocv"><div class="rel-charts">${devClassBoard('mass')}${fracasLoopPanel({ recurZeroGate: true })}</div></div></div>` : ''}
     <div class="dev-2col">
       <div class="prog-track tk-d"><div class="pt-h">${esc(O('trkDiscussLabel', '부서 협의 및 기타사항'))}</div>${pDiscuss}</div>
       <div class="prog-track tk-dev"><div class="pt-h">${esc(O('trkTechLabel', '기술 개발'))}</div>${pSw}</div>
