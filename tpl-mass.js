@@ -159,93 +159,91 @@ function kirPanel() {
   };
 }
 
+/* 상세 탭 — 전 단계 공통 d-문법: d1 대장 → d2 런·일일 → d3 조치검증 → d4 판정 → d5 KIR → d6 게이트 */
 function renderSteps(C, m, f, acc, op) {
   const verifyCy = (C.acceptance || {}).verifyCycle || 200;
-  const fracasH = T('steps.fracasH', []);
-  const fracas = DATA.actions.map(a => `
-    <tr><td><b>${esc(a.code)}</b></td><td>${esc(a.type || '')}</td><td>${esc(a.action)}</td>
-    <td class="c"><div class="prog-bar" style="width:90px;display:inline-block"><i style="width:${a.verifyProgress}%;${a.verifyResult === '검증완료' ? 'background:var(--green)' : ''}"></i></div>${a.noFailCycles ? `<div class="mini">${a.noFailCycles}/${a.verifyTarget}</div>` : ''}</td>
-    <td class="c"><span class="badge ${RES_BADGE[a.verifyResult] || 'b-wait'}">${esc(a.verifyResult)}</span></td></tr>`).join('');
-  const maxTop = f.top5ByCode[0] ? f.top5ByCode[0].count : 1;
-  const top5 = f.top5ByCode.map(t =>
-    `<tr><td><b>${esc(t.code)}</b></td><td>${esc(t.type) || '<span class="mini">(미분류)</span>'}${t.recur ? ' <span style="color:var(--crit)">↺</span>' : ''}</td><td class="c"><b>${t.count}</b></td><td style="width:54px"><div class="prog-bar"><i style="width:${Math.round(t.count / maxTop * 100)}%;background:${SEV_BAR[t.severity]}"></i></div></td><td class="c"><span class="badge ${SEV_BADGE[t.severity]}">${esc(sevLabel(t.severity))}</span></td></tr>`).join('');
-  const rows = ['Critical', 'Major', 'Minor'], cols = ['드묾', '보통', '빈발'], cell = {};
-  f.matrix.forEach((it, i) => { (cell[it.severity + '|' + it.occ] = cell[it.severity + '|' + it.occ] || []).push(i + 1); });
-  const mcls = { High: 'm-h', Medium: 'm-m', Low: 'm-l' };
-  let grid = `<div class="lab"></div>` + cols.map(c => `<div class="lab">${c}</div>`).join('');
-  rows.forEach(rk => {
-    grid += `<div class="lab" style="color:${SEV_BAR[rk] || 'var(--muted)'}">${esc(sevLabel(rk))}</div>`;
-    cols.forEach(ck => {
-      const p = PRIO[rk + '|' + ck], dots = (cell[rk + '|' + ck] || []).map(n => `<span class="pt">${n}</span>`).join('');
-      grid += `<div class="cell ${mcls[p]}">${dots}</div>`;
-    });
-  });
-  const legend = f.matrix.map((it, i) => `<span><b>${i + 1}</b>${esc(it.type || it.code)}</span>`).join('');
-  const openActions = DATA.actions.filter(a => a.verifyResult !== '검증완료').length;
-  const s5ActH = T('steps.s5ActH', []);
-  const actTable = DATA.actions.map(a => `
-    <tr><td>${esc(a.id)}</td><td>${esc(a.action)}</td><td>${esc(a.code)}</td><td class="c">${esc(a.owner)}</td><td class="c">${esc(a.due)}</td>
-    <td class="c"><span class="badge ${a.status === '완료' ? 'b-ok' : 'b-prog'}">${esc(a.status)}</span></td>
-    <td class="c"><span class="badge ${RES_BADGE[a.verifyResult] || 'b-wait'}">${esc(a.verifyResult)}</span></td>
-    <td><div class="prog-bar"><i style="width:${a.verifyProgress}%;${a.verifyResult === '검증완료' ? 'background:var(--green)' : ''}"></i></div></td></tr>`).join('');
-  const dailyH = T('steps.dailyH', []);
-  const daily = DATA.daily.map(d => `<tr><td>${esc(d.date.slice(5))}</td><td class="c">${d.total}</td><td class="c">${d.errors}</td><td class="c">${d.streak}</td><td class="mini">${esc(d.notes)}</td></tr>`).join('');
-  const errlogH = T('steps.errlogH', []);
-  const errlog = DATA.errors.map((e, i) => `<tr><td><b>${esc(e.code)}</b></td><td>${esc(e.type)}<br><span class="mini">${esc((e.cause || '').slice(0, 30))}</span></td><td class="c">${esc(e.owner_sec || e.owner || '')}</td><td class="c"><button class="btn" style="padding:4px 9px" onclick="openModal(${i})">${esc(T('steps.errlogBtn'))}</button></td></tr>`).join('');
-  const flow = T('steps.flow', []);
+  const recs = DATA.records || [];
+  // d1 고장 레코드 전수 — 공통 스키마 + 판정 조인 (POC·Pilot 대장과 동일 문법)
+  const recRows = (DATA.errors || []).map((e, i) => {
+    const r = recs[i] || {};
+    const b = pocStBucket(r.status);
+    const recur = r.recurLink ? `<span class="rlink" title="동일 고장모드 선행 레코드 — 재발">↺ ${esc(r.recurLink)}</span>` : '—';
+    const VB = { '관련': 'b-crit', '비관련': 'b-ok' };
+    return `<tr><td><b>${esc(e.code)}</b></td><td>${esc(e.type)}</td><td class="c">${c4Chip(r.cause)}</td>
+      <td class="c"><span class="badge ${SEV_BADGE[r.severity] || 'b-minor'}">${esc(sevLabel(r.severity || 'Minor'))}</span></td>
+      <td class="c">${esc(e.sw_ver || '—')}</td><td class="c">${recur}</td>
+      <td class="c"><span class="badge ${POC_ST_BADGE[b]}">${esc(r.status || '—')}</span></td>
+      <td class="c">${r.verdict ? `<span class="badge ${VB[r.verdict] || 'b-prog'}">${esc(r.verdict)}</span>` : '<span class="badge b-wait">판정중</span>'}</td>
+      <td class="c">${esc(e.date || '')}</td>
+      <td class="c"><button class="btn" style="padding:3px 8px" onclick="openModal(${i})">＋</button></td></tr>`;
+  }).join('');
+  // d2 일일평가 원본
+  const daily = (DATA.daily || []).map(d =>
+    `<tr><td>${esc((d.date || '').slice(5))}</td><td class="c">${fmt(d.total)}</td><td class="c">${d.errors ? `<b style="color:var(--crit)">${d.errors}</b>` : 0}</td><td class="c">${fmt(d.streak)}</td><td class="mini">${esc(d.notes || '')}</td></tr>`).join('');
+  // d3 시정조치 검증 (FRACAS 폐루프의 원천)
+  const flow = T('steps.flow', ['에러 발생', '기록·분류', '원인 분석', '시정 적용', `무발생 ${verifyCy}Cy 검증`, '종결']);
   const flowHtml = flow.map((s, i) => `<span class="b${i === flow.length - 1 ? ' last' : ''}">${esc(s)}</span>`).join('<span class="ar">→</span>');
-  const kir = kirPanel();   // 인증 준비 — 공통 레코드 오픈 건 + 처분대장
+  const actRows = (DATA.actions || []).map(a => `
+    <tr><td><b>${esc(a.id)}</b></td><td class="c">${esc(a.code)}</td><td>${esc(a.action)}</td><td class="c">${esc(a.owner || '')}</td><td class="c">${esc(a.due || '')}</td>
+    <td class="c"><div class="prog-bar" style="width:90px;display:inline-block"><i style="width:${a.verifyProgress || 0}%;${a.verifyResult === '검증완료' ? 'background:var(--green)' : ''}"></i></div>${a.noFailCycles ? `<div class="mini">${a.noFailCycles}/${a.verifyTarget}</div>` : ''}</td>
+    <td class="c"><span class="badge ${RES_BADGE[a.verifyResult] || 'b-wait'}">${esc(a.verifyResult || '—')}</span></td></tr>`).join('');
+  const openActions = (DATA.actions || []).filter(a => a.verifyResult !== '검증완료').length;
+  // d6 합격 기준 (계약) + TECOP
+  const accCs = acceptanceCriteria();
+  const critHtml = accCs.map(c =>
+    `<div class="crit"><div class="k">${esc(c.key)}</div><div class="v">${esc(String(c.value == null ? '' : c.value))}</div><span class="s ${esc(c.status || 'prog')}">${esc({ pass: '충족', fail: '미달', prog: '진행', wait: '예정' }[c.status] || '')}</span></div>`).join('');
+  const kir = kirPanel();   // d5 인증 준비 — 공통 레코드 오픈 건 + 처분대장
 
-  return `
-    <div class="sbox-h"><span class="tag">${esc(T('steps.tag'))}</span><h2>${esc(T('steps.title'))}</h2><span class="d">${esc(T('steps.desc'))}</span></div>
+  return `<div class="pocv">
+    <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">일일평가·에러로그 + 관리 시트(조치검증·판정·처분) — 공통 레코드 스키마 · 출처 ${esc(DATA.source || '')}</span></div>
 
-    <section class="step" id="s2">
-      ${stepHead(2, T('steps.s2Title'), T('steps.s2Q'), T('steps.s2Chip'), 'prog')}
-      <div class="step-body">
-        <div class="panel">
-          <div class="flow">${flowHtml}</div>
-          <div class="tbl-scroll"><table><tr><th>${esc(fracasH[0] || '')}</th><th>${esc(fracasH[1] || '')}</th><th>${esc(fracasH[2] || '')}</th><th class="c" style="width:150px">${esc(tpl(fracasH[3] || '', { verify: verifyCy }))}</th><th class="c">${esc(fracasH[4] || '')}</th></tr>${fracas}</table></div>
-        </div>
-        <div class="grid g3 mt">
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.top5Title'))}</h3><span class="ps">${esc(T('steps.top5Sub'))}</span></div><table><tr>${(T('steps.top5H', [])).map((h, i) => i === 2 || i === 4 ? `<th class="c">${esc(h)}</th>` : `<th>${esc(h)}</th>`).join('')}</tr>${top5}</table></div>
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.matrixTitle'))}</h3><span class="ps">${esc(T('steps.matrixSub'))}</span></div><div class="matrix">${grid}</div><div class="legend-row">${legend}</div></div>
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.recurTitle'))}</h3><span class="ps">${esc(T('steps.recurSub'))}</span></div><div class="stat-big"><b>${DATA.recurrence.count}</b><span>${esc(TT('steps.recurUnit', { rate: DATA.recurrence.rate }))}</span></div><div class="mini">${DATA.recurrence.items.map(it => esc(it.code) + '(' + it.count + ')').join(', ') || esc(T('steps.recurNone'))}</div>${(DATA.recurrence.cleared || []).length ? `<div class="mini" style="margin-top:6px;color:var(--green)">✅ ${esc(TT('steps.recurCleared', { list: DATA.recurrence.cleared.map(it => it.code).join(', ') }, '검증완료로 해제: {list}'))}</div>` : ''}<div class="mini" style="margin-top:6px">${esc(T('steps.recurWarn'))}</div></div>
-        </div>
-        ${adjudicationPanel()}
-      </div>
+    <section class="step" id="d1">
+      ${stepHead(1, '고장 레코드 (전수)', '"잔여 고장률이 계약 기준 이내인가" — 원인분류·판정을 대장에서 한 줄로', `${(DATA.errors || []).length}건`, 'prog')}
+      <div class="step-body"><div class="panel">
+        <div class="ph"><h3>공통 레코드 스키마 — 양산 시범 평가</h3><span class="ps">POC·Pilot 대장이 그대로 이어진다 · 판정(관련/비관련)은 판정대장 조인 — docs/RECORD_SCHEMA.md</span></div>
+        <div class="tbl-scroll" style="max-height:460px"><table><tr><th>코드</th><th>고장모드</th><th class="c">원인분류</th><th class="c">심각도</th><th class="c">SW버전</th><th class="c">재발</th><th class="c">상태</th><th class="c">판정</th><th class="c">발생일</th><th class="c">상세</th></tr>${recRows}</table></div>
+      </div></div>
     </section>
 
-    <section class="step" id="s5">
-      ${stepHead(5, T('steps.s5Title'), T('steps.s5Q'), TT('steps.s5Chip', { open: openActions, crit: op.openCritical }), op.openCritical ? 'fail' : 'prog')}
-      <div class="step-body">
-        <div class="grid g3">
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.s5OpenCritTitle'))}</h3><span class="ps">${esc(T('steps.s5OpenCritSub'))}</span></div><div class="big-num" style="color:${op.openCritical ? 'var(--crit)' : 'var(--green)'}">${op.openCritical}<span style="font-size:13px;color:var(--muted)"> 건</span></div><div class="mini">${esc(op.openCritical ? T('steps.s5OpenCritUnmet') : T('steps.s5OpenCritMet'))}</div></div>
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.s5OpenActTitle'))}</h3><span class="ps">${esc(T('steps.s5OpenActSub'))}</span></div><div class="big-num" style="color:var(--major)">${openActions}<span style="font-size:13px;color:var(--muted)"> / ${DATA.actions.length}</span></div></div>
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.s5ClosedTitle'))}</h3><span class="ps">${esc(T('steps.s5ClosedSub'))}</span></div><div class="big-num" style="color:var(--navy-deep)">${op.verifyClosedRate}<span style="font-size:13px;color:var(--muted)">%</span></div><div class="prog-bar" style="margin-top:8px"><i style="width:${op.verifyClosedRate}%;background:var(--green)"></i></div></div>
-        </div>
-        <div class="panel mt">
-          <div class="ph"><h3>${esc(T('steps.s5ActTitle'))}</h3><span class="vlabel" style="margin-left:8px">${esc(T('steps.s5ActBadge'))}</span></div>
-          <div class="psub">${esc(T('steps.s5ActSub'))}</div>
-          <div class="tbl-scroll"><table><tr>${s5ActH.map((h, i) => i === 0 ? `<th>${esc(h)}</th>` : i === 1 ? `<th>${esc(h)}</th>` : i === 7 ? `<th style="width:96px">${esc(h)}</th>` : `<th class="c">${esc(h)}</th>`).join('')}</tr>${actTable}</table></div>
-        </div>
-      </div>
+    <section class="step" id="d2">
+      ${stepHead(2, '무정지 런 · 일일평가 기록', '관련 고장만 리셋 잣대 — 런 시간은 장비 가동 기준, 계획 정지 제외', `${(DATA.daily || []).length}일`, 'prog')}
+      <div class="step-body"><div class="panel">
+        <div class="ph"><h3>일일평가 기록</h3><span class="ps">연속 사이클 완주와 에러버짓의 원천 데이터</span></div>
+        <div class="tbl-scroll" style="max-height:380px"><table><tr><th>일자</th><th class="c">사이클</th><th class="c">에러</th><th class="c">연속</th><th>비고</th></tr>${daily}</table></div>
+      </div></div>
     </section>
 
-    <section class="step" id="s6">
-      ${stepHead(6, T('steps.s6Title'), T('steps.s6Q'), T('steps.s6Chip'), 'pass')}
-      <div class="step-body">
-        <div class="op-rel" style="margin-bottom:14px">${T('steps.s6Integrity')} <span class="mini" style="margin-left:auto">${esc(TT('steps.s6Source', { source: DATA.source }))}</span></div>
-        <div class="grid g2">
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.dailyTitle'))}</h3><span class="ps">${esc(T('steps.dailySub'))}</span></div><div class="tbl-scroll"><table><tr>${dailyH.map((h, i) => i === 0 || i === 4 ? `<th>${esc(h)}</th>` : `<th class="c">${esc(h)}</th>`).join('')}</tr>${daily}</table></div></div>
-          <div class="panel"><div class="ph"><h3>${esc(T('steps.errlogTitle'))}</h3><span class="badge b-prog" style="margin-left:8px">${esc(T('steps.errlogBadge'))}</span></div><div class="psub">${esc(T('steps.errlogSub'))}</div><div class="tbl-scroll"><table><tr>${errlogH.map((h, i) => i === 0 || i === 1 ? `<th>${esc(h)}</th>` : `<th class="c">${esc(h)}</th>`).join('')}</tr>${errlog}</table></div></div>
-        </div>
-      </div>
+    <section class="step" id="d3">
+      ${stepHead(3, '시정조치 검증 (FRACAS)', `조치 후 동일 코드 무발생 ${verifyCy}Cy 자동판정 — 폐루프의 원천 기록`, `오픈 ${openActions}/${(DATA.actions || []).length}`, op.openCritical ? 'fail' : 'prog')}
+      <div class="step-body"><div class="panel">
+        <div class="flow">${flowHtml}</div>
+        <div class="tbl-scroll" style="max-height:380px"><table><tr><th>조치ID</th><th class="c">대상코드</th><th>조치내용</th><th class="c">담당</th><th class="c">목표일</th><th class="c" style="width:150px">무발생 검증 (${verifyCy}Cy)</th><th class="c">판정</th></tr>${actRows}</table></div>
+        <div class="mini mt">미해결 Critical <b style="color:${op.openCritical ? 'var(--crit)' : 'var(--green)'}">${op.openCritical}건</b> · 검증종결률 <b>${op.verifyClosedRate}%</b> — 재발 시 검증완료가 해제되고 재분석 의무</div>
+      </div></div>
     </section>
 
-    <section class="step" id="s7">
-      ${stepHead(7, '인증 준비 — Known Issues Register', '남은 결점을 어떤 조건으로 안고 가는가 — 심의는 새 데이터가 아니라 기존 증거를 심사하는 이벤트', `오픈 ${kir.open}건 · 미정 ${kir.pending}`, kir.pending ? 'prog' : 'pass')}
+    <section class="step" id="d4">
+      ${stepHead(4, '판정 대장 (관련/비관련 합동판정)', '공정 연결 후엔 원인보다 판정 — 사전 합의 잣대·증거·사후 재분류 금지', `${(DATA.adjudication || []).length}건`, 'prog')}
+      <div class="step-body">${adjudicationPanel() || '<div class="panel"><div class="mini">판정 대상 없음</div></div>'}</div>
+    </section>
+
+    <section class="step" id="d5">
+      ${stepHead(5, '인증 준비 — Known Issues Register', '남은 결점을 어떤 조건으로 안고 가는가 — 심의는 기존 증거를 심사하는 이벤트', `오픈 ${kir.open}건 · 미정 ${kir.pending}`, kir.pending ? 'prog' : 'pass')}
       <div class="step-body">${kir.html}</div>
-    </section>`;
+    </section>
+
+    <section class="step" id="d6">
+      ${stepHead(6, '단계 진행 · 양산 합격 기준(계약)', '데이터 이전에 서면 동결 — 사후 변경·재해석 금지 (docs/CRITERIA.md)', `가동인증 ${(C.gate || {}).reviewDate || '—'}`, 'prog')}
+      <div class="step-body">
+        ${lifecycleStagePanel(C)}
+        <div class="panel mt">
+          <div class="ph"><h3>양산 합격 기준 — 계약 파라미터</h3><span class="vlabel" style="margin-left:auto">사전 확정 · 사후 변경 불가</span></div>
+          <div class="crit-grid">${critHtml}</div>
+          <div style="display:flex;align-items:center;margin-top:12px"><span class="mini" style="margin-right:10px">게이트 리뷰 고정 안건 — TECOP</span>${tecopRow(C.tecop)}</div>
+        </div>
+      </div>
+    </section>
+  </div>`;
 }
 
 /* ── 한눈에 보기(관제) : 같은 데이터로 한 화면 밀집 요약 ── */
@@ -287,22 +285,7 @@ function renderOverview(C, m, f, acc, op) {
     { icon: '🛡', title: O('kgReliability', '신뢰성 입증 (MTBF·신뢰수준)'), a: K[4], b: K[5] },
   ];
 
-  // 위험 매트릭스 (renderSteps 와 동일 구조). 데이터 키는 고정, 표시 라벨만 config.
-  const occL = [O('occRare', '드묾'), O('occMid', '보통'), O('occHigh', '빈발')];
-  const mrows = ['Critical', 'Major', 'Minor'], mcols = ['드묾', '보통', '빈발'], mcell = {};
-  (f.matrix || []).forEach((it, i) => { (mcell[it.severity + '|' + it.occ] = mcell[it.severity + '|' + it.occ] || []).push(i + 1); });
-  const mcls = { High: 'm-h', Medium: 'm-m', Low: 'm-l' };
-  let mx = `<div class="lab"></div>` + mcols.map((c, ci) => `<div class="lab">${esc(occL[ci])}</div>`).join('');
-  mrows.forEach(rk => {
-    mx += `<div class="lab" style="color:${SEV_BAR[rk] || 'var(--muted)'}">${esc(sevLabel(rk))}</div>`;
-    mcols.forEach(ck => {
-      const p = PRIO[rk + '|' + ck], dots = (mcell[rk + '|' + ck] || []).map(n => `<span class="pt">${n}</span>`).join('');
-      mx += `<div class="cell ${mcls[p]}">${dots}</div>`;
-    });
-  });
-  const mlegend = (f.matrix || []).map((it, i) => `<span><b>${i + 1}</b>${esc(it.type || it.code)}</span>`).join('');
-
-  // Top5 — 코드별 조치 현황(actions.verifyResult)을 현황 컬럼에 표시(상세 보기 STEP5 조치와 동일 데이터)
+  // Top5 — 코드별 조치 현황(actions.verifyResult)을 현황 컬럼에 표시(상세 보기 조치검증과 동일 데이터)
   const actByCode = {}; (DATA.actions || []).forEach(a => { if (a.code && !actByCode[a.code]) actByCode[a.code] = a; });
   const top5 = (f.top5ByCode || []).map(t => {
     const a = actByCode[t.code];
@@ -344,19 +327,6 @@ function renderOverview(C, m, f, acc, op) {
         <div class="blocks" style="margin:9px 0 6px">${ebBlocks}</div><span class="pg-stat-s">${esc(ebudNote)}</span></div>
     </div></div>`;
 
-  // 심각도 분포
-  const sd = f.severityDist || { total: 0 };
-
-  // 최근 알람 피드
-  const codeSev = {};
-  (DATA.codes || []).forEach(c => { codeSev[c.code] = c.severity; });
-  const feed = (DATA.errors || []).slice().reverse().map(e => {
-    const sevCls = SEV_BADGE[codeSev[e.code]] || 'b-minor';
-    return `<div class="it"><span class="badge ${sevCls}">${esc(e.code)}</span>
-      <div class="tp"><div class="t1">${esc(e.type || '-')}</div><div class="t2">${esc(e.detail || e.cause || '')}</div></div>
-      <span class="dt">${esc(e.date || '')}<br>${esc(e.result || '')}</span></div>`;
-  }).join('');
-
   // 신뢰수준 입증 표
   const ctable = (conf.table || []).map(t =>
     `<tr class="${t.c === confLv ? 'now' : ''}"><td>${t.c}%</td><td class="c">${t.required}</td>
@@ -365,19 +335,8 @@ function renderOverview(C, m, f, acc, op) {
   // 왼쪽 통합 트랙에 들어갈 성장추이 패널 (span 없이 트랙 폭 전체)
   const pGrowth = `<div class="panel tight ovchart" onclick="openChart('weekly')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('growthTitle'))}</h3><span class="ps">${esc(OT('growthSub', { target: fmt(prog.target) }))} ⤢</span></div>${weeklyChart(m.weekly || [], prog.target, { bot: 420, vbH: 470 })}
     <div class="clegend"><span><i style="background:#C0392B"></i>${esc(O('growthLgCum', '누적 연속'))}</span><span style="color:#8B2E1F">✕ ${esc(O('growthLgReset', '리셋'))}</span><span><span style="display:inline-block;width:16px;border-top:2px dashed #1565C0;vertical-align:middle"></span> ${esc(O('growthLgTarget', '목표'))}</span></div></div>`;
-  const pMatrix =`<div class="panel tight ovmx"><div class="ph"><h3>${esc(O('matrixTitle'))}</h3><span class="ps">${esc(O('matrixSub'))}</span></div>
-    <div class="ovmx-row" style="display:flex;gap:12px;align-items:center">
-      <div style="flex:1;min-width:0"><div class="matrix">${mx}</div><div class="legend-row">${mlegend}</div></div>
-      <div class="ovmx-side" style="flex:none;display:flex;flex-direction:column;align-items:center;gap:9px;border-left:1px solid var(--line-soft);padding-left:14px">
-        <div style="position:relative;flex:none;width:104px;height:104px">${sevDonut(sd)}
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><b style="font-size:22px;font-weight:800;color:var(--navy-deep)">${sd.total || 0}</b><span style="font-size:9.5px;color:var(--muted)">${esc(O('matrixTotal', '총 고장'))}</span></div></div>
-        <div class="legend" style="width:100%">
-          <div class="li"><span class="sw" style="background:#C0392B"></span>${esc(sevLabel('Critical'))}<b>${sd.Critical || 0}</b></div>
-          <div class="li"><span class="sw" style="background:#E08600"></span>${esc(sevLabel('Major'))}<b>${sd.Major || 0}</b></div>
-          <div class="li"><span class="sw" style="background:#3F7CC4"></span>${esc(sevLabel('Minor'))}<b>${sd.Minor || 0}</b></div></div></div></div></div>`;
   const pTop5 = `<div class="panel tight"><div class="ph"><h3>${esc(O('top5Title'))}</h3><span class="ps">${esc(O('top5Sub'))}</span></div>
     <table><tr>${(O('top5H', ['코드', '유형', '건수', '등급', '재발', '현황'])).map((h, i) => i >= 2 ? `<th class="c">${esc(h)}</th>` : `<th>${esc(h)}</th>`).join('')}</tr>${top5}</table></div>`;
-  const pFeed = `<div class="panel tight"><div class="ph"><h3>${esc(O('feedTitle'))}</h3><span class="ps">${esc(O('feedSub'))}</span></div><div class="feed">${feed || `<div class="mini">${esc(O('feedEmpty', '기록 없음'))}</div>`}</div></div>`;
   const pStab = `<div class="panel tight ovchart" onclick="openChart('stab')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('stabTitle'))}</h3><span class="ps">${esc(O('stabSub'))} ⤢</span></div>${stabChart(m.weekly || [], { bot: 186, vbH: 212 })}
     <div class="clegend"><span><i style="background:#8B2E1F"></i>${esc(O('stabLgErr', '에러율(좌%)'))}</span><span><i style="background:#2E89D6"></i>${esc(O('stabLgMtbf', 'MTBF(우)'))}</span></div></div>`;
   const pErr = `<div class="panel tight ovchart" onclick="openChart('errrate')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('errTitle'))}</h3><span class="ps">${esc(O('errSub'))} ⤢</span></div>${errRateChart(m.errRate || [], { bot: 420, vbH: 470 })}
@@ -403,10 +362,10 @@ function renderOverview(C, m, f, acc, op) {
       <div class="rel-grp"><div class="rel-grp-h">${esc(O('relGrpReliab', '신뢰성 입증'))}</div><div class="rel-donuts g2">${relDonut(K[4])}${relDonut(K[5])}</div></div>
     </div></div>`;
 
-  // 공통 FRACAS 트랙 (전 단계 동일 템플릿) — 분류 보드 + 폐루프
-  const fracasWide = (typeof devClassBoard === 'function' && (DATA.records || []).length) ? `
-    <div class="prog-track track-wide tk-b"><div class="pt-h">${esc(O('trkFracasLabel', '발굴 이슈 분류 → 폐루프 — 공통 FRACAS 트랙 (전 단계 동일 템플릿)'))}</div>
-      <div class="rel-charts">${devClassBoard('mass')}${fracasLoopPanel({ recurZeroGate: true })}</div></div>` : '';
+  // 신뢰성 입증(양산 렌즈)은 보조 와이드 트랙으로 — 본대(tk-b)는 전 단계 공통인 분류→폐루프
+  const relWide = `
+    <div class="prog-track track-wide tk-b"><div class="pt-h">${esc(O('trkRelLabel', '신뢰성 입증 → 안정화 추세 · 연결된 지표'))}<span class="badge ${opBadge}" style="margin-left:auto">${esc(O('opTitle', '운용 신뢰도'))} ${esc(grade)}</span></div>
+      <div class="fault-grid">${kRelBox}${pErr}${pStab}</div></div>`;
 
   // 셸은 전 단계 공통(devShell) — 양산 고유 렌즈(진행률 히어로·성장 차트·신뢰성 도넛·매트릭스)만 슬롯 주입
   const prj = C.project || {}, gate9 = C.gate || {};
@@ -424,12 +383,12 @@ function renderOverview(C, m, f, acc, op) {
     aTitle: `${esc(O('trkProgLabel', '완주 진행 → 성장 · 연결된 지표'))}<span class="badge ${goalCrit.status === 'pass' ? 'b-ok' : 'b-prog'}" style="margin-left:auto">${esc(goalCrit.status === 'pass' ? O('gateDone', '달성') : O('gateProg', '진행 중'))}</span>`,
     aHero: kProgBox,
     aChart: pGrowth,
-    bTitle: `${esc(O('trkRelLabel', '신뢰성 입증 → 안정화 추세 · 연결된 지표'))}<span class="badge ${opBadge}" style="margin-left:auto">${esc(O('opTitle', '운용 신뢰도'))} ${esc(grade)}</span>`,
-    bTop: kRelBox,
-    bCharts: [pErr, pStab],
-    cTitle: esc(O('trkFaultLabel', '고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람')),
-    cPanels: [pMatrix, pTop5, devPriorityPanel()],
-    extraWide: fracasWide,
+    bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
+    bTop: devClassBoard('mass'),
+    bCharts: [fracasLoopPanel({ recurZeroGate: true }), pTop5],
+    cTitle: '고장 분석 · 위험 매트릭스 · 판정 · 우선순위',
+    cPanels: [devMatrixPanel(), adjudicationPanel() || pTop5, devPriorityPanel()],
+    extraWide: relWide,
   });
 }
 
