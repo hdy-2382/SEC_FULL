@@ -720,7 +720,7 @@ function renderPilot(C) {
     aChart: pilotGrowthPanel({ bot: 396, vbH: 448, zoom: true }),
     bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
     bTop: devClassBoard('pilot'),
-    bCharts: [devParetoPanel(true), fracasLoopPanel({ recurZeroGate: true })],
+    bCharts: [fracasLoopPanel({ recurZeroGate: true }), devParetoPanel(true)],
     cTitle: '고장 분석 · 위험 매트릭스 · 형상 · 최근 알람',
     cPanels: [devMatrixPanel(), pilotVersionPanel(), devPriorityPanel()],
   });
