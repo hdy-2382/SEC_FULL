@@ -71,6 +71,80 @@ function renderGuide() {
     </svg>
   </div>
 
+  <div class="panel mt">
+    <div class="ph"><h3>그림 3 · 단계별 실행 플레이북 — 각 단계 안에서 무엇을 어떤 순서로</h3><span class="ps">원문 docs/PROCESS.md §2 — 스텝 산출물이 다음 스텝의 입력이 된다</span></div>
+    <div class="gd-play">
+
+      <div class="gp-row" style="--sc:#3F7CC4">
+        <div class="gp-h"><b>POC</b><span>"측정의 기준을 만드는 단계"</span><em>사외 랩 · 무에러 잣대</em></div>
+        <div class="gp-steps">
+          <div class="gp-step"><i>P1</i><b>타당성 분석</b><span>목표·투자비·예상 ROI — 비기술 리스크 조기 차단</span></div><span class="gp-ar">→</span>
+          <div class="gp-step hl"><i>P2</i><b>평가항목·FMEA 초판</b><span>고장모드 어휘 탄생(⑥) · 판정기준서 v1</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>P3</i><b>안전인증 컨셉</b><span>위험원 식별 → 설계 반영 목록</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>P4</i><b>기성능 평가</b><span>스펙 합부 · 이슈로그(FRACAS-lite) 개시</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>P5</i><b>자주 시험</b><span>사외 72h 무에러 + 비정상 상황 평가</span></div>
+        </div>
+        <div class="gp-gate">▸ 게이트(Pilot 이관): 기성능 스펙 + 72h 무에러 + 비정상 합부 + 상위 심각도 미해결 0 + FMEA 상위 리스크 조치계획 — <b>컨셉 리스크 0 입증</b></div>
+      </div>
+
+      <div class="gp-row" style="--sc:#B36F0A">
+        <div class="gp-h"><b>Pilot</b><span>"고쳐가며 성장시키는 단계"</span><em>사내 (공정 연결 없이) · 무정지 잣대</em></div>
+        <div class="gp-steps">
+          <div class="gp-step"><i>L1</i><b>가동 지표 정의</b><span>MCBF·MTTR·가동률 산식 확정 — 양산과 동일 산식</span></div><span class="gp-ar">→</span>
+          <div class="gp-step hl"><i>L2</i><b>신뢰성 평가 (TAAF)</b><span>반복운전→고장→FRACAS→재운전 · 성장 추적</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>L3</i><b>임시 사용 안전 승인</b><span>사내 반입·가동 근거</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>L4</i><b>퀄 항목·사양 정리</b><span>퀄 잣대를 사용 전에 확정</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>L5</i><b>실증 런</b><span>설계 동결 후 무정지 300h</span></div>
+        </div>
+        <div class="gp-gate">▸ 게이트(양산 시범 이관): 300h 무정지 + 만성(재발) 0 + 시정조치 검증마감 + 안전인증서</div>
+      </div>
+
+      <div class="gp-row" style="--sc:#2F7A55">
+        <div class="gp-h"><b>양산 시범 평가</b><span>"합의된 잣대로 실증하는 단계"</span><em>사내 (공정 연결) · 판정 합의제</em></div>
+        <div class="gp-steps">
+          <div class="gp-step hl"><i>M1</i><b>성공 기준 계약 동결</b><span>개발·수혜부서 서면 합의 — 사후 변경 불가</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>M2</i><b>시범라인 운영</b><span>실부하 · 무정지 1개월(환산 Cy)</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>M3</i><b>운영 안정성 검증</b><span>MTTR 실측 · 가동률 산출</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>M4</i><b>안전 검수·가동인증</b><span>설치 상태 기준 위험성 평가</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>M5</i><b>이관 산출물 준비</b><span>퀄 보고서 · 매뉴얼·SOP · 인증서</span></div>
+        </div>
+        <div class="gp-gate">▸ 게이트(인증 상정): 무정지 1개월(관련 고장 ≤ 한도) + MTTR/가동률 목표 + 안전 3종 + 이관 산출물 완비</div>
+      </div>
+
+      <div class="gp-row" style="--sc:#8a99ac">
+        <div class="gp-h"><b>◆ 인증 — 심의 2종</b><span>"남은 결점을 어떤 조건으로 안고 가는가"</span><em>기간이 아니라 이벤트 — 새 데이터를 만들지 않는다</em></div>
+        <div class="gp-steps">
+          <div class="gp-step" style="flex:1.4"><i>심의1</i><b>이관심의 (운영승인 · ORR)</b><span>이관 산출물 점검·합의 + <b>KIR</b>: 오픈 건 전건 처분(종결예정/carry-over/waiver) → 운영조직 인수 서명</span></div><span class="gp-ar">→</span>
+          <div class="gp-step" style="flex:1.4"><i>심의2</i><b>투자심의</b><span>실증치 동결 스냅샷 → 경제성 변환(MCBF·MTTR·가동률 → ROI, 보수치 병기) → 확산 투자결정</span></div>
+        </div>
+        <div class="gp-gate">▸ 통과 조건: KIR 처분 미정 0건 + 기한·오너 서명 완비 · 경제성은 신뢰구간 하한으로도 성립</div>
+      </div>
+
+      <div class="gp-row" style="--sc:#7A4FB3">
+        <div class="gp-h"><b>확산</b><span>"설계의 병인가, 이 호기만의 병인가"</span><em>각 적용 라인 · 호기별 SAT</em></div>
+        <div class="gp-steps">
+          <div class="gp-step"><i>S1</i><b>기준 구성 동결</b><span>승인 편차만 예외 — 변경관리 절차</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>S2</i><b>호기 설치·SAT</b><span>라인별 설치 → 현장 인수시험</span></div><span class="gp-ar">→</span>
+          <div class="gp-step hl"><i>S3</i><b>축약 무고장 런</b><span>호기별 사전 확정 파라미터(예: 48h)</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>S4</i><b>지표 검증·횡전개</b><span>가동지표 확인 · 설치 표준 개정</span></div>
+        </div>
+        <div class="gp-gate">▸ 완료 기준: 전 호기 퀄(SAT+런) + <b>설계성 고장 0</b>(발생 시 전 함대 에스컬레이션·게이트 보류) + 횡전개 문서</div>
+      </div>
+
+      <div class="gp-row" style="--sc:#5f6b7a">
+        <div class="gp-h"><b>운영/관제</b><span>"어떤 고장부터 없애는 게 경제적인가"</span><em>상시 — 게이트가 아니라 월간 리듬</em></div>
+        <div class="gp-steps">
+          <div class="gp-step"><i>O1</i><b>통합관제·알람</b><span>자동 수집 · FRACAS 승격 기준 확정</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>O2</i><b>비상 대응 체계</b><span>에스컬레이션 매트릭스 · 훈련</span></div><span class="gp-ar">→</span>
+          <div class="gp-step"><i>O3</i><b>PM → CBM</b><span>주기 정비 → 상태 기반 정비 전환</span></div><span class="gp-ar">→</span>
+          <div class="gp-step hl"><i>O4</i><b>CIP · FMEA 환류</b><span>다운타임 Pareto → 개선 → 차기 과제 어휘로</span></div>
+        </div>
+        <div class="gp-gate">▸ 상시 기준: 월간 RAM 리뷰(가동률·MTBF·MTTR) + 만성 재발 CIP 마감 — 필드 경험이 다음 과제 P2의 입력이 된다 ↩</div>
+      </div>
+
+    </div>
+  </div>
+
   <div class="grid g3 mt">
     <div class="panel gd-fx"><div class="n">1</div><div class="ph"><h3>재발이 보인다</h3></div>
       <p><b>메커니즘</b>: 같은 고장모드 어휘 + 같은 레코드 형식 + 재발 링크(↺).</p>
