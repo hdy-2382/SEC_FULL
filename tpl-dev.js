@@ -272,6 +272,33 @@ function devMatrixPanel() {
 }
 
 /* 개발·운영 템플릿 차트 확대 모달 — 케미컬 openChart와 동일 UX */
+/* 트랙 A 차트 fit — 렌더 후 슬롯의 실제 픽셀 비율을 재서 뷰박스를 딱 맞게 재렌더.
+   제목(.ph)·레전드(.clegend) 제외한 영역을 그래프가 꽉 채운다. 각 렌더러가 TRACKA_BUILDER(vbH)를 등록 */
+let TRACKA_BUILDER = null;
+function fitTrackAChart() {
+  if (typeof TRACKA_BUILDER !== 'function') return;
+  const panel = document.querySelector('#s-overview .ov-2col .tk-a > .panel.ovchart');
+  if (!panel) return;
+  const svg = panel.querySelector(':scope > svg');
+  if (!svg) return;
+  const st = getComputedStyle(panel);
+  const availW = panel.clientWidth - parseFloat(st.paddingLeft) - parseFloat(st.paddingRight);
+  let availH = panel.clientHeight - parseFloat(st.paddingTop) - parseFloat(st.paddingBottom);
+  Array.from(panel.children).forEach(el => {
+    if (el === svg) return;
+    const cs = getComputedStyle(el);
+    availH -= el.offsetHeight + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+  });
+  if (availW < 80 || availH < 90) return;
+  const vbH = Math.max(140, Math.min(620, Math.round(320 * availH / availW)));
+  const html = TRACKA_BUILDER(vbH);
+  if (html) panel.outerHTML = html;
+}
+window.addEventListener('resize', () => {
+  clearTimeout(window.__fitTA);
+  window.__fitTA = setTimeout(fitTrackAChart, 150);
+});
+
 function openDevChart(kind) {
   if (!DATA) return;
   const REG9 = {
@@ -723,6 +750,8 @@ function renderPoc(C) {
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = vbH => pocTrendPanel({ narrow: true, zoom: true, vbH, bot: vbH - 26 });
+  requestAnimationFrame(fitTrackAChart);
 }
 
 /* Pilot 관제 — 같은 골격 + Pilot 렌즈 */
@@ -731,7 +760,7 @@ function renderPilot(C) {
     qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
-    aChart: pilotGrowthPanel({ narrow: true, zoom: true, bot: 150, vbH: 200 }),   // Pilot은 히어로가 높아 차트 슬롯이 낮음 — 납작 뷰박스
+    aChart: pilotGrowthPanel({ narrow: true, zoom: true }),
     bTitle: '발굴 이슈 분류 → 폐루프 · 연결된 지표',
     bTop: devClassBoard('pilot'),
     bCharts: [fracasLoopPanel({ recurZeroGate: true }), devParetoPanel(true)],
@@ -741,6 +770,8 @@ function renderPilot(C) {
   $('s-steps').innerHTML = pilotSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = vbH => pilotGrowthPanel({ narrow: true, zoom: true, vbH, bot: vbH - 30 });
+  requestAnimationFrame(fitTrackAChart);
 }
 
 function renderDev(stage) {

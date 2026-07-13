@@ -302,6 +302,7 @@ function renderSpread(C) {
   $('s-steps').innerHTML = spreadSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = null;   // 확산 트랙 A는 표(호기별 퀄) — fit 대상 아님
 }
 
 /* 운영/관제 — 케미컬 골격(devShell) + 운영 렌즈 */
@@ -321,6 +322,8 @@ function renderOpsMode(C) {
   $('s-steps').innerHTML = opsSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = vbH => opsRamTrendPanel({ zoom: true, narrow: true, vbH, bot: vbH - 30 });
+  requestAnimationFrame(fitTrackAChart);
 }
 
 function renderOps(stage) {

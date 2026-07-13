@@ -332,9 +332,11 @@ function renderOverview(C, m, f, acc, op) {
     `<tr class="${t.c === confLv ? 'now' : ''}"><td>${t.c}%</td><td class="c">${t.required}</td>
       <td class="c">${(conf.currentCycles || 0) >= t.required ? '<span class="badge b-ok">달성</span>' : '+' + (t.required - (conf.currentCycles || 0))}</td></tr>`).join('');
 
-  // 왼쪽 통합 트랙에 들어갈 성장추이 패널 (span 없이 트랙 폭 전체)
-  const pGrowth = `<div class="panel tight ovchart" onclick="openChart('weekly')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('growthTitle'))}</h3><span class="ps">${esc(OT('growthSub', { target: fmt(prog.target) }))} ⤢</span></div>${weeklyChart(m.weekly || [], prog.target, { narrow: true })}
+  // 왼쪽 통합 트랙에 들어갈 성장추이 패널 (span 없이 트랙 폭 전체) — vbH 지정 시 슬롯 fit 재렌더용
+  const growthPanel = vbH => `<div class="panel tight ovchart" onclick="openChart('weekly')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('growthTitle'))}</h3><span class="ps">${esc(OT('growthSub', { target: fmt(prog.target) }))} ⤢</span></div>${weeklyChart(m.weekly || [], prog.target, vbH ? { narrow: true, vbH, bot: vbH - 32 } : { narrow: true })}
     <div class="clegend"><span><i style="background:#C0392B"></i>${esc(O('growthLgCum', '누적 연속'))}</span><span style="color:#8B2E1F">✕ ${esc(O('growthLgReset', '리셋'))}</span><span><span style="display:inline-block;width:16px;border-top:2px dashed #1565C0;vertical-align:middle"></span> ${esc(O('growthLgTarget', '목표'))}</span></div></div>`;
+  const pGrowth = growthPanel();
+  TRACKA_BUILDER = growthPanel;   // 트랙 A 차트 fit (tpl-dev)
   const pTop5 = `<div class="panel tight"><div class="ph"><h3>${esc(O('top5Title'))}</h3><span class="ps">${esc(O('top5Sub'))}</span></div>
     <div class="tbl-scroll nowrap"><table><tr>${(O('top5H', ['코드', '유형', '건수', '등급', '재발', '현황'])).map((h, i) => i >= 2 ? `<th class="c">${esc(h)}</th>` : `<th>${esc(h)}</th>`).join('')}</tr>${top5}</table></div></div>`;
   const pStab = `<div class="panel tight ovchart" onclick="openChart('stab')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('stabTitle'))}</h3><span class="ps">${esc(O('stabSub'))} ⤢</span></div>${stabChart(m.weekly || [], { bot: 186, vbH: 212 })}
@@ -447,6 +449,7 @@ function renderMass() {
   { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   $('s-overview').innerHTML = renderOverview(C, m, f, acc, op);
   $('s-steps').innerHTML = renderSteps(C, m, f, acc, op);
+  requestAnimationFrame(fitTrackAChart);   // 트랙 A 차트를 슬롯 비율에 맞게 재렌더 (tpl-dev)
 }
 
 function selectMonth(mo) {
