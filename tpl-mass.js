@@ -344,39 +344,6 @@ function renderOverview(C, m, f, acc, op) {
         <div class="blocks" style="margin:9px 0 6px">${ebBlocks}</div><span class="pg-stat-s">${esc(ebudNote)}</span></div>
     </div></div>`;
 
-  // lifecycle 미니
-  const lcStat = { done: O('lcDone', '완료'), current: O('lcCurrent', '진행 중'), todo: O('lcTodo', '예정') };
-  const lcm = (C.lifecycle || []).map(s => {
-    const cls = s.status === 'done' ? 'done' : s.status === 'current' ? 'cur' : 'todo';
-    return `<div class="lcm ${cls}"><div class="s">${esc(lcStat[s.status] || '')}</div><div class="n">${esc(s.stage)}</div></div>`;
-  }).join('');
-
-  // SW 모듈 바 — group(로봇/상위시스템/환경)별 3열. 모듈의 group 필드로 분류.
-  const moduleBar = s => {
-    const col = s.pct >= 100 ? 'var(--green)' : s.pct >= 70 ? 'var(--sky)' : 'var(--major)';
-    return `<div class="mod"><span class="nm">${esc(s.name)}</span><div class="bar"><i style="width:${s.pct}%;background:${col}"></i></div><span class="pc">${s.pct}%</span></div>`;
-  };
-  const swGroups = Array.isArray(O('swGroups')) ? O('swGroups') : ['로봇', '상위시스템', '환경'];
-  const swCols = swGroups.map(g => {
-    const items = (C.swModules || []).filter(s => (s.group || swGroups[0]) === g);
-    return `<div class="sw-col"><div class="sw-col-h">${esc(g)}<span>${items.length}</span></div><div class="sw-col-body">${items.map(moduleBar).join('') || `<div class="mini">—</div>`}</div></div>`;
-  }).join('');
-
-  // 협의 및 논의 필요(한눈에 보기용 — 심플 리스트)
-  const ovDiscuss = discussModel();
-  // 협의 항목을 group(안전/운영/기타)별 3열로. 항목의 group 필드로 분류(없으면 마지막 열=기타).
-  const DTAG_OV = { '긴급': 't-urgent', '검토': 't-review', '협의': 't-discuss', '진행': 't-review', '완료': 't-done', '보류': 't-hold' };
-  const discArr = Array.isArray(T('overview.discussItems')) ? T('overview.discussItems') : [];
-  const discGroups = Array.isArray(O('discGroups')) ? O('discGroups') : ['안전', '운영', '기타'];
-  const discItemHtml = it => {
-    const tag = it.tag ? `<span class="disc-tag ${DTAG_OV[it.tag] || 't-discuss'}">${esc(it.tag)}</span>` : '';
-    return `<li class="ovd-it">${tag}<span class="ovd-t">${esc(it.topic || it.title || '')}</span></li>`;
-  };
-  const discCols = discGroups.map(g => {
-    const items = discArr.filter(it => (it.group || discGroups[discGroups.length - 1]) === g);
-    return `<div class="sw-col"><div class="sw-col-h">${esc(g)}<span>${items.length}</span></div><ul class="ov-disc sw-col-body">${items.map(discItemHtml).join('') || `<li class="ovd-empty">—</li>`}</ul></div>`;
-  }).join('');
-
   // 심각도 분포
   const sd = f.severityDist || { total: 0 };
 
@@ -398,9 +365,6 @@ function renderOverview(C, m, f, acc, op) {
   // 왼쪽 통합 트랙에 들어갈 성장추이 패널 (span 없이 트랙 폭 전체)
   const pGrowth = `<div class="panel tight ovchart" onclick="openChart('weekly')" title="클릭하면 크게 보기"><div class="ph"><h3>${esc(O('growthTitle'))}</h3><span class="ps">${esc(OT('growthSub', { target: fmt(prog.target) }))} ⤢</span></div>${weeklyChart(m.weekly || [], prog.target, { bot: 420, vbH: 470 })}
     <div class="clegend"><span><i style="background:#C0392B"></i>${esc(O('growthLgCum', '누적 연속'))}</span><span style="color:#8B2E1F">✕ ${esc(O('growthLgReset', '리셋'))}</span><span><span style="display:inline-block;width:16px;border-top:2px dashed #1565C0;vertical-align:middle"></span> ${esc(O('growthLgTarget', '목표'))}</span></div></div>`;
-  // 오른쪽 나머지 패널들 (rel-charts 2열 그리드)
-  const pDiscuss = `<div class="panel tight"><div class="ph"><h3>${esc(T('overview.discussTitle', '협의 및 논의 필요'))}</h3><span class="ps" style="margin-left:auto">${esc(TT('overview.discussBadge', { n: ovDiscuss.count }, '{n}건'))}</span></div><div class="sw-cols">${discCols}</div></div>`;
-  const pSw = `<div class="panel tight"><div class="ph"><h3>${esc(O('swTitle'))}</h3><span class="ps">${esc(O('swSub'))}</span></div><div class="sw-cols">${swCols}</div></div>`;
   const pMatrix =`<div class="panel tight ovmx"><div class="ph"><h3>${esc(O('matrixTitle'))}</h3><span class="ps">${esc(O('matrixSub'))}</span></div>
     <div class="ovmx-row" style="display:flex;gap:12px;align-items:center">
       <div style="flex:1;min-width:0"><div class="matrix">${mx}</div><div class="legend-row">${mlegend}</div></div>
@@ -439,41 +403,34 @@ function renderOverview(C, m, f, acc, op) {
       <div class="rel-grp"><div class="rel-grp-h">${esc(O('relGrpReliab', '신뢰성 입증'))}</div><div class="rel-donuts g2">${relDonut(K[4])}${relDonut(K[5])}</div></div>
     </div></div>`;
 
-  // 종합 클리어 — 좁은 세로 1열(완주 진행 왼쪽): 상태 타일 7개(글자 내장) + ROI 자리.
-  // (템플릿: status/n은 placeholder. 추후 각 항목 리스트의 진행/미완료 개수로 배선)
-  // 종합 클리어 항목 — config.json ui.overview.clearItems 로 수동 편집(status/gauge/n). 없으면 기본값.
-  //   status: go(초록✓)/warn(주황·n)/bad(빨강·n)/todo(회색—), gauge: 0~100 주관적 채움%.
-  const clrCfg = T('overview.clearItems');
-  const clrItems = (Array.isArray(clrCfg) && clrCfg.length) ? clrCfg : [
-    { label: '양산평가 1차', sub: '유휴설비', status: 'warn', gauge: 60, n: 2 },
-    { label: '양산평가 2차', sub: '양산설비', status: 'todo', gauge: 15, n: 0 },
-    { label: '양산대응', sub: '', status: 'todo', gauge: 0, n: 0 },
-    { label: '신뢰성 분석', sub: '', status: 'warn', gauge: 45, n: 1 },
-    { label: '에러 조치', sub: '', status: 'warn', gauge: 70, n: 3 },
-    { label: '기술 개발', sub: '', status: 'go', gauge: 100, n: 0 },
-    { label: '부서 협의', sub: '', status: 'warn', gauge: 50, n: 2 },
-    { label: '기타 사항', sub: '', status: 'warn', gauge: 20, n: 1 },
-  ];
-  const clrNum = it => it.status === 'go' ? '✓' : it.status === 'todo' ? '—' : String(it.n != null ? it.n : '');
-  const clrTiles = clrItems.map(it => `<div class="clr-tile clr-${it.status || 'todo'}"><div class="clr-top"><span class="clr-label">${esc(it.label || '')}${it.sub ? `<em>${esc(it.sub)}</em>` : ''}</span><span class="clr-num">${clrNum(it)}</span></div><div class="clr-gauge"><i style="width:${Math.max(0, Math.min(100, Number(it.gauge) || 0))}%"></i></div></div>`).join('');
-
-  return `
-    <div class="ov-2col">
-      <div class="prog-track tk-exec"><div class="pt-h">${esc(O('trkExecLabel', '종합 클리어'))}</div>
-        <div class="clr-list">${clrTiles}</div>
-        <div class="exec-roi"><div class="exec-roi-h">${esc(O('execRoiTitle', 'ROI'))}</div><div class="exec-roi-body">${esc(O('execRoiHint', '투자 대비 효과 (개념) · 추후 입력'))}</div></div>
-      </div>
-      <div class="prog-track tk-a"><div class="pt-h">${esc(O('trkProgLabel', '완주 진행 → 성장 · 연결된 지표'))}<span class="badge ${goalCrit.status === 'pass' ? 'b-ok' : 'b-prog'}" style="margin-left:auto">${esc(goalCrit.status === 'pass' ? O('gateDone', '달성') : O('gateProg', '진행 중'))}</span></div>${kProgBox}${pGrowth}</div>
-      <div class="prog-track tk-b"><div class="pt-h">${esc(O('trkRelLabel', '신뢰성 입증 → 안정화 추세 · 연결된 지표'))}<span class="badge ${opBadge}" style="margin-left:auto">${esc(O('opTitle', '운용 신뢰도'))} ${esc(grade)}</span></div>${kRelBox}<div class="rel-charts">${pErr}${pStab}</div></div>
-    </div>
-    <div class="prog-track track-wide tk-c"><div class="pt-h">${esc(O('trkFaultLabel', '고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람'))}</div><div class="fault-grid">${pMatrix}${pTop5}${pFeed}</div></div>
-    ${(typeof devClassBoard === 'function' && (DATA.records || []).length) ? `
+  // 공통 FRACAS 트랙 (전 단계 동일 템플릿) — 분류 보드 + 폐루프
+  const fracasWide = (typeof devClassBoard === 'function' && (DATA.records || []).length) ? `
     <div class="prog-track track-wide tk-b"><div class="pt-h">${esc(O('trkFracasLabel', '발굴 이슈 분류 → 폐루프 — 공통 FRACAS 트랙 (전 단계 동일 템플릿)'))}</div>
-      <div class="pocv"><div class="rel-charts">${devClassBoard('mass')}${fracasLoopPanel({ recurZeroGate: true })}</div></div></div>` : ''}
-    <div class="dev-2col">
-      <div class="prog-track tk-d"><div class="pt-h">${esc(O('trkDiscussLabel', '부서 협의 및 기타사항'))}</div>${pDiscuss}</div>
-      <div class="prog-track tk-dev"><div class="pt-h">${esc(O('trkTechLabel', '기술 개발'))}</div>${pSw}</div>
+      <div class="rel-charts">${devClassBoard('mass')}${fracasLoopPanel({ recurZeroGate: true })}</div></div>` : '';
+
+  // 셸은 전 단계 공통(devShell) — 양산 고유 렌즈(진행률 히어로·성장 차트·신뢰성 도넛·매트릭스)만 슬롯 주입
+  const prj = C.project || {}, gate9 = C.gate || {};
+  const head = `
+    <div class="ptitle">
+      <span class="stagechip st-mass">${esc(STAGE_LABEL.mass || '양산평가')}</span>
+      <span class="tmpl">템플릿 ② 실증 — 양산 시범 평가</span>
+      <span class="meta">PM <b>${esc((prj.team || '').split(',')[0] || '—')}</b> · 기간 <b>${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</b> · ${esc(gate9.label || '게이트 리뷰')} <b>${esc(gate9.reviewDate || '—')} ${esc(typeof ddayLabel === 'function' ? ddayLabel(gate9.reviewDate) : '')}</b></span>
     </div>`;
+  return devShell('mass', C, {
+    head,
+    qbox: `이 단계의 질문: <b>“잔여 고장률이 계약 기준 이내인가?”</b> — 성공 기준은 서면 동결(연속 ${fmt(prog.target)}Cy · 에러 한도 ${errLimit}회, 사후 변경 불가), 공정 연결 후엔 원인보다 <b>판정(관련/비관련 합동)</b>이 쟁점. 모든 사건은 증거와 함께 대장에.`,
+    clear: { title: `${esc(O('trkExecLabel', '종합 클리어'))} — 양산 합격 기준(계약)`,
+             criteria: accCs.map(c => ({ label: c.key, value: c.value, status: c.status })) },
+    aTitle: `${esc(O('trkProgLabel', '완주 진행 → 성장 · 연결된 지표'))}<span class="badge ${goalCrit.status === 'pass' ? 'b-ok' : 'b-prog'}" style="margin-left:auto">${esc(goalCrit.status === 'pass' ? O('gateDone', '달성') : O('gateProg', '진행 중'))}</span>`,
+    aHero: kProgBox,
+    aChart: pGrowth,
+    bTitle: `${esc(O('trkRelLabel', '신뢰성 입증 → 안정화 추세 · 연결된 지표'))}<span class="badge ${opBadge}" style="margin-left:auto">${esc(O('opTitle', '운용 신뢰도'))} ${esc(grade)}</span>`,
+    bTop: kRelBox,
+    bCharts: [pErr, pStab],
+    cTitle: esc(O('trkFaultLabel', '고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람')),
+    cPanels: [pMatrix, pTop5, pFeed],
+    extraWide: fracasWide,
+  });
 }
 
 /* '업무 목표' 데이터 모델 — config.json ui.goals 의 자유 텍스트 + 날짜 자동 태그.

@@ -110,16 +110,19 @@ function c4Chip(c) {
 
 /* ══════════ 공유 셸 (케미컬 renderOverview 문법) ══════════ */
 
-/* [트랙 0] 종합 클리어 — 게이트 통과 기준을 상태 타일로 (케미컬 tk-exec 형태) */
-function devClearTrack(C) {
+/* [트랙 0] 종합 클리어 — 게이트/합격 기준을 상태 타일로 (전 단계 공통 · 케미컬 tk-exec 형태).
+   opts.criteria 로 기준 목록 교체 가능 — 양산평가는 계약 합격 기준(acceptance)을 넣는다 */
+function devClearTrack(C, opts) {
   const g = C.gate || {};
+  const crits = (opts && opts.criteria) || g.criteria || [];
+  const title = (opts && opts.title) || '종합 클리어 — 게이트 기준';
   const ST = { pass: ['go', 100, '✓'], prog: ['warn', 55, '…'], fail: ['bad', 25, '!'], wait: ['todo', 10, '—'] };
-  const tiles = (g.criteria || []).map(c => {
+  const tiles = crits.map(c => {
     const m = ST[c.status] || ST.prog;
-    return `<div class="clr-tile clr-${m[0]}"><div class="clr-top"><span class="clr-label">${esc((c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''))}<em>${esc(devGateValue(c.value || ''))}</em></span><span class="clr-num">${m[1] === 100 ? '✓' : m[2]}</span></div><div class="clr-gauge"><i style="width:${m[1]}%"></i></div></div>`;
+    return `<div class="clr-tile clr-${m[0]}"><div class="clr-top"><span class="clr-label">${esc(String(c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''))}<em>${esc(devGateValue(String(c.value == null ? '' : c.value)))}</em></span><span class="clr-num">${m[1] === 100 ? '✓' : m[2]}</span></div><div class="clr-gauge"><i style="width:${m[1]}%"></i></div></div>`;
   }).join('');
   const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
-  return `<div class="prog-track tk-exec"><div class="pt-h">종합 클리어 — 게이트 기준</div>
+  return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     <div class="clr-list">${tiles}</div>
     <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')} <b>${esc(dday || '—')}</b></div>
       <div class="exec-roi-body" style="flex-direction:column;gap:9px">
@@ -289,11 +292,12 @@ function devShell(stage, C, s) {
     <div class="pocv">
       <div class="qbox">${s.qbox}</div>
       <div class="ov-2col">
-        ${devClearTrack(C)}
+        ${devClearTrack(C, s.clear)}
         <div class="prog-track tk-a"><div class="pt-h">${s.aTitle}</div>${s.aHero}${s.aChart}</div>
         <div class="prog-track tk-b"><div class="pt-h">${s.bTitle}</div>${s.bTop}<div class="rel-charts">${s.bCharts.join('')}</div></div>
       </div>
       <div class="prog-track track-wide tk-c"><div class="pt-h">${s.cTitle}</div><div class="fault-grid">${s.cPanels.join('')}</div></div>
+      ${s.extraWide || ''}
       <div class="dev-2col">
         <div class="prog-track tk-d"><div class="pt-h">부서 협의 및 기타사항</div>${devDiscussPanel()}</div>
         <div class="prog-track tk-dev"><div class="pt-h">기술 개발</div>${devSwPanel(C)}</div>
