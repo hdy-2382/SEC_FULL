@@ -428,7 +428,7 @@ function renderOverview(C, m, f, acc, op) {
     bTop: kRelBox,
     bCharts: [pErr, pStab],
     cTitle: esc(O('trkFaultLabel', '고장 분석 · 위험 매트릭스 · 빈발 · 최근 알람')),
-    cPanels: [pMatrix, pTop5, pFeed],
+    cPanels: [pMatrix, pTop5, devPriorityPanel()],
     extraWide: fracasWide,
   });
 }

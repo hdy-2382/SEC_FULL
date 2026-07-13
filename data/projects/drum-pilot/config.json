@@ -1,0 +1,177 @@
+{
+  "stage": "pilot",
+  "run": {
+    "target": 300,
+    "unit": "h",
+    "criterion": "무정지",
+    "env": "사내 (공정 연결 없이)",
+    "growthTarget": 1500
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "ok",
+      "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"
+    },
+    {
+      "k": "E",
+      "status": "warn",
+      "note": "그리퍼 코팅 단가 절감안 검토"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "공급계약 초안 합의"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "수혜부서 지표 정의 참여 완료"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "안전인증 심사 일정 정상"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-09-15",
+    "label": "게이트 리뷰(양산시범 이관)",
+    "criteria": [
+      {
+        "label": "① MCBF 성장 목표",
+        "value": "auto:growth",
+        "status": "prog"
+      },
+      {
+        "label": "② 만성(재발) 고장",
+        "value": "1건(DRM-03) — 마감 필요",
+        "status": "fail"
+      },
+      {
+        "label": "③ 시정조치 검증마감",
+        "value": "auto:actions",
+        "status": "prog"
+      },
+      {
+        "label": "④ Critical 재발",
+        "value": "0건 — POC 소진 유지",
+        "status": "pass"
+      },
+      {
+        "label": "⑤ 무정지 300h",
+        "value": "설계 동결(9/10) 후",
+        "status": "wait"
+      }
+    ]
+  },
+  "project": {
+    "name": "드럼 자동화 (Pilot)",
+    "department": "인프라 기술팀",
+    "team": "김OO, 박OO",
+    "startDate": "2026-07-20",
+    "endDate": "2026-10-31"
+  },
+  "swModules": [
+    {
+      "name": "비전 인식",
+      "pct": 95,
+      "group": "로봇"
+    },
+    {
+      "name": "체결 시퀀스",
+      "pct": 90,
+      "group": "로봇"
+    },
+    {
+      "name": "그리퍼 제어",
+      "pct": 85,
+      "group": "로봇"
+    },
+    {
+      "name": "PLC I/F",
+      "pct": 80,
+      "group": "상위시스템"
+    },
+    {
+      "name": "로그/리포트",
+      "pct": 70,
+      "group": "상위시스템"
+    },
+    {
+      "name": "안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
+  "lifecycle": [
+    {
+      "stage": "L1 가동 지표 정의",
+      "status": "done",
+      "note": "MCBF/MTTR/가동률 — 양산시범과 동일 산식"
+    },
+    {
+      "stage": "L2 신뢰성 평가/검증 (TAAF)",
+      "status": "current",
+      "note": "성장 추적 · DRM-03 만성 마감 중"
+    },
+    {
+      "stage": "L3 임시 사용 안전 승인 · 퀄 사양",
+      "status": "current",
+      "note": "v0.9 협의"
+    },
+    {
+      "stage": "L4 무정지 300h",
+      "status": "todo",
+      "note": "설계 동결(9/10) 후 본 런"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "드럼 자동화 — Pilot",
+      "brandLogo": "드",
+      "brandName": "드럼 자동화<br>Pilot",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "FRACAS + MCBF 성장 — POC 대장 승계",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "Pilot 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "L1→L4 · POC 어휘(DRM) 승계",
+      "discussItems": [
+        {
+          "topic": "DRM-03 만성 마감 — Rev C 전수 검증",
+          "tag": "긴급",
+          "group": "운영"
+        },
+        {
+          "topic": "설계 동결(9/10) 전 변경 등급 매트릭스 합의",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "안전인증 심사 서류 (~9/1)",
+          "tag": "진행",
+          "group": "안전"
+        }
+      ],
+      "goalsMonth": "만성(DRM-03) 마감 → 설계 동결 → 300h 본 런",
+      "goalsWeek": "Rev C 무발생 검증\n안전인증 서류 제출"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

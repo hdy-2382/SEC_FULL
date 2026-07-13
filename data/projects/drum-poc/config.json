@@ -1,0 +1,181 @@
+{
+  "stage": "poc",
+  "run": {
+    "target": 72,
+    "unit": "h",
+    "criterion": "무에러",
+    "env": "사외 랩"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "warn",
+      "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "타당성 분석 — 개략 사업성 확인"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "개발 계약 정상"
+    },
+    {
+      "k": "O",
+      "status": "warn",
+      "note": "수혜부서 Pilot 지표 정의 참여 필요"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "안전인증 컨셉 합의 완료"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2026-07-15",
+    "label": "게이트 리뷰(Pilot 이관)",
+    "criteria": [
+      {
+        "label": "① 기성능 스펙",
+        "value": "3/3",
+        "status": "pass"
+      },
+      {
+        "label": "② 72h 무에러",
+        "value": "auto:run",
+        "status": "prog"
+      },
+      {
+        "label": "③ 비정상 시나리오",
+        "value": "auto:abnormal",
+        "status": "prog"
+      },
+      {
+        "label": "④ Critical 미해결 0",
+        "value": "1건 — 검증중(41/50Cy)",
+        "status": "prog"
+      },
+      {
+        "label": "⑤ FMEA 상위 리스크",
+        "value": "조치계획 수립",
+        "status": "pass"
+      }
+    ]
+  },
+  "project": {
+    "name": "드럼 자동화 (POC)",
+    "department": "인프라 기술팀",
+    "team": "김OO, 박OO",
+    "startDate": "2026-06-05",
+    "endDate": "2026-07-15"
+  },
+  "swModules": [
+    {
+      "name": "비전 인식",
+      "pct": 90,
+      "group": "로봇"
+    },
+    {
+      "name": "체결 시퀀스",
+      "pct": 80,
+      "group": "로봇"
+    },
+    {
+      "name": "그리퍼 제어",
+      "pct": 75,
+      "group": "로봇"
+    },
+    {
+      "name": "PLC I/F",
+      "pct": 60,
+      "group": "상위시스템"
+    },
+    {
+      "name": "로그/리포트",
+      "pct": 55,
+      "group": "상위시스템"
+    },
+    {
+      "name": "안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
+  "lifecycle": [
+    {
+      "stage": "P1 타당성·평가항목 정의",
+      "status": "done",
+      "note": "FMEA 초판(어휘 v1 = DRM-01~08) · 판정기준서 v1"
+    },
+    {
+      "stage": "P2 안전인증 컨셉미팅",
+      "status": "done",
+      "note": "위험원 12건 → 설계 반영"
+    },
+    {
+      "stage": "P3 기성능 평가/검증",
+      "status": "done",
+      "note": "3/3 충족 · Critical 2건 조기 발굴→우선 조치"
+    },
+    {
+      "stage": "P4 사외 72h 무에러 + 비정상 평가",
+      "status": "current",
+      "note": "2차 시도 · 비정상 6/8"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "드럼 자동화 — POC",
+      "brandLogo": "드",
+      "brandName": "드럼 자동화<br>POC",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "FRACAS-lite · 전수 4분류 · Critical 우선",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "POC 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관",
+      "discussItems": [
+        {
+          "topic": "Critical: 토크 암 강성 보강 검증 런 (ISS-013)",
+          "tag": "긴급",
+          "group": "안전"
+        },
+        {
+          "topic": "통신 재접속 로직 변경 후 재시험",
+          "tag": "진행",
+          "group": "안전"
+        },
+        {
+          "topic": "편광 필터 설계 변경 (ISS-016)",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "Pilot 가동 지표 정의 — 수혜부서 참여",
+          "tag": "협의",
+          "group": "기타"
+        }
+      ],
+      "goalsMonth": "Critical 미해결 0 달성 (ISS-013 마감)\n72h 무에러 완주",
+      "goalsWeek": "2차 시도 잔여 20h\n토크 암 보강 무발생 검증 마감"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

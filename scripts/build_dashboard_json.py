@@ -1692,6 +1692,17 @@ def _portfolio_summary(stage: str, out: dict) -> dict:
         s["issueStats"] = out.get("issueStats")
     # 폐루프 상태 분포 — 홈 카드의 '에러 진행'(종결률 스택바)용, 전 단계 공통 배관
     s["statusDist"] = out.get("statusDist")
+    # 심각도 분포 + 오픈 Critical — 홈의 '심각도 깔때기'(크리티컬 조기 소진 증거)용
+    sev_d = {"Critical": 0, "Major": 0, "Minor": 0}
+    open_crit = 0
+    for r in (out.get("records") or []):
+        sev = r.get("severity")
+        if sev in sev_d:
+            sev_d[sev] += 1
+        if sev == "Critical" and _status_bucket(r.get("status")) != "closed":
+            open_crit += 1
+    s["sevDist"] = sev_d
+    s["openCritical"] = open_crit
     if stage == "mass":
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")

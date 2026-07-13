@@ -18,15 +18,21 @@
 - **빌드**: `python3 scripts/build_dashboard_json.py [--project <id>]` — config의 `stage`(poc|pilot|mass)로 분기. `_compute`(mass, SEC 원본)는 **무변경 유지**가 원칙, poc/pilot은 `_compute_poc`/`_compute_pilot`. 엑셀 파싱은 별칭 사전+헤더 자동탐지, DRM 시 xlwings 폴백(Windows+Excel).
 - **config.json 계약 파라미터**(errorLimit, acceptance 등)는 임의 변경 금지 — 로직/문의로 해결. `gate.criteria[].value`에 `auto:run|growth|actions` 쓰면 빌드값 자동 치환.
 
-## 현재 상태 (2026-07-10, 커밋 M0~M6)
+## 현재 상태 (2026-07-13, v0.2.0 이후 — "한 과제의 여정" 재구성)
 
-| 과제 | stage | 데이터 |
+**레지스트리 = 드럼 자동화 1개 과제의 4단계 여정** (v0.2.0 태그까지는 7개 멀티 과제 데모):
+공통 어휘 DRM-01~08이 전 단계를 관통, **Critical(DRM-01 체결 토크)을 POC에서 소진 → Pilot부터 Critical 0**
+— 홈의 심각도 깔때기·각 페이지의 조치 우선순위 큐(S×O)가 이 목적(크리티컬 조기 해결 = 효율화)을 시각화.
+
+| 과제 id | stage | 데이터 (가상) |
 |---|---|---|
-| chem 케미컬 체결/반송 | mass | SEC 샘플 사본 (실데이터는 SEC 리포에 있음 — 주의) |
-| drum 드럼 자동화 | poc | 가상 (52/72h 런·이슈18·컨셉리스크0) |
-| sort 분류 자동화 | pilot | 가상 (MCBF 1,240/1,500·재발1) |
-| clean 크린룸 반송 | spread | 가상 (호기 퀄 5/8·설계성 1건 에스컬레이션) |
-| agv 물류 AMR | ops | 가상 (가동률 98.4%·다운타임 Pareto·CIP 5) |
+| drum-poc | poc | 이슈 18 (Critical 2 조기 조치·오픈 1) · 52/72h 런 |
+| drum-pilot | pilot | 에러 9 (Critical 0) · DRM-03 만성 · MCBF 1,240/1,500 |
+| drum-mass | mass | 에러 4 (Critical 0·외생 혼입) · 판정 4·처분 1 · 60/360Cy |
+| drum-spread | spread | 호기 4/8 퀄 · 설계성 0 · 신규 모드 2건(어휘 v2.1) |
+
+구 데모 폴더(chem·drum·sort·pack·clean·agv·weld)는 레지스트리에서 제외됐지만 디스크에 보존
+(drum-mass config는 chem config를 복제 생성 — chem 폴더 삭제 금지).
 
 - **리모트**: https://github.com/hdy-2382/SEC_FULL (origin/main, **PUBLIC**) — SEC 리포와 분리 개발.
 - **M5**: POC 관제형 템플릿 + **공통 레코드 스토어 `records[]`**(전 단계 RECORD_SCHEMA 형식 병기 —

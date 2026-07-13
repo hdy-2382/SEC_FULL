@@ -170,15 +170,47 @@ function renderHome() {
       ${principles ? `<div class="principles">${principles}</div>` : ''}
     </section>` : '';
 
+  // ①-2 심각도 깔때기 — 이 체계의 목적 그 자체: 누적 대장 기반으로 크리티컬을 조기(상류)에
+  //     소진해 뒤 단계를 싸게 만든다. 단계 순서대로 발굴 심각도 구성과 오픈 Critical을 본다.
+  const ORDER9 = ['poc', 'pilot', 'mass', 'spread', 'ops'];
+  const journey = withData.filter(e => (e.summary || {}).sevDist)
+    .sort((a, b) => ORDER9.indexOf(a.stage) - ORDER9.indexOf(b.stage));
+  let funnelBox = '';
+  if (journey.length >= 2) {
+    const maxTot = Math.max(...journey.map(e => {
+      const d = e.summary.sevDist; return (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
+    }), 1);
+    const seg = (n, col) => n ? `<i style="flex:${n};background:${col}" title="${n}건"></i>` : '';
+    const fRows = journey.map(e => {
+      const d = e.summary.sevDist, oc = e.summary.openCritical || 0;
+      const tot = (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
+      return `<div class="fn-row" data-go="${esc(e.id)}">
+        <span class="fn-stg" style="color:${esc(STAGE_COLOR[e.stage] || '#666')}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
+        <div class="fn-bar" style="width:${Math.round(tot / maxTot * 100)}%">${seg(d.Critical, '#C0392B')}${seg(d.Major, '#E08600')}${seg(d.Minor, '#3F7CC4')}</div>
+        <span class="fn-tot">${tot}건</span>
+        <span class="fn-crit${(d.Critical || 0) ? '' : ' zero'}">치명 ${d.Critical || 0}${oc ? ` <b>· 오픈 ${oc}</b>` : ''}</span>
+      </div>`;
+    }).join('');
+    const upCrit = journey[0].summary.sevDist.Critical || 0;
+    const downCrit = journey.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
+    funnelBox = `
+    <section class="sbox">
+      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', '심각도 깔때기 — 크리티컬은 상류에서 소진한다'))}</h2><span class="d">누적 대장(공통 어휘) 기준 · 치명 상류 ${upCrit}건 → 하류 ${downCrit}건</span></div>
+      <div class="panel"><div class="fnl">${fRows}</div>
+        <div class="clegend"><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span>
+        <span class="mini" style="margin-left:auto">S×O 우선순위로 치명·빈발을 조기 해결 → 뒤 단계는 중대·경미만 남는다 — 개발·평가 효율화의 그림</span></div></div>
+    </section>`;
+  }
+
   // ② 과제 카드
   const cards = entries.map(homeCard).join('');
 
-  $('s-home').innerHTML = procBox + `
+  $('s-home').innerHTML = procBox + funnelBox + `
     <section class="sbox">
       <div class="sbox-h"><span class="tag">${esc(orgT('cardsTag', '과제 현황'))}</span><h2>${esc(orgT('cardsTitle', '진행 중 과제'))} ${entries.length}${esc(orgT('cardsUnit', '건'))}</h2><span class="d">${cardsNote}</span></div>
       <div class="pcards">${cards}</div>
     </section>`;
 
-  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go]').forEach(c =>
+  document.querySelectorAll('#s-home .pcard[data-go], #s-home .lp-chip[data-go], #s-home .fn-row[data-go]').forEach(c =>
     c.addEventListener('click', ev => { ev.stopPropagation(); location.hash = '#/' + c.dataset.go; }));
 }

@@ -384,6 +384,18 @@
 .gatecard .items span{font-size:10.5px;font-weight:700;background:var(--card-alt);border:1px solid var(--line-soft);border-radius:14px;padding:3px 10px;color:var(--ink-soft)}
 .gatecard .items span.hl{background:#EAF2FB;border-color:var(--line);color:var(--navy-deep)}
 /* 과제 카드 */
+/* 심각도 깔때기 — 한 과제의 여정에서 크리티컬이 상류에서 소진되는 그림 */
+.fnl{display:flex;flex-direction:column;gap:9px;padding:4px 2px}
+.fnl .fn-row{display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:8px;padding:3px 6px}
+.fnl .fn-row:hover{background:var(--card-alt)}
+.fnl .fn-stg{flex:none;width:76px;font-size:12px;font-weight:800;text-align:right}
+.fnl .fn-bar{display:flex;height:22px;border-radius:6px;overflow:hidden;gap:1px;min-width:24px;transition:width .2s}
+.fnl .fn-bar i{display:block;height:100%}
+.fnl .fn-tot{flex:none;font-size:11.5px;font-weight:800;color:var(--navy-deep);min-width:38px}
+.fnl .fn-crit{flex:none;font-size:10.5px;font-weight:700;color:var(--crit);margin-left:auto}
+.fnl .fn-crit.zero{color:var(--green)}
+.fnl .fn-crit b{color:var(--crit)}
+
 .pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:1180px){.pcards{grid-template-columns:1fr 1fr}.gatecards{grid-template-columns:1fr}}
 @media(max-width:760px){.pcards{grid-template-columns:1fr}}

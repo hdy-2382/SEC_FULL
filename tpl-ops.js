@@ -292,7 +292,7 @@ function renderSpread(C) {
     bTop: spreadLayerBoard(),
     bCharts: [fracasLoopPanel(), spreadUnitDistPanel()],
     cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
-    cPanels: [devMatrixPanel(), devParetoPanel(true), devFeedPanel()],
+    cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
   });
   $('s-steps').innerHTML = spreadSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
@@ -311,7 +311,7 @@ function renderOpsMode(C) {
     bTop: opsDownParetoBoard(),
     bCharts: [fracasLoopPanel(), devMatrixPanel()],
     cTitle: '고장 분석 · Pareto(건수) · CIP · 최근 알람',
-    cPanels: [devParetoPanel(true), opsCipPanel(), devFeedPanel()],
+    cPanels: [devParetoPanel(true), opsCipPanel(), devPriorityPanel()],
   });
   $('s-steps').innerHTML = opsSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }

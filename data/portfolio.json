@@ -1,98 +1,9 @@
 {
   "projects": [
     {
-      "id": "chem",
-      "name": "케미컬 체결/반송 자동화",
-      "abbr": "C",
-      "hasData": true,
-      "stage": "mass",
-      "run": {
-        "target": 360,
-        "unit": "Cy",
-        "criterion": "무정지 · 관련 고장만",
-        "env": "사내 (공정 연결)"
-      },
-      "gate": {
-        "reviewDate": "2026-09-30",
-        "label": "가동인증"
-      },
-      "tecop": [
-        {
-          "k": "T",
-          "status": "ok",
-          "note": "진도 정상"
-        },
-        {
-          "k": "E",
-          "status": "ok",
-          "note": "투자 승인 완료"
-        },
-        {
-          "k": "C",
-          "status": "warn",
-          "note": "계약 마감 9/30 · 에러 여유 1회"
-        },
-        {
-          "k": "O",
-          "status": "ok",
-          "note": "수혜부서 합동 판정 운영 중"
-        },
-        {
-          "k": "P",
-          "status": "ok",
-          "note": "안전검수 통과"
-        }
-      ],
-      "project": {
-        "name": "S4 증축동",
-        "department": "A-INFRA 기술팀",
-        "team": "양희두, 김현일",
-        "startDate": "2026-06-01",
-        "endDate": "2026-09-30"
-      },
-      "lifecycle": {
-        "total": 6,
-        "pos": 4,
-        "current": "양산평가 1차"
-      },
-      "swAvg": 81,
-      "generatedAt": "2026-07-12T23:08:49Z",
-      "summary": {
-        "progress": {
-          "cum": 49,
-          "target": 360,
-          "pct": 13.6
-        },
-        "records": 7,
-        "recur": 3,
-        "statusDist": {
-          "new": 0,
-          "acting": 6,
-          "verifying": 1,
-          "closed": 0
-        },
-        "errorBudget": {
-          "used": 2,
-          "limit": 3,
-          "resets": 3,
-          "lifetimeErrors": 14,
-          "dailyAvg": 0.64,
-          "weeklyAvg": 3.5
-        },
-        "mtbf": {
-          "current": 103,
-          "target": 100
-        },
-        "acceptance": {
-          "passed": 0,
-          "total": 5
-        }
-      }
-    },
-    {
-      "id": "drum",
+      "id": "drum-poc",
       "name": "드럼 자동화",
-      "abbr": "D",
+      "abbr": "P",
       "hasData": true,
       "stage": "poc",
       "run": {
@@ -121,9 +32,9 @@
             "status": "prog"
           },
           {
-            "label": "④ 상위 심각도 미해결",
-            "value": "0건",
-            "status": "pass"
+            "label": "④ Critical 미해결 0",
+            "value": "1건 — 검증중(41/50Cy)",
+            "status": "prog"
           },
           {
             "label": "⑤ FMEA 상위 리스크",
@@ -136,7 +47,7 @@
         {
           "k": "T",
           "status": "warn",
-          "note": "72h 무에러 2차 진행 중"
+          "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"
         },
         {
           "k": "E",
@@ -146,12 +57,12 @@
         {
           "k": "C",
           "status": "ok",
-          "note": "해당 없음 (사내)"
+          "note": "개발 계약 정상"
         },
         {
           "k": "O",
           "status": "warn",
-          "note": "수혜부서 후보 협의 전 — Pilot 지표 정의 참여 필요"
+          "note": "수혜부서 Pilot 지표 정의 참여 필요"
         },
         {
           "k": "P",
@@ -172,7 +83,7 @@
         "current": "P4 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-12T23:08:49Z",
+      "generatedAt": "2026-07-13T03:17:24Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -191,13 +102,19 @@
           "acting": 4,
           "verifying": 3,
           "closed": 11
-        }
+        },
+        "sevDist": {
+          "Critical": 2,
+          "Major": 7,
+          "Minor": 9
+        },
+        "openCritical": 1
       }
     },
     {
-      "id": "sort",
-      "name": "분류 자동화",
-      "abbr": "S",
+      "id": "drum-pilot",
+      "name": "드럼 자동화",
+      "abbr": "L",
       "hasData": true,
       "stage": "pilot",
       "run": {
@@ -208,7 +125,7 @@
         "growthTarget": 1500
       },
       "gate": {
-        "reviewDate": "2026-07-29",
+        "reviewDate": "2026-09-15",
         "label": "게이트 리뷰(양산시범 이관)",
         "criteria": [
           {
@@ -218,7 +135,7 @@
           },
           {
             "label": "② 만성(재발) 고장",
-            "value": "1건 — 마감 필요",
+            "value": "1건(DRM-03) — 마감 필요",
             "status": "fail"
           },
           {
@@ -227,13 +144,13 @@
             "status": "prog"
           },
           {
-            "label": "④ 안전인증서",
-            "value": "심사 중 (~07-20)",
-            "status": "prog"
+            "label": "④ Critical 재발",
+            "value": "0건 — POC 소진 유지",
+            "status": "pass"
           },
           {
             "label": "⑤ 무정지 300h",
-            "value": "설계 동결(07-25) 후",
+            "value": "설계 동결(9/10) 후",
             "status": "wait"
           }
         ]
@@ -242,12 +159,12 @@
         {
           "k": "T",
           "status": "ok",
-          "note": "MCBF 성장곡선 순항"
+          "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"
         },
         {
           "k": "E",
           "status": "warn",
-          "note": "양산 원가 절감안 검토 중 (그리퍼 단가)"
+          "note": "그리퍼 코팅 단가 절감안 검토"
         },
         {
           "k": "C",
@@ -257,7 +174,7 @@
         {
           "k": "O",
           "status": "ok",
-          "note": "수혜부서 가동 지표 정의 참여 완료"
+          "note": "수혜부서 지표 정의 참여 완료"
         },
         {
           "k": "P",
@@ -266,19 +183,19 @@
         }
       ],
       "project": {
-        "name": "분류 자동화 (Pilot)",
+        "name": "드럼 자동화 (Pilot)",
         "department": "인프라 기술팀",
-        "team": "이OO, 김OO",
-        "startDate": "2026-05-25",
-        "endDate": "2026-08-31"
+        "team": "김OO, 박OO",
+        "startDate": "2026-07-20",
+        "endDate": "2026-10-31"
       },
       "lifecycle": {
         "total": 4,
         "pos": 2,
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
-      "swAvg": 77,
-      "generatedAt": "2026-07-12T23:08:49Z",
+      "swAvg": 87,
+      "generatedAt": "2026-07-13T03:17:24Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -286,19 +203,25 @@
           "pct": 40.3
         },
         "records": 9,
-        "recur": 1,
+        "recur": 3,
         "statusDist": {
           "new": 0,
           "acting": 0,
           "verifying": 4,
           "closed": 5
-        }
+        },
+        "sevDist": {
+          "Critical": 0,
+          "Major": 6,
+          "Minor": 3
+        },
+        "openCritical": 0
       }
     },
     {
-      "id": "pack",
-      "name": "팔레타이저",
-      "abbr": "P",
+      "id": "drum-mass",
+      "name": "드럼 자동화",
+      "abbr": "M",
       "hasData": true,
       "stage": "mass",
       "run": {
@@ -308,19 +231,19 @@
         "env": "사내 (공정 연결)"
       },
       "gate": {
-        "reviewDate": "2026-08-28",
+        "reviewDate": "2027-01-15",
         "label": "가동인증"
       },
       "tecop": [
         {
           "k": "T",
-          "status": "warn",
-          "note": "PAL-001 재발 — 흡착부 증설 검증 전"
+          "status": "ok",
+          "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항"
         },
         {
           "k": "E",
           "status": "ok",
-          "note": "투자심의 입력용 실증치 축적 중"
+          "note": "실증치 축적 — 투자심의 입력 준비"
         },
         {
           "k": "C",
@@ -339,55 +262,61 @@
         }
       ],
       "project": {
-        "name": "팔레타이저 (양산 시범 평가)",
+        "name": "드럼 자동화 (양산 시범 평가)",
         "department": "인프라 기술팀",
-        "team": "정OO, 양OO",
-        "startDate": "2026-06-08",
-        "endDate": "2026-08-31"
+        "team": "김OO, 박OO",
+        "startDate": "2026-11-02",
+        "endDate": "2027-01-31"
       },
       "lifecycle": {
         "total": 6,
         "pos": 4,
         "current": "양산평가 1차"
       },
-      "swAvg": 82,
-      "generatedAt": "2026-07-12T23:08:49Z",
+      "swAvg": 92,
+      "generatedAt": "2026-07-13T03:17:24Z",
       "summary": {
         "progress": {
-          "cum": 91,
+          "cum": 60,
           "target": 360,
-          "pct": 25.3
+          "pct": 16.7
         },
-        "records": 5,
+        "records": 4,
         "recur": 1,
         "statusDist": {
           "new": 0,
-          "acting": 0,
-          "verifying": 3,
+          "acting": 2,
+          "verifying": 0,
           "closed": 2
         },
+        "sevDist": {
+          "Critical": 0,
+          "Major": 1,
+          "Minor": 3
+        },
+        "openCritical": 0,
         "errorBudget": {
-          "used": 1,
+          "used": 0,
           "limit": 3,
           "resets": 1,
-          "lifetimeErrors": 5,
-          "dailyAvg": 0.21,
-          "weeklyAvg": 1.25
+          "lifetimeErrors": 4,
+          "dailyAvg": 0.17,
+          "weeklyAvg": 1.0
         },
         "mtbf": {
           "current": 360,
           "target": 100
         },
         "acceptance": {
-          "passed": 1,
+          "passed": 3,
           "total": 5
         }
       }
     },
     {
-      "id": "clean",
-      "name": "크린룸 반송 자동화",
-      "abbr": "K",
+      "id": "drum-spread",
+      "name": "드럼 자동화",
+      "abbr": "S",
       "hasData": true,
       "stage": "spread",
       "run": {
@@ -397,7 +326,7 @@
         "env": "각 적용 라인 (호기별 SAT)"
       },
       "gate": {
-        "reviewDate": "2026-07-31",
+        "reviewDate": "2027-04-15",
         "label": "확산 완료 리뷰",
         "criteria": [
           {
@@ -407,46 +336,46 @@
           },
           {
             "label": "② 설계성 고장 0",
-            "value": "1건 — 보강 전개 중",
-            "status": "fail"
+            "value": "0건 유지",
+            "status": "pass"
           },
           {
-            "label": "③ 가동지표 검증",
-            "value": "5/5 호기 (완료분)",
-            "status": "prog"
+            "label": "③ Critical 0",
+            "value": "0건 — 전 여정 유지",
+            "status": "pass"
           },
           {
             "label": "④ 기준 구성 동결",
-            "value": "승인 편차 1건",
+            "value": "편차 0",
             "status": "pass"
           },
           {
             "label": "⑤ 횡전개 문서",
-            "value": "설치 표준 v1.1",
-            "status": "pass"
+            "value": "설치 표준 v2.1",
+            "status": "prog"
           }
         ]
       },
       "tecop": [
         {
           "k": "T",
-          "status": "warn",
-          "note": "공진 이슈 — 전 함대 브래킷 보강 전개 중"
+          "status": "ok",
+          "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"
         },
         {
           "k": "E",
           "status": "ok",
-          "note": "확산 ROI — 투자심의 승인 조건 유지"
+          "note": "확산 ROI 승인 조건 유지"
         },
         {
           "k": "C",
           "status": "ok",
-          "note": "호기 추가 발주 계약 정상"
+          "note": "호기 추가 발주 정상"
         },
         {
           "k": "O",
           "status": "ok",
-          "note": "라인별 운영 인수 교육 3/4 완료"
+          "note": "라인별 운영 인수 교육 진행"
         },
         {
           "k": "P",
@@ -455,275 +384,50 @@
         }
       ],
       "project": {
-        "name": "크린룸 반송 자동화 (확산)",
+        "name": "드럼 자동화 (양산 적용·확산)",
         "department": "인프라 기술팀",
         "team": "박OO, 정OO",
-        "startDate": "2026-05-10",
-        "endDate": "2026-08-31"
+        "startDate": "2027-02-01",
+        "endDate": "2027-05-31"
       },
       "lifecycle": {
         "total": 4,
         "pos": 2,
         "current": "S2 호기 설치·SAT"
       },
-      "swAvg": 89,
-      "generatedAt": "2026-07-12T23:08:49Z",
+      "swAvg": 88,
+      "generatedAt": "2026-07-13T03:17:24Z",
       "summary": {
         "progress": {
-          "cum": 5,
+          "cum": 4,
           "target": 8,
-          "pct": 62.5
+          "pct": 50.0
         },
-        "records": 12,
+        "records": 6,
         "recur": 0,
         "fleet": {
           "total": 8,
-          "satDone": 6,
-          "qualified": 5,
-          "pct": 62.5
+          "satDone": 5,
+          "qualified": 4,
+          "pct": 50.0
         },
         "issueStats": {
-          "total": 12,
-          "closed": 8,
-          "open": 4
-        },
-        "statusDist": {
-          "new": 0,
-          "acting": 3,
-          "verifying": 1,
-          "closed": 8
-        }
-      }
-    },
-    {
-      "id": "agv",
-      "name": "물류 AMR",
-      "abbr": "A",
-      "hasData": true,
-      "stage": "ops",
-      "run": {
-        "target": 98,
-        "unit": "%",
-        "criterion": "가동률",
-        "env": "양산 라인 (12호기 함대)"
-      },
-      "gate": {
-        "reviewDate": "2026-07-31",
-        "label": "월간 RAM 리뷰",
-        "criteria": [
-          {
-            "label": "① 가동률 ≥98%",
-            "value": "auto:avail",
-            "status": "pass"
-          },
-          {
-            "label": "② MTBF 성장",
-            "value": "340h (+62% YTD)",
-            "status": "pass"
-          },
-          {
-            "label": "③ MTTR ≤10분",
-            "value": "9분",
-            "status": "pass"
-          },
-          {
-            "label": "④ 만성(재발) 마감",
-            "value": "2모드 — CIP 검증 중",
-            "status": "prog"
-          },
-          {
-            "label": "⑤ CIP 진행",
-            "value": "완료 2 · 진행 3",
-            "status": "prog"
-          }
-        ]
-      },
-      "tecop": [
-        {
-          "k": "T",
-          "status": "ok",
-          "note": "가동률 목표 달성 — CBM 전환 진행"
-        },
-        {
-          "k": "E",
-          "status": "ok",
-          "note": "다운타임 비용 월 -18% (CIP 효과)"
-        },
-        {
-          "k": "C",
-          "status": "ok",
-          "note": "유지보수 계약 갱신 완료"
-        },
-        {
-          "k": "O",
-          "status": "warn",
-          "note": "야간 비상 대응 훈련 1회 미실시"
-        },
-        {
-          "k": "P",
-          "status": "ok",
-          "note": "정기 안전점검 일정 정상"
-        }
-      ],
-      "project": {
-        "name": "물류 AMR (운영/관제)",
-        "department": "인프라 기술팀",
-        "team": "정OO, 한OO",
-        "startDate": "2026-01-01",
-        "endDate": "—"
-      },
-      "lifecycle": {
-        "total": 4,
-        "pos": 3,
-        "current": "O3 PM → CBM 전환"
-      },
-      "swAvg": 86,
-      "generatedAt": "2026-07-12T23:08:49Z",
-      "summary": {
-        "progress": {
-          "cum": 98.4,
-          "target": 98.0,
-          "pct": 100.0
-        },
-        "records": 10,
-        "recur": 2,
-        "ram": {
-          "avail": 98.4,
-          "target": 98.0
-        },
-        "issueStats": {
-          "total": 10,
-          "closed": 7,
-          "open": 3
+          "total": 6,
+          "closed": 4,
+          "open": 2
         },
         "statusDist": {
           "new": 0,
           "acting": 1,
-          "verifying": 2,
-          "closed": 7
-        }
-      }
-    },
-    {
-      "id": "weld",
-      "name": "용접 협동로봇",
-      "abbr": "W",
-      "hasData": false,
-      "stage": "poc",
-      "run": {
-        "target": 72,
-        "unit": "h",
-        "criterion": "무에러",
-        "env": "사외 랩"
-      },
-      "gate": {
-        "reviewDate": "2026-09-08",
-        "label": "평가 착수 리뷰(DR)",
-        "criteria": [
-          {
-            "label": "① 상세 설계 승인",
-            "value": "60%",
-            "status": "prog"
-          },
-          {
-            "label": "② FMEA·판정기준서",
-            "value": "v1 확정",
-            "status": "pass"
-          },
-          {
-            "label": "③ 시제 제작",
-            "value": "25%",
-            "status": "prog"
-          },
-          {
-            "label": "④ 안전 컨셉 합의",
-            "value": "미팅 7/22",
-            "status": "wait"
-          },
-          {
-            "label": "⑤ 랩 셋업",
-            "value": "9/1 예정",
-            "status": "wait"
-          }
-        ]
-      },
-      "tecop": [
-        {
-          "k": "T",
-          "status": "warn",
-          "note": "토치 냉각 설계 검증 전 — 시제에서 확인"
+          "verifying": 1,
+          "closed": 4
         },
-        {
-          "k": "E",
-          "status": "ok",
-          "note": "타당성 분석 완료 — 예상 ROI 산출"
+        "sevDist": {
+          "Critical": 0,
+          "Major": 2,
+          "Minor": 4
         },
-        {
-          "k": "C",
-          "status": "ok",
-          "note": "개발 계약 체결 완료"
-        },
-        {
-          "k": "O",
-          "status": "ok",
-          "note": "수혜부서 요구사양 합의"
-        },
-        {
-          "k": "P",
-          "status": "warn",
-          "note": "용접 흄 안전 컨셉 미팅 예정 (7/22)"
-        }
-      ],
-      "project": {
-        "name": "용접 협동로봇 (개발 중)",
-        "department": "인프라 기술팀",
-        "team": "한OO, 최OO",
-        "startDate": "2026-06-01",
-        "endDate": "2026-11-30"
-      },
-      "devPlan": {
-        "label": "설계·제작 (평가 착수 전)",
-        "start": "2026-06-01",
-        "end": "2026-09-01",
-        "evalStart": "2026-09-08",
-        "evalLabel": "사외 72h 무에러 + 비정상 평가",
-        "items": [
-          {
-            "name": "요구사양·컨셉 설계",
-            "due": "2026-06-20",
-            "pct": 100
-          },
-          {
-            "name": "FMEA 초판·판정기준서 v1",
-            "due": "2026-07-05",
-            "pct": 100
-          },
-          {
-            "name": "본체·토치부 상세 설계",
-            "due": "2026-07-25",
-            "pct": 60
-          },
-          {
-            "name": "지그·시제 제작",
-            "due": "2026-08-10",
-            "pct": 25
-          },
-          {
-            "name": "제어 SW 프레임",
-            "due": "2026-08-20",
-            "pct": 30
-          },
-          {
-            "name": "사외 랩 셋업·시운전",
-            "due": "2026-09-01",
-            "pct": 0
-          }
-        ]
-      },
-      "lifecycle": {
-        "total": 4,
-        "pos": 2,
-        "current": "P2 설계·제작"
+        "openCritical": 0
       }
     }
   ]

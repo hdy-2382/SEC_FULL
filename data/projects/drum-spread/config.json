@@ -1,0 +1,171 @@
+{
+  "stage": "spread",
+  "run": {
+    "target": 48,
+    "unit": "호기",
+    "criterion": "축약 런",
+    "env": "각 적용 라인 (호기별 SAT)"
+  },
+  "tecop": [
+    {
+      "k": "T",
+      "status": "ok",
+      "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"
+    },
+    {
+      "k": "E",
+      "status": "ok",
+      "note": "확산 ROI 승인 조건 유지"
+    },
+    {
+      "k": "C",
+      "status": "ok",
+      "note": "호기 추가 발주 정상"
+    },
+    {
+      "k": "O",
+      "status": "ok",
+      "note": "라인별 운영 인수 교육 진행"
+    },
+    {
+      "k": "P",
+      "status": "ok",
+      "note": "호기별 가동인증 일정 정상"
+    }
+  ],
+  "gate": {
+    "reviewDate": "2027-04-15",
+    "label": "확산 완료 리뷰",
+    "criteria": [
+      {
+        "label": "① 호기별 퀄 (SAT+런)",
+        "value": "auto:fleet",
+        "status": "prog"
+      },
+      {
+        "label": "② 설계성 고장 0",
+        "value": "0건 유지",
+        "status": "pass"
+      },
+      {
+        "label": "③ Critical 0",
+        "value": "0건 — 전 여정 유지",
+        "status": "pass"
+      },
+      {
+        "label": "④ 기준 구성 동결",
+        "value": "편차 0",
+        "status": "pass"
+      },
+      {
+        "label": "⑤ 횡전개 문서",
+        "value": "설치 표준 v2.1",
+        "status": "prog"
+      }
+    ]
+  },
+  "project": {
+    "name": "드럼 자동화 (양산 적용·확산)",
+    "department": "인프라 기술팀",
+    "team": "박OO, 정OO",
+    "startDate": "2027-02-01",
+    "endDate": "2027-05-31"
+  },
+  "swModules": [
+    {
+      "name": "체결 제어 (동결 v1.1)",
+      "pct": 100,
+      "group": "로봇"
+    },
+    {
+      "name": "호기 파라미터 셋",
+      "pct": 80,
+      "group": "로봇"
+    },
+    {
+      "name": "관제 연동",
+      "pct": 90,
+      "group": "상위시스템"
+    },
+    {
+      "name": "설치 자동 점검",
+      "pct": 70,
+      "group": "상위시스템"
+    },
+    {
+      "name": "라인별 안전 인터록",
+      "pct": 100,
+      "group": "환경"
+    }
+  ],
+  "lifecycle": [
+    {
+      "stage": "S1 기준 구성 동결",
+      "status": "done",
+      "note": "v1.1 동결 — 편차 0"
+    },
+    {
+      "stage": "S2 호기 설치·SAT",
+      "status": "current",
+      "note": "8호기 중 SAT 5 통과"
+    },
+    {
+      "stage": "S3 축약 무고장 런 (48h)",
+      "status": "current",
+      "note": "4호기 통과 · 5호기 진행"
+    },
+    {
+      "stage": "S4 가동지표 검증·횡전개",
+      "status": "todo",
+      "note": "설치 표준 v2.1 개정 중"
+    }
+  ],
+  "ui": {
+    "app": {
+      "title": "드럼 자동화 — 양산 적용(확산)",
+      "brandLogo": "드",
+      "brandName": "드럼 자동화<br>확산",
+      "evalDateLabel": "평가일",
+      "printBtn": "PDF 리포트",
+      "footBrand": "원인계층 + 호기 층화 — 어휘 v2.1",
+      "updatedPrefix": "업데이트 "
+    },
+    "nav": {
+      "overview": "한눈에 보기",
+      "all": "평가 상세 내역"
+    },
+    "common": {
+      "stDone": "완료",
+      "stCurrent": "진행 중",
+      "stTodo": "예정",
+      "noteEmpty": "— 메모"
+    },
+    "overview": {
+      "stageTitle": "확산 세부 단계",
+      "stageCurrentPrefix": "현재: ",
+      "stageSub": "S1→S4 · 호기별 양산 퀄",
+      "discussItems": [
+        {
+          "topic": "AP 음영 — 신규 라인 시공 사양 반영 (DIS-003)",
+          "tag": "협의",
+          "group": "운영"
+        },
+        {
+          "topic": "7·8호기 설치 슬롯 협의",
+          "tag": "진행",
+          "group": "운영"
+        },
+        {
+          "topic": "신규 모드 2건 → 차기 과제 FMEA 환류",
+          "tag": "검토",
+          "group": "기타"
+        }
+      ],
+      "goalsMonth": "5호기 런 완료 → 6/8 퀄\n설치 표준 v2.1 개정",
+      "goalsWeek": "AP 증설 무발생 감시\n6호기 SAT"
+    },
+    "modal": {
+      "title": "상세"
+    }
+  }
+}

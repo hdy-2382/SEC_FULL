@@ -708,11 +708,402 @@ def gen_weld():
     print("[demo] weld(개발 중): config만 생성 — 평가 착수 전 (devPlan 카드)")
 
 
+# ═════════════════ 드럼 자동화 — 한 과제의 4단계 여정 (POC→Pilot→양산평가→양산적용) ═════════════════
+# 목적 시연: 공통 어휘(DRM-01~08)가 전 단계를 관통하고, Critical(DRM-01 체결 토크 이탈)을
+# POC에서 우선 소진 → Pilot부터 Critical 0 → 뒤 단계가 싸진다 (심각도 깔때기).
+DRM_CODES = [
+    ("DRM-01", "체결 토크 이탈", "Critical", "토크 상한 초과/이탈 체결 — 파손 위험"),
+    ("DRM-02", "비전 오인식", "Major", "드럼 마킹/좌표 인식 오류"),
+    ("DRM-03", "그리퍼 파지 실패", "Major", "파지 미끄러짐·낙하"),
+    ("DRM-04", "통신 지연", "Minor", "PLC/상위 통신 지연·두절"),
+    ("DRM-05", "전장 간섭", "Minor", "배선·EMI 간섭"),
+    ("DRM-06", "자재 급송 지연", "Minor", "드럼 급송 슈트 지연"),
+    ("DRM-07", "소음 초과", "Minor", "구동 구간 소음/공진"),
+    ("DRM-08", "로그 유실", "Minor", "제어 로그 누락"),
+]
+
+
+def _codes_sheet(wb):
+    _sheet(wb, "코드마스터", ["코드", "유형", "등급", "설명"], DRM_CODES)
+
+
+def gen_drum_poc():
+    pid = "drum-poc"
+    (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
+    (PROJECTS / pid / "errors").mkdir(exist_ok=True)
+    # 18건 — Critical 2(체결 토크: 1 종결·1 검증중 = 조기 우선 조치), Major 7, Minor 9
+    issues = [
+        ("비전 오인식", "Major", "구현(SW)", "종결", "2026-06-08", "2026-06-12", "", "저조도 마킹 오인식 → 노출 보정"),
+        ("체결 토크 이탈", "Critical", "구현(SW)", "종결", "2026-06-09", "2026-06-11", "", "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)"),
+        ("전장 간섭", "Minor", "시험환경", "종결", "2026-06-09", "2026-06-11", "", "임시 배선 간섭 — 정리 후 미재현"),
+        ("비전 오인식", "Major", "구현(SW)", "종결", "2026-06-10", "2026-06-15", "", "역광 한정 재현 → 후드 1차 개선"),
+        ("그리퍼 파지 실패", "Minor", "구현(SW)", "종결", "2026-06-11", "2026-06-16", "", "파지 좌표 오프셋 → 티칭 보정"),
+        ("비전 오인식", "Minor", "시험환경", "종결", "2026-06-12", "2026-06-14", "", "랩 조명 공사 영향 — 복구 후 미재현"),
+        ("통신 지연", "Minor", "설계", "종결", "2026-06-13", "2026-06-19", "", "핸드셰이크 타임아웃 여유 부족 → 설계값 조정"),
+        ("체결 토크 이탈", "Major", "구현(SW)", "종결", "2026-06-14", "2026-06-18", "", "과도구간 이탈 → 램프업 로직 수정"),
+        ("로그 유실", "Minor", "구현(SW)", "종결", "2026-06-15", "2026-06-17", "", "버퍼 오버플로 → 플러시 주기 수정"),
+        ("자재 급송 지연", "Minor", "설계", "종결", "2026-06-16", "2026-06-20", "", "급송 슈트 각도 조정"),
+        ("그리퍼 파지 실패", "Minor", "구현(SW)", "종결", "2026-06-17", "2026-06-22", "", "접근 속도 프로파일 수정"),
+        ("비전 오인식", "Major", "시험환경", "검증중", "2026-06-20", "", "38/50Cy", "외란광 각도 한정 → 후드 연장, 무발생 감시"),
+        ("체결 토크 이탈", "Critical", "설계", "검증중", "2026-06-22", "", "41/50Cy", "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1"),
+        ("소음 초과", "Minor", "구현(SW)", "검증중", "2026-06-24", "", "45/50Cy", "고속 공진음 → 속도 프로파일 보정"),
+        ("체결 토크 이탈", "Major", "설계", "조치중", "2026-06-30", "", "", "체결 자세 편차 추정 — 지그 재설계 협의"),
+        ("비전 오인식", "Major", "설계", "조치중", "2026-07-01", "", "", "고반사 드럼 한정 → 편광 필터 검토"),
+        ("그리퍼 파지 실패", "Major", "설계", "조치중", "2026-07-03", "", "", "림 변형품 파지 불가 → 핑거 형상 변경"),
+        ("통신 지연", "Minor", "구현(SW)", "조치중", "2026-07-04", "", "", "로그 폭주 시 지연 → 로그 레벨 조정"),
+    ]
+    rows = [(f"ISS-{i+1:03d}", m, sv, c4, st, d1, d2, vf, det, "")
+            for i, (m, sv, c4, st, d1, d2, vf, det) in enumerate(issues)]
+    runs = [
+        ("2026-06-29", 10, 0, "1차 시도 개시"), ("2026-06-30", 11, 0, ""),
+        ("2026-07-01", 10, 1, "31h 시점 비전 오인식 → 조명 후드 개선 · 리셋"),
+        ("2026-07-02", 12, 0, "2차 시도 개시"), ("2026-07-03", 11, 0, ""),
+        ("2026-07-04", 10, 0, ""), ("2026-07-06", 9, 0, ""), ("2026-07-07", 10, 0, ""),
+    ]
+    abn = [
+        ("비상정지 후 재기동", "45s", "PASS", ""), ("순간 정전 복구", "2.1m", "PASS", ""),
+        ("자재 걸림 제거 후 재개", "1.4m", "PASS", ""),
+        ("통신 두절 → 자동 재접속", "—", "FAIL", "재접속 로직 설계 변경 후 재시험"),
+        ("도어 오픈 인터록", "30s", "PASS", ""), ("외란 조명 변화", "—", "PASS", ""),
+        ("이종 자재 투입 감지", "50s", "PASS", ""), ("과부하 정지 복구", "—", "대기", "7/10 예정"),
+    ]
+    wb = Workbook(); wb.remove(wb.active)
+    _sheet(wb, "안내", ["POC 이슈로그 — 필수 5필드 + 선택(종결일·무발생검증). 어휘 v1(코드마스터)은 P2 미팅 산출물. docs/RECORD_SCHEMA.md"], [])
+    _sheet(wb, "이슈로그", ["이슈ID", "고장모드", "심각도", "원인분류", "상태", "발생일", "종결일", "무발생검증", "상세", "사진(파일명)"], rows)
+    _sheet(wb, "런기록", ["일자", "런시간(h)", "에러수", "비고"], runs)
+    _sheet(wb, "비정상평가", ["시나리오", "복구시간", "판정", "비고"], abn)
+    _codes_sheet(wb)
+    wb.save(PROJECTS / pid / "raw" / "드럼POC_샘플.xlsx")
+    _write_config(pid, {
+        "stage": "poc",
+        "run": {"target": 72, "unit": "h", "criterion": "무에러", "env": "사외 랩"},
+        "tecop": [
+            {"k": "T", "status": "warn", "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"},
+            {"k": "E", "status": "ok", "note": "타당성 분석 — 개략 사업성 확인"},
+            {"k": "C", "status": "ok", "note": "개발 계약 정상"},
+            {"k": "O", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요"},
+            {"k": "P", "status": "ok", "note": "안전인증 컨셉 합의 완료"},
+        ],
+        "gate": {"reviewDate": "2026-07-15", "label": "게이트 리뷰(Pilot 이관)", "criteria": [
+            {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
+            {"label": "② 72h 무에러", "value": "auto:run", "status": "prog"},
+            {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog"},
+            {"label": "④ Critical 미해결 0", "value": "1건 — 검증중(41/50Cy)", "status": "prog"},
+            {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass"},
+        ]},
+        "project": {"name": "드럼 자동화 (POC)", "department": "인프라 기술팀", "team": "김OO, 박OO",
+                    "startDate": "2026-06-05", "endDate": "2026-07-15"},
+        "swModules": [
+            {"name": "비전 인식", "pct": 90, "group": "로봇"}, {"name": "체결 시퀀스", "pct": 80, "group": "로봇"},
+            {"name": "그리퍼 제어", "pct": 75, "group": "로봇"}, {"name": "PLC I/F", "pct": 60, "group": "상위시스템"},
+            {"name": "로그/리포트", "pct": 55, "group": "상위시스템"}, {"name": "안전 인터록", "pct": 100, "group": "환경"},
+        ],
+        "lifecycle": [
+            {"stage": "P1 타당성·평가항목 정의", "status": "done", "note": "FMEA 초판(어휘 v1 = DRM-01~08) · 판정기준서 v1"},
+            {"stage": "P2 안전인증 컨셉미팅", "status": "done", "note": "위험원 12건 → 설계 반영"},
+            {"stage": "P3 기성능 평가/검증", "status": "done", "note": "3/3 충족 · Critical 2건 조기 발굴→우선 조치"},
+            {"stage": "P4 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 · 비정상 6/8"},
+        ],
+        "ui": {
+            "app": {"title": "드럼 자동화 — POC", "brandLogo": "드", "brandName": "드럼 자동화<br>POC",
+                    "evalDateLabel": "평가일", "printBtn": "PDF 리포트", "footBrand": "FRACAS-lite · 전수 4분류 · Critical 우선", "updatedPrefix": "업데이트 "},
+            "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
+            "common": {"stDone": "완료", "stCurrent": "진행 중", "stTodo": "예정", "noteEmpty": "— 메모"},
+            "overview": {"stageTitle": "POC 세부 단계", "stageCurrentPrefix": "현재: ", "stageSub": "P1→P4 · 게이트 통과 시 Pilot 이관",
+                "discussItems": [
+                    {"topic": "Critical: 토크 암 강성 보강 검증 런 (ISS-013)", "tag": "긴급", "group": "안전"},
+                    {"topic": "통신 재접속 로직 변경 후 재시험", "tag": "진행", "group": "안전"},
+                    {"topic": "편광 필터 설계 변경 (ISS-016)", "tag": "협의", "group": "운영"},
+                    {"topic": "Pilot 가동 지표 정의 — 수혜부서 참여", "tag": "협의", "group": "기타"},
+                ],
+                "goalsMonth": "Critical 미해결 0 달성 (ISS-013 마감)\n72h 무에러 완주",
+                "goalsWeek": "2차 시도 잔여 20h\n토크 암 보강 무발생 검증 마감"},
+            "modal": {"title": "상세"},
+        },
+    })
+    print(f"[demo] drum-poc: 이슈 {len(issues)} (Critical 2 조기 조치) · 런 {len(runs)}일 · 비정상 {len(abn)}")
+
+
+def gen_drum_pilot():
+    pid = "drum-pilot"
+    (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
+    (PROJECTS / pid / "errors").mkdir(exist_ok=True)
+    weeks = [(2400, 4), (2480, 2), (1960, 1), (1440, 1), (1440, 1), (1440, 0)]
+    start = date(2026, 7, 20)
+    daily_rows, err_slots = [], []
+    for wi, (cyc, errn) in enumerate(weeks):
+        days = [start + timedelta(days=wi * 7 + d) for d in range(6)]
+        per = [cyc // 6] * 6
+        per[-1] += cyc - sum(per)
+        epd = [0] * 6
+        for k in range(errn):
+            epd[k % 3] += 1
+        for d, c, e in zip(days, per, epd):
+            daily_rows.append((d.isoformat(), 2, "체결·반송 반복 운전", c, e, 0, 11, ""))
+            for _ in range(e):
+                err_slots.append(d)
+    # 9건 — Critical 0 (POC에서 소진!) · DRM-03 만성 4회
+    err_defs = [
+        ("DRM-03", "그리퍼 파지 실패", "드럼 림 변형품 파지 미끄러짐", "핑거 형상 여유 부족", "설계", "핑거 Rev B 형상 변경", "v0.9.1", "Rev A"),
+        ("DRM-02", "비전 오인식", "고반사 드럼 한정 오인식", "편광 필터 미적용 개체", "부품", "필터 전수 적용", "v0.9.1", "Rev A"),
+        ("DRM-04", "통신 지연", "핸드셰이크 응답 지연", "타임아웃 여유 과소", "SW", "타임아웃 로직 변경", "v0.9.1", "Rev A"),
+        ("DRM-03", "그리퍼 파지 실패", "동일 모드 재발 — 코팅 편차", "그리퍼 코팅 로트 편차", "부품", "코팅 Rev C 교체", "v0.9.2", "Rev A"),
+        ("DRM-07", "소음 초과", "고속 구간 공진 재현", "속도 프로파일 한계", "설계", "프로파일 보정", "v0.9.2", "Rev A"),
+        ("DRM-02", "비전 오인식", "야간 조도 저하 오인식", "노출 스케줄 미적용", "SW", "시간대 노출 스케줄", "v0.9.2", "Rev B"),
+        ("DRM-03", "그리퍼 파지 실패", "재발 검증 중 재현", "Rev C 적용 전 잔존", "부품", "Rev C 전수 적용", "v0.9.3", "Rev B"),
+        ("DRM-04", "통신 지연", "로그 폭주 시 지연", "로그 레벨 과다", "SW", "레벨 조정 배포", "v0.9.3", "Rev B"),
+        ("DRM-03", "그리퍼 파지 실패", "고속 모드 한정 재현", "속도-파지 간섭", "설계", "v0.9.4 속도 보정", "v0.9.3", "Rev B"),
+    ]
+    error_rows = [
+        (i + 1, err_slots[i].isoformat(), f"{9 + i % 8}:{10 + i * 5 % 50:02d}", 400 * (i + 1),
+         code, mode, det, cause, cls, act, "정상복귀", "김OO", "업체 박OO", sw, hw, "", "")
+        for i, (code, mode, det, cause, cls, act, sw, hw) in enumerate(err_defs)
+    ]
+    wb = Workbook(); wb.remove(wb.active)
+    _sheet(wb, "안내", ["Pilot — 에러로그에 코드(DRM)·원인분류·SW/HW버전 필수. POC 대장이 그대로 이어진다."], [])
+    _sheet(wb, "일일평가", ["평가일", "입실인원", "주평가내용", "일일평가", "일일에러", "연속성공", "가동시간(h)", "비고"], daily_rows)
+    _sheet(wb, "에러로그", ["No", "발생일", "시각", "회차", "코드", "유형", "상세", "원인", "원인분류", "조치", "결과",
+                          "삼성 담당자", "업체 담당자", "SW버전", "HW버전", "상세설명", "사진(파일명)"], error_rows)
+    wb.save(PROJECTS / pid / "raw" / "드럼Pilot_샘플.xlsx")
+    wb2 = Workbook(); wb2.remove(wb2.active)
+    _codes_sheet(wb2)
+    _sheet(wb2, "조치검증", ["조치ID", "대상코드", "조치내용", "담당", "목표일", "상태", "검증시작"], [
+        ("A-001", "DRM-03", "코팅 Rev C 전수 + v0.9.4 속도 보정", "김OO", "2026-09-05", "검증중", "2026-08-25"),
+        ("A-002", "DRM-02", "편광 필터 전수 + 노출 스케줄", "박OO", "2026-08-10", "검증완료", "2026-08-01"),
+        ("A-003", "DRM-04", "타임아웃·로그 레벨 배포", "박OO", "2026-08-12", "검증완료", "2026-08-05"),
+        ("A-004", "DRM-07", "속도 프로파일 보정", "김OO", "2026-08-08", "검증완료", "2026-08-02"),
+    ])
+    wb2.save(PROJECTS / pid / "REPORT.xlsx")
+    _write_config(pid, {
+        "stage": "pilot",
+        "run": {"target": 300, "unit": "h", "criterion": "무정지", "env": "사내 (공정 연결 없이)", "growthTarget": 1500},
+        "tecop": [
+            {"k": "T", "status": "ok", "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"},
+            {"k": "E", "status": "warn", "note": "그리퍼 코팅 단가 절감안 검토"},
+            {"k": "C", "status": "ok", "note": "공급계약 초안 합의"},
+            {"k": "O", "status": "ok", "note": "수혜부서 지표 정의 참여 완료"},
+            {"k": "P", "status": "ok", "note": "안전인증 심사 일정 정상"},
+        ],
+        "gate": {"reviewDate": "2026-09-15", "label": "게이트 리뷰(양산시범 이관)", "criteria": [
+            {"label": "① MCBF 성장 목표", "value": "auto:growth", "status": "prog"},
+            {"label": "② 만성(재발) 고장", "value": "1건(DRM-03) — 마감 필요", "status": "fail"},
+            {"label": "③ 시정조치 검증마감", "value": "auto:actions", "status": "prog"},
+            {"label": "④ Critical 재발", "value": "0건 — POC 소진 유지", "status": "pass"},
+            {"label": "⑤ 무정지 300h", "value": "설계 동결(9/10) 후", "status": "wait"},
+        ]},
+        "project": {"name": "드럼 자동화 (Pilot)", "department": "인프라 기술팀", "team": "김OO, 박OO",
+                    "startDate": "2026-07-20", "endDate": "2026-10-31"},
+        "swModules": [
+            {"name": "비전 인식", "pct": 95, "group": "로봇"}, {"name": "체결 시퀀스", "pct": 90, "group": "로봇"},
+            {"name": "그리퍼 제어", "pct": 85, "group": "로봇"}, {"name": "PLC I/F", "pct": 80, "group": "상위시스템"},
+            {"name": "로그/리포트", "pct": 70, "group": "상위시스템"}, {"name": "안전 인터록", "pct": 100, "group": "환경"},
+        ],
+        "lifecycle": [
+            {"stage": "L1 가동 지표 정의", "status": "done", "note": "MCBF/MTTR/가동률 — 양산시범과 동일 산식"},
+            {"stage": "L2 신뢰성 평가/검증 (TAAF)", "status": "current", "note": "성장 추적 · DRM-03 만성 마감 중"},
+            {"stage": "L3 임시 사용 안전 승인 · 퀄 사양", "status": "current", "note": "v0.9 협의"},
+            {"stage": "L4 무정지 300h", "status": "todo", "note": "설계 동결(9/10) 후 본 런"},
+        ],
+        "ui": {
+            "app": {"title": "드럼 자동화 — Pilot", "brandLogo": "드", "brandName": "드럼 자동화<br>Pilot",
+                    "evalDateLabel": "평가일", "printBtn": "PDF 리포트", "footBrand": "FRACAS + MCBF 성장 — POC 대장 승계", "updatedPrefix": "업데이트 "},
+            "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
+            "common": {"stDone": "완료", "stCurrent": "진행 중", "stTodo": "예정", "noteEmpty": "— 메모"},
+            "overview": {"stageTitle": "Pilot 세부 단계", "stageCurrentPrefix": "현재: ", "stageSub": "L1→L4 · POC 어휘(DRM) 승계",
+                "discussItems": [
+                    {"topic": "DRM-03 만성 마감 — Rev C 전수 검증", "tag": "긴급", "group": "운영"},
+                    {"topic": "설계 동결(9/10) 전 변경 등급 매트릭스 합의", "tag": "협의", "group": "운영"},
+                    {"topic": "안전인증 심사 서류 (~9/1)", "tag": "진행", "group": "안전"},
+                ],
+                "goalsMonth": "만성(DRM-03) 마감 → 설계 동결 → 300h 본 런",
+                "goalsWeek": "Rev C 무발생 검증\n안전인증 서류 제출"},
+            "modal": {"title": "상세"},
+        },
+    })
+    n = sum(r[4] for r in daily_rows)
+    assert n == len(error_rows)
+    print(f"[demo] drum-pilot: daily {len(daily_rows)}일 · 에러 {len(error_rows)}건 (Critical 0 — POC 소진)")
+
+
+def gen_drum_mass():
+    pid = "drum-mass"
+    (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
+    (PROJECTS / pid / "errors").mkdir(exist_ok=True)
+    days, d = [], date(2026, 11, 2)
+    while len(days) < 24:
+        if d.weekday() < 6:
+            days.append(d)
+        d += timedelta(days=1)
+    err_at = {7: 1, 13: 1, 19: 2}
+    daily_rows, err_cycles = [], []
+    streak = cum = 0
+    for i, dt in enumerate(days):
+        e = err_at.get(i, 0)
+        streak = 0 if e else streak + 15
+        for k in range(e):
+            err_cycles.append((dt, cum + 7 + k * 4))
+        cum += 15
+        daily_rows.append((dt.isoformat(), 2, "체결·반송 실부하 운전", 15, e, streak, "에러 — 리셋" if e else ""))
+    # 4건 — Critical 0 · DRM-03 재발 0 (조기 소진 효과) · 외생(자재) 혼입 시작
+    err_defs = [
+        ("DRM-02", "비전 오인식", "신규 로트 표면 반사율 편차", "자재 로트 편차", "시험환경·자재", "로트 수입검사 추가", "v1.0.0"),
+        ("DRM-04", "통신 지연", "라인 PLC 응답 지연", "라인측 설정", "운영·조작", "라인 설정 표준화", "v1.0.0"),
+        ("DRM-06", "자재 급송 지연", "급송 슈트 이물", "라인 청소 주기", "운영·조작", "청소 SOP 반영", "v1.0.1"),
+        ("DRM-06", "자재 급송 지연", "동일 모드 — 슈트 마모", "슈트 코팅 마모", "부품", "코팅 사양 변경", "v1.0.1"),
+    ]
+    error_rows = [
+        (i + 1, dt.isoformat(), f"{9 + i * 2}:{15 + i * 7 % 40:02d}", cyc,
+         code, mode, det, cause, cls, act, "정상복귀", "김OO", "업체 박OO", sw, "Rev C", "", "")
+        for i, ((dt, cyc), (code, mode, det, cause, cls, act, sw)) in enumerate(zip(err_cycles, err_defs))
+    ]
+    wb = Workbook(); wb.remove(wb.active)
+    _sheet(wb, "안내", ["양산 시범 — 일일평가 + 에러로그(원인분류·버전). 판정·처분은 REPORT.xlsx."], [])
+    _sheet(wb, "일일평가", ["평가일", "입실인원", "주평가내용", "일일평가", "일일에러", "연속성공", "비고"], daily_rows)
+    _sheet(wb, "에러로그", ["No", "발생일", "시각", "회차", "코드", "유형", "상세", "원인", "원인분류", "조치", "결과",
+                          "삼성 담당자", "업체 담당자", "SW버전", "HW버전", "상세설명", "사진(파일명)"], error_rows)
+    wb.save(PROJECTS / pid / "raw" / "드럼양산평가_샘플.xlsx")
+    wb2 = Workbook(); wb2.remove(wb2.active)
+    _codes_sheet(wb2)
+    _sheet(wb2, "조치검증", ["조치ID", "대상코드", "조치내용", "담당", "목표일", "상태", "검증시작"], [
+        ("A-001", "DRM-02", "로트 수입검사 항목 추가", "김OO", "2026-11-20", "검증완료", "2026-11-12"),
+        ("A-002", "DRM-04", "라인 PLC 설정 표준화", "박OO", "2026-11-25", "검증완료", "2026-11-18"),
+        ("A-003", "DRM-06", "슈트 코팅 사양 변경", "김OO", "2026-12-10", "검증중", "2026-12-01"),
+    ])
+    _sheet(wb2, "판정대장", ["사건ID", "대상에러No", "판정", "귀책분류", "증거", "합의상태", "판정일"], [
+        ("JD-01", 1, "비관련", "자재 (로트 편차)", "로트 성적서 + 재현시험", "합의완료", "2026-11-12"),
+        ("JD-02", 2, "비관련", "운영 (라인 설정)", "PLC 로그", "합의완료", "2026-11-19"),
+        ("JD-03", 3, "관련", "설비 (운영 연동)", "슈트 점검 기록", "합의완료", "2026-11-28"),
+        ("JD-04", 4, "관련", "설비 (부품)", "마모 측정 + 재현", "합의완료", "2026-12-01"),
+    ])
+    _sheet(wb2, "처분대장", ["처분ID", "대상ID", "처분", "사유", "기한", "오너", "합의"], [
+        ("DSP-01", "DRM-06", "종결예정", "코팅 사양 변경 검증 중 — 심의 전 종결 예상", "2026-12-20", "김OO", "합의완료"),
+    ])
+    wb2.save(PROJECTS / pid / "REPORT.xlsx")
+    cfg = json.loads((PROJECTS / "chem" / "config.json").read_text(encoding="utf-8"))
+    for k in ("_stage_readme", "_swModules_readme", "_ui_readme", "_edit_guide"):
+        cfg.pop(k, None)
+    cfg["project"] = {"name": "드럼 자동화 (양산 시범 평가)", "department": "인프라 기술팀",
+                      "team": "김OO, 박OO", "startDate": "2026-11-02", "endDate": "2027-01-31"}
+    cfg["gate"] = {"reviewDate": "2027-01-15", "label": "가동인증"}
+    cfg["tecop"] = [
+        {"k": "T", "status": "ok", "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항"},
+        {"k": "E", "status": "ok", "note": "실증치 축적 — 투자심의 입력 준비"},
+        {"k": "C", "status": "ok", "note": "유지보수 계약 조건 합의"},
+        {"k": "O", "status": "ok", "note": "수혜부서 합동판정 참여 정상"},
+        {"k": "P", "status": "ok", "note": "설치 상태 위험성 평가 완료"},
+    ]
+    cfg["swModules"] = [
+        {"name": "비전 인식", "pct": 100, "group": "로봇"}, {"name": "체결 시퀀스", "pct": 100, "group": "로봇"},
+        {"name": "그리퍼 제어", "pct": 95, "group": "로봇"}, {"name": "라인 I/F", "pct": 85, "group": "상위시스템"},
+        {"name": "리포트 연동", "pct": 70, "group": "상위시스템"}, {"name": "안전 인터록", "pct": 100, "group": "환경"},
+    ]
+    cfg["ui"]["app"].update({"title": "드럼 자동화 — 양산 시범 평가", "brandLogo": "드",
+                             "brandName": "드럼 자동화<br>양산 시범 평가"})
+    ov = cfg["ui"].setdefault("overview", {})
+    ov.update({
+        "goalsMonth": "연속 360Cy 완주 (에러버짓 관련만)\nDRM-06 검증 종결",
+        "goalsWeek": "판정 완료분 대장 정리\n가동인증 산출물 준비",
+        "discussItems": [
+            {"topic": "DRM-06 슈트 코팅 검증 런", "tag": "진행", "group": "운영"},
+            {"topic": "자재 로트 수입검사 기준 — 구매 협의", "tag": "협의", "group": "운영"},
+            {"topic": "가동인증 산출물 체크리스트 사전 점검", "tag": "검토", "group": "기타"},
+        ],
+        "lineCaption": "현재 평가 <b>체결 셀 · {cum}/{target}</b> · 반송부 통과 · 출하 I/F 대기",
+    })
+    _write_config(pid, cfg)
+    src_img = PROJECTS / "chem" / "assets" / "line_layout.png"
+    if src_img.exists():
+        (PROJECTS / pid / "assets").mkdir(exist_ok=True)
+        shutil.copy(src_img, PROJECTS / pid / "assets" / "line_layout.png")
+    print(f"[demo] drum-mass: daily {len(daily_rows)}일 · 에러 {len(error_rows)}건 (Critical 0·재발은 DRM-06뿐)")
+
+
+def gen_drum_spread():
+    pid = "drum-spread"
+    (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
+    (PROJECTS / pid / "errors").mkdir(exist_ok=True)
+    units = [
+        ("1호기", "L1", "2027-02-03", "PASS", 48, 48, "퀄 완료", ""),
+        ("2호기", "L1", "2027-02-05", "PASS", 48, 48, "퀄 완료", ""),
+        ("3호기", "L2", "2027-02-17", "PASS", 48, 48, "퀄 완료", ""),
+        ("4호기", "L2", "2027-02-19", "PASS", 48, 48, "퀄 완료", ""),
+        ("5호기", "L3", "2027-03-03", "PASS", 31, 48, "런 진행", ""),
+        ("6호기", "L3", "2027-03-05", "진행", 0, 48, "SAT 진행", ""),
+        ("7호기", "L4", "2027-03-17", "—", 0, 48, "설치 중", ""),
+        ("8호기", "L4", "2027-03-24", "—", 0, 48, "설치 예정", ""),
+    ]
+    # 6건 — 설계성 0 · Critical 0 (여정의 결실) · 설치/운영 기인 위주 · 신규 모드 2건(어휘 v2.1 추가)
+    issues = [
+        ("비전 오인식", "Minor", "운영·환경", "종결", "2027-02-10", "2027-02-12", "", "1호기", "라인 조명 편차 — 임계 재설정 (DRM-02)"),
+        ("레일 수평도 초과", "Major", "설치·시공", "종결", "2027-02-06", "2027-02-08", "", "2호기", "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행"),
+        ("AP 음영 끊김", "Major", "설치·시공", "검증중", "2027-03-06", "", "12/20일", "5호기", "신규 모드(v2.1) — AP 증설 후 무발생 감시"),
+        ("통신 지연", "Minor", "설치·시공", "종결", "2027-02-20", "2027-02-22", "", "4호기", "배선 경로 간섭 — 재배선 (DRM-04)"),
+        ("커넥터 미압착", "Minor", "제작·조립", "종결", "2027-03-04", "2027-03-05", "", "5호기", "조립 체크리스트 보강"),
+        ("수동 개입 절차 미준수", "Minor", "운영·환경", "조치중", "2027-03-10", "", "", "3호기", "운영 SOP 재교육"),
+    ]
+    rows = [(f"DIS-{i+1:03d}", m, sv, c, st, d1, d2, vf, u, det, "")
+            for i, (m, sv, c, st, d1, d2, vf, u, det) in enumerate(issues)]
+    wb = Workbook(); wb.remove(wb.active)
+    _sheet(wb, "안내", ["확산 — 이슈로그(원인계층·호기 필수) + 호기퀄. 설계성 고장 = 전 함대 리스크 즉시 에스컬레이션."], [])
+    _sheet(wb, "이슈로그", ["이슈ID", "고장모드", "심각도", "원인분류", "상태", "발생일", "종결일", "무발생검증", "호기", "상세", "사진(파일명)"], rows)
+    _sheet(wb, "호기퀄", ["호기", "라인", "설치일", "SAT", "축약런(h)", "목표(h)", "상태", "비고"], units)
+    _codes_sheet(wb)
+    wb.save(PROJECTS / pid / "raw" / "드럼확산_샘플.xlsx")
+    _write_config(pid, {
+        "stage": "spread",
+        "run": {"target": 48, "unit": "호기", "criterion": "축약 런", "env": "각 적용 라인 (호기별 SAT)"},
+        "tecop": [
+            {"k": "T", "status": "ok", "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"},
+            {"k": "E", "status": "ok", "note": "확산 ROI 승인 조건 유지"},
+            {"k": "C", "status": "ok", "note": "호기 추가 발주 정상"},
+            {"k": "O", "status": "ok", "note": "라인별 운영 인수 교육 진행"},
+            {"k": "P", "status": "ok", "note": "호기별 가동인증 일정 정상"},
+        ],
+        "gate": {"reviewDate": "2027-04-15", "label": "확산 완료 리뷰", "criteria": [
+            {"label": "① 호기별 퀄 (SAT+런)", "value": "auto:fleet", "status": "prog"},
+            {"label": "② 설계성 고장 0", "value": "0건 유지", "status": "pass"},
+            {"label": "③ Critical 0", "value": "0건 — 전 여정 유지", "status": "pass"},
+            {"label": "④ 기준 구성 동결", "value": "편차 0", "status": "pass"},
+            {"label": "⑤ 횡전개 문서", "value": "설치 표준 v2.1", "status": "prog"},
+        ]},
+        "project": {"name": "드럼 자동화 (양산 적용·확산)", "department": "인프라 기술팀", "team": "박OO, 정OO",
+                    "startDate": "2027-02-01", "endDate": "2027-05-31"},
+        "swModules": [
+            {"name": "체결 제어 (동결 v1.1)", "pct": 100, "group": "로봇"},
+            {"name": "호기 파라미터 셋", "pct": 80, "group": "로봇"},
+            {"name": "관제 연동", "pct": 90, "group": "상위시스템"},
+            {"name": "설치 자동 점검", "pct": 70, "group": "상위시스템"},
+            {"name": "라인별 안전 인터록", "pct": 100, "group": "환경"},
+        ],
+        "lifecycle": [
+            {"stage": "S1 기준 구성 동결", "status": "done", "note": "v1.1 동결 — 편차 0"},
+            {"stage": "S2 호기 설치·SAT", "status": "current", "note": "8호기 중 SAT 5 통과"},
+            {"stage": "S3 축약 무고장 런 (48h)", "status": "current", "note": "4호기 통과 · 5호기 진행"},
+            {"stage": "S4 가동지표 검증·횡전개", "status": "todo", "note": "설치 표준 v2.1 개정 중"},
+        ],
+        "ui": {
+            "app": {"title": "드럼 자동화 — 양산 적용(확산)", "brandLogo": "드", "brandName": "드럼 자동화<br>확산",
+                    "evalDateLabel": "평가일", "printBtn": "PDF 리포트", "footBrand": "원인계층 + 호기 층화 — 어휘 v2.1", "updatedPrefix": "업데이트 "},
+            "nav": {"overview": "한눈에 보기", "all": "평가 상세 내역"},
+            "common": {"stDone": "완료", "stCurrent": "진행 중", "stTodo": "예정", "noteEmpty": "— 메모"},
+            "overview": {"stageTitle": "확산 세부 단계", "stageCurrentPrefix": "현재: ", "stageSub": "S1→S4 · 호기별 양산 퀄",
+                "discussItems": [
+                    {"topic": "AP 음영 — 신규 라인 시공 사양 반영 (DIS-003)", "tag": "협의", "group": "운영"},
+                    {"topic": "7·8호기 설치 슬롯 협의", "tag": "진행", "group": "운영"},
+                    {"topic": "신규 모드 2건 → 차기 과제 FMEA 환류", "tag": "검토", "group": "기타"},
+                ],
+                "goalsMonth": "5호기 런 완료 → 6/8 퀄\n설치 표준 v2.1 개정",
+                "goalsWeek": "AP 증설 무발생 감시\n6호기 SAT"},
+            "modal": {"title": "상세"},
+        },
+    })
+    print(f"[demo] drum-spread: 호기 {len(units)} · 이슈 {len(issues)}건 (설계성 0 · Critical 0)")
+
+
 if __name__ == "__main__":
-    gen_drum()
-    gen_sort()
-    gen_pack()
-    gen_clean()
-    gen_agv()
-    gen_weld()
-    print("[demo] 완료 — python3 scripts/build_dashboard_json.py 로 빌드하세요")
+    # 드럼 자동화 — 한 과제의 4단계 여정 (다른 가상 과제 생성은 중단: gen_drum/gen_sort/... 는 보존용)
+    gen_drum_poc()
+    gen_drum_pilot()
+    gen_drum_mass()
+    gen_drum_spread()
+    print("[demo] 드럼 자동화 4단계 여정 생성 완료 — python3 scripts/build_dashboard_json.py 로 빌드")

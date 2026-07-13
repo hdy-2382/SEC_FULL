@@ -179,6 +179,36 @@ function devStatGate(C) {
     <span class="pg-stat-s">${esc(g.reviewDate || '—')} · 리셋은 실패가 아니라 <b>잣대가 지켜진다는 증거</b></span></div>`;
 }
 
+/* [와이드 트랙] 조치 우선순위 큐 — "지금 먼저 잡을 것": 오픈 레코드를 S×O로 정렬.
+   이 체계의 목적 그 자체 — 누적 데이터 기반으로 치명·빈발을 먼저 소진해 뒤 단계를 싸게 만든다 */
+function devPriorityPanel() {
+  const recs = DATA.records || [];
+  const cnt = {};
+  recs.forEach(r => { const k = r.modeCode || r.mode; if (k) cnt[k] = (cnt[k] || 0) + 1; });
+  const occ = n => n >= 6 ? '빈발' : n >= 3 ? '보통' : '드묾';
+  const open = recs.filter(r => pocStBucket(r.status) !== 'closed').map(r => {
+    const band = occ(cnt[r.modeCode || r.mode] || 1);
+    return { r, band, pr: PRIO[(r.severity || 'Minor') + '|' + band] || 'Low' };
+  });
+  const rank = { High: 0, Medium: 1, Low: 2 }, srank = { Critical: 0, Major: 1, Minor: 2 };
+  open.sort((a, b) => (rank[a.pr] - rank[b.pr])
+    || ((srank[a.r.severity] != null ? srank[a.r.severity] : 3) - (srank[b.r.severity] != null ? srank[b.r.severity] : 3))
+    || ((cnt[b.r.modeCode || b.r.mode] || 0) - (cnt[a.r.modeCode || a.r.mode] || 0)));
+  const PB = { High: 'b-crit', Medium: 'b-major', Low: 'b-minor' };
+  const rows = open.slice(0, 8).map(({ r, band, pr }) =>
+    `<tr><td class="c"><span class="badge ${PB[pr]}">${pr}</span></td>
+     <td><b>${esc(r.id)}</b> ${esc(r.mode)}${r.recurLink ? ` <span class="rlink" title="재발 ↺ ${esc(r.recurLink)}">↺</span>` : ''}</td>
+     <td class="c"><span class="badge ${SEV_BADGE[r.severity] || 'b-minor'}">${esc(sevLabel(r.severity))}</span></td>
+     <td class="c">${band}</td>
+     <td class="c"><span class="badge ${POC_ST_BADGE[pocStBucket(r.status)]}">${esc(r.status || '—')}</span></td></tr>`).join('');
+  const highN = open.filter(o => o.pr === 'High').length;
+  return `<div class="panel tight">
+    <div class="ph"><h3>조치 우선순위 — 지금 먼저 잡을 것</h3><span class="ps">오픈 ${open.length}건 · S×O 정렬${highN ? ` · <b style="color:var(--crit)">High ${highN}</b>` : ''}</span><a class="more" href="#/${esc(CUR_PID || '')}/all">전체 대장 →</a></div>
+    <div class="tbl-scroll" style="max-height:300px"><table><tr><th class="c">우선</th><th>레코드</th><th class="c">심각도</th><th class="c">발생도</th><th class="c">상태</th></tr>${rows || '<tr><td colspan="5" class="mini c">오픈 없음 — 전건 종결</td></tr>'}</table></div>
+    <div class="mini mt">치명·빈발을 상류에서 소진할수록 하류가 싸진다 — 홈의 <b>심각도 깔때기</b>가 그 증거</div>
+  </div>`;
+}
+
 /* [와이드 트랙] 최근 이슈/이벤트 피드 — 공통 레코드 스토어(records) 기반, 전 단계 동일 */
 function devFeedPanel() {
   const recs = (DATA.records || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 8);
@@ -668,7 +698,7 @@ function renderPoc(C) {
     bTop: pocFourwayBoard(),
     bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
     cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
-    cPanels: [devMatrixPanel(), devParetoPanel(true), devFeedPanel()],
+    cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
@@ -686,7 +716,7 @@ function renderPilot(C) {
     bTop: devClassBoard('pilot'),
     bCharts: [devParetoPanel(true), fracasLoopPanel({ recurZeroGate: true })],
     cTitle: '고장 분석 · 위험 매트릭스 · 형상 · 최근 알람',
-    cPanels: [devMatrixPanel(), pilotVersionPanel(), devFeedPanel()],
+    cPanels: [devMatrixPanel(), pilotVersionPanel(), devPriorityPanel()],
   });
   $('s-steps').innerHTML = pilotSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
