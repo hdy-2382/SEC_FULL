@@ -20,6 +20,78 @@ function renderGuide() {
   <div class="qbox">이 페이지는 화면의 각 지표가 <b>어디서 온 개념이고, 왜 그 단계에서 쓰며, 어떻게 읽고, 어떻게 오용되는지</b>를 정리한다.
   ${GD_ORIG()} = 업계 표준의 본래 모습 · ${GD_OURS()} = 우리 프로세스에 맞춘 변형 — <b>변형을 표준인 척하지 않기 위해 구분해 적는다.</b></div>
 
+  <!-- ⓪ 전체 그림 — 흐름과 효과 -->
+  <div class="sbox-h"><span class="tag">⓪</span><h2>전체 그림 — 프로세스는 이렇게 흐르고, 이런 효과가 난다</h2><span class="d">아래 ①~⑧의 모든 장치가 이 두 그림 위에 서 있다</span></div>
+
+  <div class="panel">
+    <div class="ph"><h3>그림 1 · 고장 한 건의 여정 — 폐루프 FRACAS</h3><span class="ps">모든 단계에서 동일 — 에러는 사건이 아니라 대장 위의 데이터가 된다</span></div>
+    <div class="gd-flow">
+      <div class="gf-box"><div class="t">에러 발생</div><div class="s">업체 데일리 리포트<br>그대로</div></div><span class="gf-ar">→</span>
+      <div class="gf-box"><div class="t">기록</div><div class="s">공통 5필드부터<br>(ID·모드·심각도·분류·상태)</div></div><span class="gf-ar">→</span>
+      <div class="gf-box"><div class="t">분류</div><div class="s">단계 축<br>(4분류→근본원인→계층)</div></div><span class="gf-ar">→</span>
+      <div class="gf-box"><div class="t">조치</div><div class="s">원인 가설<br>+ 시정 적용</div></div><span class="gf-ar">→</span>
+      <div class="gf-box hl"><div class="t">무발생 검증</div><div class="s">동일 모드 무발생<br>N Cy 감시</div></div><span class="gf-ar">→</span>
+      <div class="gf-box ok"><div class="t">종결</div><div class="s">검증 통과 시에만</div></div>
+    </div>
+    <svg viewBox="0 0 1000 64" style="width:100%;height:auto;display:block" aria-hidden="true">
+      <defs><marker id="gfarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C0392B"/></marker></defs>
+      <path d="M 915 6 C 915 44, 340 44, 340 10" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#gfarr)"/>
+      <text x="620" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#C0392B">↺ 재발 — 동일 고장모드 재출현(종결 여부 무관) = 근본원인 미해결 신호 → 재분석 의무</text>
+    </svg>
+    <div class="mini mt">이 루프가 돌기 때문에: 단발성 조치가 "했다"로 끝나지 않고 <b>"닫혔다"</b>가 되고, 같은 병의 재출현이 <b>자동으로 드러난다</b> — 위에서 보면 중구난방이 아니라 수렴으로 읽히는 이유.</div>
+  </div>
+
+  <div class="panel mt">
+    <div class="ph"><h3>그림 2 · 배관은 하나, 계기판은 단계별</h3><span class="ps">같은 대장이 단계를 넘어 이어지고, 각 단계는 자기 질문에 맞는 렌즈만 올린다</span></div>
+    <svg viewBox="0 0 1000 258" style="width:100%;height:auto;display:block" role="img" aria-label="공통 레코드 배관 위에 단계별 렌즈가 올라간 구조도">
+      ${[
+        { x: 16,  w: 128, c: '#5b7ea8', nm: '개발(제작)', q: '계획대로 되나', lens: '마일스톤 vs 일정' },
+        { x: 158, w: 128, c: '#3F7CC4', nm: 'POC', q: '컨셉의 병인가', lens: '전수 4분류 · 72h 런' },
+        { x: 300, w: 128, c: '#B36F0A', nm: 'Pilot', q: '수렴하는가', lens: 'MCBF 성장 · 재발 0' },
+        { x: 442, w: 128, c: '#2F7A55', nm: '양산 시범', q: '계약 기준 이내인가', lens: '판정대장 · Error Budget' },
+        { x: 584, w: 112, c: '#8a99ac', nm: '◆ 심의', q: '안고 갈 조건은', lens: 'KIR (오픈 건 처분)' },
+        { x: 710, w: 128, c: '#7A4FB3', nm: '확산', q: '전 함대의 병인가', lens: '원인계층 · 호기 층화' },
+        { x: 852, w: 132, c: '#5f6b7a', nm: '운영/관제', q: '무엇부터가 경제적인가', lens: '다운타임 Pareto · CIP' },
+      ].map((s, i, arr) => `
+        <g>
+          <rect x="${s.x}" y="26" width="${s.w}" height="92" rx="10" fill="#fff" stroke="#DFEAF4"/>
+          <rect x="${s.x}" y="26" width="${s.w}" height="5" rx="2.5" fill="${s.c}"/>
+          <text x="${s.x + s.w / 2}" y="52" text-anchor="middle" font-size="13.5" font-weight="800" fill="${s.c}">${s.nm}</text>
+          <text x="${s.x + s.w / 2}" y="72" text-anchor="middle" font-size="10" fill="#6E7D90">"${s.q}"</text>
+          <text x="${s.x + s.w / 2}" y="97" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2E3D52">${s.lens}</text>
+          <line x1="${s.x + s.w / 2}" y1="118" x2="${s.x + s.w / 2}" y2="168" stroke="#93aac6" stroke-width="1.6" stroke-dasharray="3 3"/>
+          <circle cx="${s.x + s.w / 2}" cy="168" r="3.5" fill="#2E89D6"/>
+          ${i < arr.length - 1 ? `<text x="${(s.x + s.w + arr[i + 1].x) / 2}" y="76" text-anchor="middle" font-size="13" font-weight="800" fill="#2E89D6">→</text>` : ''}
+        </g>`).join('')}
+      <rect x="16" y="172" width="968" height="46" rx="12" fill="url(#gdpipe)"/>
+      <defs><linearGradient id="gdpipe" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#13335c"/><stop offset="1" stop-color="#0c1f3b"/></linearGradient></defs>
+      <text x="500" y="192" text-anchor="middle" font-size="12.5" font-weight="800" fill="#fff">공통 레코드 스토어 (records) — 같은 형식 · 같은 폐루프 · 같은 재발 정의</text>
+      <text x="500" y="209" text-anchor="middle" font-size="10.5" fill="#9fb6d4">대장은 단계를 넘어 그대로 이어진다 (이관 = 마이그레이션이 아니라 필수 필드 추가) · 게이트 잣대는 데이터 이전에 확정</text>
+      <text x="500" y="245" text-anchor="middle" font-size="11" fill="#6E7D90">기간 = 증거 축적 → 게이트 = 사전 확정 잣대로 판정 → 통과하면 같은 대장을 들고 다음 단계로</text>
+    </svg>
+  </div>
+
+  <div class="grid g3 mt">
+    <div class="panel gd-fx"><div class="n">1</div><div class="ph"><h3>재발이 보인다</h3></div>
+      <p><b>메커니즘</b>: 같은 고장모드 어휘 + 같은 레코드 형식 + 재발 링크(↺).</p>
+      <p><b>효과</b>: "Pilot의 정지가 POC 때 그 에러"임이 자동으로 드러난다 — 땜질이 시스템에서 걸러지고, 근본원인 분석이 강제된다.</p></div>
+    <div class="panel gd-fx"><div class="n">2</div><div class="ph"><h3>보고가 가볍고, 한 번만 배운다</h3></div>
+      <p><b>메커니즘</b>: POC 필수 5필드(FRACAS-lite) — 업체 데일리 리포트를 그대로 옮겨 적는 수준.</p>
+      <p><b>효과</b>: 초기 기록 누락이 없고, 업체는 전 단계·전 과제에서 같은 양식 하나만 배운다.</p></div>
+    <div class="panel gd-fx"><div class="n">3</div><div class="ph"><h3>게이트에서 협상이 사라진다</h3></div>
+      <p><b>메커니즘</b>: 잣대·리셋 규칙 사전 서면 확정(3원칙 ③) + 리셋을 숨기지 않는 화면.</p>
+      <p><b>효과</b>: 리뷰의 질문이 "이걸 통과로 볼 수 있나"에서 <b>"남은 20h가 언제 끝나나"</b>로 바뀐다 — 위에서 보는 것은 수렴.</p></div>
+    <div class="panel gd-fx"><div class="n">4</div><div class="ph"><h3>심의가 문서 작업이 아니게 된다</h3></div>
+      <p><b>메커니즘</b>: 심의는 새 데이터를 만들지 않는다 — KIR은 대장의 오픈 건 필터 + 처분 조인.</p>
+      <p><b>효과</b>: 이관 준비 = "미정 0건 + 기한·오너 서명"으로 수렴. 심의 자료 재작성 공수 0.</p></div>
+    <div class="panel gd-fx"><div class="n">5</div><div class="ph"><h3>확산이 안전해진다</h3></div>
+      <p><b>메커니즘</b>: 원인계층(설계/제작/설치/운영) + 호기별 층화.</p>
+      <p><b>효과</b>: "이 호기만의 병"과 "전 함대의 병"이 즉시 갈라진다 — 설계성 고장은 자동 에스컬레이션, 나머지는 국소 조치.</p></div>
+    <div class="panel gd-fx"><div class="n">6</div><div class="ph"><h3>경험이 자산이 된다</h3></div>
+      <p><b>메커니즘</b>: 운영 필드 고장모드 → 차기 과제 FMEA 환류 + 과제 간 동일 형식 비교.</p>
+      <p><b>효과</b>: 다음 과제의 POC는 선배 과제의 고장 어휘에서 출발한다 — 조직의 학습 곡선이 과제를 넘어 누적.</p></div>
+  </div>
+
   <!-- ① 뼈대 프레임 -->
   <div class="sbox-h"><span class="tag">①</span><h2>뼈대 프레임 2개</h2><span class="d">모든 화면이 이 두 프레임 위에 서 있다</span></div>
   <div class="grid g2">
