@@ -40,6 +40,9 @@
 - **M6**: POC·Pilot·확산·운영 관제를 케미컬 골격(공유 셸 `devShell`, tpl-dev.js)으로 표준화.
   tpl-ops.js(확산=원인계층·호기퀄·층화 / 운영=월간 RAM·다운타임 Pareto·CIP) — 5단계 사다리 전체 커버.
   공개 배포 `scripts/publish_public.sh`(화이트리스트·`--exclude`·gh-pages) — **실행(발행)은 사용자 수행**.
+- **M7 일부**: **부서 고장모드 라이브러리 `#/library`**(library.js) — 전 과제 records를 모드 단위 통합
+  (`write_library` → data/library.json: 코드마스터 dedupe·모드명 역매핑·S×O 정렬·발생 이력 타임라인 모달·`#/library/{key}` 딥링크).
+  부서 표준 `org.standards`(무발생 200Cy·재발 규칙·어휘 v2.1) — tpl-mass verifyCy 폴백: config → org → 200.
 - **잔여 작업(M7)**: drum·sort·clean·agv 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토,
   인증(이관·투자심의) 체크리스트 뷰 — Known Issues Register = records 오픈 건 필터.
 

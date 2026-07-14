@@ -24,6 +24,7 @@ function portfolioEntry(pid) {
 function buildNav() {
   let html = `<a href="#/home"${VIEW === 'home' ? ' class="active"' : ''}><span class="st">▦</span> ${esc(orgT('homeLabel', '한눈에 보기'))}</a>`;
   html += `<a href="#/guide"${VIEW === 'guide' ? ' class="active"' : ''}><span class="st">✎</span> ${esc(orgT('guideLabel', '지표 핸드북'))}</a>`;
+  html += `<a href="#/library"${VIEW === 'library' ? ' class="active"' : ''}><span class="st">▥</span> ${esc(orgT('libraryLabel', '고장모드 라이브러리'))}</a>`;
   html += `<div class="t">${esc(orgT('navProjects', '과제 (표준 템플릿)'))}</div>`;
   ((REG && REG.projects) || []).forEach(p => {
     const e = portfolioEntry(p.id) || {};
@@ -42,7 +43,7 @@ function buildNav() {
 /* ── 정적 셸(브랜드·제목·내비) 텍스트 주입 — 홈/과제 모드 분기 ── */
 function applyShellText() {
   const set = (id, prop, val) => { const el = $(id); if (el) el[prop] = val; };
-  if (VIEW === 'home' || VIEW === 'guide') {
+  if (VIEW === 'home' || VIEW === 'guide' || VIEW === 'library') {
     document.title = orgT('title', document.title);
     set('brand-logo', 'textContent', orgT('brandLogo', 'R'));
     set('brand-name', 'innerHTML', orgT('brandName', ''));
@@ -76,6 +77,7 @@ function showHome() {
   VIEW = 'home'; CUR_PID = null;
   $('s-home').style.display = '';
   { const g = $('s-guide'); if (g) g.style.display = 'none'; }
+  { const l = $('s-library'); if (l) l.style.display = 'none'; }
   TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = 'none'; });
   SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
   { const tb = $('topbar-lc'); if (tb) { tb.style.display = 'none'; } }
@@ -90,6 +92,7 @@ function showGuide() {
   VIEW = 'guide'; CUR_PID = null;
   $('s-home').style.display = 'none';
   { const g = $('s-guide'); if (g) g.style.display = ''; }
+  { const l = $('s-library'); if (l) l.style.display = 'none'; }
   TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = 'none'; });
   SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
   { const tb = $('topbar-lc'); if (tb) { tb.style.display = 'none'; } }
@@ -98,11 +101,26 @@ function showGuide() {
   scrollTo(0, 0);
 }
 
+/* 고장모드 라이브러리 (#/library[/{modeKey}]) — 전 과제 records 통합 뷰 (library.js renderLibrary) */
+function showLibrary(modeKey) {
+  VIEW = 'library'; CUR_PID = null;
+  $('s-home').style.display = 'none';
+  { const g = $('s-guide'); if (g) g.style.display = 'none'; }
+  { const l = $('s-library'); if (l) l.style.display = ''; }
+  TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = 'none'; });
+  SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
+  { const tb = $('topbar-lc'); if (tb) { tb.style.display = 'none'; } }
+  applyShellText();
+  if (typeof renderLibrary === 'function') renderLibrary(modeKey || '');
+  scrollTo(0, 0);
+}
+
 /* 과제 내 탭 표시 (구 showOnly — 실증 템플릿의 관제/상세/스텝 필터) */
 function showProjectTab(tab) {
   CUR_TAB = tab || 'overview';
   $('s-home').style.display = 'none';
   { const g = $('s-guide'); if (g) g.style.display = 'none'; }
+  { const l = $('s-library'); if (l) l.style.display = 'none'; }
   if (CUR_TAB === 'all' || CUR_TAB === 's-steps') {
     showAllSections();
   } else if (/^s[1-6]$/.test(CUR_TAB)) {
@@ -151,6 +169,7 @@ function openProject(pid, tab) {
     const nm = e ? e.name : pid;
     $('s-home').style.display = 'none';
     { const g = $('s-guide'); if (g) g.style.display = 'none'; }
+    { const l = $('s-library'); if (l) l.style.display = 'none'; }
     TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = (t === 's-overview') ? '' : 'none'; });
     $('s-overview').innerHTML = `<div class="banner" style="margin:16px 0">『${esc(nm)}』 ${esc(orgT('noDataMsg', '데이터가 아직 없습니다 — 과제 폴더(config·엑셀) 구성 후 빌드하세요.'))}<br><span class="mini">${esc(err.message)}</span></div>`;
   });
@@ -171,6 +190,7 @@ function parseHash() {
     const seg = h.slice(2).split('/');
     if (!seg[0] || seg[0] === 'home') return { view: 'home' };
     if (seg[0] === 'guide') return { view: 'guide' };
+    if (seg[0] === 'library') return { view: 'library', key: seg[1] ? decodeURIComponent(seg[1]) : '' };
     return { view: 'project', pid: seg[0], tab: seg[1] || 'overview' };
   }
   // 레거시 해시 (#s-overview · #all · #s1~#s6) → 첫 과제로 (구 북마크·인쇄 흐름 보호)
@@ -182,6 +202,7 @@ function route() {
   const r = parseHash();
   if (r.view === 'home') showHome();
   else if (r.view === 'guide') showGuide();
+  else if (r.view === 'library') showLibrary(r.key);
   else if (VIEW === 'project' && CUR_PID === r.pid) showProjectTab(r.tab);   // 같은 과제 내 탭 전환 — 재마운트 없음
   else openProject(r.pid, r.tab);
 }
@@ -196,9 +217,11 @@ function initRouter() {
 Promise.all([
   fetch('data/projects.json?t=' + Date.now()).then(r => r.json()),
   fetch('data/portfolio.json?t=' + Date.now()).then(r => r.json()).catch(() => null),
-]).then(([reg, pf]) => {
+  fetch('data/library.json?t=' + Date.now()).then(r => r.json()).catch(() => null),
+]).then(([reg, pf, lib]) => {
   REG = reg;
   PORTFOLIO = pf || { projects: (reg.projects || []).map(p => ({ ...p, hasData: false })) };
+  if (typeof LIB !== 'undefined') LIB = lib;
   initRouter();
 }).catch(err => {
   document.querySelector('.main').innerHTML = `<div class="banner" style="margin-top:20px">데이터를 불러오지 못했습니다 (data/projects.json). 로컬에서는 HTTP 서버로 여세요.<br><span class="mini">${esc(err.message)}</span></div>`;
