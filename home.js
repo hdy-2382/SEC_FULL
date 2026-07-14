@@ -105,11 +105,13 @@ function homeCard(e) {
       ${e.swAvg != null ? `<span class="mv">SW ${e.swAvg}%</span>` : ''}</div>` : '';
   const sd = s.statusDist || null;
   const sdTotal = sd ? (sd.new || 0) + (sd.acting || 0) + (sd.verifying || 0) + (sd.closed || 0) : 0;
-  const seg = (n, col) => n ? `<i style="flex:${n};background:${col}"></i>` : '';
+  const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}건"></i>` : '';
+  // 폐루프 상태 색은 라벨과 함께 표기 — 막대만으로는 의미 전달 불가
+  const LOOP_ST = [['closed', '종결', 'var(--green)'], ['verifying', '검증', 'var(--sky)'], ['acting', '조치', 'var(--major)'], ['new', '신규', 'var(--crit)']];
+  const loopCnt = sd ? LOOP_ST.filter(([k]) => sd[k]).map(([k, lb, col]) => `<i class="lpdot" style="background:${col}"></i>${lb} ${sd[k]}`).join(' · ') : '';
   const loopRow = sdTotal ? `<div class="mrow"><span class="mk">폐루프</span>
-      <div class="mbar" title="종결 ${sd.closed} · 검증중 ${sd.verifying} · 조치중 ${sd.acting} · 신규 ${sd.new}">
-        ${seg(sd.closed, 'var(--green)')}${seg(sd.verifying, 'var(--sky)')}${seg(sd.acting, 'var(--major)')}${seg(sd.new, 'var(--crit)')}</div>
-      <span class="mv">종결 ${sd.closed}/${sdTotal}</span></div>` : '';
+      <div class="mbar">${LOOP_ST.map(([k, lb, col]) => seg(sd[k], col, lb)).join('')}</div>
+      <span class="mv">${loopCnt}</span></div>` : '';
   return `<div class="pcard" data-go="${esc(e.id)}" style="border-top:3px solid ${esc(sc)}">
     <div class="ph"><b>${esc(e.name)}</b>${chip}</div>
     <div class="psub">${esc(meta)}${e.generatedAt ? ` · ${esc(orgT('cardUpdated', '갱신'))} ${esc(e.generatedAt.slice(0, 10))}` : ''}</div>
