@@ -38,6 +38,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECTS_ROOT = ROOT / "data" / "projects"
 REGISTRY_PATH = ROOT / "data" / "projects.json"
 PORTFOLIO_PATH = ROOT / "data" / "portfolio.json"
+LIBRARY_PATH = ROOT / "data" / "library.json"
 
 # 과제별 경로 — _set_project()가 설정 (멀티 과제: data/projects/<id>/ 기준)
 RAW_DIR = OUT_PATH = CONFIG_PATH = MGMT_PATH = None
@@ -1788,6 +1789,103 @@ def write_portfolio():
     print(f"[build] 포트폴리오: {PORTFOLIO_PATH.relative_to(ROOT)} (과제 {len(entries)}, 데이터 보유 {n_data})")
 
 
+_SEV_RANK = {"Critical": 3, "Major": 2, "Minor": 1}
+_CAT_ORDER = ["concept", "design", "parts", "build", "install", "sw", "env", "oper", "etc"]
+_CAT_LABEL = {"concept": "컨셉", "design": "설계", "parts": "부품", "build": "제작·조립",
+              "install": "설치·시공", "sw": "구현(SW)", "env": "환경·자재", "oper": "운영·조작", "etc": "기타"}
+
+
+def write_library(exclude: set | None = None, out_path: Path | None = None):
+    """부서 고장모드 라이브러리 — 전 과제 records를 고장모드 단위로 통합 (data/library.json).
+    그룹 키 = modeCode, 없으면 코드마스터 type 역매핑, 그래도 없으면 모드명(어휘 미등재)."""
+    reg = _load_registry()
+    projects = [p for p in sorted(reg.get("projects", []), key=lambda x: x.get("order", 99))
+                if not (exclude and p["id"] in exclude)]
+    # 1패스: 과제 dashboard.json 로드 + 코드마스터 통합 (code 키 dedupe, type→code 역매핑)
+    codes_master: dict = {}
+    type2code: dict = {}
+    loaded = []
+    for p in projects:
+        path = PROJECTS_ROOT / p["id"] / "dashboard.json"
+        if not path.exists():
+            continue
+        out = json.loads(path.read_text(encoding="utf-8"))
+        loaded.append((p, out, (out.get("config") or {}).get("stage", "mass")))
+        for c in out.get("codes") or []:
+            code = c.get("code")
+            if not code:
+                continue
+            prev = codes_master.get(code)
+            if prev and (prev.get("type"), prev.get("severity")) != (c.get("type"), c.get("severity")):
+                print(f"[build] ⚠ 코드마스터 충돌: {code} — 선착순 유지 ({p['id']})")
+            codes_master.setdefault(code, c)
+            if c.get("type"):
+                type2code.setdefault(_norm(c.get("type")), code)
+    # 2패스: records → 고장모드 그룹
+    groups: dict = {}
+    for p, out, stage in loaded:
+        for r in out.get("records") or []:
+            code = r.get("modeCode") or type2code.get(_norm(r.get("mode") or ""), "")
+            key = code or _norm(r.get("mode") or "") or "(미분류)"
+            master = codes_master.get(code) or {}
+            g = groups.setdefault(key, {"key": key, "code": code,
+                                        "mode": master.get("type") or r.get("mode") or "",
+                                        "desc": master.get("desc") or "", "occurrences": []})
+            g["occurrences"].append({
+                "project": p["id"], "projectName": p.get("name", p["id"]),
+                "abbr": p.get("abbr", ""), "stage": stage,
+                "id": r.get("id") or "", "date": r.get("date") or "",
+                "severity": r.get("severity") or "", "status": r.get("status") or "",
+                "cause": r.get("cause") or "", "causeText": r.get("causeText") or "",
+                "detail": r.get("detail") or "", "action": r.get("action") or "",
+                "verify": r.get("verify") or "", "recurLink": r.get("recurLink") or "",
+                "verdict": r.get("verdict") or "", "closedDate": r.get("closedDate") or "",
+                "unit": r.get("unit") or "", "images": r.get("images") or []})
+    # 그룹 마감 — 발생 오름차순 정렬, 최고 심각도, 최빈 원인분류, 상태 분포, 발생 과제
+    for g in groups.values():
+        occ = sorted(g["occurrences"], key=lambda o: (o["date"] or "9999", o["id"]))
+        g["occurrences"] = occ
+        g["severity"] = max((o["severity"] for o in occ), key=lambda s: _SEV_RANK.get(s, 0), default="")
+        freq: dict = {}
+        for o in occ:
+            if o["cause"]:
+                freq[o["cause"]] = freq.get(o["cause"], 0) + 1
+        label = max(freq, key=lambda c: freq[c]) if freq else ""
+        g["categoryLabel"] = label
+        g["category"] = _cause_key(label) if label else "etc"
+        g["counts"] = {"total": len(occ), **_status_dist_of(occ)}
+        seen, pjs = set(), []
+        for o in occ:
+            if o["project"] in seen:
+                continue
+            seen.add(o["project"])
+            pjs.append({"id": o["project"], "name": o["projectName"], "abbr": o["abbr"], "stage": o["stage"]})
+        g["projects"] = pjs
+        g["firstDate"], g["lastDate"] = occ[0]["date"], occ[-1]["date"]
+        g["recurCount"] = max(0, len(occ) - 1)
+    modes = sorted(groups.values(),
+                   key=lambda g: (-_SEV_RANK.get(g["severity"], 0), -g["counts"]["total"], g["key"]))
+    # 카테고리 롤업 — 표준 8종은 상시(0건 포함), etc는 있을 때만
+    cats = []
+    for ck in _CAT_ORDER:
+        ms = [m for m in modes if m["category"] == ck]
+        total = sum(m["counts"]["total"] for m in ms)
+        opened = sum(m["counts"]["new"] + m["counts"]["acting"] + m["counts"]["verifying"] for m in ms)
+        if ck == "etc" and not ms:
+            continue
+        cats.append({"key": ck, "label": _CAT_LABEL[ck], "modes": len(ms), "records": total, "open": opened})
+    total_rec = sum(m["counts"]["total"] for m in modes)
+    total_open = sum(m["counts"]["new"] + m["counts"]["acting"] + m["counts"]["verifying"] for m in modes)
+    lib = {"generatedAt": _now_iso(),
+           "totals": {"projects": len(loaded), "modes": len(modes), "records": total_rec, "open": total_open},
+           "codes": [codes_master[k] for k in sorted(codes_master)],
+           "categories": cats, "modes": modes}
+    path = out_path or LIBRARY_PATH
+    path.write_text(json.dumps(lib, ensure_ascii=False, indent=2), encoding="utf-8")
+    rel = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+    print(f"[build] 라이브러리: {rel} (모드 {len(modes)}, 레코드 {total_rec}, 과제 {len(loaded)})")
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(description="과제별 엑셀 → dashboard.json (+ 전사 portfolio.json)")
@@ -1813,6 +1911,7 @@ def main():
             # 개발(제작) 단계 과제: config만 있고 평가 엑셀이 아직 없음 — 정상 (홈 카드는 devPlan으로 표시)
             print(f"[build:{pid}] 스킵 — {ex}")
     write_portfolio()
+    write_library()
 
     if args.validate_stage:
         for pid in pids:

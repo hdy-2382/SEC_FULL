@@ -1,0 +1,1261 @@
+{
+  "generatedAt": "2026-07-14T07:39:24Z",
+  "totals": {
+    "projects": 4,
+    "modes": 12,
+    "records": 37,
+    "open": 15
+  },
+  "codes": [
+    {
+      "code": "DRM-01",
+      "type": "체결 토크 이탈",
+      "severity": "Critical",
+      "desc": "토크 상한 초과/이탈 체결 — 파손 위험"
+    },
+    {
+      "code": "DRM-02",
+      "type": "비전 오인식",
+      "severity": "Major",
+      "desc": "드럼 마킹/좌표 인식 오류"
+    },
+    {
+      "code": "DRM-03",
+      "type": "그리퍼 파지 실패",
+      "severity": "Major",
+      "desc": "파지 미끄러짐·낙하"
+    },
+    {
+      "code": "DRM-04",
+      "type": "통신 지연",
+      "severity": "Minor",
+      "desc": "PLC/상위 통신 지연·두절"
+    },
+    {
+      "code": "DRM-05",
+      "type": "전장 간섭",
+      "severity": "Minor",
+      "desc": "배선·EMI 간섭"
+    },
+    {
+      "code": "DRM-06",
+      "type": "자재 급송 지연",
+      "severity": "Minor",
+      "desc": "드럼 급송 슈트 지연"
+    },
+    {
+      "code": "DRM-07",
+      "type": "소음 초과",
+      "severity": "Minor",
+      "desc": "구동 구간 소음/공진"
+    },
+    {
+      "code": "DRM-08",
+      "type": "로그 유실",
+      "severity": "Minor",
+      "desc": "제어 로그 누락"
+    }
+  ],
+  "categories": [
+    {
+      "key": "concept",
+      "label": "컨셉",
+      "modes": 0,
+      "records": 0,
+      "open": 0
+    },
+    {
+      "key": "design",
+      "label": "설계",
+      "modes": 2,
+      "records": 10,
+      "open": 7
+    },
+    {
+      "key": "parts",
+      "label": "부품",
+      "modes": 0,
+      "records": 0,
+      "open": 0
+    },
+    {
+      "key": "build",
+      "label": "제작·조립",
+      "modes": 1,
+      "records": 1,
+      "open": 0
+    },
+    {
+      "key": "install",
+      "label": "설치·시공",
+      "modes": 2,
+      "records": 2,
+      "open": 1
+    },
+    {
+      "key": "sw",
+      "label": "구현(SW)",
+      "modes": 5,
+      "records": 22,
+      "open": 6
+    },
+    {
+      "key": "env",
+      "label": "환경·자재",
+      "modes": 1,
+      "records": 1,
+      "open": 0
+    },
+    {
+      "key": "oper",
+      "label": "운영·조작",
+      "modes": 1,
+      "records": 1,
+      "open": 1
+    }
+  ],
+  "modes": [
+    {
+      "key": "DRM-01",
+      "code": "DRM-01",
+      "mode": "체결 토크 이탈",
+      "desc": "토크 상한 초과/이탈 체결 — 파손 위험",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-002",
+          "date": "2026-06-09",
+          "severity": "Critical",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-11",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-008",
+          "date": "2026-06-14",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-002",
+          "verdict": "",
+          "closedDate": "2026-06-18",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-013",
+          "date": "2026-06-22",
+          "severity": "Critical",
+          "status": "검증중",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
+          "action": "",
+          "verify": "41/50Cy",
+          "recurLink": "ISS-008",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-015",
+          "date": "2026-06-30",
+          "severity": "Major",
+          "status": "조치중",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "체결 자세 편차 추정 — 지그 재설계 협의",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-013",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Critical",
+      "categoryLabel": "구현(SW)",
+      "category": "sw",
+      "counts": {
+        "total": 4,
+        "new": 0,
+        "acting": 1,
+        "verifying": 1,
+        "closed": 2
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        }
+      ],
+      "firstDate": "2026-06-09",
+      "lastDate": "2026-06-30",
+      "recurCount": 3
+    },
+    {
+      "key": "DRM-02",
+      "code": "DRM-02",
+      "mode": "비전 오인식",
+      "desc": "드럼 마킹/좌표 인식 오류",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-001",
+          "date": "2026-06-08",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "저조도 마킹 오인식 → 노출 보정",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-12",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-004",
+          "date": "2026-06-10",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "역광 한정 재현 → 후드 1차 개선",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-001",
+          "verdict": "",
+          "closedDate": "2026-06-15",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-006",
+          "date": "2026-06-12",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "시험환경",
+          "causeText": "",
+          "detail": "랩 조명 공사 영향 — 복구 후 미재현",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-004",
+          "verdict": "",
+          "closedDate": "2026-06-14",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-012",
+          "date": "2026-06-20",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "시험환경",
+          "causeText": "",
+          "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
+          "action": "",
+          "verify": "38/50Cy",
+          "recurLink": "ISS-006",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-016",
+          "date": "2026-07-01",
+          "severity": "Major",
+          "status": "조치중",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "고반사 드럼 한정 → 편광 필터 검토",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-012",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-002",
+          "date": "2026-07-20",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "부품",
+          "causeText": "편광 필터 미적용 개체",
+          "detail": "고반사 드럼 한정 오인식",
+          "action": "필터 전수 적용",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-006",
+          "date": "2026-07-28",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "SW",
+          "causeText": "노출 스케줄 미적용",
+          "detail": "야간 조도 저하 오인식",
+          "action": "시간대 노출 스케줄",
+          "verify": "",
+          "recurLink": "E-002",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-mass",
+          "projectName": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass",
+          "id": "E-001",
+          "date": "2026-11-10",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "시험환경·자재",
+          "causeText": "자재 로트 편차",
+          "detail": "신규 로트 표면 반사율 편차",
+          "action": "로트 수입검사 추가",
+          "verify": "210/200Cy",
+          "recurLink": "",
+          "verdict": "비관련",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-001",
+          "date": "2027-02-10",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "운영·환경",
+          "causeText": "",
+          "detail": "라인 조명 편차 — 임계 재설정 (DRM-02)",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2027-02-12",
+          "unit": "1호기",
+          "images": []
+        }
+      ],
+      "severity": "Major",
+      "categoryLabel": "구현(SW)",
+      "category": "sw",
+      "counts": {
+        "total": 9,
+        "new": 0,
+        "acting": 1,
+        "verifying": 1,
+        "closed": 7
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        },
+        {
+          "id": "drum-pilot",
+          "name": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot"
+        },
+        {
+          "id": "drum-mass",
+          "name": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass"
+        },
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2026-06-08",
+      "lastDate": "2027-02-10",
+      "recurCount": 8
+    },
+    {
+      "key": "DRM-03",
+      "code": "DRM-03",
+      "mode": "그리퍼 파지 실패",
+      "desc": "파지 미끄러짐·낙하",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-005",
+          "date": "2026-06-11",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "파지 좌표 오프셋 → 티칭 보정",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-16",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-011",
+          "date": "2026-06-17",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "접근 속도 프로파일 수정",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-005",
+          "verdict": "",
+          "closedDate": "2026-06-22",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-017",
+          "date": "2026-07-03",
+          "severity": "Major",
+          "status": "조치중",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "림 변형품 파지 불가 → 핑거 형상 변경",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-011",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-001",
+          "date": "2026-07-20",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "설계",
+          "causeText": "핑거 형상 여유 부족",
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "action": "핑거 Rev B 형상 변경",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-004",
+          "date": "2026-07-22",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "부품",
+          "causeText": "그리퍼 코팅 로트 편차",
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "action": "코팅 Rev C 교체",
+          "verify": "",
+          "recurLink": "E-001",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-007",
+          "date": "2026-08-03",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "부품",
+          "causeText": "Rev C 적용 전 잔존",
+          "detail": "재발 검증 중 재현",
+          "action": "Rev C 전수 적용",
+          "verify": "",
+          "recurLink": "E-004",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-009",
+          "date": "2026-08-17",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "설계",
+          "causeText": "속도-파지 간섭",
+          "detail": "고속 모드 한정 재현",
+          "action": "v0.9.4 속도 보정",
+          "verify": "",
+          "recurLink": "E-007",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Major",
+      "categoryLabel": "설계",
+      "category": "design",
+      "counts": {
+        "total": 7,
+        "new": 0,
+        "acting": 1,
+        "verifying": 4,
+        "closed": 2
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        },
+        {
+          "id": "drum-pilot",
+          "name": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot"
+        }
+      ],
+      "firstDate": "2026-06-11",
+      "lastDate": "2026-08-17",
+      "recurCount": 6
+    },
+    {
+      "key": "ap음영끊김",
+      "code": "",
+      "mode": "AP 음영 끊김",
+      "desc": "",
+      "occurrences": [
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-003",
+          "date": "2027-03-06",
+          "severity": "Major",
+          "status": "검증중",
+          "cause": "설치·시공",
+          "causeText": "",
+          "detail": "신규 모드(v2.1) — AP 증설 후 무발생 감시",
+          "action": "",
+          "verify": "12/20일",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "5호기",
+          "images": []
+        }
+      ],
+      "severity": "Major",
+      "categoryLabel": "설치·시공",
+      "category": "install",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 0,
+        "verifying": 1,
+        "closed": 0
+      },
+      "projects": [
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2027-03-06",
+      "lastDate": "2027-03-06",
+      "recurCount": 0
+    },
+    {
+      "key": "레일수평도초과",
+      "code": "",
+      "mode": "레일 수평도 초과",
+      "desc": "",
+      "occurrences": [
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-002",
+          "date": "2027-02-06",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "설치·시공",
+          "causeText": "",
+          "detail": "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2027-02-08",
+          "unit": "2호기",
+          "images": []
+        }
+      ],
+      "severity": "Major",
+      "categoryLabel": "설치·시공",
+      "category": "install",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 0,
+        "verifying": 0,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2027-02-06",
+      "lastDate": "2027-02-06",
+      "recurCount": 0
+    },
+    {
+      "key": "DRM-04",
+      "code": "DRM-04",
+      "mode": "통신 지연",
+      "desc": "PLC/상위 통신 지연·두절",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-007",
+          "date": "2026-06-13",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-19",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-018",
+          "date": "2026-07-04",
+          "severity": "Minor",
+          "status": "조치중",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "로그 폭주 시 지연 → 로그 레벨 조정",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-007",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-003",
+          "date": "2026-07-21",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "SW",
+          "causeText": "타임아웃 여유 과소",
+          "detail": "핸드셰이크 응답 지연",
+          "action": "타임아웃 로직 변경",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-008",
+          "date": "2026-08-10",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "SW",
+          "causeText": "로그 레벨 과다",
+          "detail": "로그 폭주 시 지연",
+          "action": "레벨 조정 배포",
+          "verify": "",
+          "recurLink": "E-003",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-mass",
+          "projectName": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass",
+          "id": "E-002",
+          "date": "2026-11-17",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "운영·조작",
+          "causeText": "라인측 설정",
+          "detail": "라인 PLC 응답 지연",
+          "action": "라인 설정 표준화",
+          "verify": "135/200Cy",
+          "recurLink": "",
+          "verdict": "비관련",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-004",
+          "date": "2027-02-20",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "설치·시공",
+          "causeText": "",
+          "detail": "배선 경로 간섭 — 재배선 (DRM-04)",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2027-02-22",
+          "unit": "4호기",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "SW",
+      "category": "sw",
+      "counts": {
+        "total": 6,
+        "new": 0,
+        "acting": 1,
+        "verifying": 0,
+        "closed": 5
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        },
+        {
+          "id": "drum-pilot",
+          "name": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot"
+        },
+        {
+          "id": "drum-mass",
+          "name": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass"
+        },
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2026-06-13",
+      "lastDate": "2027-02-20",
+      "recurCount": 5
+    },
+    {
+      "key": "DRM-06",
+      "code": "DRM-06",
+      "mode": "자재 급송 지연",
+      "desc": "드럼 급송 슈트 지연",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-010",
+          "date": "2026-06-16",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "설계",
+          "causeText": "",
+          "detail": "급송 슈트 각도 조정",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-20",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-mass",
+          "projectName": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass",
+          "id": "E-003",
+          "date": "2026-11-24",
+          "severity": "Minor",
+          "status": "조치중",
+          "cause": "운영·조작",
+          "causeText": "라인 청소 주기",
+          "detail": "급송 슈트 이물",
+          "action": "청소 SOP 반영",
+          "verify": "0/200Cy",
+          "recurLink": "",
+          "verdict": "관련",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-mass",
+          "projectName": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass",
+          "id": "E-004",
+          "date": "2026-11-24",
+          "severity": "Minor",
+          "status": "조치중",
+          "cause": "부품",
+          "causeText": "슈트 코팅 마모",
+          "detail": "동일 모드 — 슈트 마모",
+          "action": "코팅 사양 변경",
+          "verify": "0/200Cy",
+          "recurLink": "E-003",
+          "verdict": "관련",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "설계",
+      "category": "design",
+      "counts": {
+        "total": 3,
+        "new": 0,
+        "acting": 2,
+        "verifying": 0,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        },
+        {
+          "id": "drum-mass",
+          "name": "드럼 자동화",
+          "abbr": "M",
+          "stage": "mass"
+        }
+      ],
+      "firstDate": "2026-06-16",
+      "lastDate": "2026-11-24",
+      "recurCount": 2
+    },
+    {
+      "key": "DRM-07",
+      "code": "DRM-07",
+      "mode": "소음 초과",
+      "desc": "구동 구간 소음/공진",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-014",
+          "date": "2026-06-24",
+          "severity": "Minor",
+          "status": "검증중",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "고속 공진음 → 속도 프로파일 보정",
+          "action": "",
+          "verify": "45/50Cy",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-pilot",
+          "projectName": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot",
+          "id": "E-005",
+          "date": "2026-07-27",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "설계",
+          "causeText": "속도 프로파일 한계",
+          "detail": "고속 구간 공진 재현",
+          "action": "프로파일 보정",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "구현(SW)",
+      "category": "sw",
+      "counts": {
+        "total": 2,
+        "new": 0,
+        "acting": 0,
+        "verifying": 1,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        },
+        {
+          "id": "drum-pilot",
+          "name": "드럼 자동화",
+          "abbr": "L",
+          "stage": "pilot"
+        }
+      ],
+      "firstDate": "2026-06-24",
+      "lastDate": "2026-07-27",
+      "recurCount": 1
+    },
+    {
+      "key": "DRM-05",
+      "code": "DRM-05",
+      "mode": "전장 간섭",
+      "desc": "배선·EMI 간섭",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-003",
+          "date": "2026-06-09",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "시험환경",
+          "causeText": "",
+          "detail": "임시 배선 간섭 — 정리 후 미재현",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-11",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "시험환경",
+      "category": "env",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 0,
+        "verifying": 0,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        }
+      ],
+      "firstDate": "2026-06-09",
+      "lastDate": "2026-06-09",
+      "recurCount": 0
+    },
+    {
+      "key": "DRM-08",
+      "code": "DRM-08",
+      "mode": "로그 유실",
+      "desc": "제어 로그 누락",
+      "occurrences": [
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
+          "id": "ISS-009",
+          "date": "2026-06-15",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "버퍼 오버플로 → 플러시 주기 수정",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2026-06-17",
+          "unit": "",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "구현(SW)",
+      "category": "sw",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 0,
+        "verifying": 0,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-poc",
+          "name": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc"
+        }
+      ],
+      "firstDate": "2026-06-15",
+      "lastDate": "2026-06-15",
+      "recurCount": 0
+    },
+    {
+      "key": "수동개입절차미준수",
+      "code": "",
+      "mode": "수동 개입 절차 미준수",
+      "desc": "",
+      "occurrences": [
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-006",
+          "date": "2027-03-10",
+          "severity": "Minor",
+          "status": "조치중",
+          "cause": "운영·환경",
+          "causeText": "",
+          "detail": "운영 SOP 재교육",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "",
+          "unit": "3호기",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "운영·환경",
+      "category": "oper",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 1,
+        "verifying": 0,
+        "closed": 0
+      },
+      "projects": [
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2027-03-10",
+      "lastDate": "2027-03-10",
+      "recurCount": 0
+    },
+    {
+      "key": "커넥터미압착",
+      "code": "",
+      "mode": "커넥터 미압착",
+      "desc": "",
+      "occurrences": [
+        {
+          "project": "drum-spread",
+          "projectName": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread",
+          "id": "DIS-005",
+          "date": "2027-03-04",
+          "severity": "Minor",
+          "status": "종결",
+          "cause": "제작·조립",
+          "causeText": "",
+          "detail": "조립 체크리스트 보강",
+          "action": "",
+          "verify": "",
+          "recurLink": "",
+          "verdict": "",
+          "closedDate": "2027-03-05",
+          "unit": "5호기",
+          "images": []
+        }
+      ],
+      "severity": "Minor",
+      "categoryLabel": "제작·조립",
+      "category": "build",
+      "counts": {
+        "total": 1,
+        "new": 0,
+        "acting": 0,
+        "verifying": 0,
+        "closed": 1
+      },
+      "projects": [
+        {
+          "id": "drum-spread",
+          "name": "드럼 자동화",
+          "abbr": "S",
+          "stage": "spread"
+        }
+      ],
+      "firstDate": "2027-03-04",
+      "lastDate": "2027-03-04",
+      "recurCount": 0
+    }
+  ]
+}
