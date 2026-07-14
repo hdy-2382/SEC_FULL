@@ -181,25 +181,34 @@ function renderHome() {
       const d = e.summary.sevDist; return (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
     }), 1);
     const seg = (n, col, label) => n ? `<i style="flex:${n};background:${col}" title="${label ? label + ' ' : ''}${n}건"></i>` : '';
-    // 원인분류 팔레트 — 단계 페이지의 카테고리 색 1:1 고정과 동일 (styles.css)
+    // 원인분류 팔레트 — 단계 페이지의 카테고리 색 1:1 고정과 동일 (styles.css). [key, 라벨, 색, 세그 글자색]
     const CAUSE_HOME = [
       ['concept', '컨셉', '#C0392B'], ['design', '설계', '#2E89D6'], ['parts', '부품', '#7A4FB3'],
-      ['build', '제작·조립', '#B36F0A'], ['install', '설치·시공', '#0e7a8a'], ['sw', 'SW', '#E08600'],
+      ['build', '제작·조립', '#B36F0A'], ['install', '설치·시공', '#0e7a8a'], ['sw', 'SW', '#E08600', '#4a3000'],
       ['env', '환경·자재', '#3E9B6E'], ['oper', '운영·조작', '#6E7D90'], ['etc', '기타', '#9aa9bb'],
     ];
+    // 왼쪽 — 심각도 깔때기 (총량 비례 폭)
     const fRows = journey.map(e => {
       const d = e.summary.sevDist, oc = e.summary.openCritical || 0;
-      const cd = e.summary.causeDist || {};
       const tot = (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
-      const catSegs = CAUSE_HOME.map(([k, lb, col]) => seg(cd[k], col, lb)).join('');
       return `<div class="fn-row" data-go="${esc(e.id)}">
         <span class="fn-stg" style="color:${esc(STAGE_COLOR[e.stage] || '#666')}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
-        <div class="fn-bars" style="width:${Math.round(tot / maxTot * 100)}%">
-          <div class="fn-bar">${seg(d.Critical, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
-          ${catSegs ? `<div class="fn-bar fn-cat">${catSegs}</div>` : ''}
-        </div>
+        <div class="fn-bar" style="width:${Math.round(tot / maxTot * 100)}%">${seg(d.Critical, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
         <span class="fn-tot">${tot}건</span>
         <span class="fn-crit${(d.Critical || 0) ? '' : ' zero'}">치명 ${d.Critical || 0}${oc ? ` <b>· 오픈 ${oc}</b>` : ''}</span>
+      </div>`;
+    }).join('');
+    // 오른쪽 — 원인분류 구성 (전폭 구성비 · 세그 안에 라벨)
+    const cRows = journey.map(e => {
+      const cd = e.summary.causeDist || {};
+      const tot = CAUSE_HOME.reduce((a, [k]) => a + (cd[k] || 0), 0);
+      const segs = CAUSE_HOME.map(([k, lb, col, txt]) => {
+        const n = cd[k]; if (!n) return '';
+        return `<span class="fc-sg" style="flex:${n};background:${col}${txt ? `;color:${txt}` : ''}" title="${lb} ${n}건"><b>${lb} ${n}</b></span>`;
+      }).join('');
+      return `<div class="fn-row" data-go="${esc(e.id)}">
+        <span class="fn-stg" style="color:${esc(STAGE_COLOR[e.stage] || '#666')}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
+        <div class="fc-bar">${segs || '<span class="mini">기록 없음</span>'}</div>
       </div>`;
     }).join('');
     // 분류 레전드 — 여정에 실제 등장하는 분류만
@@ -209,12 +218,21 @@ function renderHome() {
     const downCrit = journey.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
     funnelBox = `
     <section class="sbox">
-      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', '심각도 깔때기 — 크리티컬은 상류에서 소진한다'))}</h2><span class="d">누적 대장(공통 어휘) 기준 · 치명 상류 ${upCrit}건 → 하류 ${downCrit}건</span></div>
-      <div class="panel"><div class="fnl">${fRows}</div>
-        <div class="clegend"><span class="lg-k">심각도</span><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span>
-        <span class="mini" style="margin-left:auto">S×O 우선순위로 치명·빈발을 조기 해결 → 뒤 단계는 중대·경미만 남는다 — 개발·평가 효율화의 그림</span></div>
-        <div class="clegend"><span class="lg-k">분류</span>${catLegend}
-        <span class="mini" style="margin-left:auto">병의 종류도 단계마다 바뀐다 — SW·설계(상류) → 부품·제작(실증) → 설치·운영(현장) · 아래 얇은 바</span></div></div>
+      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', '심각도는 상류에서 소진하고, 병의 종류는 단계마다 이동한다'))}</h2><span class="d">누적 대장(공통 어휘) 기준 · 치명 상류 ${upCrit}건 → 하류 ${downCrit}건</span></div>
+      <div class="fn2">
+        <div class="panel">
+          <div class="fn-h">심각도 깔때기 <span>총량 비례 — 치명(빨강)이 상류에서 사라지는가</span></div>
+          <div class="fnl">${fRows}</div>
+          <div class="clegend"><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span>
+          <span class="mini" style="margin-left:auto">S×O 우선순위로 치명·빈발 조기 해결</span></div>
+        </div>
+        <div class="panel">
+          <div class="fn-h">원인분류 구성 <span>구성비 — 단계 보드와 같은 색</span></div>
+          <div class="fnl">${cRows}</div>
+          <div class="clegend">${catLegend}
+          <span class="mini" style="margin-left:auto">SW·설계(상류) → 부품·제작(실증) → 설치·운영(현장)</span></div>
+        </div>
+      </div>
     </section>`;
   }
 

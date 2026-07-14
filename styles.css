@@ -429,11 +429,16 @@
 .fnl .fn-row{display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:8px;padding:3px 6px}
 .fnl .fn-row:hover{background:var(--card-alt)}
 .fnl .fn-stg{flex:none;width:76px;font-size:12px;font-weight:800;text-align:right}
-.fnl .fn-bars{display:flex;flex-direction:column;gap:2px;min-width:24px;transition:width .2s}
-.fnl .fn-bar{display:flex;height:15px;border-radius:5px;overflow:hidden;gap:1px;min-width:24px}
+.fnl .fn-bar{display:flex;height:22px;border-radius:6px;overflow:hidden;gap:1px;min-width:24px;transition:width .2s}
 .fnl .fn-bar i{display:block;height:100%}
-.fnl .fn-bar.fn-cat{height:7px;border-radius:4px;opacity:.95}   /* 분류 구성 — 심각도 바 아래 얇은 바 */
-.clegend .lg-k{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.03em;margin-right:2px}
+/* 과제 여정 2열 — 왼쪽 심각도 깔때기 / 오른쪽 원인분류 구성 */
+.fn2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1180px){.fn2{grid-template-columns:1fr}}
+.fn2 .fn-h{font-size:13px;font-weight:800;color:var(--navy-deep);padding-bottom:8px;margin-bottom:9px;border-bottom:1px solid var(--line-soft)}
+.fn2 .fn-h span{font-size:10.5px;font-weight:600;color:var(--muted);margin-left:6px}
+.fnl .fc-bar{flex:1;display:flex;height:22px;border-radius:6px;overflow:hidden;gap:1px;min-width:0}
+.fnl .fc-sg{display:flex;align-items:center;justify-content:center;min-width:0;color:#fff}
+.fnl .fc-sg b{font-size:10.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
 .fnl .fn-tot{flex:none;font-size:11.5px;font-weight:800;color:var(--navy-deep);min-width:38px}
 .fnl .fn-crit{flex:none;font-size:10.5px;font-weight:700;color:var(--crit);margin-left:auto}
 .fnl .fn-crit.zero{color:var(--green)}
