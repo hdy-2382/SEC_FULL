@@ -161,7 +161,8 @@ function kirPanel() {
 
 /* 상세 탭 — 전 단계 공통 d-문법: d1 대장 → d2 런·일일 → d3 조치검증 → d4 판정 → d5 KIR → d6 게이트 */
 function renderSteps(C, m, f, acc, op) {
-  const verifyCy = (C.acceptance || {}).verifyCycle || 200;
+  // 검증 사이클: 과제 config → 부서 표준(org.standards) → 200 순 폴백
+  const verifyCy = (C.acceptance || {}).verifyCycle || (((REG || {}).org || {}).standards || {}).verifyCycle || 200;
   const recs = DATA.records || [];
   // d1 고장 레코드 전수 — 공통 스키마 + 판정 조인 (POC·Pilot 대장과 동일 문법)
   const recRows = (DATA.errors || []).map((e, i) => {

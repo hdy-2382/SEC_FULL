@@ -99,6 +99,14 @@
           ]
         }
       ]
+    },
+    "libraryLabel": "고장모드 라이브러리",
+    "standards": {
+      "verifyCycle": 200,
+      "verifyRule": "시정조치 적용 후 동일 고장모드 무발생 200Cy 경과 시에만 검증완료 → 종결 (docs/CRITERIA.md §5)",
+      "recurRule": "동일 고장모드 재출현 = 재발 → 재분석 의무 (종결 여부 무관)",
+      "vocab": "DRM-01~08",
+      "vocabVersion": "v2.1"
     }
   },
   "projects": [
