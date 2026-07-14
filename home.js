@@ -164,7 +164,7 @@ function renderHome() {
     </div>`).join('');
   const procBox = (proc.ladder && proc.ladder.length) ? `
     <section class="sbox">
-      <div class="sbox-h"><span class="tag">${esc(orgT('procTag', '표준 프로세스'))}</span><h2>${esc(orgT('procTitle', '전체 체인 — 기간(데이터 축적) + 심의 게이트(체크리스트)'))}</h2><span class="d">${esc(orgT('procDesc', '무고장 런은 동일 컴포넌트 · 파라미터만 단계별 상향 · docs/PROCESS.md'))}</span></div>
+      <div class="sbox-h"><span class="tag">${esc(orgT('procTag', '표준 프로세스'))}</span><h2>${esc(orgT('procTitle', '전체 체인'))}</h2><span class="d">${esc(orgT('procDesc', ''))}</span></div>
       <div class="ladder">${ladder}</div>
       ${gatecards ? `<div class="gatecards">${gatecards}</div>` : ''}
       ${principles ? `<div class="principles">${principles}</div>` : ''}
@@ -221,19 +221,17 @@ function renderHome() {
     const downCrit = journey.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
     funnelBox = `
     <section class="sbox">
-      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', '심각도는 상류에서 소진하고, 병의 종류는 단계마다 이동한다'))}</h2><span class="d">누적 대장(공통 어휘) 기준 · 치명 상류 ${upCrit}건 → 하류 ${downCrit}건</span></div>
+      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', ''))}</h2><span class="d"></span></div>
       <div class="fn2">
         <div class="panel">
-          <div class="fn-h">심각도 깔때기 <span>총량 비례 — 치명(빨강)이 상류에서 사라지는가</span></div>
+          <div class="fn-h">심각도 깔때기</div>
           <div class="fnl">${fRows}</div>
-          <div class="clegend"><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span>
-          <span class="mini" style="margin-left:auto">S×O 우선순위로 치명·빈발 조기 해결</span></div>
+          <div class="clegend"><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span></div>
         </div>
         <div class="panel">
-          <div class="fn-h">원인분류 구성 <span>구성비 — 단계 보드와 같은 색</span></div>
+          <div class="fn-h">원인분류 구성</div>
           <div class="fnl">${cRows}</div>
-          <div class="clegend">${catLegend}
-          <span class="mini" style="margin-left:auto">SW·설계(상류) → 부품·제작(실증) → 설치·운영(현장)</span></div>
+          <div class="clegend">${catLegend}</div>
         </div>
       </div>
     </section>`;

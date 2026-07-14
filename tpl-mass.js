@@ -198,7 +198,7 @@ function renderSteps(C, m, f, acc, op) {
     <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">일일평가·에러로그 + 관리 시트(조치검증·판정·처분) — 공통 레코드 스키마 · 출처 ${esc(DATA.source || '')}</span></div>
 
     <section class="step" id="d1">
-      ${stepHead(1, '고장 레코드 (전수)', '"잔여 고장률이 계약 기준 이내인가" — 원인분류·판정을 대장에서 한 줄로', `${(DATA.errors || []).length}건`, 'prog')}
+      ${stepHead(1, '고장 레코드 (전수)', '원인분류·판정을 대장에서 한 줄로', `${(DATA.errors || []).length}건`, 'prog')}
       <div class="step-body"><div class="panel">
         <div class="ph"><h3>공통 레코드 스키마 — 양산 시범 평가</h3><span class="ps">POC·Pilot 대장이 그대로 이어진다 · 판정(관련/비관련)은 판정대장 조인 — docs/RECORD_SCHEMA.md</span></div>
         <div class="tbl-scroll" style="max-height:460px"><table><tr><th>코드</th><th>고장모드</th><th class="c">원인분류</th><th class="c">심각도</th><th class="c">SW버전</th><th class="c">재발</th><th class="c">상태</th><th class="c">판정</th><th class="c">발생일</th><th class="c">상세</th></tr>${recRows}</table></div>
@@ -223,12 +223,12 @@ function renderSteps(C, m, f, acc, op) {
     </section>
 
     <section class="step" id="d4">
-      ${stepHead(4, '판정 대장 (관련/비관련 합동판정)', '공정 연결 후엔 원인보다 판정 — 사전 합의 잣대·증거·사후 재분류 금지', `${(DATA.adjudication || []).length}건`, 'prog')}
+      ${stepHead(4, '판정 대장 (관련/비관련 합동판정)', '사전 합의 잣대 · 증거 첨부 · 사후 재분류 금지', `${(DATA.adjudication || []).length}건`, 'prog')}
       <div class="step-body">${adjudicationPanel() || '<div class="panel"><div class="mini">판정 대상 없음</div></div>'}</div>
     </section>
 
     <section class="step" id="d5">
-      ${stepHead(5, '인증 준비 — Known Issues Register', '남은 결점을 어떤 조건으로 안고 가는가 — 심의는 기존 증거를 심사하는 이벤트', `오픈 ${kir.open}건 · 미정 ${kir.pending}`, kir.pending ? 'prog' : 'pass')}
+      ${stepHead(5, '인증 준비 — Known Issues Register', '오픈 건 처분(carry-over·waiver) 지정', `오픈 ${kir.open}건 · 미정 ${kir.pending}`, kir.pending ? 'prog' : 'pass')}
       <div class="step-body">${kir.html}</div>
     </section>
 
@@ -379,7 +379,7 @@ function renderOverview(C, m, f, acc, op) {
     </div>`;
   return devShell('mass', C, {
     head,
-    qbox: `이 단계의 질문: <b>“잔여 고장률이 계약 기준 이내인가?”</b> — 성공 기준은 서면 동결(연속 ${fmt(prog.target)}Cy · 에러 한도 ${errLimit}회, 사후 변경 불가), 공정 연결 후엔 원인보다 <b>판정(관련/비관련 합동)</b>이 쟁점. 모든 사건은 증거와 함께 대장에.`,
+    qbox: '',
     clear: { title: `${esc(O('trkExecLabel', '종합 클리어'))} — 양산 합격 기준(계약)`,
              criteria: accCs.map(c => ({ label: c.key, value: c.value, status: c.status })) },
     aTitle: `${esc(O('trkProgLabel', '완주 진행 → 성장 · 연결된 지표'))}<span class="badge ${goalCrit.status === 'pass' ? 'b-ok' : 'b-prog'}" style="margin-left:auto">${esc(goalCrit.status === 'pass' ? O('gateDone', '달성') : O('gateProg', '진행 중'))}</span>`,

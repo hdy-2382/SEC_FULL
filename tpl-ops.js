@@ -77,18 +77,16 @@ function spreadLayerBoard() {
     return `<div class="sg ${SEG[k][0]}" style="flex:${l.count}"><span>${SEG[k][1]} ${l.count}</span></div>`;
   }).join('');
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>고장 원인계층 (전수)</span><span class="pg-subh-note">${st.total || 0}건 · "설계의 병인가, 이 호기만의 병인가"</span></div>
+    <div class="pg-subh"><span>고장 원인계층 (전수)</span><span class="pg-subh-note">${st.total || 0}건 전수</span></div>
     <div class="fw-board">
       <div class="fwt risk hero${ok ? '' : ' hero-bad'}">
         <div class="hero-n ${ok ? 'ok' : 'bad'}">${des.count}<small>건</small></div>
         <div class="hero-tx"><div class="t">${esc(nm9(des.label))} — 전 함대 리스크</div>
-          <div class="m">${ok ? '설계성 고장 없음 — 잔여는 호기 국소 이슈' : '<b>⚠ 즉시 에스컬레이션</b> — 전 호기 개선 전개 · 완료까지 확산 게이트 보류'}</div></div>
-        ${ok ? '<span class="fw-badge">확산의 성적표</span>' : ''}
+          <div class="m">${ok ? '설계성 고장 없음' : '<b>⚠ 즉시 에스컬레이션</b> — 전 호기 개선 전개 · 완료까지 확산 게이트 보류'}</div></div>
       </div>
       ${tile(by.build, 'build')}${tile(by.install, 'install')}${tile(by.oper, 'oper')}
     </div>
     <div class="compo"><div class="sg sg-zero">설계 ${des.count}</div>${segs}</div>
-    <div class="mini mt">설계성 고장은 <b>한 호기의 사건이 아니라 전 함대의 리스크</b> — 나머지 계층은 해당 호기·라인에서 국소 조치한다.</div>
   </div>`;
 }
 
@@ -100,7 +98,7 @@ function spreadUnitDistPanel() {
     <tr><td><b>${esc(r.unit)}</b></td>
     <td style="width:110px"><div class="prog-bar"><i style="width:${Math.round(r.count / max * 100)}%"></i></div><span class="mini">${r.count}</span></td></tr>`).join('');
   return `<div class="panel">
-    <div class="ph"><h3>호기별 층화</h3><span class="ps">특정 호기 집중 = 설치·시공/개체 병 · 고른 분포 = 설계·공통 병</span></div>
+    <div class="ph"><h3>호기별 층화</h3><span class="ps">호기별 이슈 분포</span></div>
     <div class="tbl-scroll" style="max-height:300px"><table><tr><th>호기</th><th>이슈 건수</th></tr>${tr}</table></div>
   </div>`;
 }
@@ -122,7 +120,7 @@ function spreadSteps(C) {
   return `<div class="pocv">
     <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">이슈로그(원인계층·호기 필수) + 호기퀄 — 공통 레코드 스키마</span></div>
     <section class="step" id="d1">
-      ${stepHead(1, '이슈 대장 (전수)', '"설계의 병인가, 이 호기만의 병인가" — 원인계층 분류 + 호기별 층화', `${all.length}건`, 'prog')}
+      ${stepHead(1, '이슈 대장 (전수)', '원인계층 분류 + 호기별 층화', `${all.length}건`, 'prog')}
       <div class="step-body"><div class="panel">
         <div class="ph"><h3>공통 레코드 스키마 — 확산부터 호기/라인 필수</h3><span class="ps">설계성 고장 = 전 함대 리스크 (docs/RECORD_SCHEMA.md §3)</span></div>
         <div class="tbl-scroll" style="max-height:460px"><table><tr><th>ID</th><th class="c">발생</th><th>고장모드</th><th class="c">원인계층</th><th class="c">심각도</th><th class="c">호기</th><th class="c">재발</th><th class="c">상태</th><th class="c">무발생검증</th><th class="c">종결일</th><th>상세</th><th class="c">보기</th></tr>${rows}</table></div>
@@ -211,7 +209,7 @@ function opsDownParetoBoard() {
     <td style="width:130px"><div class="prog-bar"><i style="width:${Math.round(r.minutes / max * 100)}%;background:var(--major)"></i></div><span class="mini">${fmt(r.minutes)}분</span></td>
     <td class="r">${r.cumPct}%</td></tr>`).join('');
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>다운타임 Pareto</span><span class="pg-subh-note">건수가 아니라 손실 시간 순 — CIP 우선순위의 근거</span></div>
+    <div class="pg-subh"><span>다운타임 Pareto</span><span class="pg-subh-note">손실 시간 순</span></div>
     <table><tr><th>고장모드</th><th>다운타임</th><th class="r">누적</th></tr>${tr}</table>
     <div class="mini mt">건수 Pareto(아래)와 순서가 다르면 — <b>드물지만 오래 세우는 고장</b>이 먼저다.</div>
   </div>`;
@@ -249,7 +247,7 @@ function opsSteps(C) {
   return `<div class="pocv">
     <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">필드 FRACAS(승격 건) + 월간 RAM + CIP — 공통 레코드 스키마</span></div>
     <section class="step" id="d1">
-      ${stepHead(1, '필드 FRACAS 대장 (승격 건)', '알람 전수가 아니라 승격 기준(정지 유발·반복)을 넘은 건만 — 다운타임·호기 필수', `${all.length}건`, 'prog')}
+      ${stepHead(1, '필드 FRACAS 대장 (승격 건)', '승격 기준(정지 유발·반복) 초과 건만 — 다운타임·호기 필수', `${all.length}건`, 'prog')}
       <div class="step-body"><div class="panel">
         <div class="ph"><h3>공통 레코드 스키마 — 운영 단계</h3><span class="ps">다운타임(분)이 비용 Pareto의 원천 (docs/PROCESS.md §3)</span></div>
         <div class="tbl-scroll" style="max-height:460px"><table><tr><th>ID</th><th class="c">발생</th><th>고장모드</th><th class="c">원인계층</th><th class="c">심각도</th><th class="c">호기</th><th class="c">다운타임</th><th class="c">재발</th><th class="c">상태</th><th class="c">무발생검증</th><th>상세</th><th class="c">보기</th></tr>${rows}</table></div>
@@ -289,7 +287,7 @@ function opsHead(stage, C) {
 function renderSpread(C) {
   $('s-overview').innerHTML = devShell('spread', C, {
     head: opsHead('spread', C),
-    qbox: `이 단계의 질문: <b>“설계의 병인가, 이 호기만의 병인가?”</b> — 고장을 <b>원인계층(설계/제작·조립/설치·시공/운영·환경)</b>으로 분류하고 호기별로 층화한다. 설계성 고장은 한 호기의 사건이 아니라 <b>전 함대의 리스크</b> — 즉시 에스컬레이션.`,
+    qbox: '',
     aTitle: '완주 진행 → 함대 퀄 · 연결된 지표',
     aHero: spreadFleetHero(C),
     aChart: spreadUnitPanel(),
@@ -309,7 +307,7 @@ function renderSpread(C) {
 function renderOpsMode(C) {
   $('s-overview').innerHTML = devShell('ops', C, {
     head: opsHead('ops', C),
-    qbox: `이 단계의 질문: <b>“어떤 고장부터 없애는 게 경제적인가?”</b> — 알람은 자동 수집하고 <b>승격 기준을 넘은 건만 필드 FRACAS</b>로 관리. 우선순위는 건수가 아니라 <b>다운타임(비용) Pareto</b>가 정하고, 개선은 CIP로 닫고, 고장모드는 차기 과제 FMEA로 환류한다.`,
+    qbox: '',
     aTitle: '운영 성과 → 월간 RAM · 연결된 지표',
     aHero: opsRamHero(C),
     aChart: opsRamTrendPanel({ zoom: true, narrow: true }),

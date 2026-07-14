@@ -136,7 +136,6 @@ function devClearTrack(C, opts) {
     <div class="clr-list">${tiles}</div>
     <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}</div>
       <div class="exr-dday"><b>${esc(dday || '—')}</b><span>${esc(g.reviewDate || '일정 미정')}</span></div>
-      <div class="exr-note">사전 확정 잣대 — 사후 변경 금지 · 리셋은 실패가 아니라 잣대가 지켜진다는 증거</div>
       <div class="exr-tecop"><div class="exr-th">고정 안건 — TECOP 리스크</div>${trows || '<div class="mini">TECOP 미기재</div>'}</div></div>
   </div>`;
 }
@@ -187,7 +186,7 @@ function devStatGate(C) {
   const g = C.gate || {};
   const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
   return `<div class="pg-stat"><span class="pg-stat-k">${esc(g.label || '게이트 리뷰')}</span><span class="pg-stat-v">${esc(dday || '—')}</span>
-    <span class="pg-stat-s">${esc(g.reviewDate || '—')} · 리셋은 실패가 아니라 <b>잣대가 지켜진다는 증거</b></span></div>`;
+    <span class="pg-stat-s">${esc(g.reviewDate || '—')}</span></div>`;
 }
 
 /* [와이드 트랙] 조치 우선순위 큐 — "지금 먼저 잡을 것": 오픈 레코드를 S×O로 정렬.
@@ -214,9 +213,8 @@ function devPriorityPanel() {
      <td class="c"><span class="badge ${POC_ST_BADGE[pocStBucket(r.status)]}">${esc(r.status || '—')}</span></td></tr>`).join('');
   const highN = open.filter(o => o.pr === 'High').length;
   return `<div class="panel tight">
-    <div class="ph"><h3>조치 우선순위 — 지금 먼저 잡을 것</h3><span class="ps">오픈 ${open.length}건 · S×O 정렬${highN ? ` · <b style="color:var(--crit)">High ${highN}</b>` : ''}</span><a class="more" href="#/${esc(CUR_PID || '')}/all">전체 대장 →</a></div>
+    <div class="ph"><h3>조치 우선순위</h3><span class="ps">오픈 ${open.length}건 · S×O 정렬${highN ? ` · <b style="color:var(--crit)">High ${highN}</b>` : ''}</span><a class="more" href="#/${esc(CUR_PID || '')}/all">전체 대장 →</a></div>
     <div class="tbl-scroll" style="max-height:300px"><table><tr><th class="c">우선</th><th>레코드</th><th class="c">심각도</th><th class="c">발생도</th><th class="c">상태</th></tr>${rows || '<tr><td colspan="5" class="mini c">오픈 없음 — 전건 종결</td></tr>'}</table></div>
-    <div class="mini mt">치명·빈발을 상류에서 소진할수록 하류가 싸진다 — 홈의 <b>심각도 깔때기</b>가 그 증거</div>
   </div>`;
 }
 
@@ -358,7 +356,7 @@ function devShell(stage, C, s) {
   return `
     ${s.head || devHead(stage, C)}
     <div class="pocv">
-      <div class="qbox">${s.qbox}</div>
+      ${s.qbox ? `<div class="qbox">${s.qbox}</div>` : ''}
       <div class="ov-2col">
         ${devClearTrack(C, s.clear)}
         <div class="prog-track tk-a"><div class="pt-h">${s.aTitle}</div>${s.aHero}${s.aChart}</div>
@@ -390,18 +388,16 @@ function pocFourwayBoard() {
     return `<div class="sg ${cls}" style="flex:${f.count}"><span>${SEG_SHORT[k]} ${f.count}</span></div>`;
   }).join('');
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>발굴 이슈 전수 4분류</span><span class="pg-subh-note">${st.total || 0}건 전수 · 통계(MTBF) 금지 — 분류가 결론</span></div>
+    <div class="pg-subh"><span>발굴 이슈 전수 4분류</span><span class="pg-subh-note">${st.total || 0}건 전수 · 통계(MTBF) 금지</span></div>
     <div class="fw-board">
       <div class="fwt risk hero${ok ? '' : ' hero-bad'}">
         <div class="hero-n ${ok ? 'ok' : 'bad'}">${con.count}<small>건</small></div>
         <div class="hero-tx"><div class="t">${esc(nm9(con.label))}</div>
-          <div class="m">${ok ? '이 아키텍처로 해결 불가한 병 — <b>0건 유지가 POC의 결론</b>' : '<b>⚠ 컨셉 재검토 필요</b> — 즉시 게이트 보류'}</div></div>
-        ${ok ? '<span class="fw-badge">POC의 성적표</span>' : ''}
+          <div class="m">${ok ? '' : '<b>⚠ 컨셉 재검토 필요</b> — 즉시 게이트 보류'}</div></div>
       </div>
       ${tile(by.design, 'design')}${tile(by.impl, 'sw')}${tile(by.env, 'env')}
     </div>
     <div class="compo"><div class="sg sg-zero">컨셉 ${con.count}</div>${segs}</div>
-    <div class="mini mt">"에러가 많이 났다"가 아니라 <b>"아키텍처를 죽이는 에러는 없었다"</b>로 읽는다 — 랩에서 찾은 에러는 싸고, 라인에서 찾은 에러는 비싸다.</div>
   </div>`;
 }
 
@@ -445,16 +441,14 @@ function devClassBoard(stage) {
     const used = eb.used != null ? eb.used : rel;
     const ok = limit == null || used < limit;
     hero = { n: used, small: limit != null ? `/${limit} (현 시도)` : '건', ok, label: '에러 버짓 — 관련 고장만 차감',
-             desc: ok ? `잔여 <b>${limit != null ? limit - used : '—'}회</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회 — 판정 합의제(비관련 제외)`
-                      : `<b>⚠ 한도 도달 — 완주 리셋</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회`,
-             badge: '양산평가의 성적표' };
+             desc: ok ? `잔여 <b>${limit != null ? limit - used : '—'}회</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회`
+                      : `<b>⚠ 한도 도달 — 완주 리셋</b> · 누적 관련 ${rel}건 · 리셋 ${eb.resets || 0}회` };
   } else {
     const rec = DATA.recurrence || {};
     const ok = !rec.count;
     const items = (rec.items || []).map(it => `${esc(it.mode || it.type || it.code || '')}(${it.count})`).join(', ');
     hero = { n: rec.count || 0, small: '개 모드', ok, label: '만성(재발) 고장',
-             desc: ok ? '동일 모드 재출현 없음 — <b>수렴의 증거</b>' : `<b>게이트 전 마감 필수(재발 0)</b> · ${items}`,
-             badge: 'Pilot의 성적표' };
+             desc: ok ? '동일 모드 재출현 없음' : `<b>게이트 전 마감 필수(재발 0)</b> · ${items}` };
   }
   const tile = r =>
     `<div class="fwt ${CAUSE6_TILE[r.key]}"><div class="t">${esc(r.label)}</div><div class="n">${r.count}<small>건</small></div><div class="m">종결 ${r.closed} · 진행 ${r.count - r.closed}</div></div>`;
@@ -462,17 +456,16 @@ function devClassBoard(stage) {
     `<div class="sg ${CAUSE6_SEG[r.key]}" style="flex:${r.count}"><span>${esc(r.label)} ${r.count}</span></div>`).join('')
     + (unclass ? `<div class="sg sg-oper" style="flex:${unclass};opacity:.55"><span>미분류 ${unclass}</span></div>` : '');
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>발굴 이슈 분류 — 근본원인 6분류</span><span class="pg-subh-note">${recs.length}건 전수 · 4분류의 세분화 축${unclass ? ` · <b style="color:var(--major)">미분류 ${unclass}</b>` : ''}</span></div>
+    <div class="pg-subh"><span>발굴 이슈 분류 — 근본원인 6분류</span><span class="pg-subh-note">${recs.length}건 전수${unclass ? ` · <b style="color:var(--major)">미분류 ${unclass}</b>` : ''}</span></div>
     <div class="fw-board">
       <div class="fwt risk hero${hero.ok ? '' : ' hero-bad'}">
         <div class="hero-n ${hero.ok ? 'ok' : 'bad'}">${hero.n}<small>${hero.small}</small></div>
         <div class="hero-tx"><div class="t">${esc(hero.label)}</div><div class="m">${hero.desc}</div></div>
-        ${hero.ok ? `<span class="fw-badge">${esc(hero.badge)}</span>` : ''}
       </div>
       ${rows.map(tile).join('')}
     </div>
     <div class="compo">${segs || '<div class="mini">기록 없음</div>'}</div>
-    <div class="mini mt">분류는 기록 시점에 판단 트리(지표 핸드북 ⑥)로 — 자유 텍스트 금지 · 세분화는 매핑표로만${unclass ? ' · <b>미분류는 에러로그 「원인분류」 컬럼 기재로 해소</b>' : ''}</div>
+    ${unclass ? '<div class="mini mt"><b>미분류는 에러로그 「원인분류」 컬럼 기재로 해소</b></div>' : ''}
   </div>`;
 }
 
@@ -487,9 +480,9 @@ function fracasLoopPanel(opts) {
   const recItems = (rec.items || []).map(it => `${esc(it.mode || it.type || it.code || '')}(${it.count})`).join(', ');
   const recNote = opts.recurZeroGate
     ? `↺ 재발(만성) 모드 <b>${rec.count || 0}개</b> — 게이트 전 마감 필수(재발 0)${recItems ? ` · ${recItems}` : ''}`
-    : `↺ 재발 모드 <b>${rec.count || 0}개</b> — 동일 고장모드 재출현 = 근본원인 미해결 신호 → 재분석 의무${recItems ? ` · ${recItems}` : ''}`;
+    : `↺ 재발 모드 <b>${rec.count || 0}개</b>${recItems ? ` · ${recItems}` : ''}`;
   return `<div class="panel looppanel${opts.mt ? ' mt' : ''}">
-    <div class="ph"><h3>폐루프 FRACAS — 조치는 "했다"가 아니라 "닫혔다"</h3><span class="ps">종결 = 조치 후 동일 모드 무발생 (CRITERIA §5) · 전 단계 공통 배관</span></div>
+    <div class="ph"><h3>폐루프 FRACAS</h3><span class="ps">종결 = 조치 후 동일 모드 무발생 (CRITERIA §5)</span></div>
     <div class="loopline">
       ${box('new', '신규', '대장 등록')}<span class="lar">→</span>
       ${box('acting', '조치중', '원인 가설·조치')}<span class="lar">→</span>
@@ -531,7 +524,7 @@ function pocTrendPanel(opt) {
     + `<circle cx="${x(i)}" cy="${y(t.closed)}" r="3.5" fill="#3E9B6E"><title>${t.week}주차 · 종결 ${t.closed}</title></circle>`).join('');
   const last = tr[n - 1], open = last.found - last.closed;
   return `<div class="panel${(opt.wide || opt.narrow) ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('trend')" title="클릭하면 크게 보기"` : ''}>
-    <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건 · 좁혀지는가${opt.zoom ? ' ⤢' : ''}</span></div>
+    <div class="ph"><h3>수렴 추이 — 누적 발견 vs 종결</h3><span class="ps">간격 = 오픈 ${open}건${opt.zoom ? ' ⤢' : ''}</span></div>
     <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 누적 발견 대 누적 종결">
       ${axis}<line x1="${left}" y1="${top}" x2="${left}" y2="${bot}" stroke="#C9DCEC"/>
       <polygon points="${area}" fill="#2E89D6" opacity="0.07"/>
@@ -598,7 +591,7 @@ function pocSteps(C) {
   return `<div class="pocv">
     <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">업체 이슈로그·런기록·비정상평가 (필수 5필드 + 선택 필드)</span></div>
     <section class="step" id="d1">
-      ${stepHead(1, '이슈 대장 (전수)', '"이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가" — 전 건 4분류·폐루프 상태', `${all.length}건`, 'prog')}
+      ${stepHead(1, '이슈 대장 (전수)', '전 건 4분류 · 폐루프 상태', `${all.length}건`, 'prog')}
       <div class="step-body"><div class="panel">
         <div class="ph"><h3>공통 레코드 스키마 — POC 필수 5필드</h3><span class="ps">종결일·무발생검증은 선택 (Pilot부터 필수) — docs/RECORD_SCHEMA.md</span></div>
         <div class="tbl-scroll" style="max-height:460px"><table><tr><th>ID</th><th class="c">발생</th><th>고장모드 (표준분류)</th><th class="c">4분류</th><th class="c">심각도</th><th class="c">재발</th><th class="c">상태</th><th class="c">무발생검증</th><th class="c">종결일</th><th>상세</th><th class="c">보기</th></tr>${pocLedgerRows(all, true)}</table></div>
@@ -646,7 +639,7 @@ function pilotGrowthPanel(opt) {
   const last = g[g.length - 1];
   return `
     <div class="panel${(opt.vbH || opt.narrow) ? ' tight ovchart' : ''}"${opt.zoom ? ` onclick="openDevChart('growth')" title="클릭하면 크게 보기"` : ''}>
-      <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy — 안정화의 정량 증거${opt.zoom ? ' ⤢' : ''}</span></div>
+      <div class="ph"><h3>MCBF 성장곡선</h3><span class="ps">주차 누적 · 목표 ${fmt(target)}Cy${opt.zoom ? ' ⤢' : ''}</span></div>
       <svg viewBox="0 0 ${W} ${vbH}" style="width:100%;height:auto;display:block" role="img" aria-label="주차별 MCBF 성장곡선">
         ${target ? `<line x1="${left}" y1="${y(target)}" x2="${right}" y2="${y(target)}" stroke="#E08600" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${left + 4}" y="${y(target) - 6}" font-size="12.5" fill="#B36F0A" font-weight="700">목표 ${fmt(target)}</text>` : ''}
         <line x1="${left}" y1="${bot}" x2="${right}" y2="${bot}" stroke="#C9DCEC"/>
@@ -706,7 +699,7 @@ function pilotSteps(C) {
   return `<div class="pocv">
     <div class="sbox-h"><span class="tag">평가 상세</span><h2>평가 상세 내역 — 원본 기록</h2><span class="d">업체 일일평가·에러로그 + 관리 시트(조치검증) — Pilot부터 버전 필수</span></div>
     <section class="step" id="d1">
-      ${stepHead(1, '고장 레코드 (전수)', '"우리는 수렴하고 있는가" — 모든 기록에 버전, 모든 수정에 검증 런', `${(DATA.errors || []).length}건`, 'prog')}
+      ${stepHead(1, '고장 레코드 (전수)', '모든 기록에 버전 · 모든 수정에 검증 런', `${(DATA.errors || []).length}건`, 'prog')}
       <div class="step-body">${pilotRecordsPanel()}
         <div class="mini mt">재발(↺) = 동일 고장모드 재출현 (docs/CRITERIA.md §5) · 원인분류는 POC 4분류의 세분화 축 — 단계를 넘어 통계가 이어진다</div></div>
     </section>
@@ -737,7 +730,7 @@ function pilotSteps(C) {
 /* POC 관제 — 케미컬 골격 + POC 렌즈 */
 function renderPoc(C) {
   $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: `이 단계의 질문: <b>“이 고장모드는 컨셉의 병인가, 고칠 수 있는 병인가?”</b> — 표본이 작고 설계가 유동적이므로 통계(MTBF) 대신 <b>전수 4분류</b>로 보고. 단발성 조치의 연속이 아니라 <b>대장 위의 수렴</b>으로 읽히게 한다.`,
+    qbox: '',
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
     aChart: pocTrendPanel({ narrow: true, zoom: true }),
@@ -757,7 +750,7 @@ function renderPoc(C) {
 /* Pilot 관제 — 같은 골격 + Pilot 렌즈 */
 function renderPilot(C) {
   $('s-overview').innerHTML = devShell('pilot', C, {
-    qbox: `이 단계의 질문: <b>“우리는 수렴하고 있는가?”</b> — 증거는 세 가지: <b>성장곡선의 기울기 · 줄어드는 Pareto · 재발 0</b>. 모든 수정에 검증 런, 모든 기록에 버전.`,
+    qbox: '',
     aTitle: '완주 진행 → 성장 · 연결된 지표',
     aHero: devRunHero(C, [devStatActions(), devStatGate(C)]),
     aChart: pilotGrowthPanel({ narrow: true, zoom: true }),
