@@ -23,7 +23,10 @@ function portfolioEntry(pid) {
 /* ── 사이드 내비: 홈 + 과제 목록(단계 배지) + 활성 과제의 하위 탭 ── */
 function buildNav() {
   let html = `<a href="#/home"${VIEW === 'home' ? ' class="active"' : ''}><span class="st">▦</span> ${esc(orgT('homeLabel', '한눈에 보기'))}</a>`;
-  html += `<a href="#/guide"${VIEW === 'guide' ? ' class="active"' : ''}><span class="st">✎</span> ${esc(orgT('guideLabel', '지표 핸드북'))}</a>`;
+  // 지표 핸드북 노출 토글 — projects.json org.showGuide:false 면 내비에서 숨김 (정리 중 비공개용)
+  if (orgT('showGuide', true) !== false) {
+    html += `<a href="#/guide"${VIEW === 'guide' ? ' class="active"' : ''}><span class="st">✎</span> ${esc(orgT('guideLabel', '지표 핸드북'))}</a>`;
+  }
   html += `<a href="#/library"${VIEW === 'library' ? ' class="active"' : ''}><span class="st">▥</span> ${esc(orgT('libraryLabel', '고장모드 라이브러리'))}</a>`;
   html += `<div class="t">${esc(orgT('navProjects', '과제 (표준 템플릿)'))}</div>`;
   ((REG && REG.projects) || []).forEach(p => {
@@ -201,7 +204,7 @@ function parseHash() {
 function route() {
   const r = parseHash();
   if (r.view === 'home') showHome();
-  else if (r.view === 'guide') showGuide();
+  else if (r.view === 'guide') { if (orgT('showGuide', true) !== false) showGuide(); else showHome(); }   // 숨김 중엔 직접 URL도 홈으로
   else if (r.view === 'library') showLibrary(r.key);
   else if (VIEW === 'project' && CUR_PID === r.pid) showProjectTab(r.tab);   // 같은 과제 내 탭 전환 — 재마운트 없음
   else openProject(r.pid, r.tab);

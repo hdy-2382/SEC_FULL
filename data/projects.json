@@ -107,7 +107,8 @@
       "recurRule": "동일 고장모드 재출현 = 재발 → 재분석 의무 (종결 여부 무관)",
       "vocab": "DRM-01~08",
       "vocabVersion": "v2.1"
-    }
+    },
+    "showGuide": false
   },
   "projects": [
     {
