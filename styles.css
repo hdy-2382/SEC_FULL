@@ -265,9 +265,16 @@
   .tk-exec .exr-dday span{font-size:12px;color:var(--muted);font-weight:600}
   .tk-exec .exr-note{font-size:10.5px;color:var(--muted);font-weight:600;text-align:center;padding:8px 0 6px;line-height:1.45}
   .tk-exec .exr-tecop{flex:1;display:flex;flex-direction:column;min-height:0;margin-top:2px}
-  .tk-exec .exr-th{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;padding:2px 0 5px}
-  .tk-exec .exr-row{flex:1;display:flex;align-items:center;gap:8px;border-top:1px solid var(--line-soft);padding:5px 0;min-height:0}
-  .tk-exec .exr-k{flex:none;width:56px;font-size:12px;font-weight:800;color:var(--navy-deep)}
+  .tk-exec .exr-th{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;padding:2px 0 6px}
+  /* TECOP 축별 구획 박스 — 상태색 좌측 보더 (양호 초록 / 주의 주황 / 리스크 빨강) */
+  .tk-exec .exr-box{--clr:var(--green);flex:1;min-height:0;display:flex;align-items:center;gap:7px;margin-bottom:6px;
+    border:1px solid var(--line-soft);border-left:3px solid var(--clr);border-radius:9px;background:var(--card-alt);padding:6px 10px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
+  .tk-exec .exr-box:last-child{margin-bottom:0}
+  .tk-exec .exr-box.st-warn{--clr:var(--major)} .tk-exec .exr-box.st-risk{--clr:var(--crit)}
+  .tk-exec .exr-box.rowlink{cursor:pointer}
+  .tk-exec .exr-box.rowlink:hover{background:var(--card);box-shadow:0 2px 6px rgba(20,51,92,.10)}
+  .tk-exec .exr-ax{flex:none;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:var(--navy-deep);color:#fff;font-size:10px;font-weight:800}
+  .tk-exec .exr-k{flex:none;font-size:12px;font-weight:800;color:var(--navy-deep)}
   .tk-exec .exr-st{flex:none;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:10px;background:var(--green-soft);color:var(--green)}
   .tk-exec .exr-st.warn{background:var(--major-soft);color:var(--major)}
   .tk-exec .exr-st.risk{background:var(--crit-soft);color:var(--crit)}
@@ -276,8 +283,6 @@
   .tk-exec .exr-rn.hi{color:var(--crit);background:var(--crit-soft)}
   .tk-exec .exr-rn.md{color:var(--major);background:var(--major-soft)}
   .tk-exec .exr-rn.lo{color:var(--sky);background:var(--sky-soft)}
-  .tk-exec .exr-row.rowlink{cursor:pointer;border-radius:7px}
-  .tk-exec .exr-row.rowlink:hover{background:var(--card-alt)}
   .tk-exec .exr-more{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--sky);cursor:pointer}
   .tk-exec .exec-roi-h{display:flex;align-items:baseline;gap:8px}
   /* ── TECOP 리스크 레지스터 모달 (openTecopModal) — 스코프: .tcpm ──

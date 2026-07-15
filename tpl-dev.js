@@ -135,8 +135,8 @@ function devClearTrack(C, opts) {
     const openRisks = (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중');
     // 오픈 배지 색 = 오픈 리스크 최악 레벨 (High 빨강 / Medium 주황 / Low 파랑)
     const worst = openRisks.some(r => r.level === 'High') ? 'hi' : openRisks.some(r => r.level === 'Medium') ? 'md' : 'lo';
-    return `<div class="exr-row${anyRisk ? ' rowlink' : ''}"${anyRisk ? ` onclick="openTecopModal('${esc(t.k)}')" title="클릭 = 리스크 레지스터"` : ''}>
-      <span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
+    return `<div class="exr-box st-${cls || 'ok'}${anyRisk ? ' rowlink' : ''}"${anyRisk ? ` onclick="openTecopModal('${esc(t.k)}')" title="클릭 = 리스크 레지스터"` : ''}>
+      <span class="exr-ax">${esc(t.k)}</span><span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
       <span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span>
       ${openRisks.length ? `<span class="exr-rn ${worst}">오픈 ${openRisks.length}</span>` : ''}</div>`;
   }).join('');
