@@ -132,11 +132,13 @@ function devClearTrack(C, opts) {
   const anyRisk = (C.tecop || []).some(t => (t.risks || []).length);
   const trows = (C.tecop || []).map(t => {
     const cls = TCLS[t.status] || '';
-    const open = (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중').length;
+    const openRisks = (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중');
+    // 오픈 배지 색 = 오픈 리스크 최악 레벨 (High 빨강 / Medium 주황 / Low 파랑)
+    const worst = openRisks.some(r => r.level === 'High') ? 'hi' : openRisks.some(r => r.level === 'Medium') ? 'md' : 'lo';
     return `<div class="exr-row${anyRisk ? ' rowlink' : ''}"${anyRisk ? ` onclick="openTecopModal('${esc(t.k)}')" title="클릭 = 리스크 레지스터"` : ''}>
       <span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
       <span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span>
-      ${open ? `<span class="exr-rn">오픈 ${open}</span>` : ''}</div>`;
+      ${openRisks.length ? `<span class="exr-rn ${worst}">오픈 ${openRisks.length}</span>` : ''}</div>`;
   }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     <div class="clr-list">${tiles}</div>
@@ -287,34 +289,48 @@ function openTecopModal(focusK) {
   const isOpen = r => r.status === '식별' || r.status === '완화중';
   const allRisks = tecop.flatMap(t => t.risks || []);
   const totOpen = allRisks.filter(isOpen).length;
+  const totHigh = allRisks.filter(r => isOpen(r) && r.level === 'High').length;
+  const totMit = allRisks.filter(r => r.status === '완화중').length;
   const totDone = allRisks.filter(r => r.status === '완화 완료').length;
+  const dday9 = due => {
+    if (!due || typeof ddayLabel !== 'function') return '';
+    const d = ddayLabel(due);
+    const urgent = /^D-([0-3])$|^D-DAY$|^D\+/.test(d || '');
+    return d ? `<span class="dd${urgent ? ' hot' : ''}">${esc(d)}</span>` : '';
+  };
   const groups = tecop.filter(t => (t.risks || []).length).map(t => {
     const cls = TCLS[t.status] || '';
-    // 그룹 요약 — 오픈 리스크의 레벨 구성 (목업 문법: "오픈 High 1 · Medium 1")
     const oc = {};
     (t.risks || []).filter(isOpen).forEach(r => { oc[r.level] = (oc[r.level] || 0) + 1; });
     const osum = ['High', 'Medium', 'Low'].filter(l => oc[l]).map(l => `${l} ${oc[l]}`).join(' · ');
     const items = (t.risks || []).map(r => {
       const lv = LV[r.level] || LV.Low;
       const pct = Math.max(0, Math.min(100, r.progress || 0));
+      const watch = r.status === '감시(수용)';
       return `<div class="tr9 ${lv[0]}">
-        <div class="r1"><span class="rid9">${esc(r.id || '')}</span><b>${esc(r.risk || '')}</b>
-          <span class="sp"><span class="badge ${lv[1]}">${esc(r.level || '')}</span><span class="tst ${RST[r.status] || 'idn'}">${esc(r.status || '식별')}</span></span></div>
-        <div class="r2">
-          ${r.mitigation ? `<span class="mit9"><b>완화</b>${esc(r.mitigation)}</span>` : ''}
+        <div class="r1"><span class="lvp ${lv[0]}">${esc(r.level || '')}</span><span class="rid9">${esc(r.id || '')}</span><b>${esc(r.risk || '')}</b>
+          <span class="sp"><span class="tst ${RST[r.status] || 'idn'}">${esc(r.status || '식별')}</span></span></div>
+        ${r.mitigation ? `<div class="mit9"><b>완화</b>${esc(r.mitigation)}</div>` : ''}
+        <div class="r3">
+          <span class="ow"><i>${esc((r.owner || '—').slice(0, 1))}</i>${esc(r.owner || '—')}</span>
+          ${r.due ? `<span class="due">~${esc(r.due.slice(5))} ${dday9(watch || pct >= 100 ? '' : r.due)}</span>` : ''}
           ${r.link ? `<span class="rlink" title="관련 고장 레코드">↺ ${esc(r.link)}</span>` : ''}
-          <span class="who">${esc(r.owner || '—')}${r.due ? ` · ~${esc(r.due.slice(5))}` : ''}</span>
-          ${r.progress != null && r.status !== '감시(수용)' ? `<span class="pw"><span class="prog-bar"><i style="width:${pct}%${pct >= 100 ? ';background:var(--green)' : ''}"></i></span><em>${pct}%</em></span>` : ''}
+          ${r.progress != null && !watch ? `<span class="pw"><span class="pb9"><i style="width:${pct}%${pct >= 100 ? ';background:var(--green)' : ''}"></i></span><em>${pct}%</em></span>` : '<span class="pw watch">상시 감시</span>'}
         </div></div>`;
     }).join('');
     return `<div class="tgrp${focusK === t.k ? ' focus' : ''}" id="tcp-${esc(t.k)}">
-      <div class="tgh"><b>${esc(t.k)} ${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || '')}</b><span class="exr-st ${cls}">${TLB[cls]}</span>${osum ? `<span class="tgo">— 오픈 ${osum}</span>` : ''}<span class="tgn">${esc(t.note || '')}</span></div>
-      ${items}</div>`;
+      <div class="tgh"><span class="axb">${esc(t.k)}</span><b>${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || '')}</b><span class="exr-st ${cls}">${TLB[cls]}</span>${osum ? `<span class="tgo">오픈 ${osum}</span>` : '<span class="tgo z">오픈 없음</span>'}<span class="tgn" title="${esc(t.note || '')}">${esc(t.note || '')}</span></div>
+      <div class="tgb">${items}</div></div>`;
   }).join('');
   $('modal-title').textContent = `TECOP 리스크 레지스터 — ${(((DATA || {}).config || {}).project || {}).name || ''}`;
   $('modal-body').innerHTML = `<div class="tcpm">
-    <div class="tcp-sum"><span class="ts-chip open">오픈 ${totOpen}</span><span class="ts-chip done">완화 완료 ${totDone}</span>
-      <span class="mini">판정 규칙 — 게이트 리뷰 시점 · 근거 필수 · P는 worst-of (CRITERIA §7)</span></div>
+    <div class="tcp-stats">
+      <div class="ts9 crit"><b>${totOpen}</b><span>오픈 (식별·완화중)</span></div>
+      <div class="ts9 ${totHigh ? 'crit' : 'dim'}"><b>${totHigh}</b><span>High 오픈</span></div>
+      <div class="ts9 sky"><b>${totMit}</b><span>완화중</span></div>
+      <div class="ts9 ok"><b>${totDone}</b><span>완화 완료</span></div>
+      <div class="ts9 rule"><span>판정 규칙</span><em>게이트 리뷰 시점 판정 · 근거 필수<br>P는 worst-of — CRITERIA §7</em></div>
+    </div>
     ${groups}</div>`;
   const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');
   $('modal-back').classList.add('open');

@@ -272,39 +272,59 @@
   .tk-exec .exr-st.warn{background:var(--major-soft);color:var(--major)}
   .tk-exec .exr-st.risk{background:var(--crit-soft);color:var(--crit)}
   .tk-exec .exr-n{flex:1;min-width:0;font-size:11px;color:var(--muted);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tk-exec .exr-rn{flex:none;font-size:10px;font-weight:800;color:var(--crit);background:var(--crit-soft);border-radius:8px;padding:1.5px 7px;white-space:nowrap}
+  .tk-exec .exr-rn{flex:none;font-size:10px;font-weight:800;border-radius:8px;padding:1.5px 7px;white-space:nowrap}
+  .tk-exec .exr-rn.hi{color:var(--crit);background:var(--crit-soft)}
+  .tk-exec .exr-rn.md{color:var(--major);background:var(--major-soft)}
+  .tk-exec .exr-rn.lo{color:var(--sky);background:var(--sky-soft)}
   .tk-exec .exr-row.rowlink{cursor:pointer;border-radius:7px}
   .tk-exec .exr-row.rowlink:hover{background:var(--card-alt)}
   .tk-exec .exr-more{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--sky);cursor:pointer}
   .tk-exec .exec-roi-h{display:flex;align-items:baseline;gap:8px}
-  /* TECOP 리스크 레지스터 모달 (openTecopModal) — 스코프: .tcpm (조형: 방향 비교 시안 기준) */
-  .tcpm .tcp-sum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:2px 0 12px}
-  .tcpm .ts-chip{font-size:11.5px;font-weight:800;border-radius:9px;padding:3px 10px}
-  .tcpm .ts-chip.open{background:var(--crit-soft);color:var(--crit)}
-  .tcpm .ts-chip.done{background:var(--green-soft);color:var(--green)}
-  .tcpm .tcp-sum .mini{margin-left:auto}
-  .tcpm .tgrp{border-top:1px solid var(--line-soft);padding:13px 0 6px}
-  .tcpm .tgrp.focus{background:var(--sky-soft);border-radius:12px;padding:13px 12px 8px;border-top:none}
-  .tcpm .tgh{display:flex;align-items:center;gap:8px;margin-bottom:9px;min-width:0}
+  /* ── TECOP 리스크 레지스터 모달 (openTecopModal) — 스코프: .tcpm ──
+     조형: 스탯 스트립 + 축 배지 그룹 + 입체 리스크 카드 (레벨 필·오너 칩·D-day·진행바) */
+  .tcpm .tcp-stats{display:grid;grid-template-columns:repeat(4,minmax(86px,1fr)) minmax(200px,1.6fr);gap:9px;margin:2px 0 16px}
+  .tcpm .ts9{border:1px solid var(--line-soft);border-radius:11px;background:var(--card-alt);padding:9px 13px;display:flex;flex-direction:column;gap:1px}
+  .tcpm .ts9 b{font-size:22px;font-weight:800;line-height:1.15;color:var(--navy-deep)}
+  .tcpm .ts9 span{font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+  .tcpm .ts9.crit b{color:var(--crit)} .tcpm .ts9.sky b{color:var(--sky)} .tcpm .ts9.ok b{color:var(--green)}
+  .tcpm .ts9.dim b{color:#9aa9bb}
+  .tcpm .ts9.rule{justify-content:center}
+  .tcpm .ts9.rule span{color:var(--ink-soft)}
+  .tcpm .ts9.rule em{font-style:normal;font-size:10.5px;color:var(--muted);line-height:1.5}
+  .tcpm .tgrp{margin-bottom:16px;border:1px solid var(--line-soft);border-radius:13px;overflow:hidden;background:var(--card)}
+  .tcpm .tgrp.focus{outline:2px solid var(--sky);outline-offset:-1px}
+  .tcpm .tgh{display:flex;align-items:center;gap:9px;min-width:0;padding:10px 14px;background:var(--card-alt);border-bottom:1px solid var(--line-soft)}
+  .tcpm .axb{flex:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--navy-deep);color:#fff;font-size:12px;font-weight:800}
   .tcpm .tgh b{font-size:13.5px;color:var(--navy-deep);flex:none}
-  .tcpm .tgh .tgo{flex:none;font-size:11px;font-weight:700;color:var(--crit)}
+  .tcpm .tgh .tgo{flex:none;font-size:10.5px;font-weight:800;color:var(--crit);background:var(--crit-soft);border-radius:8px;padding:2px 8px}
+  .tcpm .tgh .tgo.z{color:var(--muted);background:var(--line-soft)}
   .tcpm .tgh .tgn{flex:1;min-width:0;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
-  .tcpm .tr9{border:1px solid var(--line-soft);border-left:3px solid var(--line);border-radius:11px;background:var(--card-alt);padding:10px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
-  .tcpm .tr9.hi{border-left-color:var(--crit)} .tcpm .tr9.md{border-left-color:var(--major)} .tcpm .tr9.lo{border-left-color:var(--sky)}
-  .tcpm .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .tcpm .r1 .rid9{font-family:ui-monospace,Consolas,monospace;font-size:10.5px;font-weight:700;color:var(--muted)}
-  .tcpm .r1 b{font-size:13px;color:var(--ink)}
-  .tcpm .r1 .sp{margin-left:auto;display:flex;align-items:center;gap:6px}
-  .tcpm .tst{font-size:10.5px;font-weight:800;border-radius:8px;padding:2px 8px}
+  .tcpm .tgb{padding:11px 13px 5px}
+  .tcpm .tr9{position:relative;border:1px solid var(--line-soft);border-radius:11px;background:var(--card);padding:11px 14px 11px 17px;margin-bottom:8px;box-shadow:0 1px 3px rgba(20,51,92,.06)}
+  .tcpm .tr9::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;background:var(--line)}
+  .tcpm .tr9.hi::before{background:var(--crit)} .tcpm .tr9.md::before{background:var(--major)} .tcpm .tr9.lo::before{background:var(--sky)}
+  .tcpm .r1{display:flex;align-items:center;gap:8px;min-width:0}
+  .tcpm .lvp{flex:none;font-size:10px;font-weight:800;letter-spacing:.03em;border-radius:7px;padding:2px 8px}
+  .tcpm .lvp.hi{background:var(--crit);color:#fff} .tcpm .lvp.md{background:var(--major);color:#fff} .tcpm .lvp.lo{background:var(--sky);color:#fff}
+  .tcpm .r1 .rid9{flex:none;font-family:ui-monospace,Consolas,monospace;font-size:10.5px;font-weight:700;color:var(--muted)}
+  .tcpm .r1 b{flex:1;min-width:0;font-size:13.5px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tcpm .r1 .sp{flex:none;margin-left:auto}
+  .tcpm .tst{font-size:10.5px;font-weight:800;border-radius:8px;padding:2.5px 9px}
   .tcpm .tst.idn{background:#EEF2F7;color:var(--muted)} .tcpm .tst.mit{background:var(--sky-soft);color:var(--sky)}
   .tcpm .tst.done{background:var(--green-soft);color:var(--green)} .tcpm .tst.acc{background:var(--major-soft);color:var(--major)}
-  .tcpm .r2{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:6px}
-  .tcpm .r2 .mit9{background:var(--green-soft);border:1px solid #bfe0cc;border-radius:7px;padding:2px 8px}
-  .tcpm .r2 .mit9 b{color:var(--navy-deep);font-size:11px;margin-right:4px}
-  .tcpm .r2 .who{font-size:10.5px;color:var(--muted)}
-  .tcpm .r2 .pw{display:inline-flex;align-items:center;gap:5px}
-  .tcpm .r2 .pw .prog-bar{width:74px}
-  .tcpm .r2 .pw em{font-style:normal;font-size:10.5px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .tcpm .mit9{margin:8px 0 0;font-size:12px;color:var(--ink);line-height:1.5;background:var(--green-soft);border:1px solid #bfe0cc;border-radius:8px;padding:6px 11px}
+  .tcpm .mit9 b{color:var(--green);font-size:10.5px;font-weight:800;letter-spacing:.04em;margin-right:7px}
+  .tcpm .r3{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:11.5px;color:var(--ink-soft)}
+  .tcpm .ow{display:inline-flex;align-items:center;gap:6px;font-weight:700}
+  .tcpm .ow i{width:19px;height:19px;border-radius:50%;background:var(--navy-deep);color:#fff;font-size:10px;font-weight:800;font-style:normal;display:inline-flex;align-items:center;justify-content:center}
+  .tcpm .due{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+  .tcpm .due .dd{font-size:10px;font-weight:800;color:var(--muted);background:var(--line-soft);border-radius:7px;padding:1px 6px;margin-left:2px}
+  .tcpm .due .dd.hot{color:#fff;background:var(--crit)}
+  .tcpm .pw{display:inline-flex;align-items:center;gap:7px;margin-left:auto}
+  .tcpm .pw.watch{font-size:10.5px;font-weight:700;color:var(--muted)}
+  .tcpm .pb9{width:118px;height:8px;border-radius:5px;background:var(--line-soft);overflow:hidden}
+  .tcpm .pb9 i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#2E89D6,#5fb0ec)}
+  .tcpm .pw em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
   /* 한눈에 보기: 바깥 큰 박스(.sbox 크롬) 제거 — 트랙 박스만 보이게 */
   #s-overview.sbox{background:none;border:none;box-shadow:none;padding:0;margin-bottom:0}
   .prog-track .pt-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;letter-spacing:.01em;color:var(--navy-deep);padding:15px 2px 12px;border-bottom:1px solid rgba(20,51,92,.07)}
