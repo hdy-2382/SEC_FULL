@@ -34,7 +34,7 @@ function buildTopbarLc(C) {
   const steps = arr.map((s, i) => {
     const cls = s.status === 'done' ? 'done' : s.status === 'current' ? 'cur' : 'todo';
     const mark = s.status === 'done' ? '✓' : (i + 1);
-    return `<span class="tb-step ${cls}"><i class="tb-dot">${mark}</i>${esc(s.stage)}</span>`;
+    return `<span class="tb-step ${cls}"><i class="tb-dot">${mark}</i><em class="tb-tx">${esc(s.stage)}</em></span>`;
   }).join('<span class="tb-sep"></span>');
   return `<button class="tb-lc-more" onclick="openStagePopup()" title="${esc(T('overview.lcMore', '개발 진행 단계 상세'))}">🔍</button><span class="tb-lc-cap">${esc(T('overview.lcTitle', '개발 단계'))} <b>${prog}/${arr.length}</b></span>${steps}`;
 }

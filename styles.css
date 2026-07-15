@@ -14,7 +14,8 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+  /* keep-all: 한글 어절 중간 줄바꿈 금지 (좁은 칸에서 "미해/결" 식 깨짐 방지) — 긴 토큰은 break-word 폴백 */
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45;word-break:keep-all;overflow-wrap:break-word}
   .app{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
   .side{background:linear-gradient(180deg,#13335c,#0c1f3b);color:#cdd9ea;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 0}
   .side .brand{display:flex;gap:10px;align-items:center;padding:0 20px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -56,8 +57,8 @@
 
   .main{padding:0 26px 48px;min-width:0}
   .topbar{display:flex;align-items:center;gap:16px;padding:18px 2px 12px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 72%,rgba(234,242,249,0));z-index:5}
-  .topbar h1{font-size:19px;font-weight:800;color:var(--navy-deep)}
-  .topbar .meta{color:var(--muted);font-size:12.5px;display:flex;gap:14px;margin-left:4px}.topbar .meta b{color:var(--ink-soft)}
+  .topbar h1{font-size:19px;font-weight:800;color:var(--navy-deep);white-space:nowrap}
+  .topbar .meta{color:var(--muted);font-size:12.5px;display:flex;gap:14px;margin-left:4px;white-space:nowrap}.topbar .meta b{color:var(--ink-soft)}
   .topbar .sp{flex:1}
   /* 상단 개발단계 스텝퍼 (한눈에 보기 전용) — 박스형·컬러 강조 */
   .tb-lc{display:flex;align-items:center;gap:0;min-width:0;overflow:hidden;flex-wrap:nowrap;
@@ -66,7 +67,9 @@
   .tb-lc .tb-lc-cap b{color:var(--sky);font-size:12px}
   .tb-lc .tb-lc-more{flex:none;border:1px solid var(--line-soft);background:#fff;border-radius:7px;padding:2px 7px;font-size:12px;line-height:1.2;cursor:pointer;margin-right:9px;color:var(--sky)}
   .tb-lc .tb-lc-more:hover{background:var(--sky-soft);border-color:var(--sky)}
-  .tb-lc .tb-step{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+  .tb-lc .tb-step{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;min-width:0}
+  .tb-lc .tb-step .tb-tx{overflow:hidden;text-overflow:ellipsis;font-style:normal}   /* 좁으면 지난 단계부터 말줄임 */
+  .tb-lc .tb-step.cur{flex-shrink:0}   /* 현재 단계는 항상 전체 표시 */
   .tb-lc .tb-step .tb-dot{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-size:9.5px;font-weight:800;font-style:normal;flex:none}
   .tb-lc .tb-step.done{color:var(--green)}
   .tb-lc .tb-step.done .tb-dot{background:var(--green);color:#fff}
@@ -293,6 +296,7 @@
   .pocv .ov-2col .panel.ovchart>svg,.pocv .fault-grid .panel.ovchart>svg{flex:1 1 auto;min-height:0}
   .pocv .looppanel .loopline .lp{display:flex;flex-direction:column;justify-content:center}
   .pocv .ov-2col .looppanel .loopret{margin-top:auto}
+  .pocv .ov-2col .rel-charts table th:first-child,.pocv .ov-2col .rel-charts table td:first-child{white-space:nowrap}   /* 시나리오·모드명 세로 깨짐 방지 — 넘치면 가로 스크롤 */
   .pocv .ov-2col .looppanel>.mini.mt,.pocv .ov-2col .looppanel .loopret{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* 감시 목록·재발 노트 1줄 클램프 (상세는 Pareto·보드 히어로에) */
   .pocv .ov-2col .rel-charts .panel{overflow:hidden}   /* 눌릴 때 다음 트랙 침범 방지 */
   .pocv .tbl-scroll.nowrap table{white-space:nowrap}   /* 좁은 칸 표: 글자 세로 깨짐 대신 가로 스크롤 */
@@ -546,6 +550,7 @@
 .pocv .fwt .t{font-size:11px;font-weight:800;color:var(--muted)}
 .pocv .fwt .n{font-size:21px;font-weight:800;color:var(--navy-deep);margin:2px 0 1px}
 .pocv .fwt .n small,.pocv .fwt .hero-n small{font-size:11px;color:var(--muted);font-weight:700;margin-left:2px}
+.pocv .mcode{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:10px;font-weight:700;color:var(--sky);background:#E5EFFA;border-radius:5px;padding:1px 5px;white-space:nowrap}
 .pocv .fwt .m{font-size:10.5px;color:var(--muted);line-height:1.5}
 /* 카테고리 → 색 1:1 고정 (전 단계·전 컴포넌트 공통 — 보드 타일·구성 막대·칩이 같은 색) */
 .pocv .fwt.risk{--tc:var(--crit)}

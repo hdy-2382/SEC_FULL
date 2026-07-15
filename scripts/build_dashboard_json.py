@@ -1548,6 +1548,31 @@ def _write_out(pid: str, out: dict, tail: str):
     print(f"[build:{pid}] 출력: {OUT_PATH.relative_to(ROOT)}  ({tail})")
 
 
+def _codes_from_sheets(sheets: dict) -> list[dict]:
+    """raw 엑셀 안의 코드마스터 시트 → codes[] (개발 단계: 관리엑셀 없이 이슈로그 파일에 병기)."""
+    rows = _pick_sheet(sheets, ["코드마스터", "코드", "code"])
+    if not rows:
+        return []
+    raw = _read_mgmt_rows(rows, CODE_FIELDS)
+    return [{"code": _cell_to_str(c["code"]), "type": _cell_to_str(c["type"]),
+             "severity": _norm_sev(c["severity"]), "desc": _cell_to_str(c["desc"])}
+            for c in raw if _cell_to_str(c["code"])]
+
+
+def _backfill_mode_codes(codes: list[dict], *record_lists) -> int:
+    """modeCode 공란 레코드에 코드마스터 type(=모드명) 역매핑으로 표준 코드 주입."""
+    t2c = {_norm(c["type"]): c["code"] for c in codes if c.get("type")}
+    n = 0
+    for lst in record_lists:
+        for r in lst or []:
+            if not r.get("modeCode"):
+                code = t2c.get(_norm(r.get("mode") or ""))
+                if code:
+                    r["modeCode"] = code
+                    n += 1
+    return n
+
+
 def _build_poc(pid: str, config: dict):
     src = _pick_latest_xlsx()
     print(f"[build:{pid}] 입력 파일: {src.name} (stage=poc)")
@@ -1555,11 +1580,16 @@ def _build_poc(pid: str, config: dict):
     issues   = _parse_generic(_pick_sheet(sheets, ISSUES_SHEET_KEYWORDS), ISSUE_FIELD_ALIASES, "id")
     runlog   = _parse_generic(_pick_sheet(sheets, RUNLOG_SHEET_KEYWORDS), RUN_FIELD_ALIASES, "date")
     abnormal = _parse_generic(_pick_sheet(sheets, ABN_SHEET_KEYWORDS), ABN_FIELD_ALIASES, "scenario")
+    codes    = _codes_from_sheets(sheets)
     computed = _compute_poc(issues, runlog, abnormal, config)
     records = _records_from_issues(issues)   # _compute_poc 이후 (recurOf 주입 승계)
+    if codes:
+        n = _backfill_mode_codes(codes, issues, records)
+        if n:
+            print(f"[build:{pid}] 코드마스터 역매핑: modeCode {n}건 주입")
     _validate_records(records, "poc")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
-           "issues": issues, "runlog": runlog, "records": records, **computed}
+           "issues": issues, "runlog": runlog, "records": records, "codes": codes, **computed}
     _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
                f"무고장 런 {computed['run']['cum']}/{computed['run']['target']}h, "
                f"비정상 {len(abnormal)}건")

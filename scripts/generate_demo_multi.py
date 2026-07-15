@@ -788,7 +788,7 @@ def gen_drum_poc():
             {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
             {"label": "② 72h 무에러", "value": "auto:run", "status": "prog"},
             {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog"},
-            {"label": "④ Critical 미해결 0", "value": "1건 — 검증중(41/50Cy)", "status": "prog"},
+            {"label": "④ Critical 미해결 0", "value": "현재 1건 · 무발생 41/50Cy", "status": "prog"},
             {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass"},
         ]},
         "project": {"name": "드럼 자동화 (POC)", "department": "인프라 기술팀", "team": "김OO, 박OO",

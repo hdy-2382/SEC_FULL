@@ -558,7 +558,7 @@ function pocLedgerRows(list, full) {
     const b = pocStBucket(i.status);
     const st = `<span class="badge ${POC_ST_BADGE[b]}">${esc(i.status || '—')}</span>${!full && i.verify ? `<div class="mini">${esc(i.verify)}</div>` : ''}`;
     const recur = i.recurOf ? `<span class="rlink" title="동일 고장모드 선행 레코드 — 재발(재분석 의무)">↺ ${esc(i.recurOf)}</span>` : '—';
-    return `<tr><td><b>${esc(i.id)}</b></td><td class="c">${esc((i.date || '').slice(5))}</td><td>${esc(i.mode)}</td>
+    return `<tr><td><b>${esc(i.id)}</b></td><td class="c">${esc((i.date || '').slice(5))}</td><td>${i.modeCode ? `<span class="mcode">${esc(i.modeCode)}</span> ` : ''}${esc(i.mode)}</td>
       <td class="c">${c4Chip(i.cause4)}</td><td class="c"><span class="badge ${SEV_BADGE[i.severity] || 'b-minor'}">${esc(sevLabel(i.severity))}</span></td>
       <td class="c">${recur}</td><td class="c">${st}</td>
       ${full ? `<td class="c">${esc(i.verify || '—')}</td><td class="c">${esc(i.closedDate || '—')}</td><td class="mini">${esc(i.detail || '')}</td>` : ''}

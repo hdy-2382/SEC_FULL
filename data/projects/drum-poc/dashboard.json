@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T07:39:24Z",
+  "generatedAt": "2026-07-15T01:39:10Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -57,7 +57,7 @@
         },
         {
           "label": "④ Critical 미해결 0",
-          "value": "1건 — 검증중(41/50Cy)",
+          "value": "현재 1건 · 무발생 41/50Cy",
           "status": "prog"
         },
         {
@@ -195,7 +195,8 @@
       "unit": "",
       "downtime": "",
       "detail": "저조도 마킹 오인식 → 노출 보정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-02"
     },
     {
       "id": "ISS-002",
@@ -209,7 +210,8 @@
       "unit": "",
       "downtime": "",
       "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-01"
     },
     {
       "id": "ISS-003",
@@ -223,7 +225,8 @@
       "unit": "",
       "downtime": "",
       "detail": "임시 배선 간섭 — 정리 후 미재현",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-05"
     },
     {
       "id": "ISS-004",
@@ -238,7 +241,8 @@
       "downtime": "",
       "detail": "역광 한정 재현 → 후드 1차 개선",
       "images": [],
-      "recurOf": "ISS-001"
+      "recurOf": "ISS-001",
+      "modeCode": "DRM-02"
     },
     {
       "id": "ISS-005",
@@ -252,7 +256,8 @@
       "unit": "",
       "downtime": "",
       "detail": "파지 좌표 오프셋 → 티칭 보정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-03"
     },
     {
       "id": "ISS-006",
@@ -267,7 +272,8 @@
       "downtime": "",
       "detail": "랩 조명 공사 영향 — 복구 후 미재현",
       "images": [],
-      "recurOf": "ISS-004"
+      "recurOf": "ISS-004",
+      "modeCode": "DRM-02"
     },
     {
       "id": "ISS-007",
@@ -281,7 +287,8 @@
       "unit": "",
       "downtime": "",
       "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-04"
     },
     {
       "id": "ISS-008",
@@ -296,7 +303,8 @@
       "downtime": "",
       "detail": "과도구간 이탈 → 램프업 로직 수정",
       "images": [],
-      "recurOf": "ISS-002"
+      "recurOf": "ISS-002",
+      "modeCode": "DRM-01"
     },
     {
       "id": "ISS-009",
@@ -310,7 +318,8 @@
       "unit": "",
       "downtime": "",
       "detail": "버퍼 오버플로 → 플러시 주기 수정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-08"
     },
     {
       "id": "ISS-010",
@@ -324,7 +333,8 @@
       "unit": "",
       "downtime": "",
       "detail": "급송 슈트 각도 조정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-06"
     },
     {
       "id": "ISS-011",
@@ -339,7 +349,8 @@
       "downtime": "",
       "detail": "접근 속도 프로파일 수정",
       "images": [],
-      "recurOf": "ISS-005"
+      "recurOf": "ISS-005",
+      "modeCode": "DRM-03"
     },
     {
       "id": "ISS-012",
@@ -354,7 +365,8 @@
       "downtime": "",
       "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
       "images": [],
-      "recurOf": "ISS-006"
+      "recurOf": "ISS-006",
+      "modeCode": "DRM-02"
     },
     {
       "id": "ISS-013",
@@ -369,7 +381,8 @@
       "downtime": "",
       "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
       "images": [],
-      "recurOf": "ISS-008"
+      "recurOf": "ISS-008",
+      "modeCode": "DRM-01"
     },
     {
       "id": "ISS-014",
@@ -383,7 +396,8 @@
       "unit": "",
       "downtime": "",
       "detail": "고속 공진음 → 속도 프로파일 보정",
-      "images": []
+      "images": [],
+      "modeCode": "DRM-07"
     },
     {
       "id": "ISS-015",
@@ -398,7 +412,8 @@
       "downtime": "",
       "detail": "체결 자세 편차 추정 — 지그 재설계 협의",
       "images": [],
-      "recurOf": "ISS-013"
+      "recurOf": "ISS-013",
+      "modeCode": "DRM-01"
     },
     {
       "id": "ISS-016",
@@ -413,7 +428,8 @@
       "downtime": "",
       "detail": "고반사 드럼 한정 → 편광 필터 검토",
       "images": [],
-      "recurOf": "ISS-012"
+      "recurOf": "ISS-012",
+      "modeCode": "DRM-02"
     },
     {
       "id": "ISS-017",
@@ -428,7 +444,8 @@
       "downtime": "",
       "detail": "림 변형품 파지 불가 → 핑거 형상 변경",
       "images": [],
-      "recurOf": "ISS-011"
+      "recurOf": "ISS-011",
+      "modeCode": "DRM-03"
     },
     {
       "id": "ISS-018",
@@ -443,7 +460,8 @@
       "downtime": "",
       "detail": "로그 폭주 시 지연 → 로그 레벨 조정",
       "images": [],
-      "recurOf": "ISS-007"
+      "recurOf": "ISS-007",
+      "modeCode": "DRM-04"
     }
   ],
   "runlog": [
@@ -500,7 +518,7 @@
     {
       "id": "ISS-001",
       "mode": "비전 오인식",
-      "modeCode": "",
+      "modeCode": "DRM-02",
       "severity": "Major",
       "cause": "구현(SW)",
       "status": "종결",
@@ -522,7 +540,7 @@
     {
       "id": "ISS-002",
       "mode": "체결 토크 이탈",
-      "modeCode": "",
+      "modeCode": "DRM-01",
       "severity": "Critical",
       "cause": "구현(SW)",
       "status": "종결",
@@ -544,7 +562,7 @@
     {
       "id": "ISS-003",
       "mode": "전장 간섭",
-      "modeCode": "",
+      "modeCode": "DRM-05",
       "severity": "Minor",
       "cause": "시험환경",
       "status": "종결",
@@ -566,7 +584,7 @@
     {
       "id": "ISS-004",
       "mode": "비전 오인식",
-      "modeCode": "",
+      "modeCode": "DRM-02",
       "severity": "Major",
       "cause": "구현(SW)",
       "status": "종결",
@@ -588,7 +606,7 @@
     {
       "id": "ISS-005",
       "mode": "그리퍼 파지 실패",
-      "modeCode": "",
+      "modeCode": "DRM-03",
       "severity": "Minor",
       "cause": "구현(SW)",
       "status": "종결",
@@ -610,7 +628,7 @@
     {
       "id": "ISS-006",
       "mode": "비전 오인식",
-      "modeCode": "",
+      "modeCode": "DRM-02",
       "severity": "Minor",
       "cause": "시험환경",
       "status": "종결",
@@ -632,7 +650,7 @@
     {
       "id": "ISS-007",
       "mode": "통신 지연",
-      "modeCode": "",
+      "modeCode": "DRM-04",
       "severity": "Minor",
       "cause": "설계",
       "status": "종결",
@@ -654,7 +672,7 @@
     {
       "id": "ISS-008",
       "mode": "체결 토크 이탈",
-      "modeCode": "",
+      "modeCode": "DRM-01",
       "severity": "Major",
       "cause": "구현(SW)",
       "status": "종결",
@@ -676,7 +694,7 @@
     {
       "id": "ISS-009",
       "mode": "로그 유실",
-      "modeCode": "",
+      "modeCode": "DRM-08",
       "severity": "Minor",
       "cause": "구현(SW)",
       "status": "종결",
@@ -698,7 +716,7 @@
     {
       "id": "ISS-010",
       "mode": "자재 급송 지연",
-      "modeCode": "",
+      "modeCode": "DRM-06",
       "severity": "Minor",
       "cause": "설계",
       "status": "종결",
@@ -720,7 +738,7 @@
     {
       "id": "ISS-011",
       "mode": "그리퍼 파지 실패",
-      "modeCode": "",
+      "modeCode": "DRM-03",
       "severity": "Minor",
       "cause": "구현(SW)",
       "status": "종결",
@@ -742,7 +760,7 @@
     {
       "id": "ISS-012",
       "mode": "비전 오인식",
-      "modeCode": "",
+      "modeCode": "DRM-02",
       "severity": "Major",
       "cause": "시험환경",
       "status": "검증중",
@@ -764,7 +782,7 @@
     {
       "id": "ISS-013",
       "mode": "체결 토크 이탈",
-      "modeCode": "",
+      "modeCode": "DRM-01",
       "severity": "Critical",
       "cause": "설계",
       "status": "검증중",
@@ -786,7 +804,7 @@
     {
       "id": "ISS-014",
       "mode": "소음 초과",
-      "modeCode": "",
+      "modeCode": "DRM-07",
       "severity": "Minor",
       "cause": "구현(SW)",
       "status": "검증중",
@@ -808,7 +826,7 @@
     {
       "id": "ISS-015",
       "mode": "체결 토크 이탈",
-      "modeCode": "",
+      "modeCode": "DRM-01",
       "severity": "Major",
       "cause": "설계",
       "status": "조치중",
@@ -830,7 +848,7 @@
     {
       "id": "ISS-016",
       "mode": "비전 오인식",
-      "modeCode": "",
+      "modeCode": "DRM-02",
       "severity": "Major",
       "cause": "설계",
       "status": "조치중",
@@ -852,7 +870,7 @@
     {
       "id": "ISS-017",
       "mode": "그리퍼 파지 실패",
-      "modeCode": "",
+      "modeCode": "DRM-03",
       "severity": "Major",
       "cause": "설계",
       "status": "조치중",
@@ -874,7 +892,7 @@
     {
       "id": "ISS-018",
       "mode": "통신 지연",
-      "modeCode": "",
+      "modeCode": "DRM-04",
       "severity": "Minor",
       "cause": "구현(SW)",
       "status": "조치중",
@@ -892,6 +910,56 @@
       "verdict": "",
       "unit": "",
       "downtime": ""
+    }
+  ],
+  "codes": [
+    {
+      "code": "DRM-01",
+      "type": "체결 토크 이탈",
+      "severity": "Critical",
+      "desc": "토크 상한 초과/이탈 체결 — 파손 위험"
+    },
+    {
+      "code": "DRM-02",
+      "type": "비전 오인식",
+      "severity": "Major",
+      "desc": "드럼 마킹/좌표 인식 오류"
+    },
+    {
+      "code": "DRM-03",
+      "type": "그리퍼 파지 실패",
+      "severity": "Major",
+      "desc": "파지 미끄러짐·낙하"
+    },
+    {
+      "code": "DRM-04",
+      "type": "통신 지연",
+      "severity": "Minor",
+      "desc": "PLC/상위 통신 지연·두절"
+    },
+    {
+      "code": "DRM-05",
+      "type": "전장 간섭",
+      "severity": "Minor",
+      "desc": "배선·EMI 간섭"
+    },
+    {
+      "code": "DRM-06",
+      "type": "자재 급송 지연",
+      "severity": "Minor",
+      "desc": "드럼 급송 슈트 지연"
+    },
+    {
+      "code": "DRM-07",
+      "type": "소음 초과",
+      "severity": "Minor",
+      "desc": "구동 구간 소음/공진"
+    },
+    {
+      "code": "DRM-08",
+      "type": "로그 유실",
+      "severity": "Minor",
+      "desc": "제어 로그 누락"
     }
   ],
   "metrics": {
