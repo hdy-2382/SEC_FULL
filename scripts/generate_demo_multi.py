@@ -727,6 +727,38 @@ def _codes_sheet(wb):
     _sheet(wb, "코드마스터", ["코드", "유형", "등급", "설명"], DRM_CODES)
 
 
+def _poc_asset_svgs(pid: str):
+    """설계·셋업 도식 SVG 플레이스홀더 — 실사진 교체 전 데모용 (assets/)."""
+    a = PROJECTS / pid / "assets"
+    a.mkdir(parents=True, exist_ok=True)
+    def svg(name, title, sub, body):
+        (a / name).write_text(
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">'
+            f'<rect width="640" height="400" fill="#F2F6FA"/><rect width="640" height="400" fill="none" stroke="#C9DCEC" stroke-width="2"/>'
+            f'{body}'
+            f'<text x="24" y="42" font-size="22" font-weight="700" fill="#0F2E54" font-family="sans-serif">{title}</text>'
+            f'<text x="24" y="68" font-size="14" fill="#5A6B7E" font-family="sans-serif">{sub}</text>'
+            f'<text x="616" y="382" font-size="12" fill="#8A99AC" text-anchor="end" font-family="sans-serif">데모 도식 — 실사진 교체 예정</text></svg>',
+            encoding="utf-8")
+    svg("design-concept.svg", "컨셉 레이아웃", "6축 로봇 + 비전 체결 · 컨베이어 직결 반송",
+        '<rect x="60" y="150" width="200" height="170" rx="10" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
+        '<text x="160" y="240" font-size="16" text-anchor="middle" fill="#2E6DB0" font-family="sans-serif">6축 로봇 셀</text>'
+        '<rect x="300" y="220" width="280" height="46" rx="8" fill="#E6F3EB" stroke="#3E9B6E" stroke-width="2"/>'
+        '<text x="440" y="249" font-size="15" text-anchor="middle" fill="#2f7a52" font-family="sans-serif">반송 컨베이어 →</text>'
+        '<circle cx="160" cy="130" r="26" fill="#FBF3E6" stroke="#E08600" stroke-width="2"/>'
+        '<text x="160" y="136" font-size="13" text-anchor="middle" fill="#B36F0A" font-family="sans-serif">비전</text>')
+    svg("design-gripper.svg", "그리퍼 핑거 v1", "림 변형 여유 2mm · 코팅 사양 A",
+        '<path d="M240 140 L240 300 L290 300 L290 210 L350 210 L350 300 L400 300 L400 140 Z" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
+        '<circle cx="320" cy="330" r="34" fill="#F7E5E2" stroke="#C0392B" stroke-width="2" stroke-dasharray="5 4"/>'
+        '<text x="320" y="336" font-size="12" text-anchor="middle" fill="#C0392B" font-family="sans-serif">드럼 림</text>')
+    svg("build-cell.svg", "사외 랩 셀 셋업", "프레임·안전 펜스·비전 조명 설치 완료",
+        '<rect x="80" y="120" width="480" height="200" rx="8" fill="none" stroke="#5A6B7E" stroke-width="2" stroke-dasharray="7 5"/>'
+        '<rect x="120" y="170" width="150" height="120" rx="8" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
+        '<rect x="330" y="200" width="190" height="60" rx="8" fill="#E6F3EB" stroke="#3E9B6E" stroke-width="2"/>'
+        '<text x="195" y="238" font-size="14" text-anchor="middle" fill="#2E6DB0" font-family="sans-serif">로봇</text>'
+        '<text x="425" y="236" font-size="14" text-anchor="middle" fill="#2f7a52" font-family="sans-serif">컨베이어</text>')
+
+
 def gen_drum_poc():
     pid = "drum-poc"
     (PROJECTS / pid / "raw").mkdir(parents=True, exist_ok=True)
@@ -777,6 +809,7 @@ def gen_drum_poc():
     _sheet(wb, "비정상평가", ["시나리오", "복구시간", "판정", "비고"], abn)
     _codes_sheet(wb)
     wb.save(PROJECTS / pid / "raw" / "드럼POC_샘플.xlsx")
+    _poc_asset_svgs(pid)
     _write_config(pid, {
         "stage": "poc",
         "run": {"target": 72, "unit": "h", "criterion": "무에러", "env": "사외 랩"},
@@ -813,12 +846,44 @@ def gen_drum_poc():
             {"name": "그리퍼 제어", "pct": 75, "group": "로봇"}, {"name": "PLC I/F", "pct": 60, "group": "상위시스템"},
             {"name": "로그/리포트", "pct": 55, "group": "상위시스템"}, {"name": "안전 인터록", "pct": 100, "group": "환경"},
         ],
+        # POC 세부 5단계 — 1~2(기획·제작)는 기획/제작 관제, 3~5(평가)는 에러·런 관제로 화면 전환
         "lifecycle": [
-            {"stage": "P1 타당성·평가항목 정의", "status": "done", "note": "FMEA 초판(어휘 v1 = DRM-01~08) · 판정기준서 v1"},
-            {"stage": "P2 안전인증 컨셉미팅", "status": "done", "note": "위험원 12건 → 설계 반영"},
-            {"stage": "P3 기성능 평가/검증", "status": "done", "note": "3/3 충족 · Critical 2건 조기 발굴→우선 조치"},
-            {"stage": "P4 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 · 비정상 6/8"},
+            {"stage": "P1 과제 기획", "status": "done", "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)"},
+            {"stage": "P2 설계·제작", "status": "done", "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (06-27)"},
+            {"stage": "P3 기/성능 평가", "status": "done", "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치"},
+            {"stage": "P4 SW 체크리스트", "status": "done", "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)"},
+            {"stage": "P5 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 52h · 비정상 6/8"},
         ],
+        # P1 기획 산출물 (기획·제작 관제의 입력 — PM 수동 관리, 재빌드 불필요)
+        "pocPlan": {
+            "goal": "드럼 체결·반송 자동화 — 수작업 2인 공정 대체, T/T 12초 이내",
+            "roi": "인력 2인/교대 절감 + 처리량 +8% — 개략 ROI 2.1년 (투자심의 입력 초안)",
+            "concept": "6축 로봇 + 비전 가이드 체결 · 컨베이어 직결 반송 (겐트리 안 대비 유연성 우위로 선정)",
+            "checks": [
+                {"item": "과제 목표·평가항목 정의", "status": "완료", "note": "합격 기준 서면 합의 — 판정기준서 v1"},
+                {"item": "개략 ROI 산정", "status": "완료", "note": "인력·처리량 기준 — 투자심의 입력 초안"},
+                {"item": "컨셉 도출 (2안 비교)", "status": "완료", "note": "로봇 안 채택 — 겐트리 안 대비 유연성"},
+                {"item": "특허 검토", "status": "완료", "note": "저촉 0 · 회피 설계 1건 반영 · 출원 후보 1건"},
+                {"item": "안전인증 컨셉 합의", "status": "완료", "note": "위험원 12건 식별 → 설계 반영"},
+                {"item": "FMEA 초판 (어휘 v1)", "status": "완료", "note": "DRM-01~08 코드마스터 확정"},
+            ],
+        },
+        # P2 설계·제작 현황 (아이템 진척 + 설계·셋업 사진 assets/)
+        "pocBuild": {
+            "items": [
+                {"name": "기구 설계 — 체결 유닛", "pct": 100, "note": "설계 동결 v1"},
+                {"name": "기구 설계 — 반송 유닛", "pct": 100, "note": ""},
+                {"name": "전장 설계", "pct": 100, "note": ""},
+                {"name": "프레임·유닛 제작", "pct": 100, "note": "업체 제작 완료 (06-20)"},
+                {"name": "로봇·비전 셋업", "pct": 100, "note": "사외 랩 설치 (06-27)"},
+                {"name": "SW 1차 구현", "pct": 90, "note": "레시피 편집기 잔여 — P5 병행"},
+            ],
+            "photos": [
+                {"file": "design-concept.svg", "cap": "컨셉 레이아웃 — 체결+반송 직결"},
+                {"file": "design-gripper.svg", "cap": "그리퍼 핑거 설계 v1 (림 여유 2mm)"},
+                {"file": "build-cell.svg", "cap": "사외 랩 셀 셋업 (06-27)"},
+            ],
+        },
         "ui": {
             "app": {"title": "드럼 자동화 — POC", "brandLogo": "드", "brandName": "드럼 자동화<br>POC",
                     "evalDateLabel": "평가일", "printBtn": "PDF 리포트", "footBrand": "FRACAS-lite · 전수 4분류 · Critical 우선", "updatedPrefix": "업데이트 "},

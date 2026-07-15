@@ -67,7 +67,9 @@
   .tb-lc .tb-lc-cap b{color:var(--sky);font-size:12px}
   .tb-lc .tb-lc-more{flex:none;border:1px solid var(--line-soft);background:#fff;border-radius:7px;padding:2px 7px;font-size:12px;line-height:1.2;cursor:pointer;margin-right:9px;color:var(--sky)}
   .tb-lc .tb-lc-more:hover{background:var(--sky-soft);border-color:var(--sky)}
-  .tb-lc .tb-step{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;min-width:0}
+  .tb-lc .tb-step{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;min-width:0;cursor:pointer}
+  .tb-lc .tb-step:hover{background:var(--sky-soft)}
+  .tb-lc .tb-step.cur:hover{background:var(--sky)}
   .tb-lc .tb-step .tb-tx{overflow:hidden;text-overflow:ellipsis;font-style:normal}   /* 좁으면 지난 단계부터 말줄임 */
   .tb-lc .tb-step.cur{flex-shrink:0}   /* 현재 단계는 항상 전체 표시 */
   .tb-lc .tb-step .tb-dot{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-size:9.5px;font-weight:800;font-style:normal;flex:none}
@@ -641,6 +643,23 @@
 .pocv .compo .sg-env{background:#3E9B6E}
 .pocv .compo .sg-oper{background:#6E7D90}
 .pocv .compo .sg-zero{flex:0 0 74px;border:1.5px dashed var(--crit);color:var(--crit);font-size:10.5px;font-weight:800;background:transparent}
+/* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
+.pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.pocv .bld-it{display:flex;align-items:center;gap:9px;min-width:0}
+.pocv .bld-it .t{flex:0 0 44%;min-width:0;font-size:12px;font-weight:700;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pocv .bld-it .bar{flex:1;height:8px;border-radius:5px;background:var(--line-soft);overflow:hidden}
+.pocv .bld-it .bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#2E89D6,#5fb0ec)}
+.pocv .bld-it em{flex:none;font-style:normal;font-size:11px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums;width:34px;text-align:right}
+.pocv .bld-it .n{flex:0 0 22%;min-width:0;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pocv .ph9-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pocv .ph9-grid figure.ph9{margin:0;min-width:0}
+.pocv .ph9-grid figure.ph9 img{width:100%;border-radius:9px;border:1px solid var(--line-soft);cursor:zoom-in;display:block;background:#fff}
+.pocv .ph9-grid figure.ph9 figcaption{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.pocv .cpt{border-top:1px solid var(--line-soft);padding:8px 0;display:flex;gap:10px}
+.pocv .cpt:first-of-type{border-top:none}
+.pocv .cpt .k{flex:none;width:44px;font-size:11px;font-weight:800;color:var(--navy-deep)}
+.pocv .cpt .v{flex:1;font-size:12px;color:var(--ink-soft);line-height:1.55}
+
 /* 폐루프 FRACAS 파이프라인 — 전 단계 공용 컴포넌트 (스코프: .looppanel — POC·Pilot 공유) */
 .looppanel .loopline{display:flex;align-items:stretch;gap:7px}
 .looppanel .loopline .lp{flex:1;min-width:0;border:1px solid var(--line-soft);border-radius:10px;background:var(--card-alt);padding:7px 7px;text-align:center}

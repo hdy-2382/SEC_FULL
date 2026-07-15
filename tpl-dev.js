@@ -797,12 +797,133 @@ function pilotSteps(C) {
   </div>`;
 }
 
+/* ══════════ POC 단계 적응형 관제 ══════════
+   POC 세부 단계(lifecycle 5단계)에 따라 화면이 바뀐다:
+     P1~P2 (기획·설계·제작) = 기획 산출물·제작 진척·설계 사진 관제
+     P3~P5 (기성능·SW·72h)  = 에러·런 관제 (평가 화면)
+   상단 개발 단계 스텝바 클릭 = 해당 단계 화면 보기 (회고/현재 전환) */
+
+let POC_PHASE = {};   // pid → 보기 단계 인덱스 (미지정 = 현재 단계)
+
+function lcStepGo(i) {
+  if (((DATA || {}).config || {}).stage !== 'poc') {
+    if (typeof openStagePopup === 'function') openStagePopup();
+    return;
+  }
+  POC_PHASE[CUR_PID] = i;
+  renderData();
+  scrollTo(0, 0);
+}
+
+/* P1 기획 산출물 히어로 — 체크 n/m + 목표/ROI */
+function pocPlanHero(C) {
+  const plan = C.pocPlan || {};
+  const checks = plan.checks || [];
+  const done = checks.filter(c => (c.status || '').includes('완료')).length;
+  const pct = checks.length ? Math.round(done / checks.length * 100) : 0;
+  return `<div class="kgroup kg-prog">
+    <div class="pg-subh"><span>과제 기획 — 산출물 체크</span><span class="pg-subh-note">P1 · 게이트 전 확정 항목</span></div>
+    <div class="pg-hero">
+      <div class="pg-hero-main">
+        <div class="pg-num"><b>${done}</b><span>/ ${checks.length} 완료</span></div>
+        <div class="pg-bar"><i style="width:${pct}%${pct >= 100 ? ';background:var(--green)' : ''}"></i></div>
+        <div class="pg-remain">${pct >= 100 ? '기획 산출물 전건 확정' : `잔여 <b>${checks.length - done}건</b>`}</div>
+      </div>
+      <div class="pg-donut"><svg viewBox="0 0 42 42"><circle class="trk" cx="21" cy="21" r="15.9"/><circle class="arc" cx="21" cy="21" r="15.9" ${pct >= 100 ? 'style="stroke:var(--green)"' : ''} stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="25"/></svg><div class="pg-donut-ctr"><b>${pct}%</b></div></div>
+    </div>
+    <div class="pg-stats">
+      <div class="pg-stat"><span class="pg-stat-k">과제 목표</span><span class="pg-stat-s" style="font-size:11.5px;line-height:1.5">${esc(plan.goal || '—')}</span></div>
+      <div class="pg-stat"><span class="pg-stat-k">개략 ROI</span><span class="pg-stat-s" style="font-size:11.5px;line-height:1.5">${esc(plan.roi || '—')}</span></div>
+    </div></div>`;
+}
+
+/* P1 기획 체크리스트 표 */
+function pocPlanChecksPanel(C) {
+  const checks = (C.pocPlan || {}).checks || [];
+  const B9 = s => (s || '').includes('완료') ? 'b-ok' : (s || '').includes('진행') ? 'b-prog' : 'b-wait';
+  const rows = checks.map(c =>
+    `<tr><td><b>${esc(c.item)}</b></td><td class="c"><span class="badge ${B9(c.status)}">${esc(c.status || '대기')}</span></td><td class="mini">${esc(c.note || '')}</td></tr>`).join('');
+  return `<div class="panel tight">
+    <div class="ph"><h3>기획 산출물</h3><span class="ps">목표 · ROI · 컨셉 · 특허 · 안전 · FMEA</span></div>
+    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c">상태</th><th>비고</th></tr>${rows || '<tr><td colspan="3" class="mini c">config pocPlan.checks 미기재</td></tr>'}</table></div>
+  </div>`;
+}
+
+/* P2 제작 진척 보드 — 아이템별 진행바 */
+function pocBuildBoard(C) {
+  const items = (C.pocBuild || {}).items || [];
+  const avg = items.length ? Math.round(items.reduce((a, i) => a + (i.pct || 0), 0) / items.length) : 0;
+  const rows = items.map(i => `<div class="bld-it">
+    <span class="t">${esc(i.name)}</span>
+    <span class="bar"><i style="width:${Math.min(100, i.pct || 0)}%${(i.pct || 0) >= 100 ? ';background:var(--green)' : ''}"></i></span>
+    <em>${i.pct || 0}%</em><span class="n" title="${esc(i.note || '')}">${esc(i.note || '')}</span></div>`).join('');
+  return `<div class="kgroup kg-prog">
+    <div class="pg-subh"><span>설계·제작 진척</span><span class="pg-subh-note">${items.length}개 항목 · 평균 <b>${avg}%</b></span></div>
+    <div class="bld-list">${rows || '<div class="mini">config pocBuild.items 미기재</div>'}</div></div>`;
+}
+
+/* P2 설계·셋업 사진 갤러리 (assets/) */
+function pocPhotoPanel(C) {
+  const photos = (C.pocBuild || {}).photos || [];
+  const figs = photos.map(p => `<figure class="ph9">
+    <img src="${BASE}assets/${esc(p.file)}" alt="${esc(p.cap || p.file)}" onclick="lightbox('${BASE}assets/${esc(p.file)}')" onerror="this.closest('figure').style.display='none'">
+    <figcaption>${esc(p.cap || '')}</figcaption></figure>`).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>설계·제작 현황 사진</h3><span class="ps">assets/ · 클릭 = 확대</span></div>
+    <div class="ph9-grid">${figs || '<div class="mini">사진 없음 — data/projects/&lt;id&gt;/assets/ 에 배치 후 config pocBuild.photos 기재</div>'}</div>
+  </div>`;
+}
+
+/* P1 컨셉 카드 */
+function pocConceptPanel(C) {
+  const plan = C.pocPlan || {};
+  return `<div class="panel">
+    <div class="ph"><h3>컨셉 · 목표</h3><span class="ps">P1 확정 — 사후 변경은 게이트 안건</span></div>
+    <div class="cpt"><div class="k">컨셉</div><div class="v">${esc(plan.concept || '—')}</div></div>
+    <div class="cpt"><div class="k">목표</div><div class="v">${esc(plan.goal || '—')}</div></div>
+    <div class="cpt"><div class="k">ROI</div><div class="v">${esc(plan.roi || '—')}</div></div>
+  </div>`;
+}
+
+/* P1~P2 기획·제작 관제 (평가 이전 화면) */
+function renderPocPlanBuild(C, view, cur) {
+  const lc = C.lifecycle || [];
+  const banner = view !== cur
+    ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
+       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>`
+    : `<b>${esc((lc[view] || {}).stage || '')}</b> 진행 중 — 평가 관제(에러·런)는 P3 착수 시 자동 전환 · 상단 단계 칩 클릭 = 단계 화면 전환`;
+  $('s-overview').innerHTML = devShell('poc', C, {
+    qbox: banner,
+    aTitle: '과제 기획 → 산출물',
+    aHero: pocPlanHero(C),
+    aChart: pocPlanChecksPanel(C),
+    bTitle: '설계·제작 → 현황',
+    bTop: pocBuildBoard(C),
+    bCharts: [pocPhotoPanel(C), devFeedPanel()],
+    cTitle: '컨셉 · 위험 매트릭스 · 조치 우선순위',
+    cPanels: [pocConceptPanel(C), devMatrixPanel(), devPriorityPanel()],
+  });
+  $('s-steps').innerHTML = pocSteps(C);
+  { const el = $('side-line'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = null;   // 기획·제작 화면엔 fit 대상 차트 없음
+}
+
 /* ══════════ 진입점 ══════════ */
 
-/* POC 관제 — 케미컬 골격 + POC 렌즈 */
+/* POC 관제 — 단계 적응형: P1~P2 기획·제작 / P3~P5 평가 (케미컬 골격 + POC 렌즈) */
 function renderPoc(C) {
+  const lc = C.lifecycle || [];
+  let cur = lc.findIndex(s => s.status === 'current');
+  if (cur < 0) cur = Math.max(0, lc.length - 1);
+  let view = POC_PHASE[CUR_PID];
+  if (view == null || view < 0 || view >= lc.length) view = cur;
+  if (view <= 1 && lc.length >= 3) return renderPocPlanBuild(C, view, cur);
+  const banner = view !== cur
+    ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
+       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '';
   $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: '',
+    qbox: banner,
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
     aChart: pocTrendPanel({ narrow: true, zoom: true }),

@@ -43,6 +43,10 @@
 - **M7 일부**: **부서 고장모드 라이브러리 `#/library`**(library.js) — 전 과제 records를 모드 단위 통합
   (`write_library` → data/library.json: 코드마스터 dedupe·모드명 역매핑·S×O 정렬·발생 이력 타임라인 모달·`#/library/{key}` 딥링크).
   부서 표준 `org.standards`(무발생 200Cy·재발 규칙·어휘 v2.1) — tpl-mass verifyCy 폴백: config → org → 200.
+- **M8 일부**: **POC 단계 적응형 관제** — lifecycle 5단계(기획→설계·제작→기/성능→SW 체크→72h) 기준
+  P1~P2는 기획·제작 화면(pocPlan/pocBuild config: 산출물 체크·제작 진척·설계 사진 assets/),
+  P3~P5는 평가 화면. 상단 개발 단계 스텝바 클릭 = 단계 화면 전환(lcStepGo, 회고 배너).
+  TECOP 리스크 레지스터(config tecop[].risks[], openTecopModal — CRITERIA §7) 게이트 카드 연동.
 - **잔여 작업(M7)**: drum·sort·clean·agv 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토,
   인증(이관·투자심의) 체크리스트 뷰 — Known Issues Register = records 오픈 건 필터.
 
