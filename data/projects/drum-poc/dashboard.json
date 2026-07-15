@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T02:24:28Z",
+  "generatedAt": "2026-07-15T02:33:10Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -567,33 +567,63 @@
     },
     {
       "date": "2026-07-02",
-      "hours": 12,
+      "hours": 7,
       "errors": 0,
       "notes": "2차 시도 개시"
     },
     {
       "date": "2026-07-03",
-      "hours": 11,
+      "hours": 6,
       "errors": 0,
       "notes": ""
     },
     {
       "date": "2026-07-04",
-      "hours": 10,
+      "hours": 5,
       "errors": 0,
       "notes": ""
     },
     {
       "date": "2026-07-06",
-      "hours": 9,
+      "hours": 4,
       "errors": 0,
       "notes": ""
     },
     {
       "date": "2026-07-07",
-      "hours": 10,
+      "hours": 6,
       "errors": 0,
       "notes": ""
+    },
+    {
+      "date": "2026-07-08",
+      "hours": 5,
+      "errors": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-09",
+      "hours": 5,
+      "errors": 0,
+      "notes": "토크 암 보강 반영 후 런 재개"
+    },
+    {
+      "date": "2026-07-10",
+      "hours": 4,
+      "errors": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-11",
+      "hours": 5,
+      "errors": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-07-13",
+      "hours": 5,
+      "errors": 0,
+      "notes": "무발생 검증 병행"
     }
   ],
   "records": [

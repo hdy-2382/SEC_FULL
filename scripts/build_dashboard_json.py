@@ -1559,6 +1559,31 @@ def _codes_from_sheets(sheets: dict) -> list[dict]:
             for c in raw if _cell_to_str(c["code"])]
 
 
+def _validate_runlog(rows: list[dict], label: str = "런 기록", stale_days: int = 7):
+    """일일 가동 기록(런기록/일일평가) 관리 검증 — 데이터 관리 항목 (RECORD_SCHEMA §4-1).
+    일자 누락·중복·역순, 기록 공백(마지막 기록이 오늘 대비 stale_days 이상 과거) 경고."""
+    if not rows:
+        print(f"[build] ⚠ {label} 없음 — 평가 기간 중이면 최신화 필요")
+        return
+    dates = [str(r.get("date") or "") for r in rows]
+    miss = sum(1 for d in dates if not d)
+    if miss:
+        print(f"[build] ⚠ {label}: 일자 누락 {miss}건")
+    clean = [d for d in dates if d]
+    dup = len(clean) - len(set(clean))
+    if dup:
+        print(f"[build] ⚠ {label}: 중복 일자 {dup}건")
+    if clean != sorted(clean):
+        print(f"[build] ⚠ {label}: 날짜 역순 행 존재 — 원장 정렬 확인")
+    try:
+        last = max(clean) if clean else ""
+        today = datetime.now(timezone.utc).date()
+        if last and (today - datetime.strptime(last, "%Y-%m-%d").date()).days >= stale_days:
+            print(f"[build] ⚠ {label}: 마지막 기록 {last} — 오늘({today}) 대비 {stale_days}일 이상 공백 (최신화 필요)")
+    except ValueError:
+        pass
+
+
 def _backfill_mode_codes(codes: list[dict], *record_lists) -> int:
     """modeCode 공란 레코드에 코드마스터 type(=모드명) 역매핑으로 표준 코드 주입."""
     t2c = {_norm(c["type"]): c["code"] for c in codes if c.get("type")}
@@ -1588,6 +1613,7 @@ def _build_poc(pid: str, config: dict):
         if n:
             print(f"[build:{pid}] 코드마스터 역매핑: modeCode {n}건 주입")
     _validate_records(records, "poc")
+    _validate_runlog(runlog, f"{pid} 런기록")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "issues": issues, "runlog": runlog, "records": records, "codes": codes, **computed}
     _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
@@ -1636,6 +1662,7 @@ def _build_pilot(pid: str, config: dict):
     computed = _compute_pilot(daily, errors, config, codes, actions)
     records = _records_from_errors(errors, codes, actions)
     _validate_records(records, "pilot")
+    _validate_runlog(daily, f"{pid} 일일평가")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "codes": codes, "daily": daily, "errors": errors, "actions": actions,
            "records": records, "statusDist": _status_dist_of(records), **computed}
@@ -1674,6 +1701,7 @@ def _build_mass(pid: str, config: dict):
     #   _compute(양산, SEC 원본)는 무변경 — records 는 그 산출물을 읽어 병기만 한다.
     records = _records_from_errors(errors, codes, computed.get("actions") or actions, adjud)
     _validate_records(records, "mass")
+    _validate_runlog(daily, f"{pid} 일일평가")
 
     out = {
         "generatedAt": now.strftime("%Y-%m-%dT%H:%M:%SZ"),

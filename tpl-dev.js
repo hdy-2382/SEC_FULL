@@ -645,8 +645,8 @@ function pocSteps(C) {
       ${stepHead(2, '무고장 런 기록', '에러수>0인 날 = 리셋(0부터 재시작) — 부분 인정 없음, 사전 합의 규칙', `${(DATA.runlog || []).length}일`, 'prog')}
       <div class="step-body">
         ${devRunPanel(C)}
-        <div class="panel mt"><div class="ph"><h3>일자별 런 기록</h3><span class="ps">장비 가동 시간 기준 (달력 시간 아님)</span></div>
-        <table><tr><th>일자</th><th class="c">런시간(h)</th><th class="c">에러수</th><th>비고</th></tr>${runrows}</table></div>
+        <div class="panel mt"><div class="ph"><h3>일자별 런 기록</h3><span class="ps">장비 가동 시간 기준 (달력 시간 아님) · 원장 관리 — RECORD_SCHEMA §4-1</span></div>
+        <div class="tbl-scroll" style="max-height:520px"><table><tr><th>일자</th><th class="c">런시간(h)</th><th class="c">에러수</th><th>비고</th></tr>${runrows}</table></div></div>
       </div>
     </section>
     <section class="step" id="d3">
