@@ -423,6 +423,7 @@ function devShell(stage, C, s) {
   return `
     ${s.head || devHead(stage, C)}
     <div class="pocv">
+      ${s.phead || ''}
       ${s.qbox ? `<div class="qbox">${s.qbox}</div>` : ''}
       <div class="ov-2col">
         ${devClearTrack(C, s.clear)}
@@ -806,13 +807,22 @@ function pilotSteps(C) {
 let POC_PHASE = {};   // pid → 보기 단계 인덱스 (미지정 = 현재 단계)
 
 function lcStepGo(i) {
-  if (((DATA || {}).config || {}).stage !== 'poc') {
-    if (typeof openStagePopup === 'function') openStagePopup();
-    return;
-  }
+  if (((DATA || {}).config || {}).stage !== 'poc') return;
   POC_PHASE[CUR_PID] = i;
   renderData();
   scrollTo(0, 0);
+}
+
+/* POC 세부 단계 선택 탭 — 페이지 안에서 단계별 대시보드 전환 (상단 여정 바와 별개) */
+function pocPhaseTabs(C, view, cur) {
+  const lc = C.lifecycle || [];
+  const tabs = lc.map((s, i) => {
+    const mark = s.status === 'done' ? '✓' : (i + 1);
+    return `<span class="pph${i === view ? ' on' : ''}${i === cur ? ' now' : ''}" onclick="lcStepGo(${i})" title="${esc(s.note || s.stage)}">
+      <i>${mark}</i>${esc(s.stage)}${i === cur ? '<em>진행 중</em>' : ''}</span>`;
+  }).join('');
+  return `<div class="pph-bar"><span class="pph-cap">POC 세부 단계</span>${tabs}
+    ${view !== cur ? `<span class="pph-note">회고 보기 · <a onclick="lcStepGo(${cur})">현재 단계로 →</a></span>` : ''}</div>`;
 }
 
 /* P1 기획 산출물 히어로 — 체크 n/m + 목표/ROI */
@@ -887,13 +897,8 @@ function pocConceptPanel(C) {
 
 /* P1~P2 기획·제작 관제 (평가 이전 화면) */
 function renderPocPlanBuild(C, view, cur) {
-  const lc = C.lifecycle || [];
-  const banner = view !== cur
-    ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
-       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>`
-    : `<b>${esc((lc[view] || {}).stage || '')}</b> 진행 중 — 평가 관제(에러·런)는 P3 착수 시 자동 전환 · 상단 단계 칩 클릭 = 단계 화면 전환`;
   $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: banner,
+    phead: pocPhaseTabs(C, view, cur),
     aTitle: '과제 기획 → 산출물',
     aHero: pocPlanHero(C),
     aChart: pocPlanChecksPanel(C),
@@ -919,11 +924,9 @@ function renderPoc(C) {
   let view = POC_PHASE[CUR_PID];
   if (view == null || view < 0 || view >= lc.length) view = cur;
   if (view <= 1 && lc.length >= 3) return renderPocPlanBuild(C, view, cur);
-  const banner = view !== cur
-    ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
-       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '';
   $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: banner,
+    phead: pocPhaseTabs(C, view, cur),
+    qbox: '',
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
     aChart: pocTrendPanel({ narrow: true, zoom: true }),

@@ -19,6 +19,15 @@ function orgT(k, fb) { const v = REG && REG.org && REG.org[k]; return v == null 
 function portfolioEntry(pid) {
   return ((PORTFOLIO && PORTFOLIO.projects) || []).find(p => p.id === pid) || null;
 }
+/* 상단 여정 칩 클릭 — 같은 과제(이름)의 해당 단계 페이지로 이동 (없으면 무동작) */
+function lcJourneyGo(key) {
+  const name = (((DATA || {}).config || {}).project || {}).name || '';
+  const hit = ((REG && REG.projects) || []).find(p => {
+    const e = portfolioEntry(p.id);
+    return e && e.stage === key && e.hasData !== false && (!name || p.name === name);
+  });
+  if (hit && hit.id !== CUR_PID) location.hash = '#/' + hit.id;
+}
 
 /* ── 사이드 내비: 홈 + 과제 목록(단계 배지) + 활성 과제의 하위 탭 ── */
 function buildNav() {

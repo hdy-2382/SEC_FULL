@@ -26,17 +26,20 @@ function acceptanceCriteria() {
 
 /* 상단 타이틀바용 개발단계 스텝퍼 (한눈에 보기 탭 전용) — 박스형·컬러 강조·진행카운트·커넥터. */
 function buildTopbarLc(C) {
-  const arr = (C && C.lifecycle) || [];
-  if (!arr.length) return '';
-  const curIdx = arr.findIndex(s => s.status === 'current');
-  const doneN = arr.filter(s => s.status === 'done').length;
-  const prog = curIdx >= 0 ? curIdx + 1 : doneN;               // 현재 단계 번호
-  const steps = arr.map((s, i) => {
-    const cls = s.status === 'done' ? 'done' : s.status === 'current' ? 'cur' : 'todo';
-    const mark = s.status === 'done' ? '✓' : (i + 1);
-    return `<span class="tb-step ${cls}" onclick="if(typeof lcStepGo==='function')lcStepGo(${i})" title="${esc(s.stage)} — 단계 화면 보기"><i class="tb-dot">${mark}</i><em class="tb-tx">${esc(s.stage)}</em></span>`;
+  // 상단 = 전 과제 공통 표준 프로세스 여정 (org.process.ladder 기간 단계) — 현재 과제 단계 강조.
+  // 칩 클릭 = 같은 과제(여정)의 해당 단계 페이지로 이동. 과제 내부 세부 단계는 페이지 안에서 선택(POC).
+  const lad = (((REG || {}).org || {}).process || {}).ladder || [];
+  const stages = lad.filter(s => s.key);
+  if (!stages.length) return '';
+  const curKey = (C && C.stage) || ((DATA || {}).config || {}).stage || '';
+  const curIdx = stages.findIndex(s => s.key === curKey);
+  const nm9 = s => String(s || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩◆]\s*/, '');
+  const steps = stages.map((s, i) => {
+    const cls = i < curIdx ? 'done' : i === curIdx ? 'cur' : 'todo';
+    const mark = i < curIdx ? '✓' : (i + 1);
+    return `<span class="tb-step ${cls}" onclick="if(typeof lcJourneyGo==='function')lcJourneyGo('${esc(s.key)}')" title="${esc(nm9(s.stg))} — ${esc(s.run || '')}"><i class="tb-dot">${mark}</i><em class="tb-tx">${esc(nm9(s.stg))}</em></span>`;
   }).join('<span class="tb-sep"></span>');
-  return `<button class="tb-lc-more" onclick="openStagePopup()" title="${esc(T('overview.lcMore', '개발 진행 단계 상세'))}">🔍</button><span class="tb-lc-cap">${esc(T('overview.lcTitle', '개발 단계'))} <b>${prog}/${arr.length}</b></span>${steps}`;
+  return `<button class="tb-lc-more" onclick="openStagePopup()" title="${esc(T('overview.lcMore', '개발 진행 단계 상세'))}">🔍</button><span class="tb-lc-cap">${esc('표준 프로세스')} <b>${curIdx >= 0 ? curIdx + 1 : '—'}/${stages.length}</b></span>${steps}`;
 }
 
 /* 협의 및 논의 필요 항목 — config.json ui.overview.discussItems (자유 편집, 재빌드 불필요).
