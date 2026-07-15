@@ -52,22 +52,22 @@
         {
           "k": "E",
           "status": "ok",
-          "note": "타당성 분석 — 개략 사업성 확인"
+          "note": "투자 효과 개략 확인 (인력·처리량)"
         },
         {
           "k": "C",
           "status": "ok",
-          "note": "개발 계약 정상"
+          "note": "업체 개발 계약 정상 · 잣대 서면 확정"
         },
         {
           "k": "O",
-          "status": "warn",
-          "note": "수혜부서 Pilot 지표 정의 참여 필요"
+          "status": "ok",
+          "note": "담당 R&R·업체 대응 체계 정상"
         },
         {
           "k": "P",
-          "status": "ok",
-          "note": "안전인증 컨셉 합의 완료"
+          "status": "warn",
+          "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)"
         }
       ],
       "project": {
@@ -83,7 +83,7 @@
         "current": "P4 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-15T01:39:10Z",
+      "generatedAt": "2026-07-15T02:00:38Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -169,22 +169,22 @@
         {
           "k": "E",
           "status": "warn",
-          "note": "그리퍼 코팅 단가 절감안 검토"
+          "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)"
         },
         {
           "k": "C",
           "status": "ok",
-          "note": "공급계약 초안 합의"
+          "note": "공급계약 초안 합의 · 잣대 동결 유지"
         },
         {
           "k": "O",
           "status": "ok",
-          "note": "수혜부서 지표 정의 참여 완료"
+          "note": "업체 개선 대응 정상"
         },
         {
           "k": "P",
           "status": "ok",
-          "note": "안전인증 심사 일정 정상"
+          "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상"
         }
       ],
       "project": {
@@ -200,7 +200,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-15T01:39:10Z",
+      "generatedAt": "2026-07-15T02:00:38Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -258,17 +258,17 @@
         {
           "k": "C",
           "status": "ok",
-          "note": "유지보수 계약 조건 합의"
+          "note": "유지보수 계약 조건 합의 · 잣대 동결 유지"
         },
         {
           "k": "O",
           "status": "ok",
-          "note": "수혜부서 합동판정 참여 정상"
+          "note": "운영 인수 준비(교육 계획) 진행"
         },
         {
           "k": "P",
           "status": "ok",
-          "note": "설치 상태 위험성 평가 완료"
+          "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료"
         }
       ],
       "project": {
@@ -284,7 +284,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-15T01:39:10Z",
+      "generatedAt": "2026-07-15T02:00:38Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -380,7 +380,7 @@
         {
           "k": "E",
           "status": "ok",
-          "note": "확산 ROI 승인 조건 유지"
+          "note": "확산 투자 승인 조건(효과 실증치) 유지"
         },
         {
           "k": "C",
@@ -395,7 +395,7 @@
         {
           "k": "P",
           "status": "ok",
-          "note": "호기별 가동인증 일정 정상"
+          "note": "수혜 라인 인수 합의 정상 · 호기별 가동인증 일정 정상"
         }
       ],
       "project": {
@@ -411,7 +411,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-15T01:39:10Z",
+      "generatedAt": "2026-07-15T02:00:38Z",
       "summary": {
         "progress": {
           "cum": 4,

@@ -11,9 +11,10 @@ function ddayLabel(dateStr) {
   return diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `D+${-diff}`;
 }
 
-/* TECOP 리스크 렌즈 — T기술 E경제 C계약 O조직 P안전 (게이트 리뷰 고정 안건).
+/* TECOP 리스크 렌즈 — T기술 E경제(투자·효과) C계약(잣대·업체) O조직(부서 안) P이해·안전(부서 밖+안전).
+   사내 정의·판정 트리거: docs/CRITERIA.md §7 (게이트 리뷰 고정 안건 · worst-of · 근거 필수).
    withLabel=true면 행 앞에 '리스크' 라벨 (홈 카드용 — 맥락 없이도 읽히게) */
-const TECOP_KO = { T: '기술', E: '경제', C: '계약', O: '조직', P: '안전' };
+const TECOP_KO = { T: '기술', E: '경제', C: '계약', O: '조직', P: '이해·안전' };
 function tecopRow(tecop, withLabel) {
   const CLS = { ok: 'ok', warn: 'warn', risk: 'risk', bad: 'risk' };
   const LB = { ok: '양호', warn: '주의', risk: '리스크' };

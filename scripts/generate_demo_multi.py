@@ -779,10 +779,10 @@ def gen_drum_poc():
         "run": {"target": 72, "unit": "h", "criterion": "무에러", "env": "사외 랩"},
         "tecop": [
             {"k": "T", "status": "warn", "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"},
-            {"k": "E", "status": "ok", "note": "타당성 분석 — 개략 사업성 확인"},
-            {"k": "C", "status": "ok", "note": "개발 계약 정상"},
-            {"k": "O", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요"},
-            {"k": "P", "status": "ok", "note": "안전인증 컨셉 합의 완료"},
+            {"k": "E", "status": "ok", "note": "투자 효과 개략 확인 (인력·처리량)"},
+            {"k": "C", "status": "ok", "note": "업체 개발 계약 정상 · 잣대 서면 확정"},
+            {"k": "O", "status": "ok", "note": "담당 R&R·업체 대응 체계 정상"},
+            {"k": "P", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)"},
         ],
         "gate": {"reviewDate": "2026-07-15", "label": "게이트 리뷰(Pilot 이관)", "criteria": [
             {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
@@ -879,10 +879,10 @@ def gen_drum_pilot():
         "run": {"target": 300, "unit": "h", "criterion": "무정지", "env": "사내 (공정 연결 없이)", "growthTarget": 1500},
         "tecop": [
             {"k": "T", "status": "ok", "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"},
-            {"k": "E", "status": "warn", "note": "그리퍼 코팅 단가 절감안 검토"},
-            {"k": "C", "status": "ok", "note": "공급계약 초안 합의"},
-            {"k": "O", "status": "ok", "note": "수혜부서 지표 정의 참여 완료"},
-            {"k": "P", "status": "ok", "note": "안전인증 심사 일정 정상"},
+            {"k": "E", "status": "warn", "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)"},
+            {"k": "C", "status": "ok", "note": "공급계약 초안 합의 · 잣대 동결 유지"},
+            {"k": "O", "status": "ok", "note": "업체 개선 대응 정상"},
+            {"k": "P", "status": "ok", "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상"},
         ],
         "gate": {"reviewDate": "2026-09-15", "label": "게이트 리뷰(양산시범 이관)", "criteria": [
             {"label": "① MCBF 성장 목표", "value": "auto:growth", "status": "prog"},
@@ -988,9 +988,9 @@ def gen_drum_mass():
     cfg["tecop"] = [
         {"k": "T", "status": "ok", "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항"},
         {"k": "E", "status": "ok", "note": "실증치 축적 — 투자심의 입력 준비"},
-        {"k": "C", "status": "ok", "note": "유지보수 계약 조건 합의"},
-        {"k": "O", "status": "ok", "note": "수혜부서 합동판정 참여 정상"},
-        {"k": "P", "status": "ok", "note": "설치 상태 위험성 평가 완료"},
+        {"k": "C", "status": "ok", "note": "유지보수 계약 조건 합의 · 잣대 동결 유지"},
+        {"k": "O", "status": "ok", "note": "운영 인수 준비(교육 계획) 진행"},
+        {"k": "P", "status": "ok", "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료"},
     ]
     cfg["swModules"] = [
         {"name": "비전 인식", "pct": 100, "group": "로봇"}, {"name": "체결 시퀀스", "pct": 100, "group": "로봇"},
@@ -1054,10 +1054,10 @@ def gen_drum_spread():
         "run": {"target": 48, "unit": "호기", "criterion": "축약 런", "env": "각 적용 라인 (호기별 SAT)"},
         "tecop": [
             {"k": "T", "status": "ok", "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"},
-            {"k": "E", "status": "ok", "note": "확산 ROI 승인 조건 유지"},
+            {"k": "E", "status": "ok", "note": "확산 투자 승인 조건(효과 실증치) 유지"},
             {"k": "C", "status": "ok", "note": "호기 추가 발주 정상"},
             {"k": "O", "status": "ok", "note": "라인별 운영 인수 교육 진행"},
-            {"k": "P", "status": "ok", "note": "호기별 가동인증 일정 정상"},
+            {"k": "P", "status": "ok", "note": "수혜 라인 인수 합의 정상 · 호기별 가동인증 일정 정상"},
         ],
         "gate": {"reviewDate": "2027-04-15", "label": "확산 완료 리뷰", "criteria": [
             {"label": "① 호기별 퀄 (SAT+런)", "value": "auto:fleet", "status": "prog"},

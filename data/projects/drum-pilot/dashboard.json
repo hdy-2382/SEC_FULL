@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T01:39:10Z",
+  "generatedAt": "2026-07-15T02:00:38Z",
   "source": "드럼Pilot_샘플.xlsx",
   "config": {
     "stage": "pilot",
@@ -19,22 +19,22 @@
       {
         "k": "E",
         "status": "warn",
-        "note": "그리퍼 코팅 단가 절감안 검토"
+        "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)"
       },
       {
         "k": "C",
         "status": "ok",
-        "note": "공급계약 초안 합의"
+        "note": "공급계약 초안 합의 · 잣대 동결 유지"
       },
       {
         "k": "O",
         "status": "ok",
-        "note": "수혜부서 지표 정의 참여 완료"
+        "note": "업체 개선 대응 정상"
       },
       {
         "k": "P",
         "status": "ok",
-        "note": "안전인증 심사 일정 정상"
+        "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상"
       }
     ],
     "gate": {
