@@ -272,6 +272,33 @@
   .tk-exec .exr-st.warn{background:var(--major-soft);color:var(--major)}
   .tk-exec .exr-st.risk{background:var(--crit-soft);color:var(--crit)}
   .tk-exec .exr-n{flex:1;min-width:0;font-size:11px;color:var(--muted);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .tk-exec .exr-rn{flex:none;font-size:10px;font-weight:800;color:var(--crit);background:var(--crit-soft);border-radius:8px;padding:1.5px 7px;white-space:nowrap}
+  .tk-exec .exr-row.rowlink{cursor:pointer;border-radius:7px}
+  .tk-exec .exr-row.rowlink:hover{background:var(--card-alt)}
+  .tk-exec .exr-more{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--sky);cursor:pointer}
+  .tk-exec .exec-roi-h{display:flex;align-items:baseline;gap:8px}
+  /* TECOP 리스크 레지스터 모달 (openTecopModal) — 스코프: .tcpm */
+  .tcpm .tgrp{border-top:1px solid var(--line-soft);padding:11px 0 4px}
+  .tcpm .tgrp.focus{background:var(--sky-soft);border-radius:10px;padding:11px 10px 6px;border-top:none}
+  .tcpm .tgh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .tcpm .tgh b{font-size:13px;color:var(--navy-deep)}
+  .tcpm .tgh .mini{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tcpm .tr9{border:1px solid var(--line-soft);border-left:3px solid var(--line);border-radius:10px;background:var(--card-alt);padding:9px 12px;margin-bottom:7px}
+  .tcpm .tr9.hi{border-left-color:var(--crit)} .tcpm .tr9.md{border-left-color:var(--major)} .tcpm .tr9.lo{border-left-color:var(--sky)}
+  .tcpm .r1{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .tcpm .r1 .rid9{font-family:ui-monospace,Consolas,monospace;font-size:10.5px;font-weight:700;color:var(--muted)}
+  .tcpm .r1 b{font-size:12.5px;color:var(--ink)}
+  .tcpm .r1 .sp{margin-left:auto;display:flex;align-items:center;gap:6px}
+  .tcpm .tst{font-size:10.5px;font-weight:800;border-radius:8px;padding:2px 8px}
+  .tcpm .tst.idn{background:#EEF2F7;color:var(--muted)} .tcpm .tst.mit{background:var(--sky-soft);color:var(--sky)}
+  .tcpm .tst.done{background:var(--green-soft);color:var(--green)} .tcpm .tst.acc{background:var(--major-soft);color:var(--major)}
+  .tcpm .r2{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:6px}
+  .tcpm .r2 .mit9{background:var(--green-soft);border:1px solid #bfe0cc;border-radius:7px;padding:2px 8px}
+  .tcpm .r2 .mit9 b{color:var(--navy-deep);font-size:11px;margin-right:4px}
+  .tcpm .r2 .who{font-size:10.5px;color:var(--muted)}
+  .tcpm .r2 .pw{display:inline-flex;align-items:center;gap:5px}
+  .tcpm .r2 .pw .prog-bar{width:74px}
+  .tcpm .r2 .pw em{font-style:normal;font-size:10.5px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
   /* 한눈에 보기: 바깥 큰 박스(.sbox 크롬) 제거 — 트랙 박스만 보이게 */
   #s-overview.sbox{background:none;border:none;box-shadow:none;padding:0;margin-bottom:0}
   .prog-track .pt-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;letter-spacing:.01em;color:var(--navy-deep);padding:15px 2px 12px;border-bottom:1px solid rgba(20,51,92,.07)}

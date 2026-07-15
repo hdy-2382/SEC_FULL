@@ -10,7 +10,20 @@
     {
       "k": "T",
       "status": "ok",
-      "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"
+      "note": "설계성 0 · Critical 0 — 개발기 대장의 결실",
+      "risks": [
+        {
+          "id": "R-T1",
+          "risk": "신규 모드(AP 음영) 재발 시 확산 지연",
+          "level": "Medium",
+          "mitigation": "AP 증설 후 무발생 감시 — 어휘 v2.1 등재",
+          "owner": "박OO",
+          "due": "2027-03-26",
+          "progress": 60,
+          "status": "완화중",
+          "link": "DIS-003"
+        }
+      ]
     },
     {
       "k": "E",
@@ -20,12 +33,36 @@
     {
       "k": "C",
       "status": "ok",
-      "note": "호기 추가 발주 정상"
+      "note": "호기 추가 발주 정상",
+      "risks": [
+        {
+          "id": "R-C1",
+          "risk": "호기 추가 발주 단가 변동",
+          "level": "Low",
+          "mitigation": "물량 계약 단가 고정 조항 — 발주 완료분 적용",
+          "owner": "PM",
+          "due": "",
+          "progress": 0,
+          "status": "감시(수용)"
+        }
+      ]
     },
     {
       "k": "O",
       "status": "ok",
-      "note": "라인별 운영 인수 교육 진행"
+      "note": "라인별 운영 인수 교육 진행",
+      "risks": [
+        {
+          "id": "R-O1",
+          "risk": "5~8호기 라인 인수 교육 지연",
+          "level": "Medium",
+          "mitigation": "교육 일정 라인 협의 확정 — 3/4 완료",
+          "owner": "김OO",
+          "due": "2027-04-30",
+          "progress": 75,
+          "status": "완화중"
+        }
+      ]
     },
     {
       "k": "P",

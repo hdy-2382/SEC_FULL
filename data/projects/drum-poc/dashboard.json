@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T02:00:38Z",
+  "generatedAt": "2026-07-15T02:24:28Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -13,27 +13,109 @@
       {
         "k": "T",
         "status": "warn",
-        "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"
+        "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1",
+        "risks": [
+          {
+            "id": "R-T1",
+            "risk": "체결 토크 반력 편차 — 파손 위험",
+            "level": "High",
+            "mitigation": "토크 암 강성 보강 + 상한 인터록",
+            "owner": "김OO",
+            "due": "2026-07-14",
+            "progress": 80,
+            "status": "완화중",
+            "link": "ISS-013"
+          },
+          {
+            "id": "R-T2",
+            "risk": "그리퍼 파지 실패 만성화 가능성",
+            "level": "Medium",
+            "mitigation": "핑거 형상 변경 — Pilot 이관 전 설계 반영",
+            "owner": "박OO",
+            "due": "2026-07-15",
+            "progress": 40,
+            "status": "완화중",
+            "link": "ISS-017"
+          }
+        ]
       },
       {
         "k": "E",
         "status": "ok",
-        "note": "투자 효과 개략 확인 (인력·처리량)"
+        "note": "투자 효과 개략 확인 (인력·처리량)",
+        "risks": [
+          {
+            "id": "R-E1",
+            "risk": "투자 효과 가정(처리량) 실측 미확보",
+            "level": "Medium",
+            "mitigation": "72h 런 실증치로 투자심의 입력 확보",
+            "owner": "PM",
+            "due": "2026-07-20",
+            "progress": 70,
+            "status": "완화중"
+          }
+        ]
       },
       {
         "k": "C",
         "status": "ok",
-        "note": "업체 개발 계약 정상 · 잣대 서면 확정"
+        "note": "업체 개발 계약 정상 · 잣대 서면 확정",
+        "risks": [
+          {
+            "id": "R-C1",
+            "risk": "합격 잣대 변경 요청 발생 가능성",
+            "level": "Low",
+            "mitigation": "서면 동결 유지 — 변경 요청 즉시 에스컬레이션",
+            "owner": "PM",
+            "due": "",
+            "progress": 0,
+            "status": "감시(수용)"
+          }
+        ]
       },
       {
         "k": "O",
         "status": "ok",
-        "note": "담당 R&R·업체 대응 체계 정상"
+        "note": "담당 R&R·업체 대응 체계 정상",
+        "risks": [
+          {
+            "id": "R-O1",
+            "risk": "업체 상주 종료 후 대응 공백",
+            "level": "Medium",
+            "mitigation": "원격 대응 SLA — Pilot 계약에 명기",
+            "owner": "김OO",
+            "due": "2026-07-22",
+            "progress": 10,
+            "status": "식별"
+          }
+        ]
       },
       {
         "k": "P",
         "status": "warn",
-        "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)"
+        "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)",
+        "risks": [
+          {
+            "id": "R-P1",
+            "risk": "수혜부서 Pilot 지표 정의 미합의",
+            "level": "Medium",
+            "mitigation": "3자 협의체 — 가동 지표 초안 합의 (7/13 회의)",
+            "owner": "PM",
+            "due": "2026-07-15",
+            "progress": 60,
+            "status": "완화중"
+          },
+          {
+            "id": "R-P2",
+            "risk": "안전인증 컨셉 부적합 가능성",
+            "level": "Low",
+            "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)",
+            "owner": "PM",
+            "due": "2026-06-10",
+            "progress": 100,
+            "status": "완화 완료"
+          }
+        ]
       }
     ],
     "gate": {

@@ -778,11 +778,23 @@ def gen_drum_poc():
         "stage": "poc",
         "run": {"target": 72, "unit": "h", "criterion": "무에러", "env": "사외 랩"},
         "tecop": [
-            {"k": "T", "status": "warn", "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1"},
-            {"k": "E", "status": "ok", "note": "투자 효과 개략 확인 (인력·처리량)"},
-            {"k": "C", "status": "ok", "note": "업체 개발 계약 정상 · 잣대 서면 확정"},
-            {"k": "O", "status": "ok", "note": "담당 R&R·업체 대응 체계 정상"},
-            {"k": "P", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)"},
+            {"k": "T", "status": "warn", "note": "Critical(체결 토크) 보강 검증 중 — 우선순위 1", "risks": [
+                {"id": "R-T1", "risk": "체결 토크 반력 편차 — 파손 위험", "level": "High", "mitigation": "토크 암 강성 보강 + 상한 인터록", "owner": "김OO", "due": "2026-07-14", "progress": 80, "status": "완화중", "link": "ISS-013"},
+                {"id": "R-T2", "risk": "그리퍼 파지 실패 만성화 가능성", "level": "Medium", "mitigation": "핑거 형상 변경 — Pilot 이관 전 설계 반영", "owner": "박OO", "due": "2026-07-15", "progress": 40, "status": "완화중", "link": "ISS-017"},
+            ]},
+            {"k": "E", "status": "ok", "note": "투자 효과 개략 확인 (인력·처리량)", "risks": [
+                {"id": "R-E1", "risk": "투자 효과 가정(처리량) 실측 미확보", "level": "Medium", "mitigation": "72h 런 실증치로 투자심의 입력 확보", "owner": "PM", "due": "2026-07-20", "progress": 70, "status": "완화중"},
+            ]},
+            {"k": "C", "status": "ok", "note": "업체 개발 계약 정상 · 잣대 서면 확정", "risks": [
+                {"id": "R-C1", "risk": "합격 잣대 변경 요청 발생 가능성", "level": "Low", "mitigation": "서면 동결 유지 — 변경 요청 즉시 에스컬레이션", "owner": "PM", "due": "", "progress": 0, "status": "감시(수용)"},
+            ]},
+            {"k": "O", "status": "ok", "note": "담당 R&R·업체 대응 체계 정상", "risks": [
+                {"id": "R-O1", "risk": "업체 상주 종료 후 대응 공백", "level": "Medium", "mitigation": "원격 대응 SLA — Pilot 계약에 명기", "owner": "김OO", "due": "2026-07-22", "progress": 10, "status": "식별"},
+            ]},
+            {"k": "P", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)", "risks": [
+                {"id": "R-P1", "risk": "수혜부서 Pilot 지표 정의 미합의", "level": "Medium", "mitigation": "3자 협의체 — 가동 지표 초안 합의 (7/13 회의)", "owner": "PM", "due": "2026-07-15", "progress": 60, "status": "완화중"},
+                {"id": "R-P2", "risk": "안전인증 컨셉 부적합 가능성", "level": "Low", "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)", "owner": "PM", "due": "2026-06-10", "progress": 100, "status": "완화 완료"},
+            ]},
         ],
         "gate": {"reviewDate": "2026-07-15", "label": "게이트 리뷰(Pilot 이관)", "criteria": [
             {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
@@ -878,11 +890,19 @@ def gen_drum_pilot():
         "stage": "pilot",
         "run": {"target": 300, "unit": "h", "criterion": "무정지", "env": "사내 (공정 연결 없이)", "growthTarget": 1500},
         "tecop": [
-            {"k": "T", "status": "ok", "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"},
-            {"k": "E", "status": "warn", "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)"},
-            {"k": "C", "status": "ok", "note": "공급계약 초안 합의 · 잣대 동결 유지"},
+            {"k": "T", "status": "ok", "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항", "risks": [
+                {"id": "R-T1", "risk": "파지 실패(DRM-03) 검증 실패 시 게이트 지연", "level": "Medium", "mitigation": "Rev C·v0.9.4 무발생 검증 병행 — 주간 점검", "owner": "박OO", "due": "2026-09-01", "progress": 60, "status": "완화중", "link": "E-009"},
+            ]},
+            {"k": "E", "status": "warn", "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)", "risks": [
+                {"id": "R-E1", "risk": "코팅 Rev C 단가 — TCO 가정 초과", "level": "Medium", "mitigation": "대체 코팅 2안 견적 — 8월 초 단가 확정", "owner": "PM", "due": "2026-08-08", "progress": 50, "status": "완화중", "link": "E-004"},
+            ]},
+            {"k": "C", "status": "ok", "note": "공급계약 초안 합의 · 잣대 동결 유지", "risks": [
+                {"id": "R-C1", "risk": "양산 이관 잣대(360Cy) 변경 요청 가능성", "level": "Low", "mitigation": "서면 동결 유지 — 변경 요청 즉시 에스컬레이션", "owner": "PM", "due": "", "progress": 0, "status": "감시(수용)"},
+            ]},
             {"k": "O", "status": "ok", "note": "업체 개선 대응 정상"},
-            {"k": "P", "status": "ok", "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상"},
+            {"k": "P", "status": "ok", "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상", "risks": [
+                {"id": "R-P1", "risk": "임시 사용 안전 승인(L3) 서류 지연", "level": "Low", "mitigation": "안전인증 심사 서류 선제 제출 — 완료", "owner": "PM", "due": "2026-08-20", "progress": 100, "status": "완화 완료"},
+            ]},
         ],
         "gate": {"reviewDate": "2026-09-15", "label": "게이트 리뷰(양산시범 이관)", "criteria": [
             {"label": "① MCBF 성장 목표", "value": "auto:growth", "status": "prog"},
@@ -986,11 +1006,17 @@ def gen_drum_mass():
                       "team": "김OO, 박OO", "startDate": "2026-11-02", "endDate": "2027-01-31"}
     cfg["gate"] = {"reviewDate": "2027-01-15", "label": "가동인증"}
     cfg["tecop"] = [
-        {"k": "T", "status": "ok", "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항"},
-        {"k": "E", "status": "ok", "note": "실증치 축적 — 투자심의 입력 준비"},
+        {"k": "T", "status": "ok", "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항", "risks": [
+            {"id": "R-T1", "risk": "외생 요인(자재·운영) 관련 판정 재유입 — 에러 버짓 소모", "level": "Low", "mitigation": "비관련 건도 시정 오너 지정 (CRITERIA §4)", "owner": "PM", "due": "", "progress": 0, "status": "감시(수용)", "link": "E-003"},
+        ]},
+        {"k": "E", "status": "ok", "note": "실증치 축적 — 투자심의 입력 준비", "risks": [
+            {"id": "R-E1", "risk": "투자심의 입력치(MCBF·가동률) 미달 가능성", "level": "Medium", "mitigation": "360Cy 완주 실증치 확보 — 월간 점검", "owner": "PM", "due": "2027-01-15", "progress": 60, "status": "완화중"},
+        ]},
         {"k": "C", "status": "ok", "note": "유지보수 계약 조건 합의 · 잣대 동결 유지"},
         {"k": "O", "status": "ok", "note": "운영 인수 준비(교육 계획) 진행"},
-        {"k": "P", "status": "ok", "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료"},
+        {"k": "P", "status": "ok", "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료", "risks": [
+            {"id": "R-P1", "risk": "가동인증 심의 일정 리스크", "level": "Low", "mitigation": "산출물 체크리스트 사전 준비 — 일정 정상", "owner": "PM", "due": "2027-01-15", "progress": 100, "status": "완화 완료"},
+        ]},
     ]
     cfg["swModules"] = [
         {"name": "비전 인식", "pct": 100, "group": "로봇"}, {"name": "체결 시퀀스", "pct": 100, "group": "로봇"},
@@ -1053,10 +1079,16 @@ def gen_drum_spread():
         "stage": "spread",
         "run": {"target": 48, "unit": "호기", "criterion": "축약 런", "env": "각 적용 라인 (호기별 SAT)"},
         "tecop": [
-            {"k": "T", "status": "ok", "note": "설계성 0 · Critical 0 — 개발기 대장의 결실"},
+            {"k": "T", "status": "ok", "note": "설계성 0 · Critical 0 — 개발기 대장의 결실", "risks": [
+                {"id": "R-T1", "risk": "신규 모드(AP 음영) 재발 시 확산 지연", "level": "Medium", "mitigation": "AP 증설 후 무발생 감시 — 어휘 v2.1 등재", "owner": "박OO", "due": "2027-03-26", "progress": 60, "status": "완화중", "link": "DIS-003"},
+            ]},
             {"k": "E", "status": "ok", "note": "확산 투자 승인 조건(효과 실증치) 유지"},
-            {"k": "C", "status": "ok", "note": "호기 추가 발주 정상"},
-            {"k": "O", "status": "ok", "note": "라인별 운영 인수 교육 진행"},
+            {"k": "C", "status": "ok", "note": "호기 추가 발주 정상", "risks": [
+                {"id": "R-C1", "risk": "호기 추가 발주 단가 변동", "level": "Low", "mitigation": "물량 계약 단가 고정 조항 — 발주 완료분 적용", "owner": "PM", "due": "", "progress": 0, "status": "감시(수용)"},
+            ]},
+            {"k": "O", "status": "ok", "note": "라인별 운영 인수 교육 진행", "risks": [
+                {"id": "R-O1", "risk": "5~8호기 라인 인수 교육 지연", "level": "Medium", "mitigation": "교육 일정 라인 협의 확정 — 3/4 완료", "owner": "김OO", "due": "2027-04-30", "progress": 75, "status": "완화중"},
+            ]},
             {"k": "P", "status": "ok", "note": "수혜 라인 인수 합의 정상 · 호기별 가동인증 일정 정상"},
         ],
         "gate": {"reviewDate": "2027-04-15", "label": "확산 완료 리뷰", "criteria": [

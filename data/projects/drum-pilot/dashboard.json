@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T02:00:38Z",
+  "generatedAt": "2026-07-15T02:24:28Z",
   "source": "드럼Pilot_샘플.xlsx",
   "config": {
     "stage": "pilot",
@@ -14,17 +14,55 @@
       {
         "k": "T",
         "status": "ok",
-        "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항"
+        "note": "Critical 0 유지 (POC 소진) — MCBF 성장 순항",
+        "risks": [
+          {
+            "id": "R-T1",
+            "risk": "파지 실패(DRM-03) 검증 실패 시 게이트 지연",
+            "level": "Medium",
+            "mitigation": "Rev C·v0.9.4 무발생 검증 병행 — 주간 점검",
+            "owner": "박OO",
+            "due": "2026-09-01",
+            "progress": 60,
+            "status": "완화중",
+            "link": "E-009"
+          }
+        ]
       },
       {
         "k": "E",
         "status": "warn",
-        "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)"
+        "note": "그리퍼 코팅 단가 절감안 검토 (TCO 가정)",
+        "risks": [
+          {
+            "id": "R-E1",
+            "risk": "코팅 Rev C 단가 — TCO 가정 초과",
+            "level": "Medium",
+            "mitigation": "대체 코팅 2안 견적 — 8월 초 단가 확정",
+            "owner": "PM",
+            "due": "2026-08-08",
+            "progress": 50,
+            "status": "완화중",
+            "link": "E-004"
+          }
+        ]
       },
       {
         "k": "C",
         "status": "ok",
-        "note": "공급계약 초안 합의 · 잣대 동결 유지"
+        "note": "공급계약 초안 합의 · 잣대 동결 유지",
+        "risks": [
+          {
+            "id": "R-C1",
+            "risk": "양산 이관 잣대(360Cy) 변경 요청 가능성",
+            "level": "Low",
+            "mitigation": "서면 동결 유지 — 변경 요청 즉시 에스컬레이션",
+            "owner": "PM",
+            "due": "",
+            "progress": 0,
+            "status": "감시(수용)"
+          }
+        ]
       },
       {
         "k": "O",
@@ -34,7 +72,19 @@
       {
         "k": "P",
         "status": "ok",
-        "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상"
+        "note": "수혜부서 지표 정의 참여 완료 · 안전인증 심사 일정 정상",
+        "risks": [
+          {
+            "id": "R-P1",
+            "risk": "임시 사용 안전 승인(L3) 서류 지연",
+            "level": "Low",
+            "mitigation": "안전인증 심사 서류 선제 제출 — 완료",
+            "owner": "PM",
+            "due": "2026-08-20",
+            "progress": 100,
+            "status": "완화 완료"
+          }
+        ]
       }
     ],
     "gate": {

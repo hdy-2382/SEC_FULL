@@ -126,15 +126,21 @@ function devClearTrack(C, opts) {
     return `<div class="clr-tile clr-${m[0]}"><div class="clr-top"><span class="clr-label">${esc(String(c.label || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, ''))}<em>${esc(devGateValue(String(c.value == null ? '' : c.value)))}</em></span><span class="clr-num">${m[1] === 100 ? '✓' : m[2]}</span></div><div class="clr-gauge"><i style="width:${m[1]}%"></i></div></div>`;
   }).join('');
   const dday = (typeof ddayLabel === 'function' && g.reviewDate) ? ddayLabel(g.reviewDate) : '';
-  // 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행(상태·비고). 남는 높이를 행이 나눠 갖는다
+  // 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행(상태·비고·오픈 리스크 수).
+  // 행 클릭 → 리스크 레지스터 모달 (완화 전략·레벨·진행 — CRITERIA §7)
   const TCLS = { ok: '', warn: 'warn', risk: 'risk', bad: 'risk' }, TLB = { '': '양호', warn: '주의', risk: '리스크' };
+  const anyRisk = (C.tecop || []).some(t => (t.risks || []).length);
   const trows = (C.tecop || []).map(t => {
     const cls = TCLS[t.status] || '';
-    return `<div class="exr-row"><span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span><span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span></div>`;
+    const open = (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중').length;
+    return `<div class="exr-row${anyRisk ? ' rowlink' : ''}"${anyRisk ? ` onclick="openTecopModal('${esc(t.k)}')" title="클릭 = 리스크 레지스터"` : ''}>
+      <span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
+      <span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span>
+      ${open ? `<span class="exr-rn">오픈 ${open}</span>` : ''}</div>`;
   }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     <div class="clr-list">${tiles}</div>
-    <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}</div>
+    <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}${anyRisk ? `<a class="exr-more" onclick="openTecopModal()">리스크 레지스터 →</a>` : ''}</div>
       <div class="exr-dday"><b>${esc(dday || '—')}</b><span>${esc(g.reviewDate || '일정 미정')}</span></div>
       <div class="exr-tecop"><div class="exr-th">고정 안건 — TECOP 리스크</div>${trows || '<div class="mini">TECOP 미기재</div>'}</div></div>
   </div>`;
@@ -270,6 +276,43 @@ function devMatrixPanel() {
 }
 
 /* 개발·운영 템플릿 차트 확대 모달 — 케미컬 openChart와 동일 UX */
+/* TECOP 리스크 레지스터 모달 — 축별 그룹: 레벨·완화 전략·오너/기한·진행·상태·관련 레코드.
+   데이터: config.tecop[].risks[] (PM 수동 관리 — 재빌드 불필요) · 정의/트리거: docs/CRITERIA.md §7 */
+function openTecopModal(focusK) {
+  const tecop = ((DATA || {}).config || {}).tecop || [];
+  if (!tecop.some(t => (t.risks || []).length)) return;
+  const TCLS = { ok: '', warn: 'warn', risk: 'risk', bad: 'risk' }, TLB = { '': '양호', warn: '주의', risk: '리스크' };
+  const LV = { High: ['hi', 'b-crit'], Medium: ['md', 'b-major'], Low: ['lo', 'b-minor'] };
+  const RST = { '식별': 'idn', '완화중': 'mit', '완화 완료': 'done', '감시(수용)': 'acc' };
+  const totOpen = tecop.reduce((a, t) => a + (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중').length, 0);
+  const groups = tecop.filter(t => (t.risks || []).length).map(t => {
+    const cls = TCLS[t.status] || '';
+    const items = (t.risks || []).map(r => {
+      const lv = LV[r.level] || LV.Low;
+      const pct = Math.max(0, Math.min(100, r.progress || 0));
+      return `<div class="tr9 ${lv[0]}">
+        <div class="r1"><span class="rid9">${esc(r.id || '')}</span><b>${esc(r.risk || '')}</b>
+          <span class="sp"><span class="badge ${lv[1]}">${esc(r.level || '')}</span><span class="tst ${RST[r.status] || 'idn'}">${esc(r.status || '식별')}</span></span></div>
+        <div class="r2">
+          ${r.mitigation ? `<span class="mit9"><b>완화</b>${esc(r.mitigation)}</span>` : ''}
+          ${r.link ? `<span class="rlink" title="관련 고장 레코드">↺ ${esc(r.link)}</span>` : ''}
+          <span class="who">${esc(r.owner || '—')}${r.due ? ` · ~${esc(r.due.slice(5))}` : ''}</span>
+          ${r.progress != null && r.status !== '감시(수용)' ? `<span class="pw"><span class="prog-bar"><i style="width:${pct}%${pct >= 100 ? ';background:var(--green)' : ''}"></i></span><em>${pct}%</em></span>` : ''}
+        </div></div>`;
+    }).join('');
+    return `<div class="tgrp${focusK === t.k ? ' focus' : ''}" id="tcp-${esc(t.k)}">
+      <div class="tgh"><b>${esc(t.k)} ${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || '')}</b><span class="exr-st ${cls}">${TLB[cls]}</span><span class="mini">${esc(t.note || '')}</span></div>
+      ${items}</div>`;
+  }).join('');
+  $('modal-title').textContent = `TECOP 리스크 레지스터 — ${(((DATA || {}).config || {}).project || {}).name || ''}`;
+  $('modal-body').innerHTML = `<div class="tcpm">
+    <div class="ed-meta"><span><b>오픈</b> ${totOpen}건 (식별·완화중)</span><span><b>판정 규칙</b> 게이트 리뷰 시점 · 근거 필수 · P는 worst-of (CRITERIA §7)</span></div>
+    ${groups}</div>`;
+  const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');
+  $('modal-back').classList.add('open');
+  if (focusK) { const el = $('tcp-' + focusK); if (el) el.scrollIntoView({ block: 'start' }); }
+}
+
 /* 트랙 A 차트 fit — 렌더 후 슬롯의 실제 픽셀 비율을 재서 뷰박스를 딱 맞게 재렌더.
    제목(.ph)·레전드(.clegend) 제외한 영역을 그래프가 꽉 채운다. 각 렌더러가 TRACKA_BUILDER(vbH)를 등록 */
 let TRACKA_BUILDER = null;

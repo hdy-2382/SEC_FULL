@@ -10,12 +10,37 @@
     {
       "k": "T",
       "status": "ok",
-      "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항"
+      "note": "Critical·만성 재발 0 — 조기 소진 효과로 완주 순항",
+      "risks": [
+        {
+          "id": "R-T1",
+          "risk": "외생 요인(자재·운영) 관련 판정 재유입 — 에러 버짓 소모",
+          "level": "Low",
+          "mitigation": "비관련 건도 시정 오너 지정 (CRITERIA §4)",
+          "owner": "PM",
+          "due": "",
+          "progress": 0,
+          "status": "감시(수용)",
+          "link": "E-003"
+        }
+      ]
     },
     {
       "k": "E",
       "status": "ok",
-      "note": "실증치 축적 — 투자심의 입력 준비"
+      "note": "실증치 축적 — 투자심의 입력 준비",
+      "risks": [
+        {
+          "id": "R-E1",
+          "risk": "투자심의 입력치(MCBF·가동률) 미달 가능성",
+          "level": "Medium",
+          "mitigation": "360Cy 완주 실증치 확보 — 월간 점검",
+          "owner": "PM",
+          "due": "2027-01-15",
+          "progress": 60,
+          "status": "완화중"
+        }
+      ]
     },
     {
       "k": "C",
@@ -30,7 +55,19 @@
     {
       "k": "P",
       "status": "ok",
-      "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료"
+      "note": "수혜부서 합동판정 참여 정상 · 설치 위험성 평가 완료",
+      "risks": [
+        {
+          "id": "R-P1",
+          "risk": "가동인증 심의 일정 리스크",
+          "level": "Low",
+          "mitigation": "산출물 체크리스트 사전 준비 — 일정 정상",
+          "owner": "PM",
+          "due": "2027-01-15",
+          "progress": 100,
+          "status": "완화 완료"
+        }
+      ]
     }
   ],
   "gate": {
