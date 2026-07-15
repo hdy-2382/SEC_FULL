@@ -284,9 +284,16 @@ function openTecopModal(focusK) {
   const TCLS = { ok: '', warn: 'warn', risk: 'risk', bad: 'risk' }, TLB = { '': '양호', warn: '주의', risk: '리스크' };
   const LV = { High: ['hi', 'b-crit'], Medium: ['md', 'b-major'], Low: ['lo', 'b-minor'] };
   const RST = { '식별': 'idn', '완화중': 'mit', '완화 완료': 'done', '감시(수용)': 'acc' };
-  const totOpen = tecop.reduce((a, t) => a + (t.risks || []).filter(r => r.status === '식별' || r.status === '완화중').length, 0);
+  const isOpen = r => r.status === '식별' || r.status === '완화중';
+  const allRisks = tecop.flatMap(t => t.risks || []);
+  const totOpen = allRisks.filter(isOpen).length;
+  const totDone = allRisks.filter(r => r.status === '완화 완료').length;
   const groups = tecop.filter(t => (t.risks || []).length).map(t => {
     const cls = TCLS[t.status] || '';
+    // 그룹 요약 — 오픈 리스크의 레벨 구성 (목업 문법: "오픈 High 1 · Medium 1")
+    const oc = {};
+    (t.risks || []).filter(isOpen).forEach(r => { oc[r.level] = (oc[r.level] || 0) + 1; });
+    const osum = ['High', 'Medium', 'Low'].filter(l => oc[l]).map(l => `${l} ${oc[l]}`).join(' · ');
     const items = (t.risks || []).map(r => {
       const lv = LV[r.level] || LV.Low;
       const pct = Math.max(0, Math.min(100, r.progress || 0));
@@ -301,12 +308,13 @@ function openTecopModal(focusK) {
         </div></div>`;
     }).join('');
     return `<div class="tgrp${focusK === t.k ? ' focus' : ''}" id="tcp-${esc(t.k)}">
-      <div class="tgh"><b>${esc(t.k)} ${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || '')}</b><span class="exr-st ${cls}">${TLB[cls]}</span><span class="mini">${esc(t.note || '')}</span></div>
+      <div class="tgh"><b>${esc(t.k)} ${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || '')}</b><span class="exr-st ${cls}">${TLB[cls]}</span>${osum ? `<span class="tgo">— 오픈 ${osum}</span>` : ''}<span class="tgn">${esc(t.note || '')}</span></div>
       ${items}</div>`;
   }).join('');
   $('modal-title').textContent = `TECOP 리스크 레지스터 — ${(((DATA || {}).config || {}).project || {}).name || ''}`;
   $('modal-body').innerHTML = `<div class="tcpm">
-    <div class="ed-meta"><span><b>오픈</b> ${totOpen}건 (식별·완화중)</span><span><b>판정 규칙</b> 게이트 리뷰 시점 · 근거 필수 · P는 worst-of (CRITERIA §7)</span></div>
+    <div class="tcp-sum"><span class="ts-chip open">오픈 ${totOpen}</span><span class="ts-chip done">완화 완료 ${totDone}</span>
+      <span class="mini">판정 규칙 — 게이트 리뷰 시점 · 근거 필수 · P는 worst-of (CRITERIA §7)</span></div>
     ${groups}</div>`;
   const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');
   $('modal-back').classList.add('open');
