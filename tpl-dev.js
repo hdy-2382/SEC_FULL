@@ -136,9 +136,9 @@ function devClearTrack(C, opts) {
     // 오픈 배지 색 = 오픈 리스크 최악 레벨 (High 빨강 / Medium 주황 / Low 파랑)
     const worst = openRisks.some(r => r.level === 'High') ? 'hi' : openRisks.some(r => r.level === 'Medium') ? 'md' : 'lo';
     return `<div class="exr-box st-${cls || 'ok'}${anyRisk ? ' rowlink' : ''}"${anyRisk ? ` onclick="openTecopModal('${esc(t.k)}')" title="클릭 = 리스크 레지스터"` : ''}>
-      <span class="exr-ax">${esc(t.k)}</span><span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
-      <span class="exr-n" title="${esc(t.note || '')}">${esc(t.note || '')}</span>
-      ${openRisks.length ? `<span class="exr-rn ${worst}">오픈 ${openRisks.length}</span>` : ''}</div>`;
+      <div class="xh"><span class="exr-ax">${esc(t.k)}</span><span class="exr-k">${esc((typeof TECOP_KO !== 'undefined' && TECOP_KO[t.k]) || t.k)}</span><span class="exr-st ${cls}">${TLB[cls]}</span>
+        ${openRisks.length ? `<span class="exr-rn ${worst}">오픈 ${openRisks.length}</span>` : ''}</div>
+      <div class="exr-n2" title="${esc(t.note || '')}">${esc(t.note || '')}</div></div>`;
   }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     <div class="clr-list">${tiles}</div>
@@ -543,7 +543,12 @@ function fracasLoopPanel(opts) {
   const sd = DATA.statusDist || {}, rec = DATA.recurrence || {};
   const box = (k, label, sub) => `<div class="lp lp-${k}"><div class="n">${sd[k] || 0}</div><div class="t">${label}</div><div class="s">${sub}</div></div>`;
   const verifying = (DATA.records || []).filter(r => pocStBucket(r.status) === 'verifying' && r.verify);
-  const vlist = verifying.map(r => `<b>${esc(r.id)}</b> ${esc(r.verify)}`).join(' · ');
+  const vlist = verifying.map(r => {
+    const m = /^(\d+)\s*\/\s*(\d+)/.exec(r.verify || '');
+    const pct = m ? Math.min(100, Math.round(+m[1] / (+m[2] || 1) * 100)) : 0;
+    return `<div class="vl-it"><b>${esc(r.id)}</b><span class="vl-m">${esc(r.mode || '')}</span>
+      <span class="vl-bar"><i style="width:${pct}%"></i></span><em>${esc(r.verify)}</em></div>`;
+  }).join('');
   const recItems = (rec.items || []).map(it => `${esc(it.mode || it.type || it.code || '')}(${it.count})`).join(', ');
   const recNote = opts.recurZeroGate
     ? `↺ 재발(만성) 모드 <b>${rec.count || 0}개</b> — 게이트 전 마감 필수(재발 0)${recItems ? ` · ${recItems}` : ''}`
@@ -556,7 +561,7 @@ function fracasLoopPanel(opts) {
       ${box('verifying', '검증중', '무발생 감시')}<span class="lar">→</span>
       ${box('closed', '종결', '검증 완료')}
     </div>
-    ${vlist ? `<div class="mini mt">무발생 감시 중: ${vlist}</div>` : ''}
+    ${vlist ? `<div class="vlist9"><div class="vl-h">무발생 감시 중 — 검증 통과 시 종결</div>${vlist}</div>` : ''}
     <div class="loopret">${recNote}</div>
   </div>`;
 }
@@ -604,17 +609,17 @@ function pocTrendPanel(opt) {
   </div>`;
 }
 
-/* 비정상 상황 평가 (Fault Injection) */
-function pocAbnormalPanel() {
+/* 비정상 상황 평가 (Fault Injection) — compact=관제용 3열(비고 제외, 가로 스크롤 방지) */
+function pocAbnormalPanel(compact) {
   const rows = (DATA.abnormal || []).map(a => {
     const v = a.verdict || '';
     const cls = v.includes('PASS') ? 'b-ok' : v.includes('FAIL') ? 'b-crit' : 'b-wait';
-    return `<tr><td>${esc(a.scenario)}</td><td class="c">${esc(a.recovery || '—')}</td><td class="c"><span class="badge ${cls}">${esc(v)}</span></td><td class="mini">${esc(a.notes || '')}</td></tr>`;
+    return `<tr><td>${esc(a.scenario)}</td><td class="c">${esc(a.recovery || '—')}</td><td class="c"><span class="badge ${cls}">${esc(v)}</span></td>${compact ? '' : `<td class="mini">${esc(a.notes || '')}</td>`}</tr>`;
   }).join('');
   return `
     <div class="panel">
-      <div class="ph"><h3>비정상 상황 평가 (Fault Injection)</h3><span class="ps">의도적 이상 주입 → 복구 거동 검증 · 첫 MTTR 측정 지점</span></div>
-      <div class="tbl-scroll" style="max-height:300px"><table><tr><th>시나리오</th><th class="c">복구시간</th><th class="c">판정</th><th>비고</th></tr>${rows}</table></div>
+      <div class="ph"><h3>비정상 상황 평가 (Fault Injection)</h3><span class="ps">의도적 이상 주입 → 복구 거동 검증${compact ? '' : ' · 첫 MTTR 측정 지점'}</span></div>
+      <div class="tbl-scroll" style="max-height:300px"><table><tr><th>시나리오</th><th class="c">복구시간</th><th class="c">판정</th>${compact ? '' : '<th>비고</th>'}</tr>${rows}</table></div>
     </div>`;
 }
 
@@ -803,7 +808,7 @@ function renderPoc(C) {
     aChart: pocTrendPanel({ narrow: true, zoom: true }),
     bTitle: '전수 4분류 → 폐루프 · 연결된 지표',
     bTop: pocFourwayBoard(),
-    bCharts: [fracasLoopPanel(), pocAbnormalPanel()],
+    bCharts: [fracasLoopPanel(), pocAbnormalPanel(true)],
     cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
     cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
   });

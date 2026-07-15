@@ -260,15 +260,18 @@
   .tk-exec .exec-roi{flex:1 1 auto;display:flex;flex-direction:column;gap:0;min-height:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 15px}
   .tk-exec .exec-roi-h{font-size:13px;font-weight:800;color:var(--navy-deep);padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
   /* 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행 리스트 (남는 높이를 행이 나눠 갖는다) */
-  .tk-exec .exr-dday{text-align:center;padding:12px 0 11px;border-bottom:1px dashed var(--line)}
-  .tk-exec .exr-dday b{display:block;font-size:36px;font-weight:800;color:var(--navy-deep);line-height:1.1}
+  .tk-exec .exr-dday{text-align:center;padding:8px 0 7px;border-bottom:1px dashed var(--line)}
+  .tk-exec .exr-dday b{display:block;font-size:31px;font-weight:800;color:var(--navy-deep);line-height:1.1}
   .tk-exec .exr-dday span{font-size:12px;color:var(--muted);font-weight:600}
   .tk-exec .exr-note{font-size:10.5px;color:var(--muted);font-weight:600;text-align:center;padding:8px 0 6px;line-height:1.45}
   .tk-exec .exr-tecop{flex:1;display:flex;flex-direction:column;min-height:0;margin-top:2px}
   .tk-exec .exr-th{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;padding:2px 0 6px}
-  /* TECOP 축별 구획 박스 — 상태색 좌측 보더 (양호 초록 / 주의 주황 / 리스크 빨강) */
-  .tk-exec .exr-box{--clr:var(--green);flex:1;min-height:0;display:flex;align-items:center;gap:7px;margin-bottom:6px;
-    border:1px solid var(--line-soft);border-left:3px solid var(--clr);border-radius:9px;background:var(--card-alt);padding:6px 10px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
+  /* TECOP 축별 구획 박스 — 상태색 좌측 보더 (양호 초록 / 주의 주황 / 리스크 빨강). 2줄: 헤더 + 비고 전체 */
+  .tk-exec .exr-box{--clr:var(--green);flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:2px;margin-bottom:5px;
+    border:1px solid var(--line-soft);border-left:3px solid var(--clr);border-radius:9px;background:var(--card-alt);padding:5px 10px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
+  .tk-exec .exr-box .xh{display:flex;align-items:center;gap:7px;min-width:0}
+  .tk-exec .exr-box .xh .exr-rn{margin-left:auto}
+  .tk-exec .exr-n2{font-size:10.5px;color:var(--muted);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tk-exec .exr-box:last-child{margin-bottom:0}
   .tk-exec .exr-box.st-warn{--clr:var(--major)} .tk-exec .exr-box.st-risk{--clr:var(--crit)}
   .tk-exec .exr-box.rowlink{cursor:pointer}
@@ -650,6 +653,15 @@
 .looppanel .loopline .lp-closed .n{color:var(--green)}
 .looppanel .loopline .lar{align-self:center;color:var(--muted);font-weight:800;flex:none}
 .looppanel .loopret{margin-top:10px;font-size:11.5px;font-weight:700;color:var(--crit);border-top:1px dashed var(--line);padding-top:9px}
+/* 무발생 감시 목록 — 검증중 레코드별 진행바 (폐루프 공백을 정보로 채움) */
+.looppanel .vlist9{margin-top:10px}
+.looppanel .vl-h{font-size:10.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;margin-bottom:5px}
+.looppanel .vl-it{display:flex;align-items:center;gap:7px;padding:3.5px 0;font-size:11.5px;min-width:0}
+.looppanel .vl-it b{flex:none;color:var(--navy-deep)}
+.looppanel .vl-m{flex:1;min-width:0;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.looppanel .vl-bar{flex:0 0 86px;height:6px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+.looppanel .vl-bar i{display:block;height:100%;border-radius:4px;background:var(--sky)}
+.looppanel .vl-it em{flex:none;font-style:normal;font-size:10.5px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 /* 4분류 칩 · 재발 링크 (대장) */
 .pocv .c4,.guidev .c4{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap}
 .pocv .c4-risk,.guidev .c4-risk{background:var(--crit-soft);color:var(--crit)}

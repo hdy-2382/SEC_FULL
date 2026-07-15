@@ -127,8 +127,10 @@ function showProjectTab(tab) {
   if (CUR_TAB === 'all' || CUR_TAB === 's-steps') {
     showAllSections();
   } else if (/^s[1-6]$/.test(CUR_TAB)) {
+    // 레거시 섹션 해시 (#s1~s6) — 현 템플릿 섹션 id는 d1~d6 (구 북마크 호환)
+    const want = 'd' + CUR_TAB.slice(1);
     TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = (t === 's-steps') ? '' : 'none'; });
-    document.querySelectorAll('#s-steps section.step').forEach(s => { s.style.display = (s.id === CUR_TAB) ? '' : 'none'; });
+    document.querySelectorAll('#s-steps section.step').forEach(s => { s.style.display = (s.id === CUR_TAB || s.id === want) ? '' : 'none'; });
   } else {
     TOP_SECTIONS.forEach(t => { const el = $(t); if (el) el.style.display = (t === 's-overview') ? '' : 'none'; });
     document.querySelectorAll('#s-steps section.step').forEach(s => { s.style.display = ''; });
