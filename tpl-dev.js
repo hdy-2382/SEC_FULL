@@ -431,12 +431,12 @@ function devShell(stage, C, s) {
         <div class="prog-track tk-a"><div class="pt-h">${s.aTitle}</div>${s.aHero}${s.aChart}</div>
         <div class="prog-track tk-b"><div class="pt-h">${s.bTitle}</div>${s.bTop}<div class="rel-charts">${s.bCharts.join('')}</div></div>
       </div>
-      <div class="prog-track track-wide tk-c"><div class="pt-h">${s.cTitle}</div><div class="fault-grid">${s.cPanels.join('')}</div></div>
+      <div class="prog-track track-wide tk-c"><div class="pt-h">${s.cTitle}</div><div class="fault-grid${s.cPanels.length === 2 ? ' two' : ''}">${s.cPanels.join('')}</div></div>
       ${s.extraWide || ''}
-      <div class="dev-2col">
+      ${s.noDev ? '' : `<div class="dev-2col">
         <div class="prog-track tk-d"><div class="pt-h">부서 협의 및 기타사항</div>${devDiscussPanel()}</div>
         <div class="prog-track tk-dev"><div class="pt-h">기술 개발</div>${devSwPanel(C)}</div>
-      </div>
+      </div>`}
     </div>`;
 }
 
@@ -939,6 +939,70 @@ function pocConceptPanel(C) {
   </div>`;
 }
 
+/* P1 일정 계획 — 세부 단계 미니 간트 (기간 대비 위치·폭, 상태색) */
+function pocSchedulePanel(C) {
+  const sch = (C.pocPlan || {}).schedule || [];
+  const lc = C.lifecycle || [];
+  const prj = C.project || {};
+  const t0 = Date.parse(prj.startDate), t1 = Date.parse(prj.endDate);
+  if (!sch.length || !(t1 > t0)) return '<div class="panel"><div class="ph"><h3>일정 계획</h3></div><div class="mini">config pocPlan.schedule 미기재</div></div>';
+  const rows = sch.map((s, i) => {
+    const a = Date.parse(s.from), b = Date.parse(s.to);
+    const l = Math.max(0, (a - t0) / (t1 - t0) * 100), w = Math.max(2, (b - a) / (t1 - t0) * 100);
+    const st = (lc[i] || {}).status;
+    const col = st === 'done' ? 'var(--green)' : st === 'current' ? 'var(--sky)' : '#c3cfdd';
+    const nm = String((lc[i] || {}).stage || `P${i + 1}`).split(' ')[0];
+    return `<div class="sch-row" onclick="lcStepGo(${i})" title="${esc((lc[i] || {}).stage || '')} · 클릭 = 단계 화면">
+      <span class="k">${esc(nm)}</span>
+      <div class="tr"><i style="left:${l}%;width:${w}%;background:${col}"></i></div>
+      <span class="d">${esc((s.from || '').slice(5))}~${esc((s.to || '').slice(5))}</span></div>`;
+  }).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>POC 일정 계획</h3><span class="ps">${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')} · 게이트 ${esc((C.gate || {}).reviewDate || '')}</span></div>
+    <div class="sch">${rows}</div>
+  </div>`;
+}
+
+/* P1 2안 비교 — 컨셉 선정 근거 */
+function pocComparePanel(C) {
+  const cp = (C.pocPlan || {}).compare || {};
+  const cols = cp.cols || [];
+  const rows = (cp.rows || []).map(r =>
+    `<tr><td><b>${esc(r[0])}</b></td><td class="c">${esc(r[1] || '')}</td><td class="c" style="color:var(--muted)">${esc(r[2] || '')}</td></tr>`).join('');
+  return `<div class="panel tight">
+    <div class="ph"><h3>컨셉 2안 비교</h3><span class="ps">P1 선정 근거</span></div>
+    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c">${esc(cols[0] || 'A안')}</th><th class="c">${esc(cols[1] || 'B안')}</th></tr>${rows}</table></div>
+    ${cp.verdict ? `<div class="mini mt"><b>결론</b> — ${esc(cp.verdict)}</div>` : ''}
+  </div>`;
+}
+
+/* P1 개략 ROI 내역 — 투자 vs 연간 효과 */
+function pocRoiPanel(C) {
+  const r = (C.pocPlan || {}).roiDetail || {};
+  const li = (arr, cls) => (arr || []).map(x => `<div class="roi-it ${cls}"><span>${esc(x[0])}</span><b>${esc(x[1])}</b></div>`).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>개략 ROI 내역</h3><span class="ps">투자심의 입력 초안</span></div>
+    <div class="roi-grid">
+      <div><div class="roi-h">투자</div>${li(r.invest, 'iv')}</div>
+      <div><div class="roi-h">연간 효과</div>${li(r.effect, 'ef')}</div>
+    </div>
+    ${r.payback ? `<div class="roi-pb">${esc(r.payback)}</div>` : ''}
+  </div>`;
+}
+
+/* P1 FMEA 초판 어휘 — 코드마스터 v1 (이후 전 단계 분류·라이브러리의 기준) */
+function pocFmeaVocabPanel() {
+  const codes = DATA.codes || [];
+  const rows = codes.map(c =>
+    `<tr><td class="c"><span class="mcode">${esc(c.code)}</span></td><td>${esc(c.type)}</td>
+     <td class="c"><span class="badge ${SEV_BADGE[c.severity] || 'b-minor'}">${esc(sevLabel(c.severity))}</span></td>
+     <td class="mini">${esc(c.desc || '')}</td></tr>`).join('');
+  return `<div class="panel tight">
+    <div class="ph"><h3>FMEA 초판 — 고장모드 어휘 v1</h3><span class="ps">이후 전 단계 에러 분류의 기준</span><a class="more" href="#/library">고장모드 라이브러리 →</a></div>
+    <div class="tbl-scroll" style="max-height:280px"><table><tr><th class="c">코드</th><th>고장모드</th><th class="c">예상 등급</th><th>설명</th></tr>${rows || '<tr><td colspan="4" class="mini c">코드마스터 없음</td></tr>'}</table></div>
+  </div>`;
+}
+
 /* 회고 배너 (공용) */
 function pocRetroBanner(C, view, cur) {
   if (view === cur) return '';
@@ -957,9 +1021,10 @@ function renderPocPlan(C, view, cur) {
     aChart: pocToBePanel(C),
     bTitle: '기획 산출물 → 정의',
     bTop: pocArtifactBoard(C),
-    bCharts: [pocConceptPanel(C), devFeedPanel()],
-    cTitle: '위험 매트릭스 · Pareto · 조치 우선순위',
-    cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
+    bCharts: [pocComparePanel(C), pocRoiPanel(C)],
+    cTitle: '일정 계획 · FMEA 초판 어휘',
+    cPanels: [pocSchedulePanel(C), pocFmeaVocabPanel()],
+    noDev: true,
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
