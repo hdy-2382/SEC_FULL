@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T01:33:56Z",
+  "generatedAt": "2026-07-21T01:39:55Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -196,22 +196,120 @@
       {
         "stage": "P1 과제 기획",
         "status": "done",
-        "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)"
+        "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)",
+        "clear": [
+          {
+            "label": "목표·평가항목 정의",
+            "value": "판정기준서 v1",
+            "status": "pass"
+          },
+          {
+            "label": "개략 ROI 산정",
+            "value": "투자심의 입력 초안",
+            "status": "pass"
+          },
+          {
+            "label": "컨셉 도출",
+            "value": "2안 비교 — 로봇 안",
+            "status": "pass"
+          },
+          {
+            "label": "특허 검토",
+            "value": "저촉 0 · 출원 후보 1",
+            "status": "pass"
+          },
+          {
+            "label": "안전인증 컨셉",
+            "value": "위험원 12건 반영",
+            "status": "pass"
+          },
+          {
+            "label": "FMEA 초판",
+            "value": "어휘 v1 (DRM-01~08)",
+            "status": "pass"
+          }
+        ]
       },
       {
         "stage": "P2 설계·제작",
         "status": "done",
-        "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (07-04)"
+        "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (07-04)",
+        "clear": [
+          {
+            "label": "설계 동결",
+            "value": "v1 (06-26)",
+            "status": "pass"
+          },
+          {
+            "label": "유닛 제작",
+            "value": "업체 완료 (06-27)",
+            "status": "pass"
+          },
+          {
+            "label": "랩 셀 셋업",
+            "value": "사외 설치 (07-04)",
+            "status": "pass"
+          },
+          {
+            "label": "SW 1차 구현",
+            "value": "90% — 레시피 편집기 잔여",
+            "status": "prog"
+          }
+        ]
       },
       {
         "stage": "P3 기/성능 평가",
         "status": "done",
-        "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치"
+        "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치",
+        "clear": [
+          {
+            "label": "택트 타임",
+            "value": "11.8s / 목표 12s",
+            "status": "pass"
+          },
+          {
+            "label": "반복 정밀도",
+            "value": "±0.04mm / 스펙 ±0.05",
+            "status": "pass"
+          },
+          {
+            "label": "체결 성공률",
+            "value": "99.2% / 목표 99%",
+            "status": "pass"
+          },
+          {
+            "label": "Critical 조기 조치",
+            "value": "2건 발굴 → 우선 조치",
+            "status": "pass"
+          }
+        ]
       },
       {
         "stage": "P4 SW 체크리스트",
         "status": "done",
-        "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)"
+        "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)",
+        "clear": [
+          {
+            "label": "비전·시퀀스 검증",
+            "value": "체크 완료",
+            "status": "pass"
+          },
+          {
+            "label": "안전 인터록 체크",
+            "value": "전 항목 PASS",
+            "status": "pass"
+          },
+          {
+            "label": "레시피 편집기",
+            "value": "잔여 — P5 병행",
+            "status": "prog"
+          },
+          {
+            "label": "로그/리포트",
+            "value": "55% 구현",
+            "status": "prog"
+          }
+        ]
       },
       {
         "stage": "P5 사외 72h 무에러 + 비정상 평가",

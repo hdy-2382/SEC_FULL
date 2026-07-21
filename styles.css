@@ -657,13 +657,9 @@
 .jrny .jp-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .jrny .jp{font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
 
-/* 종합 클리어 단계×기준 통합 행 (POC) — TECOP 구획 박스 동일 양식, 클릭 = 단계 화면 */
-.tk-exec .clr-phases{display:flex;flex-direction:column;min-height:0}
-.tk-exec .clr-phases .exr-box{flex:1}
-.tk-exec .clr-phases .exr-box.st-ok{--clr:var(--green)}
-.tk-exec .clr-phases .exr-box.view{outline:2px solid var(--sky);outline-offset:-1px}
-.tk-exec .exr-now{font-style:normal;font-size:9.5px;font-weight:800;color:var(--green);background:var(--green-soft);border-radius:8px;padding:1px 6px;white-space:nowrap}
-.tk-exec .clr-phases .exr-n2 b{color:var(--navy-deep)}
+/* POC 세부 단계 타일 — 종합 클리어 트랙 내, TECOP 구획 박스와 동일 양식 (클릭 = 단계 이동 팝업) */
+.tk-exec .exr-box.phase{--clr:var(--sky);flex:none;margin-bottom:8px}
+.tk-exec .exr-box.phase .exr-ax{width:auto;min-width:18px;padding:0 5px;border-radius:6px;background:var(--sky)}
 
 /* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
 .pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}

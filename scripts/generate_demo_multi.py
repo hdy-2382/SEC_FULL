@@ -888,12 +888,36 @@ def gen_drum_poc():
             {"name": "그리퍼 제어", "pct": 75, "group": "로봇"}, {"name": "PLC I/F", "pct": 60, "group": "상위시스템"},
             {"name": "로그/리포트", "pct": 55, "group": "상위시스템"}, {"name": "안전 인터록", "pct": 100, "group": "환경"},
         ],
-        # POC 세부 5단계 — 1~2(기획·제작)는 기획/제작 관제, 3~5(평가)는 에러·런 관제로 화면 전환
+        # POC 세부 5단계 — 1~2(기획·제작)는 기획/제작 관제, 3~5(평가)는 에러·런 관제로 화면 전환.
+        # clear[] = 그 단계에서 클리어해야 하는 항목 (종합 클리어 타일 — 단계 선택 시 교체 표시,
+        # 미정의면 게이트 기준 전체로 폴백 = 최종 단계)
         "lifecycle": [
-            {"stage": "P1 과제 기획", "status": "done", "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)"},
-            {"stage": "P2 설계·제작", "status": "done", "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (06-27)"},
-            {"stage": "P3 기/성능 평가", "status": "done", "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치"},
-            {"stage": "P4 SW 체크리스트", "status": "done", "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)"},
+            {"stage": "P1 과제 기획", "status": "done", "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)", "clear": [
+                {"label": "목표·평가항목 정의", "value": "판정기준서 v1", "status": "pass"},
+                {"label": "개략 ROI 산정", "value": "투자심의 입력 초안", "status": "pass"},
+                {"label": "컨셉 도출", "value": "2안 비교 — 로봇 안", "status": "pass"},
+                {"label": "특허 검토", "value": "저촉 0 · 출원 후보 1", "status": "pass"},
+                {"label": "안전인증 컨셉", "value": "위험원 12건 반영", "status": "pass"},
+                {"label": "FMEA 초판", "value": "어휘 v1 (DRM-01~08)", "status": "pass"},
+            ]},
+            {"stage": "P2 설계·제작", "status": "done", "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (06-27)", "clear": [
+                {"label": "설계 동결", "value": "v1 (06-19)", "status": "pass"},
+                {"label": "유닛 제작", "value": "업체 완료 (06-20)", "status": "pass"},
+                {"label": "랩 셀 셋업", "value": "사외 설치 (06-27)", "status": "pass"},
+                {"label": "SW 1차 구현", "value": "90% — 레시피 편집기 잔여", "status": "prog"},
+            ]},
+            {"stage": "P3 기/성능 평가", "status": "done", "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치", "clear": [
+                {"label": "택트 타임", "value": "11.8s / 목표 12s", "status": "pass"},
+                {"label": "반복 정밀도", "value": "±0.04mm / 스펙 ±0.05", "status": "pass"},
+                {"label": "체결 성공률", "value": "99.2% / 목표 99%", "status": "pass"},
+                {"label": "Critical 조기 조치", "value": "2건 발굴 → 우선 조치", "status": "pass"},
+            ]},
+            {"stage": "P4 SW 체크리스트", "status": "done", "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)", "clear": [
+                {"label": "비전·시퀀스 검증", "value": "체크 완료", "status": "pass"},
+                {"label": "안전 인터록 체크", "value": "전 항목 PASS", "status": "pass"},
+                {"label": "레시피 편집기", "value": "잔여 — P5 병행", "status": "prog"},
+                {"label": "로그/리포트", "value": "55% 구현", "status": "prog"},
+            ]},
             {"stage": "P5 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 52h · 비정상 6/8"},
         ],
         # P1 기획 산출물 (기획·제작 관제의 입력 — PM 수동 관리, 재빌드 불필요)
