@@ -860,31 +860,29 @@ function pocPhaseClearOpts(C, view, cur) {
   };
 }
 
-/* P1 As-Is — 현장 수작업 공정 소개 (요약·스텝 플로우·문제점·도식) */
-function pocAsIsPanel(C) {
+/* P1 As-Is → To-Be 스토리 밴드 — 좌 수작업 현장 / 중앙 개선 델타 / 우 자동화 컨셉 */
+function pocAbBand(C) {
   const a = (C.pocPlan || {}).asIs || {};
+  const t = (C.pocPlan || {}).toBe || {};
   const steps = (a.steps || []).map((s, i) => `<span class="ai-step"><i>${i + 1}</i>${esc(s)}</span>`).join('<span class="ai-ar">→</span>');
   const pains = (a.pain || []).map(p => `<span class="ai-pain">${esc(p)}</span>`).join('');
-  const img = a.photo ? `<img class="ai-img" src="${BASE}assets/${esc(a.photo)}" alt="As-Is" onclick="lightbox('${BASE}assets/${esc(a.photo)}')" onerror="this.remove()">` : '';
-  return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>현장 수작업 공정 (As-Is)</span><span class="pg-subh-note">${esc(a.people || '')}${a.tt ? ` · ${esc(a.tt)}` : ''}</span></div>
-    <div class="ai-desc">${esc(a.summary || '—')}</div>
-    ${steps ? `<div class="ai-flow">${steps}</div>` : ''}
-    ${pains ? `<div class="ai-pains">${pains}</div>` : ''}
-    ${img}</div>`;
-}
-
-/* P1 To-Be — 자동화 컨셉 (도식·목표·채택 근거) */
-function pocToBePanel(C) {
-  const t = (C.pocPlan || {}).toBe || {};
-  const targets = (t.targets || []).map(x => `<li>${esc(x)}</li>`).join('');
-  const img = t.photo ? `<img class="tb-img" src="${BASE}assets/${esc(t.photo)}" alt="컨셉" onclick="lightbox('${BASE}assets/${esc(t.photo)}')" onerror="this.remove()">` : '';
-  return `<div class="panel">
-    <div class="ph"><h3>자동화 컨셉 (To-Be)</h3><span class="ps">P1 확정 — 사후 변경은 게이트 안건</span></div>
-    ${img}
-    <div class="tb-desc"><b>${esc(t.summary || (C.pocPlan || {}).concept || '—')}</b></div>
-    ${targets ? `<ul class="tb-targets">${targets}</ul>` : ''}
-    ${t.why ? `<div class="tb-why">채택 근거 — ${esc(t.why)}</div>` : ''}
+  const deltas = (t.targets || []).map(x => `<span class="delta">${esc(x)}</span>`).join('');
+  const img9 = (f, alt) => f ? `<img class="ab-img" src="${BASE}assets/${esc(f)}" alt="${esc(alt)}" onclick="lightbox('${BASE}assets/${esc(f)}')" onerror="this.remove()">` : '';
+  return `<div class="ab-band">
+    <div class="ab-card asis">
+      <div class="ab-h">현장 수작업 (As-Is)<span>${esc(a.people || '')}${a.tt ? ` · ${esc(a.tt)}` : ''}</span></div>
+      ${img9(a.photo, 'As-Is 현장')}
+      <div class="ab-desc">${esc(a.summary || '—')}</div>
+      ${steps ? `<div class="ai-flow">${steps}</div>` : ''}
+      ${pains ? `<div class="ai-pains">${pains}</div>` : ''}
+    </div>
+    <div class="ab-mid"><span class="ab-ar">→</span>${deltas}</div>
+    <div class="ab-card tobe">
+      <div class="ab-h">자동화 컨셉 (To-Be)<span>P1 확정 — 변경은 게이트 안건</span></div>
+      ${img9(t.photo, '자동화 컨셉')}
+      <div class="ab-desc"><b>${esc(t.summary || (C.pocPlan || {}).concept || '—')}</b></div>
+      ${t.why ? `<div class="tb-why">채택 근거 — ${esc(t.why)}</div>` : ''}
+    </div>
   </div>`;
 }
 
@@ -1011,21 +1009,27 @@ function pocRetroBanner(C, view, cur) {
     <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>`;
 }
 
-/* P1 과제 기획 관제 — As-Is 현장 → To-Be 컨셉 → 산출물 정의 */
+/* P1 과제 기획 브리프 — 전용 레이아웃 (devShell 3열과 독립: 클리어 레일 + 기획 스토리 본문) */
 function renderPocPlan(C, view, cur) {
-  $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: pocRetroBanner(C, view, cur),
-    clear: pocPhaseClearOpts(C, view, cur),
-    aTitle: '현장 공정 → 자동화 컨셉',
-    aHero: pocAsIsPanel(C),
-    aChart: pocToBePanel(C),
-    bTitle: '기획 산출물 → 정의',
-    bTop: pocArtifactBoard(C),
-    bCharts: [pocComparePanel(C), pocRoiPanel(C)],
-    cTitle: '일정 계획 · FMEA 초판 어휘',
-    cPanels: [pocSchedulePanel(C), pocFmeaVocabPanel()],
-    noDev: true,
-  });
+  const banner = pocRetroBanner(C, view, cur);
+  $('s-overview').innerHTML = `
+    ${devHead('poc', C)}
+    <div class="pocv planv">
+      ${banner ? `<div class="qbox">${banner}</div>` : ''}
+      <div class="pb-grid">
+        <div class="pb-rail">${devClearTrack(C, pocPhaseClearOpts(C, view, cur))}</div>
+        <div class="pb-main">
+          <div class="sec-h">현장 → 자동화 컨셉<span class="d">이 과제가 무엇을 바꾸는가</span></div>
+          ${pocAbBand(C)}
+          <div class="sec-h">기획 산출물<span class="d">게이트 전 확정 — 종합 클리어와 동일 항목</span></div>
+          ${pocArtifactBoard(C)}
+          <div class="sec-h">일정 · 투자<span class="d">P1~P5 계획 · 투자심의 입력 초안</span></div>
+          <div class="row-2a">${pocSchedulePanel(C)}${pocRoiPanel(C)}</div>
+          <div class="sec-h">근거 자료<span class="d">컨셉 선정 · 고장모드 어휘</span></div>
+          <div class="row-2b">${pocComparePanel(C)}${pocFmeaVocabPanel()}</div>
+        </div>
+      </div>
+    </div>`;
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }

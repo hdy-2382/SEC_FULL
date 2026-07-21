@@ -339,7 +339,7 @@
   #s-overview.sbox{background:none;border:none;box-shadow:none;padding:0;margin-bottom:0}
   .prog-track .pt-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;letter-spacing:.01em;color:var(--navy-deep);padding:15px 2px 12px;border-bottom:1px solid rgba(20,51,92,.07)}
   .prog-track .pt-h::before{content:"";width:4px;height:17px;border-radius:2px;background:var(--tk);flex:none}
-  .prog-track .kgroup,.prog-track .panel{margin:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:15px 17px}
+  .prog-track .kgroup,.prog-track .panel,.planv .kgroup,.planv .panel{margin:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:15px 17px}
   .prog-track>.panel.ovchart,.prog-track>.rel-charts{flex:1 1 auto}   /* 남는 높이는 차트 영역이 흡수 → 두 트랙 높이 정렬 */
   .prog-track .rel-charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
   /* ── 박스 꽉 채우기: 관제 3열·고장분석 그리드에서 남는 높이를 내용이 흡수 ──
@@ -678,6 +678,30 @@
 .pocv .tb-targets li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
 .pocv .tb-why{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
 .pocv .fault-grid.two{grid-template-columns:1fr 1fr}
+/* ── P1 과제 기획 브리프 — 전용 레이아웃 (.planv, devShell 3열과 독립) ── */
+.planv .pb-grid{display:grid;grid-template-columns:minmax(290px,300px) 1fr;gap:18px;align-items:start;margin-bottom:18px}
+@media(max-width:1180px){.planv .pb-grid{grid-template-columns:1fr}}
+.planv .pb-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.planv .sec-h{display:flex;align-items:baseline;gap:9px;font-size:15px;font-weight:800;color:var(--navy-deep);padding:2px 2px 0}
+.planv .sec-h::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--sky);align-self:center;flex:none}
+.planv .sec-h .d{font-size:11px;font-weight:600;color:var(--muted)}
+/* As-Is → To-Be 스토리 밴드 */
+.planv .ab-band{display:grid;grid-template-columns:1fr 116px 1fr;gap:0;align-items:stretch}
+@media(max-width:1180px){.planv .ab-band{grid-template-columns:1fr}.planv .ab-mid{flex-direction:row;padding:10px 0}}
+.planv .ab-card{background:var(--card);border:1px solid var(--line-soft);border-radius:13px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:9px}
+.planv .ab-card.asis{border-top:3px solid #6E7D90}
+.planv .ab-card.tobe{border-top:3px solid var(--sky)}
+.planv .ab-h{display:flex;align-items:baseline;gap:8px;font-size:14px;font-weight:800;color:var(--navy-deep)}
+.planv .ab-h span{font-size:11px;font-weight:600;color:var(--muted);margin-left:auto;white-space:nowrap}
+.planv .ab-img{width:100%;max-height:210px;object-fit:contain;border-radius:10px;border:1px solid var(--line-soft);background:#fff;cursor:zoom-in;display:block}
+.planv .ab-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+.planv .ab-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 10px}
+.planv .ab-ar{font-size:26px;font-weight:800;color:var(--sky);line-height:1}
+.planv .delta{width:100%;text-align:center;font-size:10.5px;font-weight:800;color:var(--sky);background:var(--sky-soft);border:1px solid color-mix(in srgb,var(--sky) 30%,transparent);border-radius:9px;padding:4px 6px;word-break:keep-all}
+/* 하단 그리드 */
+.planv .row-2a{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.planv .row-2b{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1180px){.planv .row-2a,.planv .row-2b{grid-template-columns:1fr}}
 /* P1 일정 계획 미니 간트 */
 .pocv .sch{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .pocv .sch-row{display:flex;align-items:center;gap:9px;cursor:pointer;min-width:0}
