@@ -126,66 +126,76 @@ function homeCard(e) {
   </div>`;
 }
 
-/* 여정 뷰 — 드럼 자동화의 4단계를 스테이션 카드로 (표준 프로세스·깔때기·과제 카드 통합) */
-function renderHomeJourney(jr, entries, proc) {
-  const projName = (jr[0].name || '드럼 자동화').replace(/\s*\(.*\)$/, '');
-  const dept = (jr[0].project || {}).department || '';
-  // 활성 단계 = 지나지 않은 가장 가까운 게이트
-  let activeIdx = jr.findIndex(e => (e.gate || {}).reviewDate && !ddayLabel(e.gate.reviewDate).startsWith('D+'));
-  if (activeIdx < 0) activeIdx = jr.length - 1;
+/* 포트폴리오 파이프라인 — 부서의 여러 과제를 표준 프로세스 단계별 열에 배치.
+   각 과제는 서로 독립 (같은 단계에 여러 과제 가능). "어느 과제가 어느 단계에, 얼마나 건강한가" */
+function renderHomePortfolio(withData, entries, proc) {
+  const UNIT = { poc: 'h', pilot: 'h', mass: 'Cy', spread: '호기', ops: '%' };
+  const ddNum = d => { const m = /^D-(\d+)$/.exec(ddayLabel(d) || ''); return m ? +m[1] : (String(ddayLabel(d)).startsWith('D+') ? 999 : 0); };
+  const stages = (proc.ladder || []).filter(r => r.key);
 
-  const totRec = jr.reduce((a, e) => a + ((e.summary || {}).records || 0), 0);
-  const upCrit = (jr[0].summary.sevDist.Critical || 0);
-  const downCrit = jr.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
-  const ag = jr[activeIdx] && jr[activeIdx].gate;
+  // 과제 건강도: 오픈 치명 > 기준 미달 > 게이트 임박 > 정상
+  const health = e => {
+    const oc = (e.summary || {}).openCritical || 0;
+    const failN = ((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length;
+    const dd = (e.gate || {}).reviewDate ? ddNum(e.gate.reviewDate) : 999;
+    if (oc) return { cls: 'crit', tag: `치명 오픈 ${oc}` };
+    if (failN) return { cls: 'warn', tag: `기준 미달 ${failN}` };
+    if (dd <= 7) return { cls: 'soon', tag: `게이트 임박` };
+    return { cls: 'ok', tag: '정상' };
+  };
+
+  // KPI
+  const N = withData.length;
+  const soonN = withData.filter(e => (e.gate || {}).reviewDate && ddNum(e.gate.reviewDate) <= 7).length;
+  const critN = withData.reduce((a, e) => a + ((e.summary || {}).openCritical || 0), 0);
+  const failN = withData.reduce((a, e) => a + (((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length), 0);
   const kchip = (k, v, cls) => `<span class="jk ${cls || ''}"><em>${esc(k)}</em><b>${v}</b></span>`;
 
-  // 스테이션 카드
-  const UNIT = { poc: 'h', pilot: 'h', mass: 'Cy', spread: '호기', ops: '' };
-  const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}"></i>` : '';
-  const stations = jr.map((e, i) => {
-    const s = e.summary || {}, d = s.sevDist || {}, prog = s.progress || {};
-    const g = e.gate || {}, dd = g.reviewDate ? ddayLabel(g.reviewDate) : '';
+  const card = e => {
+    const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {};
     const col = STAGE_COLOR[e.stage] || '#888';
     const pct = Math.max(0, Math.min(100, prog.pct || 0));
-    const crit = d.Critical || 0, oc = s.openCritical || 0;
-    const tot = crit + (d.Major || 0) + (d.Minor || 0);
-    const critBadge = crit
-      ? `<span class="jcr hot">치명 ${crit}${oc ? ` · 오픈 ${oc}` : ' 소진'}</span>`
-      : `<span class="jcr ok">치명 0</span>`;
-    const run = e.run || {};
-    return `<div class="jstn${i === activeIdx ? ' active' : ''}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
-      <div class="jstn-h"><span class="jnum">${i + 1}</span><b>${esc(STAGE_LABEL[e.stage] || e.stage)}</b>
-        ${i === activeIdx ? '<span class="jnow">진행 중</span>' : ''}</div>
-      <div class="jstn-run">${esc(run.criterion || '')} ${prog.target != null ? `${fmt(prog.target)}${UNIT[e.stage] || ''}` : ''}</div>
-      <div class="jgauge"><div class="jg-num"><b>${fmt(prog.cum)}</b><span>/${fmt(prog.target)}${UNIT[e.stage] || ''}</span><em>${Math.round(pct)}%</em></div>
-        <div class="jg-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div></div>
-      <div class="jstn-gate"><span>게이트</span><b>${esc(dd || '—')}</b></div>
-      <div class="jsev"><div class="jsev-bar">${seg(crit, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
-        <span class="jsev-n">발굴 ${tot}</span></div>
-      ${critBadge}</div>`;
-  }).join('<span class="jconn">→</span>');
+    const h = health(e);
+    const dd = g.reviewDate ? ddayLabel(g.reviewDate) : '';
+    const nm = (e.name || '').replace(/\s*\(.*\)$/, '');
+    return `<div class="ppc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
+      <div class="ppc-h"><b>${esc(nm)}</b><span class="ppc-dd">${esc(dd)}</span></div>
+      <div class="ppc-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div>
+      <div class="ppc-f"><span class="ppc-g">${fmt(prog.cum)}/${fmt(prog.target)}${UNIT[e.stage] || ''} · ${Math.round(pct)}%</span>
+        <span class="ppc-hl">${esc(h.tag)}</span></div>
+    </div>`;
+  };
+
+  const cols = stages.map(r => {
+    const list = withData.filter(e => e.stage === r.key);
+    const nm9 = String(r.stg || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
+    return `<div class="ppcol" style="--sc:${esc(r.color || '#8a99ac')}">
+      <div class="ppcol-h"><span class="ppcol-t">${esc(nm9)}</span><span class="ppcol-n">${list.length || '·'}</span></div>
+      <div class="ppcol-b">${list.map(card).join('') || '<div class="ppcol-e">진행 과제 없음</div>'}</div>
+    </div>`;
+  }).join('');
 
   const html = `
     <section class="jhero">
       <div class="jhero-l">
-        <div class="jh-eyebrow">${esc(dept)} · 표준 프로세스 4단계 여정</div>
-        <h1 class="jh-title">${esc(projName)}</h1>
+        <div class="jh-eyebrow">부서 표준 프로세스 · 다과제 포트폴리오</div>
+        <h1 class="jh-title">과제 포트폴리오</h1>
       </div>
       <div class="jhero-k">
-        ${kchip('총 발굴', `${totRec}건`)}
-        ${kchip('치명 소진', `${upCrit} → 0`, downCrit ? '' : 'ok')}
-        ${ag ? kchip('다음 게이트', `${esc((jr[activeIdx].abbr) || '')} ${esc(ddayLabel(ag.reviewDate))}`, 'hl') : ''}
+        ${kchip('진행 과제', `${N}건`)}
+        ${kchip('게이트 임박', `${soonN}`, soonN ? 'hl' : '')}
+        ${kchip('오픈 치명', `${critN}`, critN ? 'bad' : 'ok')}
+        ${kchip('기준 미달', `${failN}`, failN ? 'bad' : 'ok')}
       </div>
     </section>
     <section class="sbox jsec">
-      <div class="sbox-h"><span class="tag">과제 여정</span><h2>단계별 성적 · 치명 에러는 상류에서 소진</h2>
-        <span class="d">치명 ${upCrit}건을 POC에서 소진 → 이후 전 단계 0 · 하류 평가비용↓ · 카드 클릭 → 단계 페이지</span></div>
-      <div class="jflow">${stations}</div>
+      <div class="sbox-h"><span class="tag">파이프라인</span><h2>단계별 진행 과제 — 표준 프로세스 위 위치</h2>
+        <span class="d">각 과제는 독립 · 카드 색 = 건강도(빨강 치명·주황 미달·정상) · 클릭 → 과제 페이지</span></div>
+      <div class="ppipe">${cols}</div>
     </section>`;
 
   $('s-home').innerHTML = html;
-  document.querySelectorAll('#s-home .jstn[data-go]').forEach(c =>
+  document.querySelectorAll('#s-home .ppc[data-go]').forEach(c =>
     c.addEventListener('click', () => { location.hash = '#/' + c.dataset.go; }));
 }
 
@@ -195,12 +205,9 @@ function renderHome() {
   const proc = (REG && REG.org && REG.org.process) || {};
   const entries = (PORTFOLIO && PORTFOLIO.projects) || [];
   const withData = entries.filter(e => e.hasData);
-  const ORDER9 = ['poc', 'pilot', 'mass', 'spread', 'ops'];
-  const jr = withData.filter(e => (e.summary || {}).sevDist)
-    .sort((a, b) => ORDER9.indexOf(a.stage) - ORDER9.indexOf(b.stage));
-
-  if (jr.length >= 2) return renderHomeJourney(jr, entries, proc);
-  // 폴백(단계 데이터 없음): 기존 상세 뷰 유지
+  if (withData.length >= 1 && (proc.ladder || []).some(r => r.key))
+    return renderHomePortfolio(withData, entries, proc);
+  // 폴백(등록 과제 없음): 기존 상세 뷰 유지
 
   // 상단 요약 밴드는 두지 않는다 — 과제 5건 규모에선 카드가 곧 요약이고, 게이트 D-day·TECOP는
   // 카드 안에 이미 있다. 최소 신호(가장 임박한 게이트·기준 미달 수)만 과제 현황 헤더에 한 줄로.
