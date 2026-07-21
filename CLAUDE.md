@@ -43,10 +43,14 @@
 - **M7 일부**: **부서 고장모드 라이브러리 `#/library`**(library.js) — 전 과제 records를 모드 단위 통합
   (`write_library` → data/library.json: 코드마스터 dedupe·모드명 역매핑·S×O 정렬·발생 이력 타임라인 모달·`#/library/{key}` 딥링크).
   부서 표준 `org.standards`(무발생 200Cy·재발 규칙·어휘 v2.1) — tpl-mass verifyCy 폴백: config → org → 200.
-- **M8 일부**: **POC 단계 적응형 관제** — lifecycle 5단계(기획→설계·제작→기/성능→SW 체크→72h) 기준
-  P1~P2는 기획·제작 화면(pocPlan/pocBuild config: 산출물 체크·제작 진척·설계 사진 assets/),
-  P3~P5는 평가 화면. 상단 개발 단계 스텝바 클릭 = 단계 화면 전환(lcStepGo, 회고 배너).
-  TECOP 리스크 레지스터(config tecop[].risks[], openTecopModal — CRITERIA §7) 게이트 카드 연동.
+- **M8**: **POC 단계 적응형 관제** — lifecycle **3단계**(P1 과제 기획 / P2 설계·제작 / P3 기·성능·SW·72h 평가).
+  P1·P2는 전용 브리프 레이아웃(`.planv`, devShell 3열 독립): As-Is→To-Be 스토리 밴드(assets/ 도식) +
+  산출물/제작 진척 + 일정 간트·ROI·2안 비교·FMEA 어휘(P1) / 사진·이슈(P2). config pocPlan(asIs/toBe/
+  schedule/compare/roiDetail)·pocBuild(design/setup/items/photos). P3는 평가 관제(72h 런·4분류·FRACAS)
+  + extraWide '게이트 전제 확인'(pocPerf 기성능표 · pocSwCheck SW 체크리스트). 종합 클리어 트랙 상단
+  단계 박스 클릭 → 이동 팝업, 클리어 타일은 선택 단계 clear[] 항목으로 교체(devClearTrack opts.rows/sub).
+  상단 여정 바(buildTopbarLc)=표준 프로세스, 돋보기=전체 여정 팝업(openStagePopup). 날짜 시프트(_shift_obj)
+  로 데모 항상 D-1. TECOP 리스크 레지스터(tecop[].risks[], openTecopModal — CRITERIA §7) 게이트 카드 연동.
 - **잔여 작업(M7)**: drum·sort·clean·agv 실데이터 교체, mass(chem) 화면에 records 렌즈 연결 검토,
   인증(이관·투자심의) 체크리스트 뷰 — Known Issues Register = records 오픈 건 필터.
 

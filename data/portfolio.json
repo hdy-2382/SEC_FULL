@@ -19,20 +19,17 @@
           {
             "label": "① 기성능 스펙",
             "value": "3/3",
-            "status": "pass",
-            "phase": 3
+            "status": "pass"
           },
           {
             "label": "② 72h 무에러",
             "value": "auto:run",
-            "status": "prog",
-            "phase": 5
+            "status": "prog"
           },
           {
             "label": "③ 비정상 시나리오",
             "value": "auto:abnormal",
-            "status": "prog",
-            "phase": 5
+            "status": "prog"
           },
           {
             "label": "④ Critical 미해결 0",
@@ -42,8 +39,7 @@
           {
             "label": "⑤ FMEA 상위 리스크",
             "value": "조치계획 수립",
-            "status": "pass",
-            "phase": 1
+            "status": "pass"
           }
         ]
       },
@@ -164,12 +160,12 @@
         "endDate": "2026-07-22"
       },
       "lifecycle": {
-        "total": 5,
-        "pos": 5,
-        "current": "P5 사외 72h 무에러 + 비정상 평가"
+        "total": 3,
+        "pos": 3,
+        "current": "P3 기/성능·SW·72h 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-21T05:10:07Z",
+      "generatedAt": "2026-07-21T05:54:47Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -336,7 +332,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-21T05:10:07Z",
+      "generatedAt": "2026-07-21T05:54:47Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -457,7 +453,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-21T05:10:07Z",
+      "generatedAt": "2026-07-21T05:54:47Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -621,7 +617,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-21T05:10:07Z",
+      "generatedAt": "2026-07-21T05:54:47Z",
       "summary": {
         "progress": {
           "cum": 4,

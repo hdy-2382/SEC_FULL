@@ -1051,20 +1051,49 @@ function renderPocPlan(C, view, cur) {
   TRACKA_BUILDER = null;
 }
 
-/* P2 설계·제작 관제 — 제작 진척 · 설계 사진 · 초기 이슈 */
+/* P2 설계 → 제작·셋업 스토리 밴드 — 좌 설계 / 중앙 마일스톤 델타 / 우 제작·셋업 */
+function pocBuildBand(C) {
+  const b = C.pocBuild || {};
+  const d = b.design || {}, s = b.setup || {};
+  const li9 = arr => (arr || []).map(x => `<li>${esc(x)}</li>`).join('');
+  const deltas = (b.deltas || []).map(x => `<span class="delta">${esc(x)}</span>`).join('');
+  const img9 = (f, alt) => f ? `<img class="ab-img" src="${BASE}assets/${esc(f)}" alt="${esc(alt)}" onclick="lightbox('${BASE}assets/${esc(f)}')" onerror="this.remove()">` : '';
+  return `<div class="ab-band">
+    <div class="ab-card design">
+      <div class="ab-h">설계 (Design)<span><em class="ab-met">동결 v1</em></span></div>
+      ${img9(d.photo, '설계')}
+      <div class="ab-desc">${esc(d.summary || '—')}</div>
+      ${d.items ? `<ul class="tb-targets">${li9(d.items)}</ul>` : ''}
+    </div>
+    <div class="ab-mid"><span class="ab-ar">→</span>${deltas}</div>
+    <div class="ab-card build">
+      <div class="ab-h">제작 · 셋업 (Build)<span><em class="ab-met ok">셋업 완료</em></span></div>
+      ${img9(s.photo, '제작·셋업')}
+      <div class="ab-desc">${esc(s.summary || '—')}</div>
+      ${s.items ? `<ul class="tb-targets">${li9(s.items)}</ul>` : ''}
+    </div>
+  </div>`;
+}
+
+/* P2 설계·제작 브리프 — P1과 동일한 전용 레이아웃 (.planv) */
 function renderPocBuild(C, view, cur) {
-  $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: pocRetroBanner(C, view, cur),
-    clear: pocPhaseClearOpts(C, view, cur),
-    aTitle: '설계·제작 → 진척',
-    aHero: pocBuildBoard(C),
-    aChart: pocPhotoPanel(C),
-    bTitle: '발굴 이슈 → 초기 폐루프',
-    bTop: fracasLoopPanel(),
-    bCharts: [devFeedPanel(), devMatrixPanel()],
-    cTitle: '컨셉 · Pareto · 조치 우선순위',
-    cPanels: [pocConceptPanel(C), devParetoPanel(true), devPriorityPanel()],
-  });
+  const banner = pocRetroBanner(C, view, cur);
+  $('s-overview').innerHTML = `
+    ${devHead('poc', C)}
+    <div class="pocv planv">
+      ${banner ? `<div class="qbox">${banner}</div>` : ''}
+      <div class="pb-grid">
+        <div class="pb-rail">${devClearTrack(C, pocPhaseClearOpts(C, view, cur))}</div>
+        <div class="pb-main">
+          <div class="sec-h">설계 → 제작·셋업<span class="d">이 단계가 무엇을 만들었나</span></div>
+          ${pocBuildBand(C)}
+          <div class="sec-h">제작 진척<span class="d">항목별 진행 — 잔여는 P5 병행</span></div>
+          ${pocBuildBoard(C)}
+          <div class="sec-h">기록<span class="d">설계·셋업 사진 · 제작 중 발굴 이슈</span></div>
+          <div class="row-2b">${pocPhotoPanel(C)}${devFeedPanel()}</div>
+        </div>
+      </div>
+    </div>`;
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
@@ -1074,6 +1103,34 @@ function renderPocBuild(C, view, cur) {
 /* ══════════ 진입점 ══════════ */
 
 /* POC 관제 — 단계 적응형: P1~P2 기획·제작 / P3~P5 평가 (케미컬 골격 + POC 렌즈) */
+/* 기/성능 평가 패널 (P3) — 스펙 대비 결과 */
+function pocPerfPanel(C) {
+  const rows = (C.pocPerf || []).map(p => {
+    const cls = p.status === 'pass' ? 'b-ok' : p.status === 'fail' ? 'b-crit' : 'b-wait';
+    return `<tr><td><b>${esc(p.item)}</b></td><td class="c"><b style="color:var(--navy-deep)">${esc(p.value || '')}</b></td>
+      <td class="c mini">${esc(p.target || '')}</td><td class="c"><span class="badge ${cls}">${p.status === 'pass' ? '충족' : p.status === 'fail' ? '미달' : '진행'}</span></td></tr>`;
+  }).join('');
+  return `<div class="panel tight">
+    <div class="ph"><h3>기/성능 평가</h3><span class="ps">스펙 대비 — 게이트 ① 기성능</span></div>
+    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c">실측</th><th class="c">기준</th><th class="c">판정</th></tr>${rows || '<tr><td colspan="4" class="mini c">config pocPerf 미기재</td></tr>'}</table></div>
+  </div>`;
+}
+
+/* SW 체크리스트 패널 (P4) — 핵심 모듈 점검 */
+function pocSwCheckPanel(C) {
+  const items = C.pocSwCheck || [];
+  const done = items.filter(i => (i.status || '').includes('완료')).length;
+  const rows = items.map(i => {
+    const ok = (i.status || '').includes('완료');
+    return `<div class="swck-it"><span class="swck-i ${ok ? 'ok' : 'run'}">${ok ? '✓' : '…'}</span>
+      <span class="swck-t">${esc(i.item)}</span><span class="swck-n">${esc(i.note || '')}</span></div>`;
+  }).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>SW 체크리스트</h3><span class="ps">핵심 모듈 점검 — <b>${done}/${items.length}</b> 완료</span></div>
+    <div class="swck">${rows || '<div class="mini">config pocSwCheck 미기재</div>'}</div>
+  </div>`;
+}
+
 function renderPoc(C) {
   const lc = C.lifecycle || [];
   let cur = lc.findIndex(s => s.status === 'current');
@@ -1094,6 +1151,8 @@ function renderPoc(C) {
     bCharts: [fracasLoopPanel(), pocAbnormalPanel(true)],
     cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
     cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
+    extraWide: `<div class="prog-track track-wide tk-a"><div class="pt-h">게이트 전제 확인 — 기/성능 · SW 체크리스트</div>
+      <div class="fault-grid two">${pocPerfPanel(C)}${pocSwCheckPanel(C)}</div></div>`,
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }

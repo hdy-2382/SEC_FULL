@@ -973,13 +973,12 @@ def gen_drum_poc():
                 {"id": "R-P2", "risk": "안전인증 컨셉 부적합 가능성", "level": "Low", "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)", "owner": "PM", "due": "2026-06-10", "progress": 100, "status": "완화 완료"},
             ]},
         ],
-        # phase = 이 기준이 결판나는 세부 단계 번호 (종합 클리어의 단계×기준 통합 행에 사용, 없으면 공통 조건)
         "gate": {"reviewDate": "2026-07-15", "label": "게이트 리뷰(Pilot 이관)", "criteria": [
-            {"label": "① 기성능 스펙", "value": "3/3", "status": "pass", "phase": 3},
-            {"label": "② 72h 무에러", "value": "auto:run", "status": "prog", "phase": 5},
-            {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog", "phase": 5},
+            {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
+            {"label": "② 72h 무에러", "value": "auto:run", "status": "prog"},
+            {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog"},
             {"label": "④ Critical 미해결 0", "value": "현재 1건 · 무발생 41/50Cy", "status": "prog"},
-            {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass", "phase": 1},
+            {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass"},
         ]},
         "project": {"name": "드럼 자동화 (POC)", "department": "인프라 기술팀", "team": "김OO, 박OO",
                     "startDate": "2026-06-05", "endDate": "2026-07-15"},
@@ -1012,19 +1011,23 @@ def gen_drum_poc():
                 {"label": "랩 셀 셋업", "value": "사외 설치 (06-27)", "status": "pass"},
                 {"label": "SW 1차 구현", "value": "90% — 레시피 편집기 잔여", "status": "prog"},
             ]},
-            {"stage": "P3 기/성능 평가", "status": "done", "note": "택트·반복정밀도·체결성공률 3/3 충족 · Critical 2건 조기 발굴→우선 조치", "clear": [
-                {"label": "택트 타임", "value": "11.8s / 목표 12s", "status": "pass"},
-                {"label": "반복 정밀도", "value": "±0.04mm / 스펙 ±0.05", "status": "pass"},
-                {"label": "체결 성공률", "value": "99.2% / 목표 99%", "status": "pass"},
-                {"label": "Critical 조기 조치", "value": "2건 발굴 → 우선 조치", "status": "pass"},
-            ]},
-            {"stage": "P4 SW 체크리스트", "status": "done", "note": "핵심 모듈 점검 — 비전·시퀀스·인터록 (잔여 2건 P5 병행)", "clear": [
-                {"label": "비전·시퀀스 검증", "value": "체크 완료", "status": "pass"},
-                {"label": "안전 인터록 체크", "value": "전 항목 PASS", "status": "pass"},
-                {"label": "레시피 편집기", "value": "잔여 — P5 병행", "status": "prog"},
-                {"label": "로그/리포트", "value": "55% 구현", "status": "prog"},
-            ]},
-            {"stage": "P5 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 52h · 비정상 6/8"},
+            # P3~P5(기/성능·SW 체크·72h 평가)는 한 페이지로 통합 — 평가 관제에서 모두 표시
+            {"stage": "P3 기/성능·SW·72h 평가", "status": "current",
+             "note": "기성능 3/3 · SW 체크 · 2차 시도 52h · 비정상 6/8"},
+        ],
+        # 기성능 평가 (P3) — 평가 화면 패널
+        "pocPerf": [
+            {"item": "택트 타임", "value": "11.8s", "target": "≤ 12s", "status": "pass"},
+            {"item": "반복 정밀도", "value": "±0.04mm", "target": "스펙 ±0.05", "status": "pass"},
+            {"item": "체결 성공률", "value": "99.2%", "target": "≥ 99%", "status": "pass"},
+            {"item": "Critical 조기 발굴", "value": "2건", "target": "우선 조치 완료", "status": "pass"},
+        ],
+        # SW 체크리스트 (P4) — 평가 화면 패널
+        "pocSwCheck": [
+            {"item": "비전·시퀀스 검증", "status": "완료", "note": "인식·핸들링 로직 점검"},
+            {"item": "안전 인터록 체크", "status": "완료", "note": "전 항목 PASS"},
+            {"item": "레시피 편집기", "status": "진행", "note": "잔여 — 72h 병행"},
+            {"item": "로그/리포트", "status": "진행", "note": "55% 구현"},
         ],
         # P1 기획 화면 데이터 — As-Is 현장 수작업 / To-Be 자동화 컨셉 (산출물 정의는 lifecycle P1 clear)
         "pocPlan": {
@@ -1069,8 +1072,19 @@ def gen_drum_poc():
                 "payback": "회수 약 2.1년 — POC·Pilot 실증치로 정밀화 후 투자심의 입력",
             },
         },
-        # P2 설계·제작 현황 (아이템 진척 + 설계·셋업 사진 assets/)
+        # P2 설계·제작 현황 (스토리 밴드 + 아이템 진척 + 사진 assets/)
         "pocBuild": {
+            "design": {
+                "summary": "체결·반송 유닛 기구 설계 + 전장 설계 — 특허 회피 1건·FMEA 반영, 설계 동결 v1 (06-19)",
+                "photo": "design-gripper.svg",
+                "items": ["기구 설계 — 체결 유닛 (토크 암·지그)", "기구 설계 — 반송 유닛 (컨베이어 직결)", "전장 설계 — 인터록·비전 조명"],
+            },
+            "setup": {
+                "summary": "업체 제작 → 사외 랩 반입·설치 — 프레임·안전 펜스·비전 캘리브레이션까지 완료 (06-27)",
+                "photo": "build-cell.svg",
+                "items": ["프레임·유닛 제작 (업체)", "로봇·비전 설치 및 캘리브레이션", "안전 펜스·인터록 검증"],
+            },
+            "deltas": ["설계 동결 v1 (06-19)", "업체 제작 완료 (06-20)", "랩 셀 셋업 (06-27)"],
             "items": [
                 {"name": "기구 설계 — 체결 유닛", "pct": 100, "note": "설계 동결 v1"},
                 {"name": "기구 설계 — 반송 유닛", "pct": 100, "note": ""},

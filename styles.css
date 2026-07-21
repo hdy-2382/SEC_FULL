@@ -678,6 +678,16 @@
 .pocv .tb-targets li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
 .pocv .tb-why{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
 .pocv .fault-grid.two{grid-template-columns:1fr 1fr}
+.pocv .track-wide .fault-grid.two{grid-template-columns:1fr 1fr}
+/* SW 체크리스트 (평가 화면 P4 패널) */
+.pocv .swck{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.pocv .swck-it{display:flex;align-items:center;gap:9px;padding:6px 0;border-top:1px solid var(--line-soft);min-width:0}
+.pocv .swck-it:first-child{border-top:none}
+.pocv .swck-i{flex:none;width:19px;height:19px;border-radius:50%;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.pocv .swck-i.ok{background:var(--green);color:#fff}
+.pocv .swck-i.run{background:var(--major-soft);color:var(--major)}
+.pocv .swck-t{flex:none;font-size:12.5px;font-weight:700;color:var(--ink)}
+.pocv .swck-n{flex:1;min-width:0;font-size:11px;color:var(--muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ── P1 과제 기획 브리프 — 전용 레이아웃 (.planv, devShell 3열과 독립) ── */
 .planv .pb-grid{display:grid;grid-template-columns:minmax(290px,300px) 1fr;gap:18px;align-items:start;margin-bottom:18px}
 @media(max-width:1180px){.planv .pb-grid{grid-template-columns:1fr}}
@@ -691,6 +701,9 @@
 .planv .ab-card{background:var(--card);border:1px solid var(--line-soft);border-radius:13px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:9px}
 .planv .ab-card.asis{border-top:3px solid #6E7D90}
 .planv .ab-card.tobe{border-top:3px solid var(--sky)}
+.planv .ab-card.design{border-top:3px solid var(--sky)}
+.planv .ab-card.build{border-top:3px solid var(--green)}
+.planv .ab-met.ok{color:var(--green);background:var(--green-soft);border-color:transparent}
 .planv .ab-h{display:flex;align-items:baseline;gap:8px;font-size:14px;font-weight:800;color:var(--navy-deep)}
 .planv .ab-h span{display:flex;gap:5px;margin-left:auto;white-space:nowrap}
 .planv .ab-met{font-style:normal;font-size:10.5px;font-weight:800;color:var(--ink-soft);background:var(--card-alt);border:1px solid var(--line-soft);border-radius:9px;padding:2px 9px}
