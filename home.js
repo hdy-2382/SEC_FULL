@@ -154,16 +154,8 @@ function renderHomePortfolio(withData, entries, proc) {
   // 단계 순서로 정렬 (프로세스 진행 순)
   const ORD = { poc: 0, pilot: 1, mass: 2, spread: 3, ops: 4 };
   const list = withData.slice().sort((a, b) => (ORD[a.stage] ?? 9) - (ORD[b.stage] ?? 9));
-  const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}"></i>` : '';
-  const stagePos = k => { const i = stages.findIndex(r => r.key === k); return i < 0 ? '' : `${i + 1}/${stages.length}`; };
-
-  const meter = (label, segs, note) => {
-    const bar = segs.filter(x => x[0]).map(x => `<i style="flex:${x[0]};background:${x[1]}" title="${x[2]} ${x[0]}"></i>`).join('');
-    return `<div class="hpc-meter"><span class="ml">${label}</span>
-      <span class="mbar">${bar || '<i style="flex:1;background:var(--line-soft)"></i>'}</span>
-      <span class="mn">${note}</span></div>`;
-  };
-  const GST = { pass: 'var(--green)', prog: 'var(--major)', fail: 'var(--crit)', wait: '#c3cfdd' };
+  const stageIdx = k => stages.findIndex(r => r.key === k);
+  const TKO = { poc: 'POC', pilot: '파일럿', mass: '양산평가', spread: '확산', ops: '운영' };
 
   const card = e => {
     const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {}, d = s.sevDist || {}, sd = s.statusDist || {};
@@ -174,45 +166,47 @@ function renderHomePortfolio(withData, entries, proc) {
     const nm = (e.name || '').replace(/\s*\(.*\)$/, '');
     const prj = e.project || {};
     const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
-    const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.department || ''].filter(Boolean).join(' · ');
-    // 게이트 통과 기준 준비도 — 5개 점(충족/진행/미달/대기)
+    const meta = [prj.department || '', prj.team ? 'PM ' + prj.team.split(',')[0] : ''].filter(Boolean).join(' · ');
     const crit9 = (g.criteria || []);
     const passN = crit9.filter(c => c.status === 'pass').length;
     const failN = crit9.filter(c => c.status === 'fail').length;
-    const dots = crit9.map(c => `<span class="gdot" style="background:${GST[c.status] || '#c3cfdd'}" title="${esc(c.label || '')}"></span>`).join('');
     const closed = sd.closed || 0, sdTot = closed + (sd.verifying || 0) + (sd.acting || 0) + (sd.new || 0);
-    // 평문 한 줄 — 결정권자용 "결론"
     const ddNum2 = /^D-(\d+)$/.exec(dd || ''); const soon = ddNum2 && +ddNum2[1] <= 14;
-    const line = oc ? `치명 결함 ${oc}건 해결 중 — 다음 심사 전 마무리 필요`
-      : failN ? `통과 기준 ${failN}건 미달 — 보완 진행 중`
-      : soon ? `다음 심사 임박 (${dd}) — 마무리 점검 단계`
+    // 평문 결론
+    const line = oc ? `치명 결함 <b>${oc}건</b> 해결 중 — 다음 심사 전 마무리 필요`
+      : failN ? `통과 기준 <b>${failN}건</b> 미달 — 보완 진행 중`
+      : soon ? `다음 심사 임박 <b>${dd}</b> — 마무리 점검 단계`
       : `순조 진행 — 주요 기준 충족`;
-    return `<div class="hpc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
-      <div class="hpc-top">
-        <span class="hpc-stg" style="background:${esc(col)}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
-        <b class="hpc-nm">${esc(nm)}</b>
-        <span class="hpc-hl">${esc(h.tag)}</span>
+    // 여정 트랙 — 표준 프로세스 위 현재 위치
+    const cur = stageIdx(e.stage);
+    const track = stages.map((r, i) => {
+      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
+      return `<span class="rc-node ${st}" style="--nc:${esc(r.color || '#c3cfdd')}" title="${esc(TKO[r.key] || r.key)}"><i></i><em>${esc(TKO[r.key] || r.key)}</em></span>`;
+    }).join('<span class="rc-link"></span>');
+    // 비기술 리스크 — 주의/리스크 축만 표기, 없으면 '없음'
+    const TK = { T: '기술', E: '경제', C: '계약', O: '조직', P: '이해·안전' };
+    const flagged = (e.tecop || []).filter(t => t.status === 'warn' || t.status === 'risk' || t.status === 'bad');
+    const riskTxt = flagged.length
+      ? flagged.map(t => `<span class="rc-rk ${t.status === 'warn' ? 'w' : 'r'}">${esc(TK[t.k] || t.k)}</span>`).join('')
+      : '<span class="rc-rk ok">특이사항 없음</span>';
+    return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
+      <div class="rc-top">
+        <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(meta)}</span></div>
+        <span class="rc-badge">${esc(h.tag)}</span>
       </div>
-      <div class="hpc-meta">${esc(meta)} · ${esc(STAGE_LABEL[e.stage] || '')} 단계(${stagePos(e.stage)}) · 기간 ${esc((prj.startDate || '').slice(2))}~${esc((prj.endDate || '').slice(2))}</div>
-      <div class="hpc-line">${esc(line)}</div>
-      <div class="hpc-body">
-        <div class="hpc-gauge">
-          <svg viewBox="0 0 42 42" class="hpc-donut"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>
-            <circle cx="21" cy="21" r="15.9" fill="none" stroke="${esc(col)}" stroke-width="5" stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="25" stroke-linecap="round"/></svg>
-          <span class="hpc-pct">${Math.round(pct)}<small>%</small></span>
-        </div>
-        <div class="hpc-num">
-          <div class="n"><b>${fmt(prog.cum)}</b><span>/ ${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
-          <div class="r">평가 진행률 · ${esc((e.run || {}).criterion || '')}</div>
-          <div class="g">다음 심사 <b>${esc(dd || '—')}</b> · ${esc((g.reviewDate || '').slice(2))}</div>
-        </div>
+      <div class="rc-track">${track}</div>
+      <div class="rc-line">${line}</div>
+      <div class="rc-prog">
+        <div class="rc-prog-h"><span>${esc((e.run || {}).criterion || '평가')} 진행</span><b>${Math.round(pct)}<small>%</small></b></div>
+        <div class="rc-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div>
+        <div class="rc-prog-f"><span>${fmt(prog.cum)} / ${fmt(prog.target)}${UNIT[e.stage] || ''}</span><span>다음 심사 <b>${esc(dd || '—')}</b></span></div>
       </div>
-      <div class="hpc-meters">
-        ${crit9.length ? `<div class="hpc-meter gate"><span class="ml">통과 기준</span><span class="gdots">${dots}</span><span class="mn"><b>${passN}</b>/${crit9.length} 충족</span></div>` : ''}
-        ${meter('결함 조치', [[closed, 'var(--green)', '완료'], [sd.verifying, 'var(--sky)', '검증'], [sd.acting, 'var(--major)', '조치중'], [sd.new, 'var(--crit)', '미착수']], `해결 <b>${closed}</b>/${sdTot}건`)}
-        ${meter('결함 등급', [[crit, '#C0392B', '치명'], [d.Major, '#E08600', '중대'], [d.Minor, '#3F7CC4', '경미']], `발굴 <b>${tot}</b>건${crit ? ` · <b style="color:var(--crit)">치명 ${crit}</b>` : ''}`)}
+      <div class="rc-facts">
+        <span class="rc-fk">통과 기준<b>${passN}<i>/${crit9.length || '—'}</i></b></span>
+        <span class="rc-fk">결함 해결<b>${closed}<i>/${sdTot}</i></b></span>
+        <span class="rc-fk">발굴<b>${tot}${crit ? `<i class="cr"> · 치명 ${crit}</i>` : ''}</b></span>
       </div>
-      ${e.tecop ? `<div class="hpc-tecop"><span class="tt-lbl">비기술 리스크</span>${tecopRow(e.tecop)}</div>` : ''}
+      <div class="rc-risk"><em>리스크</em>${riskTxt}</div>
     </div>`;
   };
 
@@ -231,13 +225,7 @@ function renderHomePortfolio(withData, entries, proc) {
     </section>
     <section class="sbox jsec">
       <div class="sbox-h"><span class="tag">과제 현황</span><h2>진행 중 과제 ${N}건 — 단계 순</h2>
-        <span class="d">카드 클릭 → 과제 상세 · 왼쪽 색 띠 = 주의 신호(빨강 치명결함·주황 기준미달·하늘 심사임박·초록 정상)</span></div>
-      <div class="hlegend">
-        <span class="hl-g"><em>통과 기준</em><i class="d ok"></i>충족<i class="d pr"></i>진행<i class="d fa"></i>미달</span>
-        <span class="hl-g"><em>결함 조치</em><i class="b ok"></i>완료<i class="b vf"></i>검증<i class="b ac"></i>조치중<i class="b nw"></i>미착수</span>
-        <span class="hl-g"><em>결함 등급</em><i class="b cr"></i>치명<i class="b mj"></i>중대<i class="b mn"></i>경미</span>
-        <span class="hl-note">각 단계 통과 = 다음 단계로 · 치명결함은 통과 전 반드시 해결</span>
-      </div>
+        <span class="d">각 과제가 표준 프로세스(POC→파일럿→양산평가→확산→운영) 어디에 있는지 · 오른쪽 배지 = 주의 신호 · 카드 클릭 → 상세</span></div>
       <div class="hcards">${list.map(card).join('')}</div>
     </section>`;
 
