@@ -792,6 +792,17 @@ def _poc_asset_svgs(pid: str):
         '<path d="M240 140 L240 300 L290 300 L290 210 L350 210 L350 300 L400 300 L400 140 Z" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
         '<circle cx="320" cy="330" r="34" fill="#F7E5E2" stroke="#C0392B" stroke-width="2" stroke-dasharray="5 4"/>'
         '<text x="320" y="336" font-size="12" text-anchor="middle" fill="#C0392B" font-family="sans-serif">드럼 림</text>')
+    svg("asis-manual.svg", "현장 수작업 공정 (As-Is)", "작업자 2인 — 토크 렌치 체결 · 대차 반송 · T/T 18초",
+        '<circle cx="150" cy="200" r="22" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
+        '<rect x="138" y="226" width="24" height="52" rx="8" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
+        '<circle cx="240" cy="200" r="22" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
+        '<rect x="228" y="226" width="24" height="52" rx="8" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
+        '<text x="195" y="308" font-size="12" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">작업자 2인 · 토크 렌치</text>'
+        '<circle cx="400" cy="240" r="42" fill="#F6EBDA" stroke="#B36F0A" stroke-width="2"/>'
+        '<text x="400" y="246" font-size="13" text-anchor="middle" fill="#8a5408" font-family="sans-serif">드럼</text>'
+        '<rect x="470" y="270" width="120" height="40" rx="7" fill="#EEF2F7" stroke="#8A99AC" stroke-width="2"/>'
+        '<text x="530" y="295" font-size="12" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">대차 반송</text>'
+        '<path d="M448 240 L466 285" stroke="#8A99AC" stroke-width="2" marker-end="none" stroke-dasharray="5 4"/>')
     svg("build-cell.svg", "사외 랩 셀 셋업", "프레임·안전 펜스·비전 조명 설치 완료",
         '<rect x="80" y="120" width="480" height="200" rx="8" fill="none" stroke="#5A6B7E" stroke-width="2" stroke-dasharray="7 5"/>'
         '<rect x="120" y="170" width="150" height="120" rx="8" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
@@ -893,12 +904,18 @@ def gen_drum_poc():
         # 미정의면 게이트 기준 전체로 폴백 = 최종 단계)
         "lifecycle": [
             {"stage": "P1 과제 기획", "status": "done", "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)", "clear": [
-                {"label": "목표·평가항목 정의", "value": "판정기준서 v1", "status": "pass"},
-                {"label": "개략 ROI 산정", "value": "투자심의 입력 초안", "status": "pass"},
-                {"label": "컨셉 도출", "value": "2안 비교 — 로봇 안", "status": "pass"},
-                {"label": "특허 검토", "value": "저촉 0 · 출원 후보 1", "status": "pass"},
-                {"label": "안전인증 컨셉", "value": "위험원 12건 반영", "status": "pass"},
-                {"label": "FMEA 초판", "value": "어휘 v1 (DRM-01~08)", "status": "pass"},
+                {"label": "목표·평가항목 정의", "value": "판정기준서 v1", "status": "pass",
+                 "summary": "합격 기준 서면 합의 — 72h 무에러 · 비정상 8종 · 기성능 3항목 (사후 변경 금지)"},
+                {"label": "개략 ROI 산정", "value": "투자심의 입력 초안", "status": "pass",
+                 "summary": "인력 2인/교대 절감 + 처리량 +8% → 회수 2.1년 — 실증치로 정밀화 예정"},
+                {"label": "컨셉 도출", "value": "2안 비교 — 로봇 안", "status": "pass",
+                 "summary": "6축 로봇+비전 vs 겐트리 — 모델 변경 유연성 우위로 로봇 안 채택"},
+                {"label": "특허 검토", "value": "저촉 0 · 출원 후보 1", "status": "pass",
+                 "summary": "선행 12건 검토 — 저촉 0 · 회피 설계 1건 반영 · 그리퍼 구조 출원 후보"},
+                {"label": "안전인증 컨셉", "value": "위험원 12건 반영", "status": "pass",
+                 "summary": "위험성 평가 v0 — 협착·낙하 등 12건 식별 → 펜스·인터록 설계 반영 합의"},
+                {"label": "FMEA 초판", "value": "어휘 v1 (DRM-01~08)", "status": "pass",
+                 "summary": "고장모드 어휘 8종 정의 — 이후 전 단계 에러 분류·라이브러리의 기준"},
             ]},
             {"stage": "P2 설계·제작", "status": "done", "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (06-27)", "clear": [
                 {"label": "설계 동결", "value": "v1 (06-19)", "status": "pass"},
@@ -920,19 +937,24 @@ def gen_drum_poc():
             ]},
             {"stage": "P5 사외 72h 무에러 + 비정상 평가", "status": "current", "note": "2차 시도 52h · 비정상 6/8"},
         ],
-        # P1 기획 산출물 (기획·제작 관제의 입력 — PM 수동 관리, 재빌드 불필요)
+        # P1 기획 화면 데이터 — As-Is 현장 수작업 / To-Be 자동화 컨셉 (산출물 정의는 lifecycle P1 clear)
         "pocPlan": {
             "goal": "드럼 체결·반송 자동화 — 수작업 2인 공정 대체, T/T 12초 이내",
             "roi": "인력 2인/교대 절감 + 처리량 +8% — 개략 ROI 2.1년 (투자심의 입력 초안)",
             "concept": "6축 로봇 + 비전 가이드 체결 · 컨베이어 직결 반송 (겐트리 안 대비 유연성 우위로 선정)",
-            "checks": [
-                {"item": "과제 목표·평가항목 정의", "status": "완료", "note": "합격 기준 서면 합의 — 판정기준서 v1"},
-                {"item": "개략 ROI 산정", "status": "완료", "note": "인력·처리량 기준 — 투자심의 입력 초안"},
-                {"item": "컨셉 도출 (2안 비교)", "status": "완료", "note": "로봇 안 채택 — 겐트리 안 대비 유연성"},
-                {"item": "특허 검토", "status": "완료", "note": "저촉 0 · 회피 설계 1건 반영 · 출원 후보 1건"},
-                {"item": "안전인증 컨셉 합의", "status": "완료", "note": "위험원 12건 식별 → 설계 반영"},
-                {"item": "FMEA 초판 (어휘 v1)", "status": "완료", "note": "DRM-01~08 코드마스터 확정"},
-            ],
+            "asIs": {
+                "summary": "드럼 2종을 작업자 2인이 수작업으로 체결·반송 — 토크 렌치 2점 체결 후 대차로 이동",
+                "tt": "T/T 18초", "people": "2인/교대",
+                "steps": ["드럼 정렬·클램프", "수동 토크 체결 (2점)", "검사·기록", "대차 적재·반송"],
+                "pain": ["T/T 18초 — 라인 병목", "수공구 토크 편차 — 품질 산포", "근골격 부하 · 협착 위험"],
+                "photo": "asis-manual.svg",
+            },
+            "toBe": {
+                "summary": "6축 로봇 + 비전 가이드 체결 · 컨베이어 직결 반송",
+                "targets": ["T/T 12초 이내 (−33%)", "인력 2인/교대 → 감시 1인", "토크 편차 ±3% — 파손 리스크 제거"],
+                "why": "겐트리 안 대비 모델 변경 유연성 우위 — 2안 비교 후 채택",
+                "photo": "design-concept.svg",
+            },
         },
         # P2 설계·제작 현황 (아이템 진척 + 설계·셋업 사진 assets/)
         "pocBuild": {

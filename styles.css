@@ -355,6 +355,7 @@
   .pocv .ov-2col .tk-a>.panel{flex:2 1 auto}
   .pocv .ov-2col .tk-a .panel>.tbl-scroll{min-height:170px!important}   /* 표형 슬롯(호기별 퀄 등) 최소 3행 보장 */
   .pocv .ov-2col .panel,.pocv .fault-grid .panel{display:flex;flex-direction:column;min-height:0}
+  .pocv .ov-2col .panel,.pocv .ov-2col .kgroup{overflow:hidden}   /* 고정 존 넘침 시 아래 트랙 침범 방지 */
   .pocv .ov-2col .panel>.tbl-scroll,.pocv .fault-grid .panel>.tbl-scroll{flex:1 1 0;min-height:0;max-height:none!important}
   .pocv .ov-2col .panel.ovchart>svg,.pocv .fault-grid .panel.ovchart>svg{flex:1 1 auto;min-height:0}
   .pocv .looppanel .loopline .lp{display:flex;flex-direction:column;justify-content:center}
@@ -660,6 +661,29 @@
 /* POC 세부 단계 타일 — 종합 클리어 트랙 내, TECOP 구획 박스와 동일 양식 (클릭 = 단계 이동 팝업) */
 .tk-exec .exr-box.phase{--clr:var(--sky);flex:none;margin-bottom:8px}
 .tk-exec .exr-box.phase .exr-ax{width:auto;min-width:18px;padding:0 5px;border-radius:6px;background:var(--sky)}
+
+/* P1 기획 관제 — As-Is 수작업 / To-Be 컨셉 / 산출물 정의 카드 */
+.pocv .ai-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:2px 0 9px}
+.pocv .ai-flow{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.pocv .ai-step{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card-alt);border:1px solid var(--line-soft);border-radius:8px;padding:3px 8px}
+.pocv .ai-step i{width:15px;height:15px;border-radius:50%;background:var(--navy-deep);color:#fff;font-size:9px;font-weight:800;font-style:normal;display:inline-flex;align-items:center;justify-content:center}
+.pocv .ai-ar{color:var(--muted);font-weight:800;font-size:11px}
+.pocv .ai-pains{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.pocv .ai-pain{font-size:10.5px;font-weight:700;color:var(--crit);background:var(--crit-soft);border-radius:8px;padding:2.5px 9px}
+.pocv .ai-img{width:100%;max-height:104px;object-fit:cover;object-position:top;border-radius:9px;border:1px solid var(--line-soft);cursor:zoom-in;display:block;background:#fff;min-height:0}
+.pocv .tb-img{width:100%;max-height:120px;object-fit:cover;object-position:top;border-radius:9px;border:1px solid var(--line-soft);cursor:zoom-in;display:block;background:#fff;margin-bottom:8px;min-height:0}
+.pocv .tb-desc{font-size:12.5px;color:var(--ink);line-height:1.55;margin-bottom:7px}
+.pocv .tb-targets{margin:0 0 8px;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.pocv .tb-targets li{font-size:12px;color:var(--ink-soft);padding-left:16px;position:relative}
+.pocv .tb-targets li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+.pocv .tb-why{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
+.pocv .art-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:4px}
+@media(max-width:1400px){.pocv .art-grid{grid-template-columns:1fr 1fr}}
+.pocv .art{border:1px solid var(--line-soft);border-top:3px solid var(--sky);border-radius:10px;background:var(--card-alt);padding:9px 12px;min-width:0}
+.pocv .art .ah{display:flex;align-items:center;gap:7px}
+.pocv .art .ah b{flex:1;min-width:0;font-size:12.5px;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pocv .art .doc{font-size:10.5px;font-weight:700;color:var(--sky);margin:3px 0 4px}
+.pocv .art .sum{font-size:11px;color:var(--ink-soft);line-height:1.5}
 
 /* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
 .pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}

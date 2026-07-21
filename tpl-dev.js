@@ -860,38 +860,47 @@ function pocPhaseClearOpts(C, view, cur) {
   };
 }
 
-/* P1 기획 산출물 히어로 — 체크 n/m + 목표/ROI */
-function pocPlanHero(C) {
-  const plan = C.pocPlan || {};
-  const checks = plan.checks || [];
-  const done = checks.filter(c => (c.status || '').includes('완료')).length;
-  const pct = checks.length ? Math.round(done / checks.length * 100) : 0;
+/* P1 As-Is — 현장 수작업 공정 소개 (요약·스텝 플로우·문제점·도식) */
+function pocAsIsPanel(C) {
+  const a = (C.pocPlan || {}).asIs || {};
+  const steps = (a.steps || []).map((s, i) => `<span class="ai-step"><i>${i + 1}</i>${esc(s)}</span>`).join('<span class="ai-ar">→</span>');
+  const pains = (a.pain || []).map(p => `<span class="ai-pain">${esc(p)}</span>`).join('');
+  const img = a.photo ? `<img class="ai-img" src="${BASE}assets/${esc(a.photo)}" alt="As-Is" onclick="lightbox('${BASE}assets/${esc(a.photo)}')" onerror="this.remove()">` : '';
   return `<div class="kgroup kg-prog">
-    <div class="pg-subh"><span>과제 기획 — 산출물 체크</span><span class="pg-subh-note">P1 · 게이트 전 확정 항목</span></div>
-    <div class="pg-hero">
-      <div class="pg-hero-main">
-        <div class="pg-num"><b>${done}</b><span>/ ${checks.length} 완료</span></div>
-        <div class="pg-bar"><i style="width:${pct}%${pct >= 100 ? ';background:var(--green)' : ''}"></i></div>
-        <div class="pg-remain">${pct >= 100 ? '기획 산출물 전건 확정' : `잔여 <b>${checks.length - done}건</b>`}</div>
-      </div>
-      <div class="pg-donut"><svg viewBox="0 0 42 42"><circle class="trk" cx="21" cy="21" r="15.9"/><circle class="arc" cx="21" cy="21" r="15.9" ${pct >= 100 ? 'style="stroke:var(--green)"' : ''} stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="25"/></svg><div class="pg-donut-ctr"><b>${pct}%</b></div></div>
-    </div>
-    <div class="pg-stats">
-      <div class="pg-stat"><span class="pg-stat-k">과제 목표</span><span class="pg-stat-s" style="font-size:11.5px;line-height:1.5">${esc(plan.goal || '—')}</span></div>
-      <div class="pg-stat"><span class="pg-stat-k">개략 ROI</span><span class="pg-stat-s" style="font-size:11.5px;line-height:1.5">${esc(plan.roi || '—')}</span></div>
-    </div></div>`;
+    <div class="pg-subh"><span>현장 수작업 공정 (As-Is)</span><span class="pg-subh-note">${esc(a.people || '')}${a.tt ? ` · ${esc(a.tt)}` : ''}</span></div>
+    <div class="ai-desc">${esc(a.summary || '—')}</div>
+    ${steps ? `<div class="ai-flow">${steps}</div>` : ''}
+    ${pains ? `<div class="ai-pains">${pains}</div>` : ''}
+    ${img}</div>`;
 }
 
-/* P1 기획 체크리스트 표 */
-function pocPlanChecksPanel(C) {
-  const checks = (C.pocPlan || {}).checks || [];
-  const B9 = s => (s || '').includes('완료') ? 'b-ok' : (s || '').includes('진행') ? 'b-prog' : 'b-wait';
-  const rows = checks.map(c =>
-    `<tr><td><b>${esc(c.item)}</b></td><td class="c"><span class="badge ${B9(c.status)}">${esc(c.status || '대기')}</span></td><td class="mini">${esc(c.note || '')}</td></tr>`).join('');
-  return `<div class="panel tight">
-    <div class="ph"><h3>기획 산출물</h3><span class="ps">목표 · ROI · 컨셉 · 특허 · 안전 · FMEA</span></div>
-    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c">상태</th><th>비고</th></tr>${rows || '<tr><td colspan="3" class="mini c">config pocPlan.checks 미기재</td></tr>'}</table></div>
+/* P1 To-Be — 자동화 컨셉 (도식·목표·채택 근거) */
+function pocToBePanel(C) {
+  const t = (C.pocPlan || {}).toBe || {};
+  const targets = (t.targets || []).map(x => `<li>${esc(x)}</li>`).join('');
+  const img = t.photo ? `<img class="tb-img" src="${BASE}assets/${esc(t.photo)}" alt="컨셉" onclick="lightbox('${BASE}assets/${esc(t.photo)}')" onerror="this.remove()">` : '';
+  return `<div class="panel">
+    <div class="ph"><h3>자동화 컨셉 (To-Be)</h3><span class="ps">P1 확정 — 사후 변경은 게이트 안건</span></div>
+    ${img}
+    <div class="tb-desc"><b>${esc(t.summary || (C.pocPlan || {}).concept || '—')}</b></div>
+    ${targets ? `<ul class="tb-targets">${targets}</ul>` : ''}
+    ${t.why ? `<div class="tb-why">채택 근거 — ${esc(t.why)}</div>` : ''}
   </div>`;
+}
+
+/* P1 기획 산출물 정의 보드 — 종합 클리어 항목(lifecycle P1 clear)의 내용을 카드로 */
+function pocArtifactBoard(C) {
+  const lc = C.lifecycle || [];
+  const arts = ((lc[0] || {}).clear) || [];
+  const B9 = { pass: 'b-ok', prog: 'b-prog', fail: 'b-crit', wait: 'b-wait' };
+  const LB9 = { pass: '확정', prog: '진행', fail: '미달', wait: '대기' };
+  const cards = arts.map(a => `<div class="art">
+    <div class="ah"><b>${esc(a.label)}</b><span class="badge ${B9[a.status] || 'b-wait'}">${LB9[a.status] || '대기'}</span></div>
+    <div class="doc">${esc(a.value || '')}</div>
+    <div class="sum">${esc(a.summary || '')}</div></div>`).join('');
+  return `<div class="kgroup kg-prog">
+    <div class="pg-subh"><span>기획 산출물 — 정의</span><span class="pg-subh-note">${arts.length}건 · 게이트 전 확정 (종합 클리어와 동일 항목)</span></div>
+    <div class="art-grid">${cards || '<div class="mini">lifecycle P1 clear 미기재</div>'}</div></div>`;
 }
 
 /* P2 제작 진척 보드 — 아이템별 진행바 */
@@ -930,26 +939,52 @@ function pocConceptPanel(C) {
   </div>`;
 }
 
-/* P1~P2 기획·제작 관제 (평가 이전 화면) */
-function renderPocPlanBuild(C, view, cur) {
+/* 회고 배너 (공용) */
+function pocRetroBanner(C, view, cur) {
+  if (view === cur) return '';
   const lc = C.lifecycle || [];
+  return `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
+    <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>`;
+}
+
+/* P1 과제 기획 관제 — As-Is 현장 → To-Be 컨셉 → 산출물 정의 */
+function renderPocPlan(C, view, cur) {
   $('s-overview').innerHTML = devShell('poc', C, {
-    qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
-      <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
+    qbox: pocRetroBanner(C, view, cur),
     clear: pocPhaseClearOpts(C, view, cur),
-    aTitle: '과제 기획 → 산출물',
-    aHero: pocPlanHero(C),
-    aChart: pocPlanChecksPanel(C),
-    bTitle: '설계·제작 → 현황',
-    bTop: pocBuildBoard(C),
-    bCharts: [pocPhotoPanel(C), devFeedPanel()],
-    cTitle: '컨셉 · 위험 매트릭스 · 조치 우선순위',
-    cPanels: [pocConceptPanel(C), devMatrixPanel(), devPriorityPanel()],
+    aTitle: '현장 공정 → 자동화 컨셉',
+    aHero: pocAsIsPanel(C),
+    aChart: pocToBePanel(C),
+    bTitle: '기획 산출물 → 정의',
+    bTop: pocArtifactBoard(C),
+    bCharts: [pocConceptPanel(C), devFeedPanel()],
+    cTitle: '위험 매트릭스 · Pareto · 조치 우선순위',
+    cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
   { const el = $('side-months'); if (el) el.innerHTML = ''; }
-  TRACKA_BUILDER = null;   // 기획·제작 화면엔 fit 대상 차트 없음
+  TRACKA_BUILDER = null;
+}
+
+/* P2 설계·제작 관제 — 제작 진척 · 설계 사진 · 초기 이슈 */
+function renderPocBuild(C, view, cur) {
+  $('s-overview').innerHTML = devShell('poc', C, {
+    qbox: pocRetroBanner(C, view, cur),
+    clear: pocPhaseClearOpts(C, view, cur),
+    aTitle: '설계·제작 → 진척',
+    aHero: pocBuildBoard(C),
+    aChart: pocPhotoPanel(C),
+    bTitle: '발굴 이슈 → 초기 폐루프',
+    bTop: fracasLoopPanel(),
+    bCharts: [devFeedPanel(), devMatrixPanel()],
+    cTitle: '컨셉 · Pareto · 조치 우선순위',
+    cPanels: [pocConceptPanel(C), devParetoPanel(true), devPriorityPanel()],
+  });
+  $('s-steps').innerHTML = pocSteps(C);
+  { const el = $('side-line'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  TRACKA_BUILDER = null;
 }
 
 /* ══════════ 진입점 ══════════ */
@@ -961,7 +996,8 @@ function renderPoc(C) {
   if (cur < 0) cur = Math.max(0, lc.length - 1);
   let view = POC_PHASE[CUR_PID];
   if (view == null || view < 0 || view >= lc.length) view = cur;
-  if (view <= 1 && lc.length >= 3) return renderPocPlanBuild(C, view, cur);
+  if (view === 0 && lc.length >= 3) return renderPocPlan(C, view, cur);
+  if (view === 1 && lc.length >= 3) return renderPocBuild(C, view, cur);
   $('s-overview').innerHTML = devShell('poc', C, {
     qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',

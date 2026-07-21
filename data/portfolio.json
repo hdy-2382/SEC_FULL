@@ -169,7 +169,7 @@
         "current": "P5 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-21T01:39:55Z",
+      "generatedAt": "2026-07-21T01:53:43Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -336,7 +336,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-21T01:39:55Z",
+      "generatedAt": "2026-07-21T01:53:43Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -457,7 +457,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-21T01:39:55Z",
+      "generatedAt": "2026-07-21T01:53:43Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -621,7 +621,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-21T01:39:55Z",
+      "generatedAt": "2026-07-21T01:53:43Z",
       "summary": {
         "progress": {
           "cum": 4,
