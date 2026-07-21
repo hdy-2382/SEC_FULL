@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T06:34:06Z",
+  "generatedAt": "2026-07-21T07:04:27Z",
   "source": "드럼확산_샘플.xlsx",
   "config": {
     "stage": "spread",
@@ -619,5 +619,706 @@
     "acting": 1,
     "verifying": 1,
     "closed": 4
+  },
+  "months": [
+    "2027-02",
+    "2027-03"
+  ],
+  "snapshots": {
+    "2027-02": {
+      "metrics": {
+        "progress": {
+          "cum": 4,
+          "target": 8,
+          "pct": 50.0
+        }
+      },
+      "fleet": {
+        "total": 8,
+        "satDone": 5,
+        "qualified": 4,
+        "pct": 50.0
+      },
+      "units": [
+        {
+          "unit": "1호기",
+          "line": "L1",
+          "installDate": "2027-02-10",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "2호기",
+          "line": "L1",
+          "installDate": "2027-02-12",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "3호기",
+          "line": "L2",
+          "installDate": "2027-02-24",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "4호기",
+          "line": "L2",
+          "installDate": "2027-02-26",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "5호기",
+          "line": "L3",
+          "installDate": "2027-03-10",
+          "sat": "PASS",
+          "runH": 31.0,
+          "runTarget": 48.0,
+          "status": "런 진행",
+          "notes": ""
+        },
+        {
+          "unit": "6호기",
+          "line": "L3",
+          "installDate": "2027-03-12",
+          "sat": "진행",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "SAT 진행",
+          "notes": ""
+        },
+        {
+          "unit": "7호기",
+          "line": "L4",
+          "installDate": "2027-03-24",
+          "sat": "—",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "설치 중",
+          "notes": ""
+        },
+        {
+          "unit": "8호기",
+          "line": "L4",
+          "installDate": "2027-03-31",
+          "sat": "—",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "설치 예정",
+          "notes": ""
+        }
+      ],
+      "causeLayer": [
+        {
+          "key": "design",
+          "label": "① 설계",
+          "count": 0,
+          "closed": 0
+        },
+        {
+          "key": "build",
+          "label": "② 제작·조립",
+          "count": 0,
+          "closed": 0
+        },
+        {
+          "key": "install",
+          "label": "③ 설치·시공",
+          "count": 2,
+          "closed": 2
+        },
+        {
+          "key": "oper",
+          "label": "④ 운영·환경",
+          "count": 1,
+          "closed": 1
+        }
+      ],
+      "escalations": [],
+      "unitDist": [
+        {
+          "unit": "1호기",
+          "count": 1
+        },
+        {
+          "unit": "2호기",
+          "count": 1
+        },
+        {
+          "unit": "4호기",
+          "count": 1
+        }
+      ],
+      "pareto": [
+        {
+          "mode": "비전 오인식",
+          "count": 1,
+          "cumPct": 33
+        },
+        {
+          "mode": "레일 수평도 초과",
+          "count": 1,
+          "cumPct": 67
+        },
+        {
+          "mode": "통신 지연",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 0,
+        "items": []
+      },
+      "issueStats": {
+        "total": 3,
+        "closed": 3,
+        "open": 0
+      },
+      "records": [
+        {
+          "id": "DIS-001",
+          "mode": "비전 오인식",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "운영·환경",
+          "status": "종결",
+          "date": "2027-02-17",
+          "time": "",
+          "cycle": null,
+          "detail": "라인 조명 편차 — 임계 재설정 (DRM-02)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-02-19",
+          "images": [],
+          "verdict": "",
+          "unit": "1호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-002",
+          "mode": "레일 수평도 초과",
+          "modeCode": "",
+          "severity": "Major",
+          "cause": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-13",
+          "time": "",
+          "cycle": null,
+          "detail": "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-02-15",
+          "images": [],
+          "verdict": "",
+          "unit": "2호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-004",
+          "mode": "통신 지연",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-27",
+          "time": "",
+          "cycle": null,
+          "detail": "배선 경로 간섭 — 재배선 (DRM-04)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-03-01",
+          "images": [],
+          "verdict": "",
+          "unit": "4호기",
+          "downtime": ""
+        }
+      ],
+      "statusDist": {
+        "new": 0,
+        "acting": 0,
+        "verifying": 0,
+        "closed": 3
+      },
+      "issues": [
+        {
+          "id": "DIS-001",
+          "mode": "비전 오인식",
+          "severity": "Minor",
+          "cause4": "운영·환경",
+          "status": "종결",
+          "date": "2027-02-17",
+          "closedDate": "2027-02-19",
+          "verify": "",
+          "unit": "1호기",
+          "downtime": "",
+          "detail": "라인 조명 편차 — 임계 재설정 (DRM-02)",
+          "images": []
+        },
+        {
+          "id": "DIS-002",
+          "mode": "레일 수평도 초과",
+          "severity": "Major",
+          "cause4": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-13",
+          "closedDate": "2027-02-15",
+          "verify": "",
+          "unit": "2호기",
+          "downtime": "",
+          "detail": "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행",
+          "images": []
+        },
+        {
+          "id": "DIS-004",
+          "mode": "통신 지연",
+          "severity": "Minor",
+          "cause4": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-27",
+          "closedDate": "2027-03-01",
+          "verify": "",
+          "unit": "4호기",
+          "downtime": "",
+          "detail": "배선 경로 간섭 — 재배선 (DRM-04)",
+          "images": []
+        }
+      ]
+    },
+    "2027-03": {
+      "metrics": {
+        "progress": {
+          "cum": 4,
+          "target": 8,
+          "pct": 50.0
+        }
+      },
+      "fleet": {
+        "total": 8,
+        "satDone": 5,
+        "qualified": 4,
+        "pct": 50.0
+      },
+      "units": [
+        {
+          "unit": "1호기",
+          "line": "L1",
+          "installDate": "2027-02-10",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "2호기",
+          "line": "L1",
+          "installDate": "2027-02-12",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "3호기",
+          "line": "L2",
+          "installDate": "2027-02-24",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "4호기",
+          "line": "L2",
+          "installDate": "2027-02-26",
+          "sat": "PASS",
+          "runH": 48.0,
+          "runTarget": 48.0,
+          "status": "퀄 완료",
+          "notes": ""
+        },
+        {
+          "unit": "5호기",
+          "line": "L3",
+          "installDate": "2027-03-10",
+          "sat": "PASS",
+          "runH": 31.0,
+          "runTarget": 48.0,
+          "status": "런 진행",
+          "notes": ""
+        },
+        {
+          "unit": "6호기",
+          "line": "L3",
+          "installDate": "2027-03-12",
+          "sat": "진행",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "SAT 진행",
+          "notes": ""
+        },
+        {
+          "unit": "7호기",
+          "line": "L4",
+          "installDate": "2027-03-24",
+          "sat": "—",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "설치 중",
+          "notes": ""
+        },
+        {
+          "unit": "8호기",
+          "line": "L4",
+          "installDate": "2027-03-31",
+          "sat": "—",
+          "runH": 0.0,
+          "runTarget": 48.0,
+          "status": "설치 예정",
+          "notes": ""
+        }
+      ],
+      "causeLayer": [
+        {
+          "key": "design",
+          "label": "① 설계",
+          "count": 0,
+          "closed": 0
+        },
+        {
+          "key": "build",
+          "label": "② 제작·조립",
+          "count": 1,
+          "closed": 1
+        },
+        {
+          "key": "install",
+          "label": "③ 설치·시공",
+          "count": 3,
+          "closed": 2
+        },
+        {
+          "key": "oper",
+          "label": "④ 운영·환경",
+          "count": 2,
+          "closed": 1
+        }
+      ],
+      "escalations": [],
+      "unitDist": [
+        {
+          "unit": "1호기",
+          "count": 1
+        },
+        {
+          "unit": "2호기",
+          "count": 1
+        },
+        {
+          "unit": "3호기",
+          "count": 1
+        },
+        {
+          "unit": "4호기",
+          "count": 1
+        },
+        {
+          "unit": "5호기",
+          "count": 2
+        }
+      ],
+      "pareto": [
+        {
+          "mode": "비전 오인식",
+          "count": 1,
+          "cumPct": 17
+        },
+        {
+          "mode": "레일 수평도 초과",
+          "count": 1,
+          "cumPct": 33
+        },
+        {
+          "mode": "AP 음영 끊김",
+          "count": 1,
+          "cumPct": 50
+        },
+        {
+          "mode": "통신 지연",
+          "count": 1,
+          "cumPct": 67
+        },
+        {
+          "mode": "커넥터 미압착",
+          "count": 1,
+          "cumPct": 83
+        },
+        {
+          "mode": "수동 개입 절차 미준수",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 0,
+        "items": []
+      },
+      "issueStats": {
+        "total": 6,
+        "closed": 4,
+        "open": 2
+      },
+      "records": [
+        {
+          "id": "DIS-001",
+          "mode": "비전 오인식",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "운영·환경",
+          "status": "종결",
+          "date": "2027-02-17",
+          "time": "",
+          "cycle": null,
+          "detail": "라인 조명 편차 — 임계 재설정 (DRM-02)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-02-19",
+          "images": [],
+          "verdict": "",
+          "unit": "1호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-002",
+          "mode": "레일 수평도 초과",
+          "modeCode": "",
+          "severity": "Major",
+          "cause": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-13",
+          "time": "",
+          "cycle": null,
+          "detail": "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-02-15",
+          "images": [],
+          "verdict": "",
+          "unit": "2호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-003",
+          "mode": "AP 음영 끊김",
+          "modeCode": "",
+          "severity": "Major",
+          "cause": "설치·시공",
+          "status": "검증중",
+          "date": "2027-03-13",
+          "time": "",
+          "cycle": null,
+          "detail": "신규 모드(v2.1) — AP 증설 후 무발생 감시",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "12/20일",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "5호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-004",
+          "mode": "통신 지연",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-27",
+          "time": "",
+          "cycle": null,
+          "detail": "배선 경로 간섭 — 재배선 (DRM-04)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-03-01",
+          "images": [],
+          "verdict": "",
+          "unit": "4호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-005",
+          "mode": "커넥터 미압착",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "제작·조립",
+          "status": "종결",
+          "date": "2027-03-11",
+          "time": "",
+          "cycle": null,
+          "detail": "조립 체크리스트 보강",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2027-03-12",
+          "images": [],
+          "verdict": "",
+          "unit": "5호기",
+          "downtime": ""
+        },
+        {
+          "id": "DIS-006",
+          "mode": "수동 개입 절차 미준수",
+          "modeCode": "",
+          "severity": "Minor",
+          "cause": "운영·환경",
+          "status": "조치중",
+          "date": "2027-03-17",
+          "time": "",
+          "cycle": null,
+          "detail": "운영 SOP 재교육",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "3호기",
+          "downtime": ""
+        }
+      ],
+      "statusDist": {
+        "new": 0,
+        "acting": 1,
+        "verifying": 1,
+        "closed": 4
+      },
+      "issues": [
+        {
+          "id": "DIS-001",
+          "mode": "비전 오인식",
+          "severity": "Minor",
+          "cause4": "운영·환경",
+          "status": "종결",
+          "date": "2027-02-17",
+          "closedDate": "2027-02-19",
+          "verify": "",
+          "unit": "1호기",
+          "downtime": "",
+          "detail": "라인 조명 편차 — 임계 재설정 (DRM-02)",
+          "images": []
+        },
+        {
+          "id": "DIS-002",
+          "mode": "레일 수평도 초과",
+          "severity": "Major",
+          "cause4": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-13",
+          "closedDate": "2027-02-15",
+          "verify": "",
+          "unit": "2호기",
+          "downtime": "",
+          "detail": "신규 모드(v2.1 추가) — 재시공 후 SAT 재수행",
+          "images": []
+        },
+        {
+          "id": "DIS-003",
+          "mode": "AP 음영 끊김",
+          "severity": "Major",
+          "cause4": "설치·시공",
+          "status": "검증중",
+          "date": "2027-03-13",
+          "closedDate": "",
+          "verify": "12/20일",
+          "unit": "5호기",
+          "downtime": "",
+          "detail": "신규 모드(v2.1) — AP 증설 후 무발생 감시",
+          "images": []
+        },
+        {
+          "id": "DIS-004",
+          "mode": "통신 지연",
+          "severity": "Minor",
+          "cause4": "설치·시공",
+          "status": "종결",
+          "date": "2027-02-27",
+          "closedDate": "2027-03-01",
+          "verify": "",
+          "unit": "4호기",
+          "downtime": "",
+          "detail": "배선 경로 간섭 — 재배선 (DRM-04)",
+          "images": []
+        },
+        {
+          "id": "DIS-005",
+          "mode": "커넥터 미압착",
+          "severity": "Minor",
+          "cause4": "제작·조립",
+          "status": "종결",
+          "date": "2027-03-11",
+          "closedDate": "2027-03-12",
+          "verify": "",
+          "unit": "5호기",
+          "downtime": "",
+          "detail": "조립 체크리스트 보강",
+          "images": []
+        },
+        {
+          "id": "DIS-006",
+          "mode": "수동 개입 절차 미준수",
+          "severity": "Minor",
+          "cause4": "운영·환경",
+          "status": "조치중",
+          "date": "2027-03-17",
+          "closedDate": "",
+          "verify": "",
+          "unit": "3호기",
+          "downtime": "",
+          "detail": "운영 SOP 재교육",
+          "images": []
+        }
+      ]
+    }
   }
 }

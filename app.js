@@ -172,7 +172,7 @@ function openProject(pid, tab) {
     BASE = projectBase(pid);
     // 월 스냅샷 상태는 과제 전환 시 반드시 초기화 (이전 과제의 FULL 백업 오염 방지)
     CUR_MONTH = null;
-    FULL = {}; SNAP_KEYS.forEach(k => { FULL[k] = DATA[k]; });
+    FULL = {}; snapKeys().forEach(k => { FULL[k] = DATA[k]; });   // 스냅샷이 덮는 키를 원본으로 백업
     SIDE_PANELS.forEach(id => { const el = $(id); if (el) el.style.display = ''; });
     applyShellText();
     { const el = $('topbar-lc'); if (el) el.innerHTML = buildTopbarLc(DATA.config || {}); }

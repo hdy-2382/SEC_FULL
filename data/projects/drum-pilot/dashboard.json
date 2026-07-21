@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T06:34:06Z",
+  "generatedAt": "2026-07-21T07:04:27Z",
   "source": "드럼Pilot_샘플.xlsx",
   "config": {
     "stage": "pilot",
@@ -1207,5 +1207,2050 @@
     "total": 4,
     "closed": 3,
     "pct": 75
+  },
+  "months": [
+    "2026-07",
+    "2026-08",
+    "2026-09"
+  ],
+  "snapshots": {
+    "2026-07": {
+      "metrics": {
+        "progress": {
+          "cum": 22.0,
+          "target": 300.0,
+          "pct": 7.3
+        }
+      },
+      "run": {
+        "cum": 22.0,
+        "target": 300.0,
+        "pct": 7.3,
+        "attempt": 4,
+        "resets": [
+          {
+            "at": 11.0,
+            "date": "2026-07-27",
+            "note": ""
+          },
+          {
+            "at": 22.0,
+            "date": "2026-07-28",
+            "note": ""
+          },
+          {
+            "at": 33.0,
+            "date": "2026-07-29",
+            "note": ""
+          }
+        ],
+        "totalHours": 55.0
+      },
+      "growth": [
+        {
+          "week": 1,
+          "weekStart": "2026-07-27",
+          "mcbf": 500
+        }
+      ],
+      "growthTarget": 1500,
+      "pareto": [
+        {
+          "mode": "그리퍼 파지 실패",
+          "count": 2,
+          "cumPct": 50
+        },
+        {
+          "mode": "비전 오인식",
+          "count": 1,
+          "cumPct": 75
+        },
+        {
+          "mode": "통신 지연",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 1,
+        "items": [
+          {
+            "mode": "그리퍼 파지 실패",
+            "count": 2
+          }
+        ]
+      },
+      "versions": [
+        {
+          "ver": "v0.9.1",
+          "date": "2026-07-27"
+        },
+        {
+          "ver": "v0.9.2",
+          "date": "2026-07-29"
+        }
+      ],
+      "actionRate": {
+        "total": 4,
+        "closed": 3,
+        "pct": 75
+      },
+      "daily": [
+        {
+          "date": "2026-07-27",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 2,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-28",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-29",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-30",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-31",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        }
+      ],
+      "errors": [
+        {
+          "no": 1,
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "cause": "핑거 형상 여유 부족",
+          "cause_class": "설계",
+          "action": "핑거 Rev B 형상 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 2,
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "고반사 드럼 한정 오인식",
+          "cause": "편광 필터 미적용 개체",
+          "cause_class": "부품",
+          "action": "필터 전수 적용",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 3,
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "핸드셰이크 응답 지연",
+          "cause": "타임아웃 여유 과소",
+          "cause_class": "SW",
+          "action": "타임아웃 로직 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 4,
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "cause": "그리퍼 코팅 로트 편차",
+          "cause_class": "부품",
+          "action": "코팅 Rev C 교체",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        }
+      ],
+      "records": [
+        {
+          "id": "E-001",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "causeText": "핑거 형상 여유 부족",
+          "status": "검증중",
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "action": "핑거 Rev B 형상 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-002",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "편광 필터 미적용 개체",
+          "status": "종결",
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "detail": "고반사 드럼 한정 오인식",
+          "action": "필터 전수 적용",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-003",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "SW",
+          "causeText": "타임아웃 여유 과소",
+          "status": "종결",
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "detail": "핸드셰이크 응답 지연",
+          "action": "타임아웃 로직 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-004",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "그리퍼 코팅 로트 편차",
+          "status": "검증중",
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "action": "코팅 Rev C 교체",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "E-001",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        }
+      ],
+      "statusDist": {
+        "new": 0,
+        "acting": 0,
+        "verifying": 2,
+        "closed": 2
+      }
+    },
+    "2026-08": {
+      "metrics": {
+        "progress": {
+          "cum": 66.0,
+          "target": 300.0,
+          "pct": 22.0
+        }
+      },
+      "run": {
+        "cum": 66.0,
+        "target": 300.0,
+        "pct": 22.0,
+        "attempt": 9,
+        "resets": [
+          {
+            "at": 11.0,
+            "date": "2026-07-27",
+            "note": ""
+          },
+          {
+            "at": 22.0,
+            "date": "2026-07-28",
+            "note": ""
+          },
+          {
+            "at": 33.0,
+            "date": "2026-07-29",
+            "note": ""
+          },
+          {
+            "at": 77.0,
+            "date": "2026-08-03",
+            "note": ""
+          },
+          {
+            "at": 88.0,
+            "date": "2026-08-04",
+            "note": ""
+          },
+          {
+            "at": 143.0,
+            "date": "2026-08-10",
+            "note": ""
+          },
+          {
+            "at": 209.0,
+            "date": "2026-08-17",
+            "note": ""
+          },
+          {
+            "at": 275.0,
+            "date": "2026-08-24",
+            "note": ""
+          }
+        ],
+        "totalHours": 341.0
+      },
+      "growth": [
+        {
+          "week": 1,
+          "weekStart": "2026-07-27",
+          "mcbf": 600
+        },
+        {
+          "week": 2,
+          "weekStart": "2026-08-03",
+          "mcbf": 813
+        },
+        {
+          "week": 3,
+          "weekStart": "2026-08-10",
+          "mcbf": 977
+        },
+        {
+          "week": 4,
+          "weekStart": "2026-08-17",
+          "mcbf": 1035
+        },
+        {
+          "week": 5,
+          "weekStart": "2026-08-24",
+          "mcbf": 1080
+        },
+        {
+          "week": 6,
+          "weekStart": "2026-08-31",
+          "mcbf": 1107
+        }
+      ],
+      "growthTarget": 1500,
+      "pareto": [
+        {
+          "mode": "그리퍼 파지 실패",
+          "count": 4,
+          "cumPct": 44
+        },
+        {
+          "mode": "비전 오인식",
+          "count": 2,
+          "cumPct": 67
+        },
+        {
+          "mode": "통신 지연",
+          "count": 2,
+          "cumPct": 89
+        },
+        {
+          "mode": "소음 초과",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 3,
+        "items": [
+          {
+            "mode": "그리퍼 파지 실패",
+            "count": 4
+          },
+          {
+            "mode": "비전 오인식",
+            "count": 2
+          },
+          {
+            "mode": "통신 지연",
+            "count": 2
+          }
+        ]
+      },
+      "versions": [
+        {
+          "ver": "v0.9.1",
+          "date": "2026-07-27"
+        },
+        {
+          "ver": "v0.9.2",
+          "date": "2026-07-29"
+        },
+        {
+          "ver": "v0.9.3",
+          "date": "2026-08-10"
+        }
+      ],
+      "actionRate": {
+        "total": 4,
+        "closed": 3,
+        "pct": 75
+      },
+      "daily": [
+        {
+          "date": "2026-07-27",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 2,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-28",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-29",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-30",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-31",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-01",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-03",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-04",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-05",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-06",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-07",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-08",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 415,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-10",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-11",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-12",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-13",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-14",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-15",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 330,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-17",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-18",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-19",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-20",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-21",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-22",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-24",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-25",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-26",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-27",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-28",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-29",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-31",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        }
+      ],
+      "errors": [
+        {
+          "no": 1,
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "cause": "핑거 형상 여유 부족",
+          "cause_class": "설계",
+          "action": "핑거 Rev B 형상 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 2,
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "고반사 드럼 한정 오인식",
+          "cause": "편광 필터 미적용 개체",
+          "cause_class": "부품",
+          "action": "필터 전수 적용",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 3,
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "핸드셰이크 응답 지연",
+          "cause": "타임아웃 여유 과소",
+          "cause_class": "SW",
+          "action": "타임아웃 로직 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 4,
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "cause": "그리퍼 코팅 로트 편차",
+          "cause_class": "부품",
+          "action": "코팅 Rev C 교체",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 5,
+          "date": "2026-08-03",
+          "time": "13:30",
+          "cycle": 2000,
+          "code": "DRM-07",
+          "type": "소음 초과",
+          "detail": "고속 구간 공진 재현",
+          "cause": "속도 프로파일 한계",
+          "cause_class": "설계",
+          "action": "프로파일 보정",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 6,
+          "date": "2026-08-04",
+          "time": "14:35",
+          "cycle": 2400,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "야간 조도 저하 오인식",
+          "cause": "노출 스케줄 미적용",
+          "cause_class": "SW",
+          "action": "시간대 노출 스케줄",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 7,
+          "date": "2026-08-10",
+          "time": "15:40",
+          "cycle": 2800,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "재발 검증 중 재현",
+          "cause": "Rev C 적용 전 잔존",
+          "cause_class": "부품",
+          "action": "Rev C 전수 적용",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 8,
+          "date": "2026-08-17",
+          "time": "16:45",
+          "cycle": 3200,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "로그 폭주 시 지연",
+          "cause": "로그 레벨 과다",
+          "cause_class": "SW",
+          "action": "레벨 조정 배포",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 9,
+          "date": "2026-08-24",
+          "time": "9:50",
+          "cycle": 3600,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "고속 모드 한정 재현",
+          "cause": "속도-파지 간섭",
+          "cause_class": "설계",
+          "action": "v0.9.4 속도 보정",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        }
+      ],
+      "records": [
+        {
+          "id": "E-001",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "causeText": "핑거 형상 여유 부족",
+          "status": "검증중",
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "action": "핑거 Rev B 형상 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-002",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "편광 필터 미적용 개체",
+          "status": "종결",
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "detail": "고반사 드럼 한정 오인식",
+          "action": "필터 전수 적용",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-003",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "SW",
+          "causeText": "타임아웃 여유 과소",
+          "status": "종결",
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "detail": "핸드셰이크 응답 지연",
+          "action": "타임아웃 로직 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-004",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "그리퍼 코팅 로트 편차",
+          "status": "검증중",
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "action": "코팅 Rev C 교체",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "E-001",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-005",
+          "mode": "소음 초과",
+          "modeCode": "DRM-07",
+          "severity": "Minor",
+          "cause": "설계",
+          "causeText": "속도 프로파일 한계",
+          "status": "종결",
+          "date": "2026-08-03",
+          "time": "13:30",
+          "cycle": 2000,
+          "detail": "고속 구간 공진 재현",
+          "action": "프로파일 보정",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-006",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "SW",
+          "causeText": "노출 스케줄 미적용",
+          "status": "종결",
+          "date": "2026-08-04",
+          "time": "14:35",
+          "cycle": 2400,
+          "detail": "야간 조도 저하 오인식",
+          "action": "시간대 노출 스케줄",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-002",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-007",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "Rev C 적용 전 잔존",
+          "status": "검증중",
+          "date": "2026-08-10",
+          "time": "15:40",
+          "cycle": 2800,
+          "detail": "재발 검증 중 재현",
+          "action": "Rev C 전수 적용",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-004",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-008",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "SW",
+          "causeText": "로그 레벨 과다",
+          "status": "종결",
+          "date": "2026-08-17",
+          "time": "16:45",
+          "cycle": 3200,
+          "detail": "로그 폭주 시 지연",
+          "action": "레벨 조정 배포",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-003",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-009",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "causeText": "속도-파지 간섭",
+          "status": "검증중",
+          "date": "2026-08-24",
+          "time": "9:50",
+          "cycle": 3600,
+          "detail": "고속 모드 한정 재현",
+          "action": "v0.9.4 속도 보정",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-007",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        }
+      ],
+      "statusDist": {
+        "new": 0,
+        "acting": 0,
+        "verifying": 4,
+        "closed": 5
+      }
+    },
+    "2026-09": {
+      "metrics": {
+        "progress": {
+          "cum": 121.0,
+          "target": 300.0,
+          "pct": 40.3
+        }
+      },
+      "run": {
+        "cum": 121.0,
+        "target": 300.0,
+        "pct": 40.3,
+        "attempt": 9,
+        "resets": [
+          {
+            "at": 11.0,
+            "date": "2026-07-27",
+            "note": ""
+          },
+          {
+            "at": 22.0,
+            "date": "2026-07-28",
+            "note": ""
+          },
+          {
+            "at": 33.0,
+            "date": "2026-07-29",
+            "note": ""
+          },
+          {
+            "at": 77.0,
+            "date": "2026-08-03",
+            "note": ""
+          },
+          {
+            "at": 88.0,
+            "date": "2026-08-04",
+            "note": ""
+          },
+          {
+            "at": 143.0,
+            "date": "2026-08-10",
+            "note": ""
+          },
+          {
+            "at": 209.0,
+            "date": "2026-08-17",
+            "note": ""
+          },
+          {
+            "at": 275.0,
+            "date": "2026-08-24",
+            "note": ""
+          }
+        ],
+        "totalHours": 396.0
+      },
+      "growth": [
+        {
+          "week": 1,
+          "weekStart": "2026-07-27",
+          "mcbf": 600
+        },
+        {
+          "week": 2,
+          "weekStart": "2026-08-03",
+          "mcbf": 813
+        },
+        {
+          "week": 3,
+          "weekStart": "2026-08-10",
+          "mcbf": 977
+        },
+        {
+          "week": 4,
+          "weekStart": "2026-08-17",
+          "mcbf": 1035
+        },
+        {
+          "week": 5,
+          "weekStart": "2026-08-24",
+          "mcbf": 1080
+        },
+        {
+          "week": 6,
+          "weekStart": "2026-08-31",
+          "mcbf": 1240
+        }
+      ],
+      "growthTarget": 1500,
+      "pareto": [
+        {
+          "mode": "그리퍼 파지 실패",
+          "count": 4,
+          "cumPct": 44
+        },
+        {
+          "mode": "비전 오인식",
+          "count": 2,
+          "cumPct": 67
+        },
+        {
+          "mode": "통신 지연",
+          "count": 2,
+          "cumPct": 89
+        },
+        {
+          "mode": "소음 초과",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 3,
+        "items": [
+          {
+            "mode": "그리퍼 파지 실패",
+            "count": 4
+          },
+          {
+            "mode": "비전 오인식",
+            "count": 2
+          },
+          {
+            "mode": "통신 지연",
+            "count": 2
+          }
+        ]
+      },
+      "versions": [
+        {
+          "ver": "v0.9.1",
+          "date": "2026-07-27"
+        },
+        {
+          "ver": "v0.9.2",
+          "date": "2026-07-29"
+        },
+        {
+          "ver": "v0.9.3",
+          "date": "2026-08-10"
+        }
+      ],
+      "actionRate": {
+        "total": 4,
+        "closed": 3,
+        "pct": 75
+      },
+      "daily": [
+        {
+          "date": "2026-07-27",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 2,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-28",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-29",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-30",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-31",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-01",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 400,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-03",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-04",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-05",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-06",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-07",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 413,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-08",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 415,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-10",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-11",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-12",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-13",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-14",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 326,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-15",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 330,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-17",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-18",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-19",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-20",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-21",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-22",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-24",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 1,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-25",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-26",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-27",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-28",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-29",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-08-31",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-09-01",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-09-02",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-09-03",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-09-04",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        },
+        {
+          "date": "2026-09-05",
+          "personnel": "2",
+          "activity": "체결·반송 반복 운전",
+          "total": 240,
+          "errors": 0,
+          "streak": 0,
+          "hours": 11,
+          "notes": ""
+        }
+      ],
+      "errors": [
+        {
+          "no": 1,
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "cause": "핑거 형상 여유 부족",
+          "cause_class": "설계",
+          "action": "핑거 Rev B 형상 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 2,
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "고반사 드럼 한정 오인식",
+          "cause": "편광 필터 미적용 개체",
+          "cause_class": "부품",
+          "action": "필터 전수 적용",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 3,
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "핸드셰이크 응답 지연",
+          "cause": "타임아웃 여유 과소",
+          "cause_class": "SW",
+          "action": "타임아웃 로직 변경",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.1",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 4,
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "cause": "그리퍼 코팅 로트 편차",
+          "cause_class": "부품",
+          "action": "코팅 Rev C 교체",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 5,
+          "date": "2026-08-03",
+          "time": "13:30",
+          "cycle": 2000,
+          "code": "DRM-07",
+          "type": "소음 초과",
+          "detail": "고속 구간 공진 재현",
+          "cause": "속도 프로파일 한계",
+          "cause_class": "설계",
+          "action": "프로파일 보정",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev A",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 6,
+          "date": "2026-08-04",
+          "time": "14:35",
+          "cycle": 2400,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "야간 조도 저하 오인식",
+          "cause": "노출 스케줄 미적용",
+          "cause_class": "SW",
+          "action": "시간대 노출 스케줄",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.2",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 7,
+          "date": "2026-08-10",
+          "time": "15:40",
+          "cycle": 2800,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "재발 검증 중 재현",
+          "cause": "Rev C 적용 전 잔존",
+          "cause_class": "부품",
+          "action": "Rev C 전수 적용",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 8,
+          "date": "2026-08-17",
+          "time": "16:45",
+          "cycle": 3200,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "로그 폭주 시 지연",
+          "cause": "로그 레벨 과다",
+          "cause_class": "SW",
+          "action": "레벨 조정 배포",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 9,
+          "date": "2026-08-24",
+          "time": "9:50",
+          "cycle": 3600,
+          "code": "DRM-03",
+          "type": "그리퍼 파지 실패",
+          "detail": "고속 모드 한정 재현",
+          "cause": "속도-파지 간섭",
+          "cause_class": "설계",
+          "action": "v0.9.4 속도 보정",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v0.9.3",
+          "hw_ver": "Rev B",
+          "detailMore": "",
+          "images": []
+        }
+      ],
+      "records": [
+        {
+          "id": "E-001",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "causeText": "핑거 형상 여유 부족",
+          "status": "검증중",
+          "date": "2026-07-27",
+          "time": "9:10",
+          "cycle": 400,
+          "detail": "드럼 림 변형품 파지 미끄러짐",
+          "action": "핑거 Rev B 형상 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-002",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "편광 필터 미적용 개체",
+          "status": "종결",
+          "date": "2026-07-27",
+          "time": "10:15",
+          "cycle": 800,
+          "detail": "고반사 드럼 한정 오인식",
+          "action": "필터 전수 적용",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-003",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "SW",
+          "causeText": "타임아웃 여유 과소",
+          "status": "종결",
+          "date": "2026-07-28",
+          "time": "11:20",
+          "cycle": 1200,
+          "detail": "핸드셰이크 응답 지연",
+          "action": "타임아웃 로직 변경",
+          "swVer": "v0.9.1",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-004",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "그리퍼 코팅 로트 편차",
+          "status": "검증중",
+          "date": "2026-07-29",
+          "time": "12:25",
+          "cycle": 1600,
+          "detail": "동일 모드 재발 — 코팅 편차",
+          "action": "코팅 Rev C 교체",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "E-001",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-005",
+          "mode": "소음 초과",
+          "modeCode": "DRM-07",
+          "severity": "Minor",
+          "cause": "설계",
+          "causeText": "속도 프로파일 한계",
+          "status": "종결",
+          "date": "2026-08-03",
+          "time": "13:30",
+          "cycle": 2000,
+          "detail": "고속 구간 공진 재현",
+          "action": "프로파일 보정",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev A",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-006",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "SW",
+          "causeText": "노출 스케줄 미적용",
+          "status": "종결",
+          "date": "2026-08-04",
+          "time": "14:35",
+          "cycle": 2400,
+          "detail": "야간 조도 저하 오인식",
+          "action": "시간대 노출 스케줄",
+          "swVer": "v0.9.2",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-002",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-007",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "부품",
+          "causeText": "Rev C 적용 전 잔존",
+          "status": "검증중",
+          "date": "2026-08-10",
+          "time": "15:40",
+          "cycle": 2800,
+          "detail": "재발 검증 중 재현",
+          "action": "Rev C 전수 적용",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-004",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-008",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "SW",
+          "causeText": "로그 레벨 과다",
+          "status": "종결",
+          "date": "2026-08-17",
+          "time": "16:45",
+          "cycle": 3200,
+          "detail": "로그 폭주 시 지연",
+          "action": "레벨 조정 배포",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-003",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        },
+        {
+          "id": "E-009",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "causeText": "속도-파지 간섭",
+          "status": "검증중",
+          "date": "2026-08-24",
+          "time": "9:50",
+          "cycle": 3600,
+          "detail": "고속 모드 한정 재현",
+          "action": "v0.9.4 속도 보정",
+          "swVer": "v0.9.3",
+          "hwVer": "Rev B",
+          "verify": "",
+          "recurLink": "E-007",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": ""
+        }
+      ],
+      "statusDist": {
+        "new": 0,
+        "acting": 0,
+        "verifying": 4,
+        "closed": 5
+      }
+    }
   }
 }

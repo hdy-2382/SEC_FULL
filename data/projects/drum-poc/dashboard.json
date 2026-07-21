@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T06:34:06Z",
+  "generatedAt": "2026-07-21T07:04:27Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -1673,5 +1673,1640 @@
       "verdict": "대기",
       "notes": "07-17 예정"
     }
-  ]
+  ],
+  "months": [
+    "2026-06",
+    "2026-07"
+  ],
+  "snapshots": {
+    "2026-06": {
+      "metrics": {
+        "progress": {
+          "cum": 0.0,
+          "target": 72.0,
+          "pct": 0.0
+        }
+      },
+      "run": {
+        "cum": 0.0,
+        "target": 72.0,
+        "pct": 0.0,
+        "attempt": 1,
+        "resets": [],
+        "totalHours": 0.0
+      },
+      "fourway": [
+        {
+          "key": "concept",
+          "label": "① 컨셉 리스크",
+          "count": 0,
+          "closed": 0
+        },
+        {
+          "key": "design",
+          "label": "② 설계 개선",
+          "count": 3,
+          "closed": 2
+        },
+        {
+          "key": "impl",
+          "label": "③ 구현(SW) 버그",
+          "count": 7,
+          "closed": 7
+        },
+        {
+          "key": "env",
+          "label": "④ 시험환경 요인",
+          "count": 3,
+          "closed": 2
+        }
+      ],
+      "pareto": [
+        {
+          "mode": "비전 오인식",
+          "count": 4,
+          "cumPct": 31
+        },
+        {
+          "mode": "체결 토크 이탈",
+          "count": 3,
+          "cumPct": 54
+        },
+        {
+          "mode": "그리퍼 파지 실패",
+          "count": 2,
+          "cumPct": 69
+        },
+        {
+          "mode": "전장 간섭",
+          "count": 1,
+          "cumPct": 77
+        },
+        {
+          "mode": "통신 지연",
+          "count": 1,
+          "cumPct": 85
+        },
+        {
+          "mode": "로그 유실",
+          "count": 1,
+          "cumPct": 92
+        },
+        {
+          "mode": "자재 급송 지연",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 3,
+        "items": [
+          {
+            "mode": "비전 오인식",
+            "count": 4
+          },
+          {
+            "mode": "체결 토크 이탈",
+            "count": 3
+          },
+          {
+            "mode": "그리퍼 파지 실패",
+            "count": 2
+          }
+        ]
+      },
+      "issueStats": {
+        "total": 13,
+        "closed": 11,
+        "open": 2
+      },
+      "statusDist": {
+        "new": 0,
+        "acting": 0,
+        "verifying": 2,
+        "closed": 11
+      },
+      "trend": [
+        {
+          "week": 1,
+          "weekStart": "2026-06-15",
+          "found": 8,
+          "closed": 4
+        },
+        {
+          "week": 2,
+          "weekStart": "2026-06-22",
+          "found": 12,
+          "closed": 10
+        },
+        {
+          "week": 3,
+          "weekStart": "2026-06-29",
+          "found": 13,
+          "closed": 11
+        }
+      ],
+      "abnormal": [
+        {
+          "scenario": "비상정지 후 재기동",
+          "recovery": "45s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "순간 정전 복구",
+          "recovery": "2.1m",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "자재 걸림 제거 후 재개",
+          "recovery": "1.4m",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "통신 두절 → 자동 재접속",
+          "recovery": "—",
+          "verdict": "FAIL",
+          "notes": "재접속 로직 설계 변경 후 재시험"
+        },
+        {
+          "scenario": "도어 오픈 인터록",
+          "recovery": "30s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "외란 조명 변화",
+          "recovery": "—",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "이종 자재 투입 감지",
+          "recovery": "50s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "과부하 정지 복구",
+          "recovery": "—",
+          "verdict": "대기",
+          "notes": "07-17 예정"
+        }
+      ],
+      "issues": [
+        {
+          "id": "ISS-001",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-15",
+          "closedDate": "2026-06-19",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "저조도 마킹 오인식 → 노출 보정",
+          "images": [],
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-002",
+          "mode": "체결 토크 이탈",
+          "severity": "Critical",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-16",
+          "closedDate": "2026-06-18",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
+          "images": [],
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-003",
+          "mode": "전장 간섭",
+          "severity": "Minor",
+          "cause4": "시험환경",
+          "status": "종결",
+          "date": "2026-06-16",
+          "closedDate": "2026-06-18",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "임시 배선 간섭 — 정리 후 미재현",
+          "images": [],
+          "modeCode": "DRM-05"
+        },
+        {
+          "id": "ISS-004",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-17",
+          "closedDate": "2026-06-22",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "역광 한정 재현 → 후드 1차 개선",
+          "images": [],
+          "recurOf": "ISS-001",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-005",
+          "mode": "그리퍼 파지 실패",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-18",
+          "closedDate": "2026-06-23",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "파지 좌표 오프셋 → 티칭 보정",
+          "images": [],
+          "modeCode": "DRM-03"
+        },
+        {
+          "id": "ISS-006",
+          "mode": "비전 오인식",
+          "severity": "Minor",
+          "cause4": "시험환경",
+          "status": "종결",
+          "date": "2026-06-19",
+          "closedDate": "2026-06-21",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "랩 조명 공사 영향 — 복구 후 미재현",
+          "images": [],
+          "recurOf": "ISS-004",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-007",
+          "mode": "통신 지연",
+          "severity": "Minor",
+          "cause4": "설계",
+          "status": "종결",
+          "date": "2026-06-20",
+          "closedDate": "2026-06-26",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
+          "images": [],
+          "modeCode": "DRM-04"
+        },
+        {
+          "id": "ISS-008",
+          "mode": "체결 토크 이탈",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-21",
+          "closedDate": "2026-06-25",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "images": [],
+          "recurOf": "ISS-002",
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-009",
+          "mode": "로그 유실",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-22",
+          "closedDate": "2026-06-24",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "버퍼 오버플로 → 플러시 주기 수정",
+          "images": [],
+          "modeCode": "DRM-08"
+        },
+        {
+          "id": "ISS-010",
+          "mode": "자재 급송 지연",
+          "severity": "Minor",
+          "cause4": "설계",
+          "status": "종결",
+          "date": "2026-06-23",
+          "closedDate": "2026-06-27",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "급송 슈트 각도 조정",
+          "images": [],
+          "modeCode": "DRM-06"
+        },
+        {
+          "id": "ISS-011",
+          "mode": "그리퍼 파지 실패",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-24",
+          "closedDate": "2026-06-29",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "접근 속도 프로파일 수정",
+          "images": [],
+          "recurOf": "ISS-005",
+          "modeCode": "DRM-03"
+        },
+        {
+          "id": "ISS-012",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "시험환경",
+          "status": "검증중",
+          "date": "2026-06-27",
+          "closedDate": "",
+          "verify": "38/50Cy",
+          "unit": "",
+          "downtime": "",
+          "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
+          "images": [],
+          "recurOf": "ISS-006",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-013",
+          "mode": "체결 토크 이탈",
+          "severity": "Critical",
+          "cause4": "설계",
+          "status": "검증중",
+          "date": "2026-06-29",
+          "closedDate": "",
+          "verify": "41/50Cy",
+          "unit": "",
+          "downtime": "",
+          "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
+          "images": [],
+          "recurOf": "ISS-008",
+          "modeCode": "DRM-01"
+        }
+      ],
+      "runlog": [],
+      "records": [
+        {
+          "id": "ISS-001",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-15",
+          "time": "",
+          "cycle": null,
+          "detail": "저조도 마킹 오인식 → 노출 보정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-19",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-002",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Critical",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-16",
+          "time": "",
+          "cycle": null,
+          "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-18",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-003",
+          "mode": "전장 간섭",
+          "modeCode": "DRM-05",
+          "severity": "Minor",
+          "cause": "시험환경",
+          "status": "종결",
+          "date": "2026-06-16",
+          "time": "",
+          "cycle": null,
+          "detail": "임시 배선 간섭 — 정리 후 미재현",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-18",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-004",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-17",
+          "time": "",
+          "cycle": null,
+          "detail": "역광 한정 재현 → 후드 1차 개선",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-001",
+          "closedDate": "2026-06-22",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-005",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-18",
+          "time": "",
+          "cycle": null,
+          "detail": "파지 좌표 오프셋 → 티칭 보정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-23",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-006",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Minor",
+          "cause": "시험환경",
+          "status": "종결",
+          "date": "2026-06-19",
+          "time": "",
+          "cycle": null,
+          "detail": "랩 조명 공사 영향 — 복구 후 미재현",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-004",
+          "closedDate": "2026-06-21",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-007",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "설계",
+          "status": "종결",
+          "date": "2026-06-20",
+          "time": "",
+          "cycle": null,
+          "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-26",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-008",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-21",
+          "time": "",
+          "cycle": null,
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-002",
+          "closedDate": "2026-06-25",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-009",
+          "mode": "로그 유실",
+          "modeCode": "DRM-08",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-22",
+          "time": "",
+          "cycle": null,
+          "detail": "버퍼 오버플로 → 플러시 주기 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-24",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-010",
+          "mode": "자재 급송 지연",
+          "modeCode": "DRM-06",
+          "severity": "Minor",
+          "cause": "설계",
+          "status": "종결",
+          "date": "2026-06-23",
+          "time": "",
+          "cycle": null,
+          "detail": "급송 슈트 각도 조정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-27",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-011",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-24",
+          "time": "",
+          "cycle": null,
+          "detail": "접근 속도 프로파일 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-005",
+          "closedDate": "2026-06-29",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-012",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "시험환경",
+          "status": "검증중",
+          "date": "2026-06-27",
+          "time": "",
+          "cycle": null,
+          "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "38/50Cy",
+          "recurLink": "ISS-006",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-013",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Critical",
+          "cause": "설계",
+          "status": "검증중",
+          "date": "2026-06-29",
+          "time": "",
+          "cycle": null,
+          "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "41/50Cy",
+          "recurLink": "ISS-008",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        }
+      ]
+    },
+    "2026-07": {
+      "metrics": {
+        "progress": {
+          "cum": 52.0,
+          "target": 72.0,
+          "pct": 72.2
+        }
+      },
+      "run": {
+        "cum": 52.0,
+        "target": 72.0,
+        "pct": 72.2,
+        "attempt": 2,
+        "resets": [
+          {
+            "at": 31.0,
+            "date": "2026-07-08",
+            "note": "31h 시점 비전 오인식 → 조명 후드 개선 · 리셋"
+          }
+        ],
+        "totalHours": 83.0
+      },
+      "fourway": [
+        {
+          "key": "concept",
+          "label": "① 컨셉 리스크",
+          "count": 0,
+          "closed": 0
+        },
+        {
+          "key": "design",
+          "label": "② 설계 개선",
+          "count": 6,
+          "closed": 2
+        },
+        {
+          "key": "impl",
+          "label": "③ 구현(SW) 버그",
+          "count": 9,
+          "closed": 7
+        },
+        {
+          "key": "env",
+          "label": "④ 시험환경 요인",
+          "count": 3,
+          "closed": 2
+        }
+      ],
+      "pareto": [
+        {
+          "mode": "비전 오인식",
+          "count": 5,
+          "cumPct": 28
+        },
+        {
+          "mode": "체결 토크 이탈",
+          "count": 4,
+          "cumPct": 50
+        },
+        {
+          "mode": "그리퍼 파지 실패",
+          "count": 3,
+          "cumPct": 67
+        },
+        {
+          "mode": "통신 지연",
+          "count": 2,
+          "cumPct": 78
+        },
+        {
+          "mode": "전장 간섭",
+          "count": 1,
+          "cumPct": 83
+        },
+        {
+          "mode": "로그 유실",
+          "count": 1,
+          "cumPct": 89
+        },
+        {
+          "mode": "자재 급송 지연",
+          "count": 1,
+          "cumPct": 94
+        },
+        {
+          "mode": "소음 초과",
+          "count": 1,
+          "cumPct": 100
+        }
+      ],
+      "recurrence": {
+        "count": 4,
+        "items": [
+          {
+            "mode": "비전 오인식",
+            "count": 5
+          },
+          {
+            "mode": "체결 토크 이탈",
+            "count": 4
+          },
+          {
+            "mode": "그리퍼 파지 실패",
+            "count": 3
+          },
+          {
+            "mode": "통신 지연",
+            "count": 2
+          }
+        ]
+      },
+      "issueStats": {
+        "total": 18,
+        "closed": 11,
+        "open": 7
+      },
+      "statusDist": {
+        "new": 0,
+        "acting": 4,
+        "verifying": 3,
+        "closed": 11
+      },
+      "trend": [
+        {
+          "week": 1,
+          "weekStart": "2026-06-15",
+          "found": 8,
+          "closed": 4
+        },
+        {
+          "week": 2,
+          "weekStart": "2026-06-22",
+          "found": 12,
+          "closed": 10
+        },
+        {
+          "week": 3,
+          "weekStart": "2026-06-29",
+          "found": 14,
+          "closed": 11
+        },
+        {
+          "week": 4,
+          "weekStart": "2026-07-06",
+          "found": 18,
+          "closed": 11
+        }
+      ],
+      "abnormal": [
+        {
+          "scenario": "비상정지 후 재기동",
+          "recovery": "45s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "순간 정전 복구",
+          "recovery": "2.1m",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "자재 걸림 제거 후 재개",
+          "recovery": "1.4m",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "통신 두절 → 자동 재접속",
+          "recovery": "—",
+          "verdict": "FAIL",
+          "notes": "재접속 로직 설계 변경 후 재시험"
+        },
+        {
+          "scenario": "도어 오픈 인터록",
+          "recovery": "30s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "외란 조명 변화",
+          "recovery": "—",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "이종 자재 투입 감지",
+          "recovery": "50s",
+          "verdict": "PASS",
+          "notes": ""
+        },
+        {
+          "scenario": "과부하 정지 복구",
+          "recovery": "—",
+          "verdict": "대기",
+          "notes": "07-17 예정"
+        }
+      ],
+      "issues": [
+        {
+          "id": "ISS-001",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-15",
+          "closedDate": "2026-06-19",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "저조도 마킹 오인식 → 노출 보정",
+          "images": [],
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-002",
+          "mode": "체결 토크 이탈",
+          "severity": "Critical",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-16",
+          "closedDate": "2026-06-18",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
+          "images": [],
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-003",
+          "mode": "전장 간섭",
+          "severity": "Minor",
+          "cause4": "시험환경",
+          "status": "종결",
+          "date": "2026-06-16",
+          "closedDate": "2026-06-18",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "임시 배선 간섭 — 정리 후 미재현",
+          "images": [],
+          "modeCode": "DRM-05"
+        },
+        {
+          "id": "ISS-004",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-17",
+          "closedDate": "2026-06-22",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "역광 한정 재현 → 후드 1차 개선",
+          "images": [],
+          "recurOf": "ISS-001",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-005",
+          "mode": "그리퍼 파지 실패",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-18",
+          "closedDate": "2026-06-23",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "파지 좌표 오프셋 → 티칭 보정",
+          "images": [],
+          "modeCode": "DRM-03"
+        },
+        {
+          "id": "ISS-006",
+          "mode": "비전 오인식",
+          "severity": "Minor",
+          "cause4": "시험환경",
+          "status": "종결",
+          "date": "2026-06-19",
+          "closedDate": "2026-06-21",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "랩 조명 공사 영향 — 복구 후 미재현",
+          "images": [],
+          "recurOf": "ISS-004",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-007",
+          "mode": "통신 지연",
+          "severity": "Minor",
+          "cause4": "설계",
+          "status": "종결",
+          "date": "2026-06-20",
+          "closedDate": "2026-06-26",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
+          "images": [],
+          "modeCode": "DRM-04"
+        },
+        {
+          "id": "ISS-008",
+          "mode": "체결 토크 이탈",
+          "severity": "Major",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-21",
+          "closedDate": "2026-06-25",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "images": [],
+          "recurOf": "ISS-002",
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-009",
+          "mode": "로그 유실",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-22",
+          "closedDate": "2026-06-24",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "버퍼 오버플로 → 플러시 주기 수정",
+          "images": [],
+          "modeCode": "DRM-08"
+        },
+        {
+          "id": "ISS-010",
+          "mode": "자재 급송 지연",
+          "severity": "Minor",
+          "cause4": "설계",
+          "status": "종결",
+          "date": "2026-06-23",
+          "closedDate": "2026-06-27",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "급송 슈트 각도 조정",
+          "images": [],
+          "modeCode": "DRM-06"
+        },
+        {
+          "id": "ISS-011",
+          "mode": "그리퍼 파지 실패",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-24",
+          "closedDate": "2026-06-29",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "접근 속도 프로파일 수정",
+          "images": [],
+          "recurOf": "ISS-005",
+          "modeCode": "DRM-03"
+        },
+        {
+          "id": "ISS-012",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "시험환경",
+          "status": "검증중",
+          "date": "2026-06-27",
+          "closedDate": "",
+          "verify": "38/50Cy",
+          "unit": "",
+          "downtime": "",
+          "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
+          "images": [],
+          "recurOf": "ISS-006",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-013",
+          "mode": "체결 토크 이탈",
+          "severity": "Critical",
+          "cause4": "설계",
+          "status": "검증중",
+          "date": "2026-06-29",
+          "closedDate": "",
+          "verify": "41/50Cy",
+          "unit": "",
+          "downtime": "",
+          "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
+          "images": [],
+          "recurOf": "ISS-008",
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-014",
+          "mode": "소음 초과",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "검증중",
+          "date": "2026-07-01",
+          "closedDate": "",
+          "verify": "45/50Cy",
+          "unit": "",
+          "downtime": "",
+          "detail": "고속 공진음 → 속도 프로파일 보정",
+          "images": [],
+          "modeCode": "DRM-07"
+        },
+        {
+          "id": "ISS-015",
+          "mode": "체결 토크 이탈",
+          "severity": "Major",
+          "cause4": "설계",
+          "status": "조치중",
+          "date": "2026-07-07",
+          "closedDate": "",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "체결 자세 편차 추정 — 지그 재설계 협의",
+          "images": [],
+          "recurOf": "ISS-013",
+          "modeCode": "DRM-01"
+        },
+        {
+          "id": "ISS-016",
+          "mode": "비전 오인식",
+          "severity": "Major",
+          "cause4": "설계",
+          "status": "조치중",
+          "date": "2026-07-08",
+          "closedDate": "",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "고반사 드럼 한정 → 편광 필터 검토",
+          "images": [],
+          "recurOf": "ISS-012",
+          "modeCode": "DRM-02"
+        },
+        {
+          "id": "ISS-017",
+          "mode": "그리퍼 파지 실패",
+          "severity": "Major",
+          "cause4": "설계",
+          "status": "조치중",
+          "date": "2026-07-10",
+          "closedDate": "",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "림 변형품 파지 불가 → 핑거 형상 변경",
+          "images": [],
+          "recurOf": "ISS-011",
+          "modeCode": "DRM-03"
+        },
+        {
+          "id": "ISS-018",
+          "mode": "통신 지연",
+          "severity": "Minor",
+          "cause4": "구현(SW)",
+          "status": "조치중",
+          "date": "2026-07-11",
+          "closedDate": "",
+          "verify": "",
+          "unit": "",
+          "downtime": "",
+          "detail": "로그 폭주 시 지연 → 로그 레벨 조정",
+          "images": [],
+          "recurOf": "ISS-007",
+          "modeCode": "DRM-04"
+        }
+      ],
+      "runlog": [
+        {
+          "date": "2026-07-06",
+          "hours": 10,
+          "errors": 0,
+          "notes": "1차 시도 개시"
+        },
+        {
+          "date": "2026-07-07",
+          "hours": 11,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-08",
+          "hours": 10,
+          "errors": 1,
+          "notes": "31h 시점 비전 오인식 → 조명 후드 개선 · 리셋"
+        },
+        {
+          "date": "2026-07-09",
+          "hours": 7,
+          "errors": 0,
+          "notes": "2차 시도 개시"
+        },
+        {
+          "date": "2026-07-10",
+          "hours": 6,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-11",
+          "hours": 5,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-13",
+          "hours": 4,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-14",
+          "hours": 6,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-15",
+          "hours": 5,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-16",
+          "hours": 5,
+          "errors": 0,
+          "notes": "토크 암 보강 반영 후 런 재개"
+        },
+        {
+          "date": "2026-07-17",
+          "hours": 4,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-18",
+          "hours": 5,
+          "errors": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-07-20",
+          "hours": 5,
+          "errors": 0,
+          "notes": "무발생 검증 병행"
+        }
+      ],
+      "records": [
+        {
+          "id": "ISS-001",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-15",
+          "time": "",
+          "cycle": null,
+          "detail": "저조도 마킹 오인식 → 노출 보정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-19",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-002",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Critical",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-16",
+          "time": "",
+          "cycle": null,
+          "detail": "토크 상한 초과 체결 — 파손 위험, 최우선 조치(레시피·상한 인터록)",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-18",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-003",
+          "mode": "전장 간섭",
+          "modeCode": "DRM-05",
+          "severity": "Minor",
+          "cause": "시험환경",
+          "status": "종결",
+          "date": "2026-06-16",
+          "time": "",
+          "cycle": null,
+          "detail": "임시 배선 간섭 — 정리 후 미재현",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-18",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-004",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-17",
+          "time": "",
+          "cycle": null,
+          "detail": "역광 한정 재현 → 후드 1차 개선",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-001",
+          "closedDate": "2026-06-22",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-005",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-18",
+          "time": "",
+          "cycle": null,
+          "detail": "파지 좌표 오프셋 → 티칭 보정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-23",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-006",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Minor",
+          "cause": "시험환경",
+          "status": "종결",
+          "date": "2026-06-19",
+          "time": "",
+          "cycle": null,
+          "detail": "랩 조명 공사 영향 — 복구 후 미재현",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-004",
+          "closedDate": "2026-06-21",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-007",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "설계",
+          "status": "종결",
+          "date": "2026-06-20",
+          "time": "",
+          "cycle": null,
+          "detail": "핸드셰이크 타임아웃 여유 부족 → 설계값 조정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-26",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-008",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Major",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-21",
+          "time": "",
+          "cycle": null,
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-002",
+          "closedDate": "2026-06-25",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-009",
+          "mode": "로그 유실",
+          "modeCode": "DRM-08",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-22",
+          "time": "",
+          "cycle": null,
+          "detail": "버퍼 오버플로 → 플러시 주기 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-24",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-010",
+          "mode": "자재 급송 지연",
+          "modeCode": "DRM-06",
+          "severity": "Minor",
+          "cause": "설계",
+          "status": "종결",
+          "date": "2026-06-23",
+          "time": "",
+          "cycle": null,
+          "detail": "급송 슈트 각도 조정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "",
+          "closedDate": "2026-06-27",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-011",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "종결",
+          "date": "2026-06-24",
+          "time": "",
+          "cycle": null,
+          "detail": "접근 속도 프로파일 수정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-005",
+          "closedDate": "2026-06-29",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-012",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "시험환경",
+          "status": "검증중",
+          "date": "2026-06-27",
+          "time": "",
+          "cycle": null,
+          "detail": "외란광 각도 한정 → 후드 연장, 무발생 감시",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "38/50Cy",
+          "recurLink": "ISS-006",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-013",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Critical",
+          "cause": "설계",
+          "status": "검증중",
+          "date": "2026-06-29",
+          "time": "",
+          "cycle": null,
+          "detail": "반력 편차 상한 근접 — 토크 암 강성 보강(설계), 크리티컬 우선순위 1",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "41/50Cy",
+          "recurLink": "ISS-008",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-014",
+          "mode": "소음 초과",
+          "modeCode": "DRM-07",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "검증중",
+          "date": "2026-07-01",
+          "time": "",
+          "cycle": null,
+          "detail": "고속 공진음 → 속도 프로파일 보정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "45/50Cy",
+          "recurLink": "",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-015",
+          "mode": "체결 토크 이탈",
+          "modeCode": "DRM-01",
+          "severity": "Major",
+          "cause": "설계",
+          "status": "조치중",
+          "date": "2026-07-07",
+          "time": "",
+          "cycle": null,
+          "detail": "체결 자세 편차 추정 — 지그 재설계 협의",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-013",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-016",
+          "mode": "비전 오인식",
+          "modeCode": "DRM-02",
+          "severity": "Major",
+          "cause": "설계",
+          "status": "조치중",
+          "date": "2026-07-08",
+          "time": "",
+          "cycle": null,
+          "detail": "고반사 드럼 한정 → 편광 필터 검토",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-012",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-017",
+          "mode": "그리퍼 파지 실패",
+          "modeCode": "DRM-03",
+          "severity": "Major",
+          "cause": "설계",
+          "status": "조치중",
+          "date": "2026-07-10",
+          "time": "",
+          "cycle": null,
+          "detail": "림 변형품 파지 불가 → 핑거 형상 변경",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-011",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        },
+        {
+          "id": "ISS-018",
+          "mode": "통신 지연",
+          "modeCode": "DRM-04",
+          "severity": "Minor",
+          "cause": "구현(SW)",
+          "status": "조치중",
+          "date": "2026-07-11",
+          "time": "",
+          "cycle": null,
+          "detail": "로그 폭주 시 지연 → 로그 레벨 조정",
+          "action": "",
+          "swVer": "",
+          "hwVer": "",
+          "verify": "",
+          "recurLink": "ISS-007",
+          "closedDate": "",
+          "images": [],
+          "verdict": "",
+          "unit": "",
+          "downtime": ""
+        }
+      ]
+    }
+  }
 }

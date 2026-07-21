@@ -1097,7 +1097,7 @@ function renderPocPlan(C, view, cur) {
     </div>`;
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = null;
 }
 
@@ -1146,7 +1146,7 @@ function renderPocBuild(C, view, cur) {
     </div>`;
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = null;
 }
 
@@ -1207,7 +1207,7 @@ function renderPoc(C) {
   });
   $('s-steps').innerHTML = pocSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = vbH => pocTrendPanel({ narrow: true, zoom: true, vbH, bot: vbH - 26 });
   requestAnimationFrame(fitTrackAChart);
 }
@@ -1227,7 +1227,7 @@ function renderPilot(C) {
   });
   $('s-steps').innerHTML = pilotSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = vbH => pilotGrowthPanel({ narrow: true, zoom: true, vbH, bot: vbH - 30 });
   requestAnimationFrame(fitTrackAChart);
 }

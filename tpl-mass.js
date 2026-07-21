@@ -426,12 +426,24 @@ function buildSideGoals() {
 /* ── 월 선택(누적 스냅샷) ── */
 let CUR_MONTH = null;   // null = 전체(최신)
 let FULL = null;        // 전체 계산 블록 백업(전체 복원용)
-const SNAP_KEYS = ['metrics', 'failure', 'actions', 'recurrence', 'acceptance', 'opReliability', 'daily', 'errors'];
+
+// 월 스냅샷이 덮어쓰는 키 = 스냅샷 객체에 실제로 담긴 키의 합집합 (단계 무관 — 빌드가 담는 대로).
+function snapKeys() {
+  const ks = new Set();
+  const snaps = (DATA && DATA.snapshots) || {};
+  Object.keys(snaps).forEach(mo => Object.keys(snaps[mo] || {}).forEach(k => ks.add(k)));
+  return [...ks];
+}
 
 // 선택 월의 스냅샷(처음~그 달 말)을 DATA에 적용. null=전체(FULL 복원).
 function applyMonth(mo) {
-  const S = (mo && DATA.snapshots && DATA.snapshots[mo]) ? DATA.snapshots[mo] : FULL;
-  if (S) SNAP_KEYS.forEach(k => { if (S[k] !== undefined) DATA[k] = S[k]; });
+  const keys = snapKeys();
+  if (!keys.length) return;
+  const S = (mo && DATA.snapshots && DATA.snapshots[mo]) ? DATA.snapshots[mo] : null;
+  keys.forEach(k => {
+    const v = (S && S[k] !== undefined) ? S[k] : (FULL || {})[k];
+    if (v !== undefined) DATA[k] = v;
+  });
 }
 
 // 사이드바 하단 월 선택 박스(데이터에 존재하는 월만 + 전체)

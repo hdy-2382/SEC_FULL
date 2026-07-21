@@ -299,7 +299,7 @@ function renderSpread(C) {
   });
   $('s-steps').innerHTML = spreadSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = null;   // 확산 트랙 A는 표(호기별 퀄) — fit 대상 아님
 }
 
@@ -319,7 +319,7 @@ function renderOpsMode(C) {
   });
   $('s-steps').innerHTML = opsSteps(C);
   { const el = $('side-line'); if (el) el.innerHTML = ''; }
-  { const el = $('side-months'); if (el) el.innerHTML = ''; }
+  { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   TRACKA_BUILDER = vbH => opsRamTrendPanel({ zoom: true, narrow: true, vbH, bot: vbH - 30 });
   requestAnimationFrame(fitTrackAChart);
 }

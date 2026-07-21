@@ -1598,6 +1598,28 @@ def _backfill_mode_codes(codes: list[dict], *record_lists) -> int:
     return n
 
 
+def _ym(x) -> str:
+    return (x.get("date") or "")[:7]
+
+
+def _month_list(*record_lists) -> list:
+    ms = set()
+    for lst in record_lists:
+        for x in (lst or []):
+            m = _ym(x)
+            if m:
+                ms.add(m)
+    return sorted(ms)
+
+
+def _attach_snapshots(out: dict, months: list, make):
+    """월별 누적 스냅샷을 out에 부착 — 2개월 이상일 때만(전체+월 선택 의미). make(mo)->스냅샷 dict."""
+    if len(months) < 2:
+        return
+    out["months"] = months
+    out["snapshots"] = {mo: make(mo) for mo in months}
+
+
 def _build_poc(pid: str, config: dict):
     src = _pick_latest_xlsx()
     print(f"[build:{pid}] 입력 파일: {src.name} (stage=poc)")
@@ -1616,6 +1638,17 @@ def _build_poc(pid: str, config: dict):
     _validate_runlog(runlog, f"{pid} 런기록")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "issues": issues, "runlog": runlog, "records": records, "codes": codes, **computed}
+
+    def _poc_snap(mo):
+        iM = [dict(x) for x in issues if (not _ym(x)) or _ym(x) <= mo]
+        rM = [dict(x) for x in runlog if _ym(x) and _ym(x) <= mo]
+        cM = _compute_poc(iM, rM, abnormal, config)
+        recM = _records_from_issues(iM)
+        if codes:
+            _backfill_mode_codes(codes, iM, recM)
+        return {**cM, "issues": iM, "runlog": rM, "records": recM}
+    _attach_snapshots(out, _month_list(issues, runlog), _poc_snap)
+
     _write_out(pid, out, f"이슈 {len(issues)}, 런기록 {len(runlog)}일, "
                f"무고장 런 {computed['run']['cum']}/{computed['run']['target']}h, "
                f"비정상 {len(abnormal)}건")
@@ -1631,6 +1664,13 @@ def _build_spread(pid: str, config: dict):
     _validate_records(computed["records"], "spread")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "issues": issues, **computed}
+
+    def _spread_snap(mo):
+        iM = [dict(x) for x in issues if (not _ym(x)) or _ym(x) <= mo]
+        cM = _compute_spread(iM, units, config)
+        return {**cM, "issues": iM}
+    _attach_snapshots(out, _month_list(issues), _spread_snap)
+
     f = computed["fleet"]
     _write_out(pid, out, f"호기 {f['total']} (퀄 완료 {f['qualified']}), 이슈 {len(issues)}, "
                f"설계성 {len(computed['escalations'])}건")
@@ -1647,6 +1687,18 @@ def _build_ops(pid: str, config: dict):
     _validate_records(computed["records"], "ops")
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "issues": issues, **computed}
+
+    def _mon(x):
+        return str(x.get("month") or "")[:7]
+    op_months = sorted({_mon(x) for x in monthly if _mon(x)})
+
+    def _ops_snap(mo):
+        iM = [dict(x) for x in issues if (not _ym(x)) or _ym(x) <= mo]
+        mM = [x for x in monthly if _mon(x) and _mon(x) <= mo]
+        cM = _compute_ops(iM, mM, cip, config)
+        return {**cM, "issues": iM}
+    _attach_snapshots(out, op_months, _ops_snap)
+
     ram = computed["ram"]["current"]
     _write_out(pid, out, f"월간지표 {len(monthly)}개월, 필드 FRACAS {len(issues)}건, "
                f"가동률 {ram.get('avail', '—')}%, CIP {len(cip)}건")
@@ -1666,6 +1718,15 @@ def _build_pilot(pid: str, config: dict):
     out = {"generatedAt": _now_iso(), "source": src.name, "config": config,
            "codes": codes, "daily": daily, "errors": errors, "actions": actions,
            "records": records, "statusDist": _status_dist_of(records), **computed}
+
+    def _pilot_snap(mo):
+        dM = [dict(x) for x in daily if _ym(x) and _ym(x) <= mo]
+        eM = [dict(x) for x in errors if (not _ym(x)) or _ym(x) <= mo]
+        cM = _compute_pilot(dM, eM, config, codes, actions)
+        recM = _records_from_errors(eM, codes, actions)
+        return {**cM, "daily": dM, "errors": eM, "records": recM, "statusDist": _status_dist_of(recM)}
+    _attach_snapshots(out, _month_list(daily, errors), _pilot_snap)
+
     g = computed["growth"]
     _write_out(pid, out, f"daily {len(daily)}, errors {len(errors)}, "
                f"MCBF {g[-1]['mcbf'] if g else '—'}/{computed.get('growthTarget') or '—'}, "
