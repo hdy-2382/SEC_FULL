@@ -679,6 +679,9 @@
 .pocv .tb-why{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
 .pocv .fault-grid.two{grid-template-columns:1fr 1fr}
 .pocv .track-wide .fault-grid.two{grid-template-columns:1fr 1fr}
+/* 게이트 전제 확인 — 표는 자연 높이(전 행 노출), 패널 상단 정렬 */
+.pocv .gpre .fault-grid{align-items:start}
+.pocv .gpre .panel>.tbl-scroll{flex:none;max-height:none!important;overflow:visible}
 /* SW 체크리스트 (평가 화면 P4 패널) */
 .pocv .swck{display:flex;flex-direction:column;gap:2px;margin-top:2px}
 .pocv .swck-it{display:flex;align-items:center;gap:9px;padding:6px 0;border-top:1px solid var(--line-soft);min-width:0}

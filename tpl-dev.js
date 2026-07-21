@@ -1151,7 +1151,7 @@ function renderPoc(C) {
     bCharts: [fracasLoopPanel(), pocAbnormalPanel(true)],
     cTitle: '고장 분석 · 위험 매트릭스 · Pareto · 최근 알람',
     cPanels: [devMatrixPanel(), devParetoPanel(true), devPriorityPanel()],
-    extraWide: `<div class="prog-track track-wide tk-a"><div class="pt-h">게이트 전제 확인 — 기/성능 · SW 체크리스트</div>
+    extraWide: `<div class="prog-track track-wide tk-a gpre"><div class="pt-h">게이트 전제 확인 — 기/성능 · SW 체크리스트</div>
       <div class="fault-grid two">${pocPerfPanel(C)}${pocSwCheckPanel(C)}</div></div>`,
   });
   $('s-steps').innerHTML = pocSteps(C);
