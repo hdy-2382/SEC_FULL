@@ -576,7 +576,7 @@
 /* 템플릿① 개발 (M3): 4분류 보드 · 질문 박스 · 게이트 그리드 · 필수/선택 배지 */
 .qbox{background:#EAF2FB;border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--ink-soft);margin-bottom:13px}
 /* 배너(회고) 슬롯 — 배너 유무와 무관하게 공간 예약: 탭 전환 시 아래 박스가 안 흔들리게 */
-.pocv .qbox-slot{min-height:37px;margin-bottom:13px}
+.pocv .qbox-slot{min-height:37px;margin-top:10px;margin-bottom:13px}
 .pocv .qbox-slot .qbox{margin-bottom:0;min-height:37px;display:flex;align-items:center;flex-wrap:wrap;gap:0 4px}
 .qbox b{color:var(--navy-deep)}
 .fourway{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
@@ -662,8 +662,10 @@
 .jrny .jp{font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
 
 /* POC 세부 단계 타일 — 종합 클리어 트랙 내, TECOP 구획 박스와 동일 양식 (클릭 = 단계 이동 팝업) */
-.tk-exec .exr-box.phase{--clr:var(--sky);flex:none;margin-bottom:8px}
+/* 단계 탭 박스 — 종합 클리어 기준 타일(.clr-tile)과 동일 크기(패딩·행간)로 통일 */
+.tk-exec .exr-box.phase{--clr:var(--sky);flex:none;gap:4px;padding:8px 10px 9px;margin-bottom:9px}
 .tk-exec .exr-box.phase .exr-ax{width:auto;min-width:18px;padding:0 5px;border-radius:6px;background:var(--sky)}
+.tk-exec .exr-box.phase .exr-n2{line-height:1.4}
 
 /* P1 기획 관제 — As-Is 수작업 / To-Be 컨셉 / 산출물 정의 카드 */
 .pocv .ai-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:2px 0 9px}
