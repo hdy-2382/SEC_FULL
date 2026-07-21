@@ -279,10 +279,10 @@ function openLineLayout() {
   const cap = TT('overview.lineCaption',
     { cum: prog.cum != null ? prog.cum : '', target: prog.target != null ? prog.target : '' },
     '현재 평가 <b>설비 3 (적재) · {cum}/{target}</b> · 설비 1·설비 2 통과 · 설비 4 대기');
-  $('modal-title').textContent = T('overview.lineTitle');
+  $('modal-title').textContent = T('overview.lineTitle', '테스트 라인 레이아웃');
   $('modal-body').innerHTML = `
     <div class="layout-figure">
-      <div class="layout-img" style="height:min(64vh,620px)"><img src="${esc(img)}" alt="${esc(T('overview.lineTitle'))}" style="object-fit:${esc(Lfit)}" onerror="this.style.opacity=.25"></div>
+      <div class="layout-img" style="height:min(64vh,620px)"><img src="${esc(img)}" alt="테스트 라인 레이아웃" style="object-fit:${esc(Lfit)}" onerror="this.style.opacity=.25"></div>
       <div class="layout-cap">${cap}</div>
     </div>`;
   const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');

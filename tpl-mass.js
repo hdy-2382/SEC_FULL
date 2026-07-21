@@ -375,12 +375,22 @@ function renderOverview(C, m, f, acc, op) {
 
   // 셸은 전 단계 공통(devShell) — 양산 고유 렌즈(진행률 히어로·성장 차트·신뢰성 도넛·매트릭스)만 슬롯 주입
   const prj = C.project || {}, gate9 = C.gate || {};
+  const lineCap = TT('overview.lineCaption',
+    { cum: (m && m.progress && m.progress.cum != null) ? m.progress.cum : '', target: (m && m.progress && m.progress.target != null) ? m.progress.target : '' },
+    '현재 평가 <b>설비 3 (적재)</b> · 설비 1·2 통과 · 설비 4 대기');
+  const lineBanner = `
+    <div class="line-banner" onclick="openLineLayout()" title="클릭하면 설비 레이아웃 크게 보기">
+      <span class="lb-ic">▦</span>
+      <div class="lb-tx"><b>테스트 라인 레이아웃</b><span>${lineCap}</span></div>
+      <span class="lb-go">설비 레이아웃 보기 <em>⤢</em></span>
+    </div>`;
   const head = `
     <div class="ptitle">
       <span class="stagechip st-mass">${esc(STAGE_LABEL.mass || '양산평가')}</span>
       <span class="tmpl">템플릿 ② 실증 — 양산 시범 평가</span>
       <span class="meta">PM <b>${esc((prj.team || '').split(',')[0] || '—')}</b> · 기간 <b>${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</b> · ${esc(gate9.label || '게이트 리뷰')} <b>${esc(gate9.reviewDate || '—')} ${esc(typeof ddayLabel === 'function' ? ddayLabel(gate9.reviewDate) : '')}</b></span>
-    </div>`;
+    </div>
+    ${lineBanner}`;
   return devShell('mass', C, {
     head,
     qbox: '',
@@ -461,7 +471,7 @@ function buildMonthSelector() {
 // 데이터-의존 영역만 재렌더(월 전환 시 재호출) — nav/핸들러는 유지
 function renderMass() {
   const C = DATA.config || {}, m = DATA.metrics, f = DATA.failure, acc = DATA.acceptance, op = DATA.opReliability;
-  { const el = $('side-line'); if (el) el.innerHTML = lineLayoutFigure(C, m); }
+  { const el = $('side-line'); if (el) el.innerHTML = ''; }   // 설비 레이아웃은 메인 상단 배너로 이동(테스트 라인 레이아웃)
   { const el = $('side-months'); if (el) el.innerHTML = buildMonthSelector(); }
   $('s-overview').innerHTML = renderOverview(C, m, f, acc, op);
   $('s-steps').innerHTML = renderSteps(C, m, f, acc, op);
