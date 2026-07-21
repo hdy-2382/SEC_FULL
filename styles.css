@@ -657,18 +657,9 @@
 .jrny .jp-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .jrny .jp{font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
 
-/* POC 세부 단계 칩 — 종합 클리어 트랙 내 (클릭 = 단계 화면 전환, P1·P2=기획·제작 / P3~P5=평가) */
-.tk-exec .pcs9{border:1px solid var(--line-soft);border-radius:10px;background:var(--card);padding:7px 10px 6px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
-.tk-exec .pcs9-r{display:flex;align-items:center;gap:5px}
-.tk-exec .pcs9 .cap{font-size:10.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;margin-right:3px;white-space:nowrap}
-.tk-exec .pc9{flex:1;text-align:center;font-size:10.5px;font-weight:800;color:var(--muted);background:var(--card-alt);border:1px solid var(--line-soft);border-radius:8px;padding:3.5px 0;cursor:pointer;white-space:nowrap}
-.tk-exec .pc9:hover{background:var(--sky-soft);color:var(--sky)}
-.tk-exec .pc9.done{color:var(--green)}
-.tk-exec .pc9.now{border-color:var(--green)}
-.tk-exec .pc9.on{background:var(--sky);border-color:var(--sky);color:#fff}
-.tk-exec .pcs9-nm{margin-top:4px;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tk-exec .pcs9-nm b{color:var(--green)}
-.tk-exec .pcs9-nm em{font-style:normal;color:var(--major);font-weight:700}
+/* POC 세부 단계 타일 — 종합 클리어 트랙 내, TECOP 구획 박스와 동일 양식 (클릭 = 단계 이동 팝업) */
+.tk-exec .exr-box.phase{--clr:var(--sky);flex:none}
+.tk-exec .exr-box.phase .exr-ax{width:auto;min-width:18px;padding:0 5px;border-radius:6px;background:var(--sky)}
 
 /* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
 .pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
