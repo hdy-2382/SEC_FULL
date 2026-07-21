@@ -575,6 +575,9 @@
 .hkpi .sub{font-size:10.5px;color:var(--ink-soft);margin-top:2px}
 /* 템플릿① 개발 (M3): 4분류 보드 · 질문 박스 · 게이트 그리드 · 필수/선택 배지 */
 .qbox{background:#EAF2FB;border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--ink-soft);margin-bottom:13px}
+/* 배너(회고) 슬롯 — 배너 유무와 무관하게 공간 예약: 탭 전환 시 아래 박스가 안 흔들리게 */
+.pocv .qbox-slot{min-height:37px;margin-bottom:13px}
+.pocv .qbox-slot .qbox{margin-bottom:0;min-height:37px;display:flex;align-items:center;flex-wrap:wrap;gap:0 4px}
 .qbox b{color:var(--navy-deep)}
 .fourway{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 .fourway .fw{border-radius:10px;padding:11px 12px;border:1px solid var(--line-soft);background:var(--card-alt)}

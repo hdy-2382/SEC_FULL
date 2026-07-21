@@ -425,7 +425,7 @@ function devShell(stage, C, s) {
     ${s.head || devHead(stage, C)}
     <div class="pocv">
       ${s.phead || ''}
-      ${s.qbox ? `<div class="qbox">${s.qbox}</div>` : ''}
+      ${s.bannerSlot ? `<div class="qbox-slot">${s.qbox ? `<div class="qbox">${s.qbox}</div>` : ''}</div>` : (s.qbox ? `<div class="qbox">${s.qbox}</div>` : '')}
       <div class="ov-2col">
         ${devClearTrack(C, s.clear)}
         <div class="prog-track tk-a"><div class="pt-h">${s.aTitle}</div>${s.aHero}${s.aChart}</div>
@@ -1080,7 +1080,7 @@ function renderPocPlan(C, view, cur) {
   $('s-overview').innerHTML = `
     ${devHead('poc', C)}
     <div class="pocv planv">
-      ${banner ? `<div class="qbox">${banner}</div>` : ''}
+      <div class="qbox-slot">${banner ? `<div class="qbox">${banner}</div>` : ''}</div>
       <div class="pb-grid">
         <div class="pb-rail">${devClearTrack(C, pocPhaseClearOpts(C, view, cur))}</div>
         <div class="pb-main">
@@ -1131,7 +1131,7 @@ function renderPocBuild(C, view, cur) {
   $('s-overview').innerHTML = `
     ${devHead('poc', C)}
     <div class="pocv planv">
-      ${banner ? `<div class="qbox">${banner}</div>` : ''}
+      <div class="qbox-slot">${banner ? `<div class="qbox">${banner}</div>` : ''}</div>
       <div class="pb-grid">
         <div class="pb-rail">${devClearTrack(C, pocPhaseClearOpts(C, view, cur))}</div>
         <div class="pb-main">
@@ -1190,6 +1190,7 @@ function renderPoc(C) {
   if (view === 0 && lc.length >= 3) return renderPocPlan(C, view, cur);
   if (view === 1 && lc.length >= 3) return renderPocBuild(C, view, cur);
   $('s-overview').innerHTML = devShell('poc', C, {
+    bannerSlot: true,
     qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
     clear: pocPhaseClearOpts(C, view, cur),
