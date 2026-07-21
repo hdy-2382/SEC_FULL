@@ -134,15 +134,17 @@
   .hpc-num .r{font-size:11.5px;color:var(--ink-soft);font-weight:600;margin-top:2px}
   .hpc-num .g{font-size:11.5px;color:var(--muted);margin-top:2px}
   .hpc-num .g b{color:var(--navy-deep);font-weight:800;font-variant-numeric:tabular-nums}
-  .hpc-stats{display:flex;gap:8px;border-top:1px solid var(--line-soft);padding-top:9px}
-  .hpc-st{flex:1;background:var(--card-alt);border-radius:9px;padding:6px 9px;min-width:0}
-  .hpc-st em{display:block;font-style:normal;font-size:10px;font-weight:700;color:var(--muted)}
-  .hpc-st b{font-size:15px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
-  .hpc-st b small{font-size:10px;font-weight:700;color:var(--crit);margin-left:3px}
-  .hpc-st b.hot{color:var(--crit)} .hpc-st b.okv{color:var(--green)}
-  .hpc-sev{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--line-soft);gap:1px}
-  .hpc-sev i{display:block;height:100%}
-  .hpc-tecop .tecop{gap:5px}
+  .hpc-meters{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line-soft);padding-top:10px}
+  .hpc-meter{display:flex;align-items:center;gap:9px}
+  .hpc-meter .ml{flex:none;width:44px;font-size:10.5px;font-weight:800;color:var(--muted)}
+  .hpc-meter .mbar{flex:1;display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--line-soft);gap:1px}
+  .hpc-meter .mbar i{display:block;height:100%}
+  .hpc-meter .mn{flex:none;min-width:96px;text-align:right;font-size:10.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .hpc-meter .mn b{color:var(--navy-deep);font-weight:800}
+  .hpc-meter.gate .gdots{flex:1;display:flex;gap:5px;align-items:center}
+  .hpc-meter .gdot{width:13px;height:13px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.6) inset}
+  .hpc-tecop{border-top:1px solid var(--line-soft);padding-top:9px}
+  .hpc-tecop .tecop{gap:5px;flex-wrap:wrap}
 
   .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:30px;box-shadow:var(--shadow-sm)}
   .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}

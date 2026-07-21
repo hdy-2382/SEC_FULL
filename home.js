@@ -157,8 +157,16 @@ function renderHomePortfolio(withData, entries, proc) {
   const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}"></i>` : '';
   const stagePos = k => { const i = stages.findIndex(r => r.key === k); return i < 0 ? '' : `${i + 1}/${stages.length}`; };
 
+  const meter = (label, segs, note) => {
+    const bar = segs.filter(x => x[0]).map(x => `<i style="flex:${x[0]};background:${x[1]}" title="${x[2]} ${x[0]}"></i>`).join('');
+    return `<div class="hpc-meter"><span class="ml">${label}</span>
+      <span class="mbar">${bar || '<i style="flex:1;background:var(--line-soft)"></i>'}</span>
+      <span class="mn">${note}</span></div>`;
+  };
+  const GST = { pass: 'var(--green)', prog: 'var(--major)', fail: 'var(--crit)', wait: '#c3cfdd' };
+
   const card = e => {
-    const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {}, d = s.sevDist || {};
+    const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {}, d = s.sevDist || {}, sd = s.statusDist || {};
     const col = STAGE_COLOR[e.stage] || '#888';
     const pct = Math.max(0, Math.min(100, prog.pct || 0));
     const h = health(e);
@@ -166,17 +174,19 @@ function renderHomePortfolio(withData, entries, proc) {
     const nm = (e.name || '').replace(/\s*\(.*\)$/, '');
     const prj = e.project || {};
     const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
-    const recur = s.recur;
-    const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.department || '',
-      prj.startDate ? `${prj.startDate.slice(2)}~${(prj.endDate || '').slice(2)}` : ''].filter(Boolean).join(' · ');
-    const stat = (lb, v, cls) => `<div class="hpc-st"><em>${lb}</em><b class="${cls || ''}">${v}</b></div>`;
+    const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.department || ''].filter(Boolean).join(' · ');
+    // 게이트 기준 준비도 — 5개 점(충족/진행/미달/대기)
+    const crit9 = (g.criteria || []);
+    const passN = crit9.filter(c => c.status === 'pass').length;
+    const dots = crit9.map(c => `<span class="gdot" style="background:${GST[c.status] || '#c3cfdd'}" title="${esc(c.label || '')}"></span>`).join('');
+    const closed = sd.closed || 0, sdTot = closed + (sd.verifying || 0) + (sd.acting || 0) + (sd.new || 0);
     return `<div class="hpc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="hpc-top">
         <span class="hpc-stg" style="background:${esc(col)}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
         <b class="hpc-nm">${esc(nm)}</b>
         <span class="hpc-hl">${esc(h.tag)}</span>
       </div>
-      <div class="hpc-meta">${esc(meta)} · 프로세스 ${stagePos(e.stage)}단계</div>
+      <div class="hpc-meta">${esc(meta)} · 프로세스 ${stagePos(e.stage)}단계 · 기간 ${esc((prj.startDate || '').slice(2))}~${esc((prj.endDate || '').slice(2))}</div>
       <div class="hpc-body">
         <div class="hpc-gauge">
           <svg viewBox="0 0 42 42" class="hpc-donut"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>
@@ -186,15 +196,14 @@ function renderHomePortfolio(withData, entries, proc) {
         <div class="hpc-num">
           <div class="n"><b>${fmt(prog.cum)}</b><span>/ ${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
           <div class="r">${esc((e.run || {}).criterion || '')}</div>
-          <div class="g">게이트 <b>${esc(dd || '—')}</b></div>
+          <div class="g">게이트 <b>${esc(dd || '—')}</b> · ${esc((g.reviewDate || '').slice(2))}</div>
         </div>
       </div>
-      <div class="hpc-stats">
-        ${stat('발굴', tot)}
-        ${stat('치명', crit + (oc ? ` <small>오픈 ${oc}</small>` : ''), crit ? 'hot' : 'okv')}
-        ${recur != null ? stat('재발', recur, recur ? 'hot' : 'okv') : stat('상태', ({new:'신규',acting:'조치중',verifying:'검증중',closed:'종결'}[Object.entries(s.statusDist||{}).sort((a,b)=>b[1]-a[1])[0]?.[0]] || '—'))}
+      <div class="hpc-meters">
+        ${crit9.length ? `<div class="hpc-meter gate"><span class="ml">게이트</span><span class="gdots">${dots}</span><span class="mn"><b>${passN}</b>/${crit9.length} 충족</span></div>` : ''}
+        ${meter('폐루프', [[closed, 'var(--green)', '종결'], [sd.verifying, 'var(--sky)', '검증'], [sd.acting, 'var(--major)', '조치'], [sd.new, 'var(--crit)', '신규']], `종결 <b>${closed}</b>/${sdTot}`)}
+        ${meter('심각도', [[crit, '#C0392B', '치명'], [d.Major, '#E08600', '중대'], [d.Minor, '#3F7CC4', '경미']], `발굴 <b>${tot}</b>${crit ? ` · <b style="color:var(--crit)">치명 ${crit}${oc ? `·오픈${oc}` : ''}</b>` : ''}`)}
       </div>
-      <div class="hpc-sev">${seg(crit, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
       ${e.tecop ? `<div class="hpc-tecop">${tecopRow(e.tecop, true)}</div>` : ''}
     </div>`;
   };
