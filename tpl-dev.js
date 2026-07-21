@@ -870,7 +870,7 @@ function pocAbBand(C) {
   const img9 = (f, alt) => f ? `<img class="ab-img" src="${BASE}assets/${esc(f)}" alt="${esc(alt)}" onclick="lightbox('${BASE}assets/${esc(f)}')" onerror="this.remove()">` : '';
   return `<div class="ab-band">
     <div class="ab-card asis">
-      <div class="ab-h">현장 수작업 (As-Is)<span>${esc(a.people || '')}${a.tt ? ` · ${esc(a.tt)}` : ''}</span></div>
+      <div class="ab-h">현장 수작업 (As-Is)<span>${a.people ? `<em class="ab-met">${esc(a.people)}</em>` : ''}${a.tt ? `<em class="ab-met bad">${esc(a.tt)}</em>` : ''}</span></div>
       ${img9(a.photo, 'As-Is 현장')}
       <div class="ab-desc">${esc(a.summary || '—')}</div>
       ${steps ? `<div class="ai-flow">${steps}</div>` : ''}
@@ -944,20 +944,25 @@ function pocSchedulePanel(C) {
   const prj = C.project || {};
   const t0 = Date.parse(prj.startDate), t1 = Date.parse(prj.endDate);
   if (!sch.length || !(t1 > t0)) return '<div class="panel"><div class="ph"><h3>일정 계획</h3></div><div class="mini">config pocPlan.schedule 미기재</div></div>';
+  const pos = t => Math.max(0, Math.min(100, (t - t0) / (t1 - t0) * 100));
+  const tl = pos(Date.now());
+  const gate9 = (C.gate || {}).reviewDate ? pos(Date.parse((C.gate || {}).reviewDate)) : null;
+  const marks = `${tl > 0 && tl < 100 ? `<s class="tdy" style="left:${tl}%"></s>` : ''}${gate9 != null ? `<s class="gt9" style="left:${gate9}%"></s>` : ''}`;
   const rows = sch.map((s, i) => {
     const a = Date.parse(s.from), b = Date.parse(s.to);
     const l = Math.max(0, (a - t0) / (t1 - t0) * 100), w = Math.max(2, (b - a) / (t1 - t0) * 100);
     const st = (lc[i] || {}).status;
-    const col = st === 'done' ? 'var(--green)' : st === 'current' ? 'var(--sky)' : '#c3cfdd';
-    const nm = String((lc[i] || {}).stage || `P${i + 1}`).split(' ')[0];
+    const col = st === 'done' ? 'url(#x) var(--green)' : st === 'current' ? 'var(--sky)' : '#c3cfdd';
+    const nm = String((lc[i] || {}).stage || '').replace(/^P\d+\s*/, '');
     return `<div class="sch-row" onclick="lcStepGo(${i})" title="${esc((lc[i] || {}).stage || '')} · 클릭 = 단계 화면">
-      <span class="k">${esc(nm)}</span>
-      <div class="tr"><i style="left:${l}%;width:${w}%;background:${col}"></i></div>
+      <span class="k"><b>P${i + 1}</b>${esc(nm)}</span>
+      <div class="tr"><i style="left:${l}%;width:${w}%;background:${col.replace('url(#x) ', '')}"></i>${marks}</div>
       <span class="d">${esc((s.from || '').slice(5))}~${esc((s.to || '').slice(5))}</span></div>`;
   }).join('');
   return `<div class="panel">
-    <div class="ph"><h3>POC 일정 계획</h3><span class="ps">${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')} · 게이트 ${esc((C.gate || {}).reviewDate || '')}</span></div>
+    <div class="ph"><h3>POC 일정 계획</h3><span class="ps">${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</span></div>
     <div class="sch">${rows}</div>
+    <div class="clegend"><span><i style="background:var(--green)"></i>완료</span><span><i style="background:var(--sky)"></i>진행 중</span><span><i style="background:var(--crit);width:3px;border-radius:1px"></i>오늘</span><span style="color:var(--major);font-weight:800">◆ 게이트 ${esc((C.gate || {}).reviewDate || '')}</span></div>
   </div>`;
 }
 
@@ -966,20 +971,30 @@ function pocComparePanel(C) {
   const cp = (C.pocPlan || {}).compare || {};
   const cols = cp.cols || [];
   const rows = (cp.rows || []).map(r =>
-    `<tr><td><b>${esc(r[0])}</b></td><td class="c">${esc(r[1] || '')}</td><td class="c" style="color:var(--muted)">${esc(r[2] || '')}</td></tr>`).join('');
-  return `<div class="panel tight">
+    `<tr><td><b>${esc(r[0])}</b></td><td class="c win">${esc(r[1] || '')}</td><td class="c" style="color:var(--muted)">${esc(r[2] || '')}</td></tr>`).join('');
+  return `<div class="panel tight cmp9">
     <div class="ph"><h3>컨셉 2안 비교</h3><span class="ps">P1 선정 근거</span></div>
-    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c">${esc(cols[0] || 'A안')}</th><th class="c">${esc(cols[1] || 'B안')}</th></tr>${rows}</table></div>
+    <div class="tbl-scroll"><table><tr><th>항목</th><th class="c win">✓ ${esc(cols[0] || 'A안')}</th><th class="c">${esc(cols[1] || 'B안')}</th></tr>${rows}</table></div>
     ${cp.verdict ? `<div class="mini mt"><b>결론</b> — ${esc(cp.verdict)}</div>` : ''}
   </div>`;
 }
 
-/* P1 개략 ROI 내역 — 투자 vs 연간 효과 */
+/* P1 개략 ROI 내역 — 투자 vs 연간 효과 합계 바 + 회수 히어로 */
 function pocRoiPanel(C) {
   const r = (C.pocPlan || {}).roiDetail || {};
+  const num = s => parseFloat(String(s).replace(/[^\d.]/g, '')) || 0;
+  const invTot = (r.invest || []).reduce((a, x) => a + num(x[1]), 0);
+  const effTot = (r.effect || []).reduce((a, x) => a + num(x[1]), 0);
+  const max = Math.max(invTot, effTot, 0.01);
+  const pay = /([\d.]+)\s*년/.exec(r.payback || '');
   const li = (arr, cls) => (arr || []).map(x => `<div class="roi-it ${cls}"><span>${esc(x[0])}</span><b>${esc(x[1])}</b></div>`).join('');
   return `<div class="panel">
-    <div class="ph"><h3>개략 ROI 내역</h3><span class="ps">투자심의 입력 초안</span></div>
+    <div class="ph"><h3>개략 ROI</h3><span class="ps">투자심의 입력 초안</span></div>
+    ${pay ? `<div class="roi-hero"><b>≈${esc(pay[1])}<small>년</small></b><span>투자 회수 기간</span></div>` : ''}
+    <div class="roi-bars">
+      <div class="rb"><span class="rk">투자</span><span class="rt"><i style="width:${invTot / max * 100}%;background:var(--sky)"></i></span><em>${invTot.toFixed(1)}억</em></div>
+      <div class="rb"><span class="rk">연간 효과</span><span class="rt"><i style="width:${effTot / max * 100}%;background:var(--green)"></i></span><em>${effTot.toFixed(1)}억/년</em></div>
+    </div>
     <div class="roi-grid">
       <div><div class="roi-h">투자</div>${li(r.invest, 'iv')}</div>
       <div><div class="roi-h">연간 효과</div>${li(r.effect, 'ef')}</div>

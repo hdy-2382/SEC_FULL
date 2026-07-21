@@ -769,46 +769,135 @@ def _codes_sheet(wb):
 
 
 def _poc_asset_svgs(pid: str):
-    """설계·셋업 도식 SVG 플레이스홀더 — 실사진 교체 전 데모용 (assets/)."""
+    """설계·셋업 도식 SVG — 데모용 정식 일러스트 (실사진 교체 전까지 사용). 팔레트=대시보드."""
     a = PROJECTS / pid / "assets"
     a.mkdir(parents=True, exist_ok=True)
-    def svg(name, title, sub, body):
+
+    grid = "".join(f'<line x1="{x}" y1="56" x2="{x}" y2="372" stroke="#EDF2F8" stroke-width="1"/>' for x in range(40, 641, 50)) + \
+           "".join(f'<line x1="16" y1="{y}" x2="624" y2="{y}" stroke="#EDF2F8" stroke-width="1"/>' for y in range(80, 373, 44))
+    defs = ('<defs>'
+            '<linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">'
+            '<stop offset="0" stop-color="#5FB0EC"/><stop offset="1" stop-color="#2E89D6"/></linearGradient>'
+            '<linearGradient id="gGrn" x1="0" y1="0" x2="0" y2="1">'
+            '<stop offset="0" stop-color="#57B183"/><stop offset="1" stop-color="#3E9B6E"/></linearGradient>'
+            '<linearGradient id="gAmb" x1="0" y1="0" x2="0" y2="1">'
+            '<stop offset="0" stop-color="#EFA94A"/><stop offset="1" stop-color="#DD8A10"/></linearGradient>'
+            '<filter id="sh" x="-20%" y="-20%" width="140%" height="160%">'
+            '<feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#14335C" flood-opacity="0.16"/></filter>'
+            '</defs>')
+
+    def svg(name, eyebrow, title, sub, body):
         (a / name).write_text(
-            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">'
-            f'<rect width="640" height="400" fill="#F2F6FA"/><rect width="640" height="400" fill="none" stroke="#C9DCEC" stroke-width="2"/>'
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">{defs}'
+            f'<rect width="640" height="400" rx="14" fill="#F6F9FC"/>'
+            f'<rect x="1" y="1" width="638" height="398" rx="13" fill="none" stroke="#D9E2EC" stroke-width="2"/>'
+            f'{grid}'
+            f'<text x="26" y="30" font-size="10" font-weight="700" letter-spacing="2" fill="#2E89D6" font-family="sans-serif">{eyebrow}</text>'
+            f'<text x="26" y="50" font-size="19" font-weight="800" fill="#0F2E54" font-family="sans-serif">{title}</text>'
+            f'<text x="614" y="30" font-size="10.5" fill="#8A99AC" text-anchor="end" font-family="sans-serif">{sub}</text>'
             f'{body}'
-            f'<text x="24" y="42" font-size="22" font-weight="700" fill="#0F2E54" font-family="sans-serif">{title}</text>'
-            f'<text x="24" y="68" font-size="14" fill="#5A6B7E" font-family="sans-serif">{sub}</text>'
-            f'<text x="616" y="382" font-size="12" fill="#8A99AC" text-anchor="end" font-family="sans-serif">데모 도식 — 실사진 교체 예정</text></svg>',
+            f'<text x="614" y="386" font-size="9.5" fill="#AEBCCB" text-anchor="end" font-family="sans-serif">데모 도식 · 실사진 교체 예정</text></svg>',
             encoding="utf-8")
-    svg("design-concept.svg", "컨셉 레이아웃", "6축 로봇 + 비전 체결 · 컨베이어 직결 반송",
-        '<rect x="60" y="150" width="200" height="170" rx="10" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
-        '<text x="160" y="240" font-size="16" text-anchor="middle" fill="#2E6DB0" font-family="sans-serif">6축 로봇 셀</text>'
-        '<rect x="300" y="220" width="280" height="46" rx="8" fill="#E6F3EB" stroke="#3E9B6E" stroke-width="2"/>'
-        '<text x="440" y="249" font-size="15" text-anchor="middle" fill="#2f7a52" font-family="sans-serif">반송 컨베이어 →</text>'
-        '<circle cx="160" cy="130" r="26" fill="#FBF3E6" stroke="#E08600" stroke-width="2"/>'
-        '<text x="160" y="136" font-size="13" text-anchor="middle" fill="#B36F0A" font-family="sans-serif">비전</text>')
-    svg("design-gripper.svg", "그리퍼 핑거 v1", "림 변형 여유 2mm · 코팅 사양 A",
-        '<path d="M240 140 L240 300 L290 300 L290 210 L350 210 L350 300 L400 300 L400 140 Z" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
-        '<circle cx="320" cy="330" r="34" fill="#F7E5E2" stroke="#C0392B" stroke-width="2" stroke-dasharray="5 4"/>'
-        '<text x="320" y="336" font-size="12" text-anchor="middle" fill="#C0392B" font-family="sans-serif">드럼 림</text>')
-    svg("asis-manual.svg", "현장 수작업 공정 (As-Is)", "작업자 2인 — 토크 렌치 체결 · 대차 반송 · T/T 18초",
-        '<circle cx="150" cy="200" r="22" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
-        '<rect x="138" y="226" width="24" height="52" rx="8" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
-        '<circle cx="240" cy="200" r="22" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
-        '<rect x="228" y="226" width="24" height="52" rx="8" fill="#DCE9F6" stroke="#5A6B7E" stroke-width="2"/>'
-        '<text x="195" y="308" font-size="12" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">작업자 2인 · 토크 렌치</text>'
-        '<circle cx="400" cy="240" r="42" fill="#F6EBDA" stroke="#B36F0A" stroke-width="2"/>'
-        '<text x="400" y="246" font-size="13" text-anchor="middle" fill="#8a5408" font-family="sans-serif">드럼</text>'
-        '<rect x="470" y="270" width="120" height="40" rx="7" fill="#EEF2F7" stroke="#8A99AC" stroke-width="2"/>'
-        '<text x="530" y="295" font-size="12" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">대차 반송</text>'
-        '<path d="M448 240 L466 285" stroke="#8A99AC" stroke-width="2" marker-end="none" stroke-dasharray="5 4"/>')
-    svg("build-cell.svg", "사외 랩 셀 셋업", "프레임·안전 펜스·비전 조명 설치 완료",
-        '<rect x="80" y="120" width="480" height="200" rx="8" fill="none" stroke="#5A6B7E" stroke-width="2" stroke-dasharray="7 5"/>'
-        '<rect x="120" y="170" width="150" height="120" rx="8" fill="#DCE9F6" stroke="#2E89D6" stroke-width="2"/>'
-        '<rect x="330" y="200" width="190" height="60" rx="8" fill="#E6F3EB" stroke="#3E9B6E" stroke-width="2"/>'
-        '<text x="195" y="238" font-size="14" text-anchor="middle" fill="#2E6DB0" font-family="sans-serif">로봇</text>'
-        '<text x="425" y="236" font-size="14" text-anchor="middle" fill="#2f7a52" font-family="sans-serif">컨베이어</text>')
+
+    def robot(cx, cy, s=1.0):
+        return (f'<g transform="translate({cx},{cy}) scale({s})" filter="url(#sh)">'
+                '<circle r="30" fill="url(#gSky)"/><circle r="30" fill="none" stroke="#1F6DB4" stroke-width="2"/>'
+                '<circle r="9" fill="#0F2E54"/>'
+                '<g transform="rotate(-32)"><rect x="4" y="-8" width="62" height="16" rx="8" fill="url(#gSky)" stroke="#1F6DB4" stroke-width="1.5"/></g>'
+                '<g transform="rotate(-32) translate(62,0) rotate(52)"><rect x="0" y="-6" width="46" height="12" rx="6" fill="#BFDCF4" stroke="#1F6DB4" stroke-width="1.5"/>'
+                '<circle cx="46" cy="0" r="7" fill="#0F2E54"/></g>'
+                '<circle cx="66" cy="-24" r="6" fill="#0F2E54"/></g>')
+
+    def drum(cx, cy, s=1.0):
+        return (f'<g transform="translate({cx},{cy}) scale({s})" filter="url(#sh)">'
+                '<rect x="-24" y="-16" width="48" height="40" fill="url(#gAmb)"/>'
+                '<ellipse cx="0" cy="24" rx="24" ry="9" fill="#C97F0E"/>'
+                '<ellipse cx="0" cy="-16" rx="24" ry="9" fill="#F4C67F" stroke="#C97F0E" stroke-width="1.5"/>'
+                '<ellipse cx="0" cy="-16" rx="13" ry="5" fill="none" stroke="#C97F0E" stroke-width="1.5"/></g>')
+
+    def worker(cx, cy, tool=""):
+        t = ('<g transform="rotate(38)"><rect x="12" y="-3.5" width="34" height="7" rx="3.5" fill="#5A6B7E"/>'
+             '<rect x="40" y="-7" width="10" height="14" rx="3" fill="#5A6B7E"/></g>') if tool == "wrench" else ""
+        return (f'<g transform="translate({cx},{cy})" filter="url(#sh)">'
+                '<path d="M-13 -34 A13 13 0 0 1 13 -34 Z" fill="#E08600"/>'
+                '<circle cy="-27" r="11" fill="#F3D8BE" stroke="#C9A17A" stroke-width="1.2"/>'
+                '<rect x="-14" y="-13" width="28" height="42" rx="11" fill="#4C607E"/>'
+                f'{t}</g>')
+
+    def conveyor(x, y, w, label="반송 컨베이어"):
+        rollers = "".join(f'<circle cx="{x + 18 + i * 26}" cy="{y + 30}" r="5" fill="#BFD0DF"/>' for i in range((w - 36) // 26))
+        return (f'<g filter="url(#sh)"><rect x="{x}" y="{y}" width="{w}" height="22" rx="8" fill="url(#gGrn)"/>'
+                f'<rect x="{x}" y="{y}" width="{w}" height="22" rx="8" fill="none" stroke="#2F7A55" stroke-width="1.5"/></g>'
+                f'{rollers}'
+                f'<path d="M{x + w - 34} {y + 11} h18 m-6 -6 l7 6 l-7 6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+                f'<text x="{x + w / 2}" y="{y + 52}" font-size="11.5" font-weight="700" text-anchor="middle" fill="#2F7A55" font-family="sans-serif">{label}</text>')
+
+    def tag(x, y, text, color="#0F2E54"):
+        w = 14 + len(text) * 11
+        return (f'<g filter="url(#sh)"><rect x="{x}" y="{y}" width="{w}" height="24" rx="12" fill="#FFFFFF" stroke="#D9E2EC"/></g>'
+                f'<text x="{x + w / 2}" y="{y + 16.5}" font-size="11.5" font-weight="700" text-anchor="middle" fill="{color}" font-family="sans-serif">{text}</text>')
+
+    # ① To-Be 컨셉 레이아웃 (top view)
+    svg("design-concept.svg", "TO-BE CONCEPT", "자동화 셀 레이아웃", "6축 로봇 + 비전 체결 · 컨베이어 직결",
+        '<rect x="60" y="96" width="300" height="252" rx="14" fill="#FFFFFF" stroke="#8A99AC" stroke-width="2" stroke-dasharray="9 6"/>'
+        '<text x="74" y="118" font-size="10.5" font-weight="700" fill="#8A99AC" font-family="sans-serif">안전 펜스</text>'
+        '<path d="M208 210 L156 158 L260 158 Z" fill="#2E89D6" opacity="0.13"/>'
+        '<g filter="url(#sh)"><rect x="186" y="132" width="44" height="26" rx="7" fill="#0F2E54"/></g>'
+        '<text x="208" y="149" font-size="10" font-weight="700" text-anchor="middle" fill="#9FD0FF" font-family="sans-serif">비전</text>'
+        + robot(208, 250) + drum(120, 216, 0.9) + drum(120, 300, 0.9) +
+        '<text x="120" y="342" font-size="10.5" font-weight="700" text-anchor="middle" fill="#B36F0A" font-family="sans-serif">드럼 대기</text>'
+        + conveyor(380, 238, 218) +
+        '<g filter="url(#sh)"><rect x="470" y="120" width="96" height="58" rx="9" fill="#FFFFFF" stroke="#D9E2EC"/></g>'
+        '<rect x="482" y="132" width="30" height="8" rx="3" fill="#2E89D6"/><rect x="482" y="146" width="52" height="6" rx="3" fill="#C8D6E4"/>'
+        '<rect x="482" y="158" width="40" height="6" rx="3" fill="#C8D6E4"/>'
+        '<text x="518" y="196" font-size="10.5" font-weight="700" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">제어반 · 레시피</text>'
+        '<path d="M148 250 h26" stroke="#B36F0A" stroke-width="2.5" stroke-dasharray="2 4" stroke-linecap="round"/>'
+        '<path d="M296 262 h74" stroke="#2F7A55" stroke-width="2.5" stroke-dasharray="2 4" stroke-linecap="round"/>'
+        + tag(240, 318, "비전 가이드 체결 셀", "#1F6DB4"))
+
+    # ② As-Is 수작업
+    svg("asis-manual.svg", "AS-IS", "현장 수작업 공정", "작업자 2인 · 토크 렌치 · 대차 반송",
+        '<g filter="url(#sh)"><rect x="60" y="286" width="520" height="14" rx="7" fill="#E2E9F1"/></g>'
+        + worker(150, 250, "wrench") + worker(236, 252) + drum(330, 236, 1.15) +
+        '<g filter="url(#sh)"><rect x="424" y="238" width="120" height="44" rx="8" fill="#FFFFFF" stroke="#8A99AC" stroke-width="2"/></g>'
+        '<circle cx="448" cy="292" r="9" fill="#5A6B7E"/><circle cx="516" cy="292" r="9" fill="#5A6B7E"/>'
+        '<path d="M544 238 v-20 h20" stroke="#8A99AC" stroke-width="3" fill="none" stroke-linecap="round"/>'
+        '<text x="484" y="266" font-size="11" font-weight="700" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">대차 반송</text>'
+        '<path d="M372 258 h44 m-8 -7 l8 7 l-8 7" stroke="#8A99AC" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<g filter="url(#sh)"><circle cx="520" cy="130" r="30" fill="#FFFFFF" stroke="#C0392B" stroke-width="2.5"/></g>'
+        '<path d="M520 130 V110 M520 130 L534 140" stroke="#C0392B" stroke-width="2.5" stroke-linecap="round"/>'
+        '<text x="520" y="176" font-size="11.5" font-weight="800" text-anchor="middle" fill="#C0392B" font-family="sans-serif">T/T 18초</text>'
+        + tag(96, 118, "토크 렌치 2점 체결 — 편차 산포", "#C0392B")
+        + tag(96, 152, "2인/교대 · 근골격 부하", "#5A6B7E"))
+
+    # ③ 그리퍼 설계 v1 (단면 + 디테일 콜아웃)
+    svg("design-gripper.svg", "DESIGN v1", "그리퍼 핑거 설계", "림 여유 2mm · 코팅 사양 A",
+        '<g filter="url(#sh)"><path d="M150 120 h150 v34 h-44 v96 h-24 v-96 h-38 v96 h-24 v-96 h-20 Z" fill="url(#gSky)" stroke="#1F6DB4" stroke-width="2"/></g>'
+        '<ellipse cx="225" cy="286" rx="86" ry="30" fill="#F4C67F" stroke="#C97F0E" stroke-width="2"/>'
+        '<ellipse cx="225" cy="286" rx="60" ry="19" fill="none" stroke="#C97F0E" stroke-width="1.5"/>'
+        '<text x="225" y="330" font-size="10.5" font-weight="700" text-anchor="middle" fill="#B36F0A" font-family="sans-serif">드럼 림</text>'
+        '<circle cx="262" cy="262" r="17" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="4 3"/>'
+        '<path d="M276 250 L392 176" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="4 3"/>'
+        '<g filter="url(#sh)"><circle cx="452" cy="176" r="74" fill="#FFFFFF" stroke="#C0392B" stroke-width="2.5"/></g>'
+        '<path d="M420 150 v70 h34" stroke="#1F6DB4" stroke-width="7" fill="none" stroke-linecap="round"/>'
+        '<path d="M436 226 a56 56 0 0 0 60 -14" stroke="#C97F0E" stroke-width="7" fill="none" stroke-linecap="round"/>'
+        '<path d="M446 196 v18 m-5 -5 l5 6 l5 -6 M446 214 m0 0" stroke="#C0392B" stroke-width="2" fill="none"/>'
+        '<text x="474" y="204" font-size="12.5" font-weight="800" fill="#C0392B" font-family="sans-serif">2.0mm</text>'
+        '<text x="452" y="272" font-size="10.5" font-weight="700" text-anchor="middle" fill="#5A6B7E" font-family="sans-serif">접촉부 확대</text>'
+        + tag(96, 340, "핑거 여유 2mm — 림 변형품 대응", "#1F6DB4"))
+
+    # ④ 사외 랩 셀 셋업
+    svg("build-cell.svg", "BUILD", "사외 랩 셀 셋업", "프레임 · 펜스 · 조명 설치 완료",
+        '<g filter="url(#sh)"><rect x="80" y="110" width="480" height="222" rx="12" fill="#FFFFFF" stroke="#8A99AC" stroke-width="2.5"/></g>'
+        '<line x1="80" y1="150" x2="560" y2="150" stroke="#D9E2EC" stroke-width="2"/>'
+        + "".join(f'<line x1="{x}" y1="112" x2="{x}" y2="148" stroke="#D9E2EC" stroke-width="2"/>' for x in range(120, 561, 40)) +
+        '<rect x="150" y="128" width="120" height="9" rx="4.5" fill="#F4E9C8" stroke="#E0C86A"/>'
+        '<rect x="370" y="128" width="120" height="9" rx="4.5" fill="#F4E9C8" stroke="#E0C86A"/>'
+        '<text x="320" y="142" font-size="9.5" text-anchor="middle" fill="#B49B37" font-family="sans-serif">비전 조명</text>'
+        + robot(240, 262, 0.92) + conveyor(360, 248, 168, "반송부") + drum(160, 236, 0.8) +
+        '<g filter="url(#sh)"><circle cx="524" cy="176" r="34" fill="#3E9B6E"/></g>'
+        '<path d="M508 176 l11 11 l21 -22" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<text x="524" y="228" font-size="11" font-weight="800" text-anchor="middle" fill="#2F7A55" font-family="sans-serif">설치 완료</text>')
 
 
 def gen_drum_poc():
