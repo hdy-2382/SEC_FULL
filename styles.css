@@ -36,19 +36,13 @@
   .sgoals .sg-lbl::before{content:"";width:4px;height:13px;border-radius:2px;background:#5fb0ec;flex:none}
   .sgoals .sg-lbl .sg-date{font-size:11px;font-weight:600;color:#a9c4de;background:rgba(255,255,255,.08);padding:1px 7px;border-radius:20px}
   .sgoals .sg-item p{margin:0 0 0 10px;font-size:11.5px;line-height:1.5;color:#cdd9ea;white-space:normal}
-  /* 테스트 라인 레이아웃 배너 — 메인 상단(양산평가), 클릭 시 설비 레이아웃 확대 */
-  .line-banner{display:flex;align-items:center;gap:12px;margin:2px 0 16px;padding:11px 15px;border-radius:12px;cursor:pointer;
-    background:linear-gradient(100deg,var(--navy-deep),#1c4a82);color:#eaf3fc;box-shadow:0 2px 8px rgba(20,51,92,.18);transition:box-shadow .15s,transform .1s}
-  .line-banner:hover{box-shadow:0 4px 14px rgba(20,51,92,.28)}
-  .line-banner:active{transform:translateY(1px)}
-  .line-banner .lb-ic{flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:rgba(255,255,255,.13);font-size:17px;color:#9fd0ff}
-  .line-banner .lb-tx{flex:1;min-width:0}
-  .line-banner .lb-tx b{font-size:14px;font-weight:800;letter-spacing:.01em;display:block}
-  .line-banner .lb-tx span{font-size:11.5px;color:#bcd6f0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-  .line-banner .lb-tx span b{display:inline;color:#9fd0ff;font-size:11.5px}
-  .line-banner .lb-go{flex:none;font-size:11.5px;font-weight:800;color:#9fd0ff;background:rgba(255,255,255,.12);border-radius:9px;padding:5px 11px;white-space:nowrap}
-  .line-banner .lb-go em{font-style:normal;margin-left:3px}
-  @media(max-width:760px){.line-banner .lb-go{display:none}}
+  /* 테스트 라인 레이아웃 칩 — 완주 진행 박스 하단, 클릭 시 설비 레이아웃 확대 */
+  .kg-prog .line-chip{display:flex;align-items:center;gap:8px;margin-top:11px;padding:7px 11px;border-radius:9px;cursor:pointer;
+    background:var(--sky-soft);border:1px solid #bcd6f0;transition:background .12s}
+  .kg-prog .line-chip:hover{background:#dcebfa}
+  .kg-prog .line-chip .lc-ic{flex:none;font-size:14px;color:var(--sky)}
+  .kg-prog .line-chip b{flex:1;min-width:0;font-size:12px;font-weight:800;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kg-prog .line-chip .lc-go{flex:none;font-size:11px;font-weight:800;color:var(--sky)}
   /* 사이드바 설비 레이아웃 박스 — 사진 크기와 무관하게 사이드바 폭/높이 고정 */
   .side #side-line{margin:12px 12px 0}
   .side #side-line .panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);box-shadow:none;border-radius:10px;padding:11px 12px}

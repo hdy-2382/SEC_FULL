@@ -329,7 +329,9 @@ function renderOverview(C, m, f, acc, op) {
         <div class="pg-mini"><i style="width:${Math.min(100, succ)}%;background:${succClr}"></i></div><span class="pg-stat-s">${esc(GRP[0].b.sub)}</span></div>
       <div class="pg-stat"><span class="pg-stat-k">${esc(O('gateBudget', 'Error Budget'))} <b>${eb.used}/${eb.limit}</b></span>
         <div class="blocks" style="margin:9px 0 6px">${ebBlocks}</div><span class="pg-stat-s">${esc(ebudNote)}</span></div>
-    </div></div>`;
+    </div>
+    <div class="line-chip" onclick="openLineLayout()" title="클릭하면 설비 레이아웃 크게 보기"><span class="lc-ic">▦</span><b>테스트 라인 레이아웃</b><span class="lc-go">보기 ⤢</span></div>
+    </div>`;
 
   // 신뢰수준 입증 표
   const ctable = (conf.table || []).map(t =>
@@ -375,22 +377,12 @@ function renderOverview(C, m, f, acc, op) {
 
   // 셸은 전 단계 공통(devShell) — 양산 고유 렌즈(진행률 히어로·성장 차트·신뢰성 도넛·매트릭스)만 슬롯 주입
   const prj = C.project || {}, gate9 = C.gate || {};
-  const lineCap = TT('overview.lineCaption',
-    { cum: (m && m.progress && m.progress.cum != null) ? m.progress.cum : '', target: (m && m.progress && m.progress.target != null) ? m.progress.target : '' },
-    '현재 평가 <b>설비 3 (적재)</b> · 설비 1·2 통과 · 설비 4 대기');
-  const lineBanner = `
-    <div class="line-banner" onclick="openLineLayout()" title="클릭하면 설비 레이아웃 크게 보기">
-      <span class="lb-ic">▦</span>
-      <div class="lb-tx"><b>테스트 라인 레이아웃</b><span>${lineCap}</span></div>
-      <span class="lb-go">설비 레이아웃 보기 <em>⤢</em></span>
-    </div>`;
   const head = `
     <div class="ptitle">
       <span class="stagechip st-mass">${esc(STAGE_LABEL.mass || '양산평가')}</span>
       <span class="tmpl">템플릿 ② 실증 — 양산 시범 평가</span>
       <span class="meta">PM <b>${esc((prj.team || '').split(',')[0] || '—')}</b> · 기간 <b>${esc(prj.startDate || '')} ~ ${esc(prj.endDate || '')}</b> · ${esc(gate9.label || '게이트 리뷰')} <b>${esc(gate9.reviewDate || '—')} ${esc(typeof ddayLabel === 'function' ? ddayLabel(gate9.reviewDate) : '')}</b></span>
-    </div>
-    ${lineBanner}`;
+    </div>`;
   return devShell('mass', C, {
     head,
     qbox: '',
