@@ -36,7 +36,7 @@
           "level": "Medium",
           "mitigation": "360Cy 완주 실증치 확보 — 월간 점검",
           "owner": "PM",
-          "due": "2027-01-15",
+          "due": "2027-01-22",
           "progress": 60,
           "status": "완화중"
         }
@@ -63,7 +63,7 @@
           "level": "Low",
           "mitigation": "산출물 체크리스트 사전 준비 — 일정 정상",
           "owner": "PM",
-          "due": "2027-01-15",
+          "due": "2027-01-22",
           "progress": 100,
           "status": "완화 완료"
         }
@@ -71,15 +71,15 @@
     }
   ],
   "gate": {
-    "reviewDate": "2027-01-15",
+    "reviewDate": "2027-01-22",
     "label": "가동인증"
   },
   "project": {
     "name": "드럼 자동화 (양산 시범 평가)",
     "department": "인프라 기술팀",
     "team": "김OO, 박OO",
-    "startDate": "2026-11-02",
-    "endDate": "2027-01-31"
+    "startDate": "2026-11-09",
+    "endDate": "2027-02-07"
   },
   "acceptance": {
     "targetCycle": 360,

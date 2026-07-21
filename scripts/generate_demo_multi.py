@@ -25,13 +25,54 @@ HDR_FILL = PatternFill("solid", fgColor="1E4A7A")
 HDR_FONT = Font(color="FFFFFF", bold=True)
 
 
+# ── 데모 날짜 시프트 ─────────────────────────────────────────────
+# 원 설계 기준일(PIN = POC 게이트 리뷰 2026-07-15)이 항상 "내일"이 되도록 전 여정 날짜를
+# 균등 이동 — 언제 재생성해도 데모가 살아있는 시점(D-1)이 된다. 스토리·간격은 그대로.
+import re as _re
+
+PIN_DATE = date(2026, 7, 15)
+DATE_OFFSET = (date.today() + timedelta(days=1)) - PIN_DATE
+
+def _shift_iso(m):
+    try:
+        d = date(int(m.group(1)), int(m.group(2)), int(m.group(3))) + DATE_OFFSET
+        return d.isoformat()
+    except ValueError:
+        return m.group(0)
+
+def _shift_md(m):
+    mo, dy = int(m.group(1)), int(m.group(2))
+    if not (1 <= mo <= 12 and 1 <= dy <= 31):
+        return m.group(0)
+    try:
+        d = date(2026, mo, dy) + DATE_OFFSET
+        return f"{d.month:02d}-{d.day:02d}"
+    except ValueError:
+        return m.group(0)
+
+def _shift_str(s: str) -> str:
+    s = _re.sub(r"(20\d{2})-(\d{2})-(\d{2})", _shift_iso, s)
+    s = _re.sub(r"(?<![\w/.-])(\d{2})-(\d{2})(?![\d-])", _shift_md, s)   # 비고 속 (MM-DD)
+    return s
+
+def _shift_obj(o):
+    if isinstance(o, str):
+        return _shift_str(o)
+    if isinstance(o, dict):
+        return {k: _shift_obj(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        t = [_shift_obj(v) for v in o]
+        return t if isinstance(o, list) else tuple(t)
+    return o
+
+
 def _sheet(wb, title, headers, rows):
     ws = wb.create_sheet(title)
     ws.append(headers)
     for c in ws[1]:
         c.fill, c.font = HDR_FILL, HDR_FONT
     for r in rows:
-        ws.append(r)
+        ws.append(_shift_obj(r))
     for i, h in enumerate(headers, 1):
         ws.column_dimensions[ws.cell(row=1, column=i).column_letter].width = max(12, len(str(h)) * 2 + 4)
     return ws
@@ -40,7 +81,7 @@ def _sheet(wb, title, headers, rows):
 def _write_config(pid: str, cfg: dict):
     p = PROJECTS / pid / "config.json"
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    p.write_text(json.dumps(_shift_obj(cfg), ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 # ══════════════════════════ 드럼 자동화 (POC) ══════════════════════════
@@ -800,7 +841,7 @@ def gen_drum_poc():
         ("자재 걸림 제거 후 재개", "1.4m", "PASS", ""),
         ("통신 두절 → 자동 재접속", "—", "FAIL", "재접속 로직 설계 변경 후 재시험"),
         ("도어 오픈 인터록", "30s", "PASS", ""), ("외란 조명 변화", "—", "PASS", ""),
-        ("이종 자재 투입 감지", "50s", "PASS", ""), ("과부하 정지 복구", "—", "대기", "7/10 예정"),
+        ("이종 자재 투입 감지", "50s", "PASS", ""), ("과부하 정지 복구", "—", "대기", "07-10 예정"),
     ]
     wb = Workbook(); wb.remove(wb.active)
     _sheet(wb, "안내", ["POC 이슈로그 — 필수 5필드 + 선택(종결일·무발생검증). 어휘 v1(코드마스터)은 P2 미팅 산출물. docs/RECORD_SCHEMA.md"], [])
@@ -828,7 +869,7 @@ def gen_drum_poc():
                 {"id": "R-O1", "risk": "업체 상주 종료 후 대응 공백", "level": "Medium", "mitigation": "원격 대응 SLA — Pilot 계약에 명기", "owner": "김OO", "due": "2026-07-22", "progress": 10, "status": "식별"},
             ]},
             {"k": "P", "status": "warn", "note": "수혜부서 Pilot 지표 정의 참여 필요 (안전인증 컨셉 합의 완료)", "risks": [
-                {"id": "R-P1", "risk": "수혜부서 Pilot 지표 정의 미합의", "level": "Medium", "mitigation": "3자 협의체 — 가동 지표 초안 합의 (7/13 회의)", "owner": "PM", "due": "2026-07-15", "progress": 60, "status": "완화중"},
+                {"id": "R-P1", "risk": "수혜부서 Pilot 지표 정의 미합의", "level": "Medium", "mitigation": "3자 협의체 — 가동 지표 초안 합의 (07-13 회의)", "owner": "PM", "due": "2026-07-15", "progress": 60, "status": "완화중"},
                 {"id": "R-P2", "risk": "안전인증 컨셉 부적합 가능성", "level": "Low", "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)", "owner": "PM", "due": "2026-06-10", "progress": 100, "status": "완화 완료"},
             ]},
         ],

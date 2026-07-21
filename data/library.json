@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T06:04:22Z",
+  "generatedAt": "2026-07-21T01:23:41Z",
   "totals": {
     "projects": 4,
     "modes": 12,
@@ -127,7 +127,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-002",
-          "date": "2026-06-09",
+          "date": "2026-06-16",
           "severity": "Critical",
           "status": "종결",
           "cause": "구현(SW)",
@@ -136,26 +136,6 @@
           "action": "",
           "verify": "",
           "recurLink": "",
-          "verdict": "",
-          "closedDate": "2026-06-11",
-          "unit": "",
-          "images": []
-        },
-        {
-          "project": "drum-poc",
-          "projectName": "드럼 자동화",
-          "abbr": "P",
-          "stage": "poc",
-          "id": "ISS-008",
-          "date": "2026-06-14",
-          "severity": "Major",
-          "status": "종결",
-          "cause": "구현(SW)",
-          "causeText": "",
-          "detail": "과도구간 이탈 → 램프업 로직 수정",
-          "action": "",
-          "verify": "",
-          "recurLink": "ISS-002",
           "verdict": "",
           "closedDate": "2026-06-18",
           "unit": "",
@@ -166,8 +146,28 @@
           "projectName": "드럼 자동화",
           "abbr": "P",
           "stage": "poc",
+          "id": "ISS-008",
+          "date": "2026-06-21",
+          "severity": "Major",
+          "status": "종결",
+          "cause": "구현(SW)",
+          "causeText": "",
+          "detail": "과도구간 이탈 → 램프업 로직 수정",
+          "action": "",
+          "verify": "",
+          "recurLink": "ISS-002",
+          "verdict": "",
+          "closedDate": "2026-06-25",
+          "unit": "",
+          "images": []
+        },
+        {
+          "project": "drum-poc",
+          "projectName": "드럼 자동화",
+          "abbr": "P",
+          "stage": "poc",
           "id": "ISS-013",
-          "date": "2026-06-22",
+          "date": "2026-06-29",
           "severity": "Critical",
           "status": "검증중",
           "cause": "설계",
@@ -187,7 +187,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-015",
-          "date": "2026-06-30",
+          "date": "2026-07-07",
           "severity": "Major",
           "status": "조치중",
           "cause": "설계",
@@ -220,8 +220,8 @@
           "stage": "poc"
         }
       ],
-      "firstDate": "2026-06-09",
-      "lastDate": "2026-06-30",
+      "firstDate": "2026-06-16",
+      "lastDate": "2026-07-07",
       "recurCount": 3
     },
     {
@@ -236,7 +236,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-001",
-          "date": "2026-06-08",
+          "date": "2026-06-15",
           "severity": "Major",
           "status": "종결",
           "cause": "구현(SW)",
@@ -246,7 +246,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-12",
+          "closedDate": "2026-06-19",
           "unit": "",
           "images": []
         },
@@ -256,7 +256,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-004",
-          "date": "2026-06-10",
+          "date": "2026-06-17",
           "severity": "Major",
           "status": "종결",
           "cause": "구현(SW)",
@@ -266,7 +266,7 @@
           "verify": "",
           "recurLink": "ISS-001",
           "verdict": "",
-          "closedDate": "2026-06-15",
+          "closedDate": "2026-06-22",
           "unit": "",
           "images": []
         },
@@ -276,7 +276,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-006",
-          "date": "2026-06-12",
+          "date": "2026-06-19",
           "severity": "Minor",
           "status": "종결",
           "cause": "시험환경",
@@ -286,7 +286,7 @@
           "verify": "",
           "recurLink": "ISS-004",
           "verdict": "",
-          "closedDate": "2026-06-14",
+          "closedDate": "2026-06-21",
           "unit": "",
           "images": []
         },
@@ -296,7 +296,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-012",
-          "date": "2026-06-20",
+          "date": "2026-06-27",
           "severity": "Major",
           "status": "검증중",
           "cause": "시험환경",
@@ -316,7 +316,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-016",
-          "date": "2026-07-01",
+          "date": "2026-07-08",
           "severity": "Major",
           "status": "조치중",
           "cause": "설계",
@@ -336,7 +336,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-002",
-          "date": "2026-07-20",
+          "date": "2026-07-27",
           "severity": "Major",
           "status": "종결",
           "cause": "부품",
@@ -356,7 +356,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-006",
-          "date": "2026-07-28",
+          "date": "2026-08-04",
           "severity": "Major",
           "status": "종결",
           "cause": "SW",
@@ -376,7 +376,7 @@
           "abbr": "M",
           "stage": "mass",
           "id": "E-001",
-          "date": "2026-11-10",
+          "date": "2026-11-17",
           "severity": "Major",
           "status": "종결",
           "cause": "시험환경·자재",
@@ -396,7 +396,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-001",
-          "date": "2027-02-10",
+          "date": "2027-02-17",
           "severity": "Minor",
           "status": "종결",
           "cause": "운영·환경",
@@ -406,7 +406,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2027-02-12",
+          "closedDate": "2027-02-19",
           "unit": "1호기",
           "images": []
         }
@@ -447,8 +447,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2026-06-08",
-      "lastDate": "2027-02-10",
+      "firstDate": "2026-06-15",
+      "lastDate": "2027-02-17",
       "recurCount": 8
     },
     {
@@ -463,7 +463,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-005",
-          "date": "2026-06-11",
+          "date": "2026-06-18",
           "severity": "Minor",
           "status": "종결",
           "cause": "구현(SW)",
@@ -473,7 +473,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-16",
+          "closedDate": "2026-06-23",
           "unit": "",
           "images": []
         },
@@ -483,7 +483,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-011",
-          "date": "2026-06-17",
+          "date": "2026-06-24",
           "severity": "Minor",
           "status": "종결",
           "cause": "구현(SW)",
@@ -493,7 +493,7 @@
           "verify": "",
           "recurLink": "ISS-005",
           "verdict": "",
-          "closedDate": "2026-06-22",
+          "closedDate": "2026-06-29",
           "unit": "",
           "images": []
         },
@@ -503,7 +503,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-017",
-          "date": "2026-07-03",
+          "date": "2026-07-10",
           "severity": "Major",
           "status": "조치중",
           "cause": "설계",
@@ -523,7 +523,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-001",
-          "date": "2026-07-20",
+          "date": "2026-07-27",
           "severity": "Major",
           "status": "검증중",
           "cause": "설계",
@@ -543,7 +543,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-004",
-          "date": "2026-07-22",
+          "date": "2026-07-29",
           "severity": "Major",
           "status": "검증중",
           "cause": "부품",
@@ -563,7 +563,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-007",
-          "date": "2026-08-03",
+          "date": "2026-08-10",
           "severity": "Major",
           "status": "검증중",
           "cause": "부품",
@@ -583,7 +583,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-009",
-          "date": "2026-08-17",
+          "date": "2026-08-24",
           "severity": "Major",
           "status": "검증중",
           "cause": "설계",
@@ -622,8 +622,8 @@
           "stage": "pilot"
         }
       ],
-      "firstDate": "2026-06-11",
-      "lastDate": "2026-08-17",
+      "firstDate": "2026-06-18",
+      "lastDate": "2026-08-24",
       "recurCount": 6
     },
     {
@@ -638,7 +638,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-003",
-          "date": "2027-03-06",
+          "date": "2027-03-13",
           "severity": "Major",
           "status": "검증중",
           "cause": "설치·시공",
@@ -671,8 +671,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2027-03-06",
-      "lastDate": "2027-03-06",
+      "firstDate": "2027-03-13",
+      "lastDate": "2027-03-13",
       "recurCount": 0
     },
     {
@@ -687,7 +687,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-002",
-          "date": "2027-02-06",
+          "date": "2027-02-13",
           "severity": "Major",
           "status": "종결",
           "cause": "설치·시공",
@@ -697,7 +697,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2027-02-08",
+          "closedDate": "2027-02-15",
           "unit": "2호기",
           "images": []
         }
@@ -720,8 +720,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2027-02-06",
-      "lastDate": "2027-02-06",
+      "firstDate": "2027-02-13",
+      "lastDate": "2027-02-13",
       "recurCount": 0
     },
     {
@@ -736,7 +736,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-007",
-          "date": "2026-06-13",
+          "date": "2026-06-20",
           "severity": "Minor",
           "status": "종결",
           "cause": "설계",
@@ -746,7 +746,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-19",
+          "closedDate": "2026-06-26",
           "unit": "",
           "images": []
         },
@@ -756,7 +756,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-018",
-          "date": "2026-07-04",
+          "date": "2026-07-11",
           "severity": "Minor",
           "status": "조치중",
           "cause": "구현(SW)",
@@ -776,7 +776,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-003",
-          "date": "2026-07-21",
+          "date": "2026-07-28",
           "severity": "Minor",
           "status": "종결",
           "cause": "SW",
@@ -796,7 +796,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-008",
-          "date": "2026-08-10",
+          "date": "2026-08-17",
           "severity": "Minor",
           "status": "종결",
           "cause": "SW",
@@ -816,7 +816,7 @@
           "abbr": "M",
           "stage": "mass",
           "id": "E-002",
-          "date": "2026-11-17",
+          "date": "2026-11-24",
           "severity": "Minor",
           "status": "종결",
           "cause": "운영·조작",
@@ -836,7 +836,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-004",
-          "date": "2027-02-20",
+          "date": "2027-02-27",
           "severity": "Minor",
           "status": "종결",
           "cause": "설치·시공",
@@ -846,7 +846,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2027-02-22",
+          "closedDate": "2027-03-01",
           "unit": "4호기",
           "images": []
         }
@@ -887,8 +887,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2026-06-13",
-      "lastDate": "2027-02-20",
+      "firstDate": "2026-06-20",
+      "lastDate": "2027-02-27",
       "recurCount": 5
     },
     {
@@ -903,7 +903,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-010",
-          "date": "2026-06-16",
+          "date": "2026-06-23",
           "severity": "Minor",
           "status": "종결",
           "cause": "설계",
@@ -913,7 +913,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-20",
+          "closedDate": "2026-06-27",
           "unit": "",
           "images": []
         },
@@ -923,7 +923,7 @@
           "abbr": "M",
           "stage": "mass",
           "id": "E-003",
-          "date": "2026-11-24",
+          "date": "2026-12-01",
           "severity": "Minor",
           "status": "조치중",
           "cause": "운영·조작",
@@ -943,7 +943,7 @@
           "abbr": "M",
           "stage": "mass",
           "id": "E-004",
-          "date": "2026-11-24",
+          "date": "2026-12-01",
           "severity": "Minor",
           "status": "조치중",
           "cause": "부품",
@@ -982,8 +982,8 @@
           "stage": "mass"
         }
       ],
-      "firstDate": "2026-06-16",
-      "lastDate": "2026-11-24",
+      "firstDate": "2026-06-23",
+      "lastDate": "2026-12-01",
       "recurCount": 2
     },
     {
@@ -998,7 +998,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-014",
-          "date": "2026-06-24",
+          "date": "2026-07-01",
           "severity": "Minor",
           "status": "검증중",
           "cause": "구현(SW)",
@@ -1018,7 +1018,7 @@
           "abbr": "L",
           "stage": "pilot",
           "id": "E-005",
-          "date": "2026-07-27",
+          "date": "2026-08-03",
           "severity": "Minor",
           "status": "종결",
           "cause": "설계",
@@ -1057,8 +1057,8 @@
           "stage": "pilot"
         }
       ],
-      "firstDate": "2026-06-24",
-      "lastDate": "2026-07-27",
+      "firstDate": "2026-07-01",
+      "lastDate": "2026-08-03",
       "recurCount": 1
     },
     {
@@ -1073,7 +1073,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-003",
-          "date": "2026-06-09",
+          "date": "2026-06-16",
           "severity": "Minor",
           "status": "종결",
           "cause": "시험환경",
@@ -1083,7 +1083,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-11",
+          "closedDate": "2026-06-18",
           "unit": "",
           "images": []
         }
@@ -1106,8 +1106,8 @@
           "stage": "poc"
         }
       ],
-      "firstDate": "2026-06-09",
-      "lastDate": "2026-06-09",
+      "firstDate": "2026-06-16",
+      "lastDate": "2026-06-16",
       "recurCount": 0
     },
     {
@@ -1122,7 +1122,7 @@
           "abbr": "P",
           "stage": "poc",
           "id": "ISS-009",
-          "date": "2026-06-15",
+          "date": "2026-06-22",
           "severity": "Minor",
           "status": "종결",
           "cause": "구현(SW)",
@@ -1132,7 +1132,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2026-06-17",
+          "closedDate": "2026-06-24",
           "unit": "",
           "images": []
         }
@@ -1155,8 +1155,8 @@
           "stage": "poc"
         }
       ],
-      "firstDate": "2026-06-15",
-      "lastDate": "2026-06-15",
+      "firstDate": "2026-06-22",
+      "lastDate": "2026-06-22",
       "recurCount": 0
     },
     {
@@ -1171,7 +1171,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-006",
-          "date": "2027-03-10",
+          "date": "2027-03-17",
           "severity": "Minor",
           "status": "조치중",
           "cause": "운영·환경",
@@ -1204,8 +1204,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2027-03-10",
-      "lastDate": "2027-03-10",
+      "firstDate": "2027-03-17",
+      "lastDate": "2027-03-17",
       "recurCount": 0
     },
     {
@@ -1220,7 +1220,7 @@
           "abbr": "S",
           "stage": "spread",
           "id": "DIS-005",
-          "date": "2027-03-04",
+          "date": "2027-03-11",
           "severity": "Minor",
           "status": "종결",
           "cause": "제작·조립",
@@ -1230,7 +1230,7 @@
           "verify": "",
           "recurLink": "",
           "verdict": "",
-          "closedDate": "2027-03-05",
+          "closedDate": "2027-03-12",
           "unit": "5호기",
           "images": []
         }
@@ -1253,8 +1253,8 @@
           "stage": "spread"
         }
       ],
-      "firstDate": "2027-03-04",
-      "lastDate": "2027-03-04",
+      "firstDate": "2027-03-11",
+      "lastDate": "2027-03-11",
       "recurCount": 0
     }
   ]

@@ -141,6 +141,7 @@ function devClearTrack(C, opts) {
       <div class="exr-n2" title="${esc(t.note || '')}">${esc(t.note || '')}</div></div>`;
   }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
+    ${(opts && opts.sub) || ''}
     <div class="clr-list">${tiles}</div>
     <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}${anyRisk ? `<a class="exr-more" onclick="openTecopModal()">리스크 레지스터 →</a>` : ''}</div>
       <div class="exr-dday"><b>${esc(dday || '—')}</b><span>${esc(g.reviewDate || '일정 미정')}</span></div>
@@ -813,16 +814,18 @@ function lcStepGo(i) {
   scrollTo(0, 0);
 }
 
-/* POC 세부 단계 선택 탭 — 페이지 안에서 단계별 대시보드 전환 (상단 여정 바와 별개) */
-function pocPhaseTabs(C, view, cur) {
+/* POC 세부 단계 칩 — 종합 클리어 트랙 안에서 단계별 대시보드 전환 (P1·P2=기획·제작 / P3~P5=평가) */
+function pocPhaseChips(C, view, cur) {
   const lc = C.lifecycle || [];
-  const tabs = lc.map((s, i) => {
-    const mark = s.status === 'done' ? '✓' : (i + 1);
-    return `<span class="pph${i === view ? ' on' : ''}${i === cur ? ' now' : ''}" onclick="lcStepGo(${i})" title="${esc(s.note || s.stage)}">
-      <i>${mark}</i>${esc(s.stage)}${i === cur ? '<em>진행 중</em>' : ''}</span>`;
+  if (!lc.length) return '';
+  const chips = lc.map((s, i) => {
+    const cls = (i === view ? ' on' : '') + (i === cur ? ' now' : '') + (s.status === 'done' ? ' done' : '');
+    return `<span class="pc9${cls}" onclick="lcStepGo(${i})" title="${esc(s.stage)}${i === cur ? ' — 진행 중' : ''} · 클릭 = 단계 화면">${s.status === 'done' ? '✓' : ''}P${i + 1}</span>`;
   }).join('');
-  return `<div class="pph-bar"><span class="pph-cap">POC 세부 단계</span>${tabs}
-    ${view !== cur ? `<span class="pph-note">회고 보기 · <a onclick="lcStepGo(${cur})">현재 단계로 →</a></span>` : ''}</div>`;
+  return `<div class="pcs9">
+    <div class="pcs9-r"><span class="cap">세부 단계</span>${chips}</div>
+    <div class="pcs9-nm">${esc((lc[view] || {}).stage || '')}${view === cur ? ' <b>· 진행 중</b>' : ' <em>· 회고</em>'}</div>
+  </div>`;
 }
 
 /* P1 기획 산출물 히어로 — 체크 n/m + 목표/ROI */
@@ -897,8 +900,11 @@ function pocConceptPanel(C) {
 
 /* P1~P2 기획·제작 관제 (평가 이전 화면) */
 function renderPocPlanBuild(C, view, cur) {
+  const lc = C.lifecycle || [];
   $('s-overview').innerHTML = devShell('poc', C, {
-    phead: pocPhaseTabs(C, view, cur),
+    qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
+      <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
+    clear: { sub: pocPhaseChips(C, view, cur) },
     aTitle: '과제 기획 → 산출물',
     aHero: pocPlanHero(C),
     aChart: pocPlanChecksPanel(C),
@@ -925,8 +931,9 @@ function renderPoc(C) {
   if (view == null || view < 0 || view >= lc.length) view = cur;
   if (view <= 1 && lc.length >= 3) return renderPocPlanBuild(C, view, cur);
   $('s-overview').innerHTML = devShell('poc', C, {
-    phead: pocPhaseTabs(C, view, cur),
-    qbox: '',
+    qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
+      <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
+    clear: { sub: pocPhaseChips(C, view, cur) },
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
     aChart: pocTrendPanel({ narrow: true, zoom: true }),

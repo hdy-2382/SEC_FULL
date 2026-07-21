@@ -13,7 +13,7 @@
         "env": "사외 랩"
       },
       "gate": {
-        "reviewDate": "2026-07-15",
+        "reviewDate": "2026-07-22",
         "label": "게이트 리뷰(Pilot 이관)",
         "criteria": [
           {
@@ -55,7 +55,7 @@
               "level": "High",
               "mitigation": "토크 암 강성 보강 + 상한 인터록",
               "owner": "김OO",
-              "due": "2026-07-14",
+              "due": "2026-07-21",
               "progress": 80,
               "status": "완화중",
               "link": "ISS-013"
@@ -66,7 +66,7 @@
               "level": "Medium",
               "mitigation": "핑거 형상 변경 — Pilot 이관 전 설계 반영",
               "owner": "박OO",
-              "due": "2026-07-15",
+              "due": "2026-07-22",
               "progress": 40,
               "status": "완화중",
               "link": "ISS-017"
@@ -84,7 +84,7 @@
               "level": "Medium",
               "mitigation": "72h 런 실증치로 투자심의 입력 확보",
               "owner": "PM",
-              "due": "2026-07-20",
+              "due": "2026-07-27",
               "progress": 70,
               "status": "완화중"
             }
@@ -118,7 +118,7 @@
               "level": "Medium",
               "mitigation": "원격 대응 SLA — Pilot 계약에 명기",
               "owner": "김OO",
-              "due": "2026-07-22",
+              "due": "2026-07-29",
               "progress": 10,
               "status": "식별"
             }
@@ -133,9 +133,9 @@
               "id": "R-P1",
               "risk": "수혜부서 Pilot 지표 정의 미합의",
               "level": "Medium",
-              "mitigation": "3자 협의체 — 가동 지표 초안 합의 (7/13 회의)",
+              "mitigation": "3자 협의체 — 가동 지표 초안 합의 (07-20 회의)",
               "owner": "PM",
-              "due": "2026-07-15",
+              "due": "2026-07-22",
               "progress": 60,
               "status": "완화중"
             },
@@ -145,7 +145,7 @@
               "level": "Low",
               "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)",
               "owner": "PM",
-              "due": "2026-06-10",
+              "due": "2026-06-17",
               "progress": 100,
               "status": "완화 완료"
             }
@@ -156,8 +156,8 @@
         "name": "드럼 자동화 (POC)",
         "department": "인프라 기술팀",
         "team": "김OO, 박OO",
-        "startDate": "2026-06-05",
-        "endDate": "2026-07-15"
+        "startDate": "2026-06-12",
+        "endDate": "2026-07-22"
       },
       "lifecycle": {
         "total": 5,
@@ -165,7 +165,7 @@
         "current": "P5 사외 72h 무에러 + 비정상 평가"
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-15T06:04:22Z",
+      "generatedAt": "2026-07-21T01:23:41Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -212,7 +212,7 @@
         "growthTarget": 1500
       },
       "gate": {
-        "reviewDate": "2026-09-15",
+        "reviewDate": "2026-09-22",
         "label": "게이트 리뷰(양산시범 이관)",
         "criteria": [
           {
@@ -254,7 +254,7 @@
               "level": "Medium",
               "mitigation": "Rev C·v0.9.4 무발생 검증 병행 — 주간 점검",
               "owner": "박OO",
-              "due": "2026-09-01",
+              "due": "2026-09-08",
               "progress": 60,
               "status": "완화중",
               "link": "E-009"
@@ -272,7 +272,7 @@
               "level": "Medium",
               "mitigation": "대체 코팅 2안 견적 — 8월 초 단가 확정",
               "owner": "PM",
-              "due": "2026-08-08",
+              "due": "2026-08-15",
               "progress": 50,
               "status": "완화중",
               "link": "E-004"
@@ -312,7 +312,7 @@
               "level": "Low",
               "mitigation": "안전인증 심사 서류 선제 제출 — 완료",
               "owner": "PM",
-              "due": "2026-08-20",
+              "due": "2026-08-27",
               "progress": 100,
               "status": "완화 완료"
             }
@@ -323,8 +323,8 @@
         "name": "드럼 자동화 (Pilot)",
         "department": "인프라 기술팀",
         "team": "김OO, 박OO",
-        "startDate": "2026-07-20",
-        "endDate": "2026-10-31"
+        "startDate": "2026-07-27",
+        "endDate": "2026-11-07"
       },
       "lifecycle": {
         "total": 4,
@@ -332,7 +332,7 @@
         "current": "L2 신뢰성 평가/검증 (TAAF)"
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-15T06:04:22Z",
+      "generatedAt": "2026-07-21T01:23:41Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -373,7 +373,7 @@
         "env": "사내 (공정 연결)"
       },
       "gate": {
-        "reviewDate": "2027-01-15",
+        "reviewDate": "2027-01-22",
         "label": "가동인증"
       },
       "tecop": [
@@ -406,7 +406,7 @@
               "level": "Medium",
               "mitigation": "360Cy 완주 실증치 확보 — 월간 점검",
               "owner": "PM",
-              "due": "2027-01-15",
+              "due": "2027-01-22",
               "progress": 60,
               "status": "완화중"
             }
@@ -433,7 +433,7 @@
               "level": "Low",
               "mitigation": "산출물 체크리스트 사전 준비 — 일정 정상",
               "owner": "PM",
-              "due": "2027-01-15",
+              "due": "2027-01-22",
               "progress": 100,
               "status": "완화 완료"
             }
@@ -444,8 +444,8 @@
         "name": "드럼 자동화 (양산 시범 평가)",
         "department": "인프라 기술팀",
         "team": "김OO, 박OO",
-        "startDate": "2026-11-02",
-        "endDate": "2027-01-31"
+        "startDate": "2026-11-09",
+        "endDate": "2027-02-07"
       },
       "lifecycle": {
         "total": 6,
@@ -453,7 +453,7 @@
         "current": "양산평가 1차"
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-15T06:04:22Z",
+      "generatedAt": "2026-07-21T01:23:41Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -510,7 +510,7 @@
         "env": "각 적용 라인 (호기별 SAT)"
       },
       "gate": {
-        "reviewDate": "2027-04-15",
+        "reviewDate": "2027-04-22",
         "label": "확산 완료 리뷰",
         "criteria": [
           {
@@ -552,7 +552,7 @@
               "level": "Medium",
               "mitigation": "AP 증설 후 무발생 감시 — 어휘 v2.1 등재",
               "owner": "박OO",
-              "due": "2027-03-26",
+              "due": "2027-04-02",
               "progress": 60,
               "status": "완화중",
               "link": "DIS-003"
@@ -592,7 +592,7 @@
               "level": "Medium",
               "mitigation": "교육 일정 라인 협의 확정 — 3/4 완료",
               "owner": "김OO",
-              "due": "2027-04-30",
+              "due": "2027-05-07",
               "progress": 75,
               "status": "완화중"
             }
@@ -608,8 +608,8 @@
         "name": "드럼 자동화 (양산 적용·확산)",
         "department": "인프라 기술팀",
         "team": "박OO, 정OO",
-        "startDate": "2027-02-01",
-        "endDate": "2027-05-31"
+        "startDate": "2027-02-08",
+        "endDate": "2027-06-07"
       },
       "lifecycle": {
         "total": 4,
@@ -617,7 +617,7 @@
         "current": "S2 호기 설치·SAT"
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-15T06:04:22Z",
+      "generatedAt": "2026-07-21T01:23:41Z",
       "summary": {
         "progress": {
           "cum": 4,

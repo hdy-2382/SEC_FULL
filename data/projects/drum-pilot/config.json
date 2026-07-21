@@ -19,7 +19,7 @@
           "level": "Medium",
           "mitigation": "Rev C·v0.9.4 무발생 검증 병행 — 주간 점검",
           "owner": "박OO",
-          "due": "2026-09-01",
+          "due": "2026-09-08",
           "progress": 60,
           "status": "완화중",
           "link": "E-009"
@@ -37,7 +37,7 @@
           "level": "Medium",
           "mitigation": "대체 코팅 2안 견적 — 8월 초 단가 확정",
           "owner": "PM",
-          "due": "2026-08-08",
+          "due": "2026-08-15",
           "progress": 50,
           "status": "완화중",
           "link": "E-004"
@@ -77,7 +77,7 @@
           "level": "Low",
           "mitigation": "안전인증 심사 서류 선제 제출 — 완료",
           "owner": "PM",
-          "due": "2026-08-20",
+          "due": "2026-08-27",
           "progress": 100,
           "status": "완화 완료"
         }
@@ -85,7 +85,7 @@
     }
   ],
   "gate": {
-    "reviewDate": "2026-09-15",
+    "reviewDate": "2026-09-22",
     "label": "게이트 리뷰(양산시범 이관)",
     "criteria": [
       {
@@ -119,8 +119,8 @@
     "name": "드럼 자동화 (Pilot)",
     "department": "인프라 기술팀",
     "team": "김OO, 박OO",
-    "startDate": "2026-07-20",
-    "endDate": "2026-10-31"
+    "startDate": "2026-07-27",
+    "endDate": "2026-11-07"
   },
   "swModules": [
     {

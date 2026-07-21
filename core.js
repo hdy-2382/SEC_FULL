@@ -245,9 +245,26 @@ function closeModal() {
   const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.remove('wide');
 }
 function openStagePopup() {
-  const C = (DATA && DATA.config) || {};
-  $('modal-title').textContent = T('overview.stageTitle', '개발 진행 단계');
-  $('modal-body').innerHTML = lifecycleStagePanel(C);
+  // 표준 프로세스 전체 여정 — org.process.ladder(기간 단계 + 심의 게이트) 순서대로.
+  // 과제 자체의 세부 단계 상세는 각 페이지(평가 상세 탭 · POC 세부 단계 칩)에서.
+  const proc = (((typeof REG !== 'undefined' && REG) || {}).org || {}).process || {};
+  const lad = proc.ladder || [];
+  const curKey = ((DATA || {}).config || {}).stage || '';
+  const nm9 = s => String(s || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩◆]\s*/, '');
+  let n = 0;
+  const rows = lad.map(s => {
+    if (s.gate) {
+      return `<div class="jr gate"><span class="jm">◆</span><div class="jt"><b>${(s.run || '').replace(/<br\s*\/?>/g, ' · ')}</b><span>${esc(s.env || '')}</span></div><span class="jtag">심의</span></div>`;
+    }
+    n += 1;
+    const on = s.key === curKey;
+    return `<div class="jr${on ? ' on' : ''}"><span class="jm" style="background:${esc(s.color || '#8a99ac')}">${n}</span>
+      <div class="jt"><b>${esc(nm9(s.stg))} — ${esc(s.run || '')}</b><span>${esc(s.env || '')}</span></div>
+      ${on ? '<span class="jtag now">현재 과제</span>' : ''}</div>`;
+  }).join('');
+  const prin = (proc.principles || []).map(p => `<span class="jp">${p}</span>`).join('');
+  $('modal-title').textContent = '표준 프로세스 — 전체 여정';
+  $('modal-body').innerHTML = `<div class="jrny">${rows}${prin ? `<div class="jp-row">${prin}</div>` : ''}</div>`;
   const modal = document.querySelector('#modal-back .modal'); if (modal) modal.classList.add('wide');
   $('modal-back').classList.add('open');
 }

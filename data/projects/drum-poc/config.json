@@ -18,7 +18,7 @@
           "level": "High",
           "mitigation": "토크 암 강성 보강 + 상한 인터록",
           "owner": "김OO",
-          "due": "2026-07-14",
+          "due": "2026-07-21",
           "progress": 80,
           "status": "완화중",
           "link": "ISS-013"
@@ -29,7 +29,7 @@
           "level": "Medium",
           "mitigation": "핑거 형상 변경 — Pilot 이관 전 설계 반영",
           "owner": "박OO",
-          "due": "2026-07-15",
+          "due": "2026-07-22",
           "progress": 40,
           "status": "완화중",
           "link": "ISS-017"
@@ -47,7 +47,7 @@
           "level": "Medium",
           "mitigation": "72h 런 실증치로 투자심의 입력 확보",
           "owner": "PM",
-          "due": "2026-07-20",
+          "due": "2026-07-27",
           "progress": 70,
           "status": "완화중"
         }
@@ -81,7 +81,7 @@
           "level": "Medium",
           "mitigation": "원격 대응 SLA — Pilot 계약에 명기",
           "owner": "김OO",
-          "due": "2026-07-22",
+          "due": "2026-07-29",
           "progress": 10,
           "status": "식별"
         }
@@ -96,9 +96,9 @@
           "id": "R-P1",
           "risk": "수혜부서 Pilot 지표 정의 미합의",
           "level": "Medium",
-          "mitigation": "3자 협의체 — 가동 지표 초안 합의 (7/13 회의)",
+          "mitigation": "3자 협의체 — 가동 지표 초안 합의 (07-20 회의)",
           "owner": "PM",
-          "due": "2026-07-15",
+          "due": "2026-07-22",
           "progress": 60,
           "status": "완화중"
         },
@@ -108,7 +108,7 @@
           "level": "Low",
           "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)",
           "owner": "PM",
-          "due": "2026-06-10",
+          "due": "2026-06-17",
           "progress": 100,
           "status": "완화 완료"
         }
@@ -116,7 +116,7 @@
     }
   ],
   "gate": {
-    "reviewDate": "2026-07-15",
+    "reviewDate": "2026-07-22",
     "label": "게이트 리뷰(Pilot 이관)",
     "criteria": [
       {
@@ -150,8 +150,8 @@
     "name": "드럼 자동화 (POC)",
     "department": "인프라 기술팀",
     "team": "김OO, 박OO",
-    "startDate": "2026-06-05",
-    "endDate": "2026-07-15"
+    "startDate": "2026-06-12",
+    "endDate": "2026-07-22"
   },
   "swModules": [
     {
@@ -194,7 +194,7 @@
     {
       "stage": "P2 설계·제작",
       "status": "done",
-      "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (06-27)"
+      "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (07-04)"
     },
     {
       "stage": "P3 기/성능 평가",
@@ -269,12 +269,12 @@
       {
         "name": "프레임·유닛 제작",
         "pct": 100,
-        "note": "업체 제작 완료 (06-20)"
+        "note": "업체 제작 완료 (06-27)"
       },
       {
         "name": "로봇·비전 셋업",
         "pct": 100,
-        "note": "사외 랩 설치 (06-27)"
+        "note": "사외 랩 설치 (07-04)"
       },
       {
         "name": "SW 1차 구현",
@@ -293,7 +293,7 @@
       },
       {
         "file": "build-cell.svg",
-        "cap": "사외 랩 셀 셋업 (06-27)"
+        "cap": "사외 랩 셀 셋업 (07-04)"
       }
     ]
   },

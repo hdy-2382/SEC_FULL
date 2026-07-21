@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T06:04:22Z",
+  "generatedAt": "2026-07-21T01:23:41Z",
   "source": "드럼양산평가_샘플.xlsx",
   "config": {
     "stage": "mass",
@@ -39,7 +39,7 @@
             "level": "Medium",
             "mitigation": "360Cy 완주 실증치 확보 — 월간 점검",
             "owner": "PM",
-            "due": "2027-01-15",
+            "due": "2027-01-22",
             "progress": 60,
             "status": "완화중"
           }
@@ -66,7 +66,7 @@
             "level": "Low",
             "mitigation": "산출물 체크리스트 사전 준비 — 일정 정상",
             "owner": "PM",
-            "due": "2027-01-15",
+            "due": "2027-01-22",
             "progress": 100,
             "status": "완화 완료"
           }
@@ -74,15 +74,15 @@
       }
     ],
     "gate": {
-      "reviewDate": "2027-01-15",
+      "reviewDate": "2027-01-22",
       "label": "가동인증"
     },
     "project": {
       "name": "드럼 자동화 (양산 시범 평가)",
       "department": "인프라 기술팀",
       "team": "김OO, 박OO",
-      "startDate": "2026-11-02",
-      "endDate": "2027-01-31"
+      "startDate": "2026-11-09",
+      "endDate": "2027-02-07"
     },
     "acceptance": {
       "targetCycle": 360,
@@ -624,7 +624,7 @@
   ],
   "daily": [
     {
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "personnel": "2",
       "activity": "체결·반송 실부하 운전",
       "total": 15,
@@ -634,7 +634,7 @@
       "notes": ""
     },
     {
-      "date": "2026-11-03",
+      "date": "2026-11-10",
       "personnel": "2",
       "activity": "체결·반송 실부하 운전",
       "total": 15,
@@ -644,72 +644,12 @@
       "notes": ""
     },
     {
-      "date": "2026-11-04",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 0,
-      "streak": 45,
-      "hours": 0,
-      "notes": ""
-    },
-    {
-      "date": "2026-11-05",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 0,
-      "streak": 60,
-      "hours": 0,
-      "notes": ""
-    },
-    {
-      "date": "2026-11-06",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 0,
-      "streak": 75,
-      "hours": 0,
-      "notes": ""
-    },
-    {
-      "date": "2026-11-07",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 0,
-      "streak": 90,
-      "hours": 0,
-      "notes": ""
-    },
-    {
-      "date": "2026-11-09",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 0,
-      "streak": 105,
-      "hours": 0,
-      "notes": ""
-    },
-    {
-      "date": "2026-11-10",
-      "personnel": "2",
-      "activity": "체결·반송 실부하 운전",
-      "total": 15,
-      "errors": 1,
-      "streak": 0,
-      "hours": 0,
-      "notes": "에러 — 리셋"
-    },
-    {
       "date": "2026-11-11",
       "personnel": "2",
       "activity": "체결·반송 실부하 운전",
       "total": 15,
       "errors": 0,
-      "streak": 15,
+      "streak": 45,
       "hours": 0,
       "notes": ""
     },
@@ -719,7 +659,7 @@
       "activity": "체결·반송 실부하 운전",
       "total": 15,
       "errors": 0,
-      "streak": 30,
+      "streak": 60,
       "hours": 0,
       "notes": ""
     },
@@ -729,7 +669,7 @@
       "activity": "체결·반송 실부하 운전",
       "total": 15,
       "errors": 0,
-      "streak": 45,
+      "streak": 75,
       "hours": 0,
       "notes": ""
     },
@@ -739,7 +679,7 @@
       "activity": "체결·반송 실부하 운전",
       "total": 15,
       "errors": 0,
-      "streak": 60,
+      "streak": 90,
       "hours": 0,
       "notes": ""
     },
@@ -749,7 +689,7 @@
       "activity": "체결·반송 실부하 운전",
       "total": 15,
       "errors": 0,
-      "streak": 75,
+      "streak": 105,
       "hours": 0,
       "notes": ""
     },
@@ -818,7 +758,7 @@
       "personnel": "2",
       "activity": "체결·반송 실부하 운전",
       "total": 15,
-      "errors": 2,
+      "errors": 1,
       "streak": 0,
       "hours": 0,
       "notes": "에러 — 리셋"
@@ -862,12 +802,72 @@
       "streak": 60,
       "hours": 0,
       "notes": ""
+    },
+    {
+      "date": "2026-11-30",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 0,
+      "streak": 75,
+      "hours": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-12-01",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 2,
+      "streak": 0,
+      "hours": 0,
+      "notes": "에러 — 리셋"
+    },
+    {
+      "date": "2026-12-02",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 0,
+      "streak": 15,
+      "hours": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-12-03",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 0,
+      "streak": 30,
+      "hours": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-12-04",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 0,
+      "streak": 45,
+      "hours": 0,
+      "notes": ""
+    },
+    {
+      "date": "2026-12-05",
+      "personnel": "2",
+      "activity": "체결·반송 실부하 운전",
+      "total": 15,
+      "errors": 0,
+      "streak": 60,
+      "hours": 0,
+      "notes": ""
     }
   ],
   "errors": [
     {
       "no": 1,
-      "date": "2026-11-10",
+      "date": "2026-11-17",
       "time": "9:15",
       "cycle": 112,
       "code": "DRM-02",
@@ -886,7 +886,7 @@
     },
     {
       "no": 2,
-      "date": "2026-11-17",
+      "date": "2026-11-24",
       "time": "11:22",
       "cycle": 202,
       "code": "DRM-04",
@@ -905,7 +905,7 @@
     },
     {
       "no": 3,
-      "date": "2026-11-24",
+      "date": "2026-12-01",
       "time": "13:29",
       "cycle": 292,
       "code": "DRM-06",
@@ -924,7 +924,7 @@
     },
     {
       "no": 4,
-      "date": "2026-11-24",
+      "date": "2026-12-01",
       "time": "15:36",
       "cycle": 296,
       "code": "DRM-06",
@@ -978,7 +978,7 @@
     "weekly": [
       {
         "week": "W1",
-        "weekStart": "2026-11-02",
+        "weekStart": "2026-11-09",
         "cumStreak": 90,
         "reset": false,
         "weekSuccess": 90,
@@ -988,7 +988,7 @@
       },
       {
         "week": "W2",
-        "weekStart": "2026-11-09",
+        "weekStart": "2026-11-16",
         "cumStreak": 180,
         "reset": false,
         "weekSuccess": 89,
@@ -998,7 +998,7 @@
       },
       {
         "week": "W3",
-        "weekStart": "2026-11-16",
+        "weekStart": "2026-11-23",
         "cumStreak": 270,
         "reset": false,
         "weekSuccess": 89,
@@ -1008,7 +1008,7 @@
       },
       {
         "week": "W4",
-        "weekStart": "2026-11-23",
+        "weekStart": "2026-11-30",
         "cumStreak": 60,
         "reset": true,
         "weekSuccess": 88,
@@ -1020,7 +1020,7 @@
     "errRate": [
       {
         "period": "1주차",
-        "range": "11/2~11/7",
+        "range": "11/9~11/14",
         "cycles": 90,
         "errors": 0,
         "rate": 0.0,
@@ -1029,7 +1029,7 @@
       },
       {
         "period": "2주차",
-        "range": "11/9~11/14",
+        "range": "11/16~11/21",
         "cycles": 90,
         "errors": 1,
         "rate": 1.1,
@@ -1038,7 +1038,7 @@
       },
       {
         "period": "3주차",
-        "range": "11/16~11/21",
+        "range": "11/23~11/28",
         "cycles": 90,
         "errors": 1,
         "rate": 1.1,
@@ -1047,7 +1047,7 @@
       },
       {
         "period": "4주차",
-        "range": "11/23~11/28",
+        "range": "11/30~12/5",
         "cycles": 90,
         "errors": 2,
         "rate": 2.2,
@@ -1057,8 +1057,8 @@
     ],
     "recentWindow": {
       "weeks": 4,
-      "fromDate": "2026-11-02",
-      "toDate": "2026-11-28",
+      "fromDate": "2026-11-09",
+      "toDate": "2026-12-05",
       "cycles": 360,
       "errors": 4,
       "rate": 1.1,
@@ -1172,10 +1172,10 @@
       "code": "DRM-02",
       "action": "로트 수입검사 항목 추가",
       "owner": "김OO",
-      "due": "2026-11-20",
+      "due": "2026-11-27",
       "status": "검증완료",
       "verifyStart": 0,
-      "verifyStartDate": "2026-11-12",
+      "verifyStartDate": "2026-11-19",
       "severity": "Major",
       "type": "비전 오인식",
       "verifyStartCycle": 150,
@@ -1190,10 +1190,10 @@
       "code": "DRM-04",
       "action": "라인 PLC 설정 표준화",
       "owner": "박OO",
-      "due": "2026-11-25",
+      "due": "2026-12-02",
       "status": "검증완료",
       "verifyStart": 0,
-      "verifyStartDate": "2026-11-18",
+      "verifyStartDate": "2026-11-25",
       "severity": "Minor",
       "type": "통신 지연",
       "verifyStartCycle": 225,
@@ -1208,10 +1208,10 @@
       "code": "DRM-06",
       "action": "슈트 코팅 사양 변경",
       "owner": "김OO",
-      "due": "2026-12-10",
+      "due": "2026-12-17",
       "status": "검증중",
       "verifyStart": 0,
-      "verifyStartDate": "2026-12-01",
+      "verifyStartDate": "2026-12-08",
       "severity": "Minor",
       "type": "자재 급송 지연",
       "verifyStartCycle": 360,
@@ -1285,7 +1285,7 @@
       "cause": "시험환경·자재",
       "causeText": "자재 로트 편차",
       "status": "종결",
-      "date": "2026-11-10",
+      "date": "2026-11-17",
       "time": "9:15",
       "cycle": 112,
       "detail": "신규 로트 표면 반사율 편차",
@@ -1307,7 +1307,7 @@
       "cause": "운영·조작",
       "causeText": "라인측 설정",
       "status": "종결",
-      "date": "2026-11-17",
+      "date": "2026-11-24",
       "time": "11:22",
       "cycle": 202,
       "detail": "라인 PLC 응답 지연",
@@ -1329,7 +1329,7 @@
       "cause": "운영·조작",
       "causeText": "라인 청소 주기",
       "status": "조치중",
-      "date": "2026-11-24",
+      "date": "2026-12-01",
       "time": "13:29",
       "cycle": 292,
       "detail": "급송 슈트 이물",
@@ -1351,7 +1351,7 @@
       "cause": "부품",
       "causeText": "슈트 코팅 마모",
       "status": "조치중",
-      "date": "2026-11-24",
+      "date": "2026-12-01",
       "time": "15:36",
       "cycle": 296,
       "detail": "동일 모드 — 슈트 마모",
@@ -1380,7 +1380,7 @@
       "attribution": "자재 (로트 편차)",
       "evidence": "로트 성적서 + 재현시험",
       "agreed": "합의완료",
-      "date": "2026-11-12"
+      "date": "2026-11-19"
     },
     {
       "id": "JD-02",
@@ -1389,7 +1389,7 @@
       "attribution": "운영 (라인 설정)",
       "evidence": "PLC 로그",
       "agreed": "합의완료",
-      "date": "2026-11-19"
+      "date": "2026-11-26"
     },
     {
       "id": "JD-03",
@@ -1398,7 +1398,7 @@
       "attribution": "설비 (운영 연동)",
       "evidence": "슈트 점검 기록",
       "agreed": "합의완료",
-      "date": "2026-11-28"
+      "date": "2026-12-05"
     },
     {
       "id": "JD-04",
@@ -1407,7 +1407,7 @@
       "attribution": "설비 (부품)",
       "evidence": "마모 측정 + 재현",
       "agreed": "합의완료",
-      "date": "2026-12-01"
+      "date": "2026-12-08"
     }
   ],
   "dispositions": [
@@ -1416,16 +1416,559 @@
       "target": "DRM-06",
       "dispo": "종결예정",
       "reason": "코팅 사양 변경 검증 중 — 심의 전 종결 예상",
-      "due": "2026-12-20",
+      "due": "2026-12-27",
       "owner": "김OO",
       "agreed": "합의완료"
     }
   ],
   "months": [
-    "2026-11"
+    "2026-11",
+    "2026-12"
   ],
   "snapshots": {
     "2026-11": {
+      "metrics": {
+        "progress": {
+          "cum": 285,
+          "target": 360,
+          "pct": 79.2
+        },
+        "errorBudget": {
+          "used": 2,
+          "limit": 3,
+          "resets": 0,
+          "lifetimeErrors": 2,
+          "dailyAvg": 0.11,
+          "weeklyAvg": 0.5
+        },
+        "successRate": 99.3,
+        "success": 283,
+        "errorsTotal": 2,
+        "mtbf": {
+          "current": 285,
+          "target": 100
+        },
+        "errRateCur": 0.7,
+        "errRateTarget": 5,
+        "streak": {
+          "current": 75,
+          "max": 119
+        },
+        "failure": {
+          "count": 0,
+          "lastCycle": 0,
+          "freeCycles": 285,
+          "keyword": "고장"
+        },
+        "weekly": [
+          {
+            "week": "W1",
+            "weekStart": "2026-11-09",
+            "cumStreak": 90,
+            "reset": false,
+            "weekSuccess": 90,
+            "errors": 0,
+            "errRate": 0.0,
+            "mtbf": 90
+          },
+          {
+            "week": "W2",
+            "weekStart": "2026-11-16",
+            "cumStreak": 180,
+            "reset": false,
+            "weekSuccess": 89,
+            "errors": 1,
+            "errRate": 0.6,
+            "mtbf": 180
+          },
+          {
+            "week": "W3",
+            "weekStart": "2026-11-23",
+            "cumStreak": 270,
+            "reset": false,
+            "weekSuccess": 89,
+            "errors": 1,
+            "errRate": 0.7,
+            "mtbf": 270
+          },
+          {
+            "week": "W4",
+            "weekStart": "2026-11-30",
+            "cumStreak": 285,
+            "reset": false,
+            "weekSuccess": 15,
+            "errors": 0,
+            "errRate": 0.7,
+            "mtbf": 285
+          }
+        ],
+        "errRate": [
+          {
+            "period": "1주차",
+            "range": "11/9~11/14",
+            "cycles": 90,
+            "errors": 0,
+            "rate": 0.0,
+            "cumRate": 0.0,
+            "mtbi": 90
+          },
+          {
+            "period": "2주차",
+            "range": "11/16~11/21",
+            "cycles": 90,
+            "errors": 1,
+            "rate": 1.1,
+            "cumRate": 0.6,
+            "mtbi": 90
+          },
+          {
+            "period": "3주차",
+            "range": "11/23~11/28",
+            "cycles": 90,
+            "errors": 1,
+            "rate": 1.1,
+            "cumRate": 0.7,
+            "mtbi": 90
+          },
+          {
+            "period": "4주차",
+            "range": "11/30",
+            "cycles": 15,
+            "errors": 0,
+            "rate": 0.0,
+            "cumRate": 0.7,
+            "mtbi": 15
+          }
+        ],
+        "recentWindow": {
+          "weeks": 4,
+          "fromDate": "2026-11-09",
+          "toDate": "2026-11-30",
+          "cycles": 285,
+          "errors": 2,
+          "rate": 0.7,
+          "mtbi": 142,
+          "lowSample": false,
+          "anchoredOn": "lastData"
+        },
+        "throughput": {
+          "total": 285,
+          "daily": 15.0
+        },
+        "confidence": {
+          "level": 0.8,
+          "current": 0.942,
+          "currentPct": 94,
+          "currentCycles": 285,
+          "requiredForLevel": 161,
+          "table": [
+            {
+              "c": 80,
+              "required": 161
+            },
+            {
+              "c": 87,
+              "required": 204
+            },
+            {
+              "c": 90,
+              "required": 230
+            }
+          ]
+        }
+      },
+      "failure": {
+        "top5ByCode": [
+          {
+            "code": "DRM-02",
+            "type": "비전 오인식",
+            "count": 1,
+            "severity": "Major",
+            "recur": false
+          },
+          {
+            "code": "DRM-04",
+            "type": "통신 지연",
+            "count": 1,
+            "severity": "Minor",
+            "recur": false
+          }
+        ],
+        "paretoByType": [
+          {
+            "type": "비전 오인식",
+            "count": 1,
+            "cumPct": 50
+          },
+          {
+            "type": "통신 지연",
+            "count": 1,
+            "cumPct": 100
+          }
+        ],
+        "severityDist": {
+          "Critical": 0,
+          "Major": 1,
+          "Minor": 1,
+          "total": 2
+        },
+        "matrix": [
+          {
+            "code": "DRM-02",
+            "type": "비전 오인식",
+            "severity": "Major",
+            "count": 1,
+            "occ": "드묾",
+            "priority": "Low"
+          },
+          {
+            "code": "DRM-04",
+            "type": "통신 지연",
+            "severity": "Minor",
+            "count": 1,
+            "occ": "드묾",
+            "priority": "Low"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "A-001",
+          "code": "DRM-02",
+          "action": "로트 수입검사 항목 추가",
+          "owner": "김OO",
+          "due": "2026-11-27",
+          "status": "검증완료",
+          "verifyStart": 0,
+          "verifyStartDate": "2026-11-19",
+          "severity": "Major",
+          "type": "비전 오인식",
+          "verifyStartCycle": 150,
+          "noFailCycles": 135,
+          "verifyTarget": 200,
+          "verifyProgress": 100,
+          "verifyResult": "검증완료",
+          "verifyManual": true
+        },
+        {
+          "id": "A-002",
+          "code": "DRM-04",
+          "action": "라인 PLC 설정 표준화",
+          "owner": "박OO",
+          "due": "2026-12-02",
+          "status": "검증완료",
+          "verifyStart": 0,
+          "verifyStartDate": "2026-11-25",
+          "severity": "Minor",
+          "type": "통신 지연",
+          "verifyStartCycle": 225,
+          "noFailCycles": 60,
+          "verifyTarget": 200,
+          "verifyProgress": 100,
+          "verifyResult": "검증완료",
+          "verifyManual": true
+        },
+        {
+          "id": "A-003",
+          "code": "DRM-06",
+          "action": "슈트 코팅 사양 변경",
+          "owner": "김OO",
+          "due": "2026-12-17",
+          "status": "검증중",
+          "verifyStart": 0,
+          "verifyStartDate": "2026-12-08",
+          "severity": "Minor",
+          "type": "자재 급송 지연",
+          "verifyStartCycle": 285,
+          "noFailCycles": 0,
+          "verifyTarget": 200,
+          "verifyProgress": 0,
+          "verifyResult": "조치중",
+          "verifyManual": false
+        }
+      ],
+      "recurrence": {
+        "count": 0,
+        "rate": 0.0,
+        "items": [],
+        "cleared": []
+      },
+      "acceptance": {
+        "criteria": [
+          {
+            "id": "complete",
+            "key": "완주",
+            "value": "285/360",
+            "status": "prog"
+          },
+          {
+            "id": "mtbf",
+            "key": "MTBF≥100 @80%",
+            "value": "MTBF 285 / 신뢰수준 94%",
+            "status": "pass"
+          },
+          {
+            "id": "openCritical",
+            "key": "미해결 Critical=0",
+            "value": "0건",
+            "status": "pass"
+          },
+          {
+            "id": "recur",
+            "key": "재발≤0",
+            "value": "0건",
+            "status": "pass"
+          },
+          {
+            "id": "verifyClose",
+            "key": "전 결함 검증종결",
+            "value": "1/1",
+            "status": "pass"
+          }
+        ],
+        "passed": 4,
+        "total": 5
+      },
+      "opReliability": {
+        "grade": "양호",
+        "recur": 0,
+        "openCritical": 0,
+        "verifyClosedRate": 100
+      },
+      "daily": [
+        {
+          "date": "2026-11-09",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 15,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-10",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 30,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-11",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 45,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-12",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 60,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-13",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 75,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-14",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 90,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-16",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 105,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-17",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 1,
+          "streak": 0,
+          "hours": 0,
+          "notes": "에러 — 리셋"
+        },
+        {
+          "date": "2026-11-18",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 15,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-19",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 30,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-20",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 45,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-21",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 60,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-23",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 75,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-24",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 1,
+          "streak": 0,
+          "hours": 0,
+          "notes": "에러 — 리셋"
+        },
+        {
+          "date": "2026-11-25",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 15,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-26",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 30,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-27",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 45,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-28",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 60,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-11-30",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 75,
+          "hours": 0,
+          "notes": ""
+        }
+      ],
+      "errors": [
+        {
+          "no": 1,
+          "date": "2026-11-17",
+          "time": "9:15",
+          "cycle": 112,
+          "code": "DRM-02",
+          "type": "비전 오인식",
+          "detail": "신규 로트 표면 반사율 편차",
+          "cause": "자재 로트 편차",
+          "cause_class": "시험환경·자재",
+          "action": "로트 수입검사 추가",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v1.0.0",
+          "hw_ver": "Rev C",
+          "detailMore": "",
+          "images": []
+        },
+        {
+          "no": 2,
+          "date": "2026-11-24",
+          "time": "11:22",
+          "cycle": 202,
+          "code": "DRM-04",
+          "type": "통신 지연",
+          "detail": "라인 PLC 응답 지연",
+          "cause": "라인측 설정",
+          "cause_class": "운영·조작",
+          "action": "라인 설정 표준화",
+          "result": "정상복귀",
+          "owner_sec": "김OO",
+          "owner": "업체 박OO",
+          "sw_ver": "v1.0.0",
+          "hw_ver": "Rev C",
+          "detailMore": "",
+          "images": []
+        }
+      ]
+    },
+    "2026-12": {
       "metrics": {
         "progress": {
           "cum": 60,
@@ -1462,7 +2005,7 @@
         "weekly": [
           {
             "week": "W1",
-            "weekStart": "2026-11-02",
+            "weekStart": "2026-11-09",
             "cumStreak": 90,
             "reset": false,
             "weekSuccess": 90,
@@ -1472,7 +2015,7 @@
           },
           {
             "week": "W2",
-            "weekStart": "2026-11-09",
+            "weekStart": "2026-11-16",
             "cumStreak": 180,
             "reset": false,
             "weekSuccess": 89,
@@ -1482,7 +2025,7 @@
           },
           {
             "week": "W3",
-            "weekStart": "2026-11-16",
+            "weekStart": "2026-11-23",
             "cumStreak": 270,
             "reset": false,
             "weekSuccess": 89,
@@ -1492,7 +2035,7 @@
           },
           {
             "week": "W4",
-            "weekStart": "2026-11-23",
+            "weekStart": "2026-11-30",
             "cumStreak": 60,
             "reset": true,
             "weekSuccess": 88,
@@ -1504,7 +2047,7 @@
         "errRate": [
           {
             "period": "1주차",
-            "range": "11/2~11/7",
+            "range": "11/9~11/14",
             "cycles": 90,
             "errors": 0,
             "rate": 0.0,
@@ -1513,7 +2056,7 @@
           },
           {
             "period": "2주차",
-            "range": "11/9~11/14",
+            "range": "11/16~11/21",
             "cycles": 90,
             "errors": 1,
             "rate": 1.1,
@@ -1522,7 +2065,7 @@
           },
           {
             "period": "3주차",
-            "range": "11/16~11/21",
+            "range": "11/23~11/28",
             "cycles": 90,
             "errors": 1,
             "rate": 1.1,
@@ -1531,7 +2074,7 @@
           },
           {
             "period": "4주차",
-            "range": "11/23~11/28",
+            "range": "11/30~12/5",
             "cycles": 90,
             "errors": 2,
             "rate": 2.2,
@@ -1541,8 +2084,8 @@
         ],
         "recentWindow": {
           "weeks": 4,
-          "fromDate": "2026-11-02",
-          "toDate": "2026-11-28",
+          "fromDate": "2026-11-09",
+          "toDate": "2026-12-05",
           "cycles": 360,
           "errors": 4,
           "rate": 1.1,
@@ -1656,10 +2199,10 @@
           "code": "DRM-02",
           "action": "로트 수입검사 항목 추가",
           "owner": "김OO",
-          "due": "2026-11-20",
+          "due": "2026-11-27",
           "status": "검증완료",
           "verifyStart": 0,
-          "verifyStartDate": "2026-11-12",
+          "verifyStartDate": "2026-11-19",
           "severity": "Major",
           "type": "비전 오인식",
           "verifyStartCycle": 150,
@@ -1674,10 +2217,10 @@
           "code": "DRM-04",
           "action": "라인 PLC 설정 표준화",
           "owner": "박OO",
-          "due": "2026-11-25",
+          "due": "2026-12-02",
           "status": "검증완료",
           "verifyStart": 0,
-          "verifyStartDate": "2026-11-18",
+          "verifyStartDate": "2026-11-25",
           "severity": "Minor",
           "type": "통신 지연",
           "verifyStartCycle": 225,
@@ -1692,10 +2235,10 @@
           "code": "DRM-06",
           "action": "슈트 코팅 사양 변경",
           "owner": "김OO",
-          "due": "2026-12-10",
+          "due": "2026-12-17",
           "status": "검증중",
           "verifyStart": 0,
-          "verifyStartDate": "2026-12-01",
+          "verifyStartDate": "2026-12-08",
           "severity": "Minor",
           "type": "자재 급송 지연",
           "verifyStartCycle": 360,
@@ -1762,7 +2305,7 @@
       },
       "daily": [
         {
-          "date": "2026-11-02",
+          "date": "2026-11-09",
           "personnel": "2",
           "activity": "체결·반송 실부하 운전",
           "total": 15,
@@ -1772,7 +2315,7 @@
           "notes": ""
         },
         {
-          "date": "2026-11-03",
+          "date": "2026-11-10",
           "personnel": "2",
           "activity": "체결·반송 실부하 운전",
           "total": 15,
@@ -1782,72 +2325,12 @@
           "notes": ""
         },
         {
-          "date": "2026-11-04",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 0,
-          "streak": 45,
-          "hours": 0,
-          "notes": ""
-        },
-        {
-          "date": "2026-11-05",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 0,
-          "streak": 60,
-          "hours": 0,
-          "notes": ""
-        },
-        {
-          "date": "2026-11-06",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 0,
-          "streak": 75,
-          "hours": 0,
-          "notes": ""
-        },
-        {
-          "date": "2026-11-07",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 0,
-          "streak": 90,
-          "hours": 0,
-          "notes": ""
-        },
-        {
-          "date": "2026-11-09",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 0,
-          "streak": 105,
-          "hours": 0,
-          "notes": ""
-        },
-        {
-          "date": "2026-11-10",
-          "personnel": "2",
-          "activity": "체결·반송 실부하 운전",
-          "total": 15,
-          "errors": 1,
-          "streak": 0,
-          "hours": 0,
-          "notes": "에러 — 리셋"
-        },
-        {
           "date": "2026-11-11",
           "personnel": "2",
           "activity": "체결·반송 실부하 운전",
           "total": 15,
           "errors": 0,
-          "streak": 15,
+          "streak": 45,
           "hours": 0,
           "notes": ""
         },
@@ -1857,7 +2340,7 @@
           "activity": "체결·반송 실부하 운전",
           "total": 15,
           "errors": 0,
-          "streak": 30,
+          "streak": 60,
           "hours": 0,
           "notes": ""
         },
@@ -1867,7 +2350,7 @@
           "activity": "체결·반송 실부하 운전",
           "total": 15,
           "errors": 0,
-          "streak": 45,
+          "streak": 75,
           "hours": 0,
           "notes": ""
         },
@@ -1877,7 +2360,7 @@
           "activity": "체결·반송 실부하 운전",
           "total": 15,
           "errors": 0,
-          "streak": 60,
+          "streak": 90,
           "hours": 0,
           "notes": ""
         },
@@ -1887,7 +2370,7 @@
           "activity": "체결·반송 실부하 운전",
           "total": 15,
           "errors": 0,
-          "streak": 75,
+          "streak": 105,
           "hours": 0,
           "notes": ""
         },
@@ -1956,7 +2439,7 @@
           "personnel": "2",
           "activity": "체결·반송 실부하 운전",
           "total": 15,
-          "errors": 2,
+          "errors": 1,
           "streak": 0,
           "hours": 0,
           "notes": "에러 — 리셋"
@@ -2000,12 +2483,72 @@
           "streak": 60,
           "hours": 0,
           "notes": ""
+        },
+        {
+          "date": "2026-11-30",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 75,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-12-01",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 2,
+          "streak": 0,
+          "hours": 0,
+          "notes": "에러 — 리셋"
+        },
+        {
+          "date": "2026-12-02",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 15,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-12-03",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 30,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-12-04",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 45,
+          "hours": 0,
+          "notes": ""
+        },
+        {
+          "date": "2026-12-05",
+          "personnel": "2",
+          "activity": "체결·반송 실부하 운전",
+          "total": 15,
+          "errors": 0,
+          "streak": 60,
+          "hours": 0,
+          "notes": ""
         }
       ],
       "errors": [
         {
           "no": 1,
-          "date": "2026-11-10",
+          "date": "2026-11-17",
           "time": "9:15",
           "cycle": 112,
           "code": "DRM-02",
@@ -2024,7 +2567,7 @@
         },
         {
           "no": 2,
-          "date": "2026-11-17",
+          "date": "2026-11-24",
           "time": "11:22",
           "cycle": 202,
           "code": "DRM-04",
@@ -2043,7 +2586,7 @@
         },
         {
           "no": 3,
-          "date": "2026-11-24",
+          "date": "2026-12-01",
           "time": "13:29",
           "cycle": 292,
           "code": "DRM-06",
@@ -2062,7 +2605,7 @@
         },
         {
           "no": 4,
-          "date": "2026-11-24",
+          "date": "2026-12-01",
           "time": "15:36",
           "cycle": 296,
           "code": "DRM-06",

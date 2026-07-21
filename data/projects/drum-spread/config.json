@@ -18,7 +18,7 @@
           "level": "Medium",
           "mitigation": "AP 증설 후 무발생 감시 — 어휘 v2.1 등재",
           "owner": "박OO",
-          "due": "2027-03-26",
+          "due": "2027-04-02",
           "progress": 60,
           "status": "완화중",
           "link": "DIS-003"
@@ -58,7 +58,7 @@
           "level": "Medium",
           "mitigation": "교육 일정 라인 협의 확정 — 3/4 완료",
           "owner": "김OO",
-          "due": "2027-04-30",
+          "due": "2027-05-07",
           "progress": 75,
           "status": "완화중"
         }
@@ -71,7 +71,7 @@
     }
   ],
   "gate": {
-    "reviewDate": "2027-04-15",
+    "reviewDate": "2027-04-22",
     "label": "확산 완료 리뷰",
     "criteria": [
       {
@@ -105,8 +105,8 @@
     "name": "드럼 자동화 (양산 적용·확산)",
     "department": "인프라 기술팀",
     "team": "박OO, 정OO",
-    "startDate": "2027-02-01",
-    "endDate": "2027-05-31"
+    "startDate": "2027-02-08",
+    "endDate": "2027-06-07"
   },
   "swModules": [
     {

@@ -643,19 +643,32 @@
 .pocv .compo .sg-env{background:#3E9B6E}
 .pocv .compo .sg-oper{background:#6E7D90}
 .pocv .compo .sg-zero{flex:0 0 74px;border:1.5px dashed var(--crit);color:var(--crit);font-size:10.5px;font-weight:800;background:transparent}
-/* POC 세부 단계 선택 탭 — 페이지 안 세그먼트 (상단 여정 바와 별개) */
-.pocv .pph-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:13px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 8px 5px 13px;box-shadow:0 1px 4px rgba(20,51,92,.06)}
-.pocv .pph-cap{font-size:11px;font-weight:800;letter-spacing:.03em;color:var(--navy-deep);margin-right:4px;white-space:nowrap}
-.pocv .pph{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--muted);border-radius:999px;padding:4px 11px;cursor:pointer;white-space:nowrap;min-width:0}
-.pocv .pph i{width:16px;height:16px;border-radius:50%;background:#dce3ec;color:#8595a8;font-size:9.5px;font-weight:800;font-style:normal;display:inline-flex;align-items:center;justify-content:center;flex:none}
-.pocv .pph:hover{background:var(--sky-soft);color:var(--ink-soft)}
-.pocv .pph.now i{background:var(--green);color:#fff}
-.pocv .pph.now em{font-style:normal;font-size:9.5px;font-weight:800;color:var(--green);background:var(--green-soft);border-radius:8px;padding:1px 6px;margin-left:2px}
-.pocv .pph.on{background:var(--sky);color:#fff}
-.pocv .pph.on i{background:#fff;color:var(--sky)}
-.pocv .pph.on.now em{background:rgba(255,255,255,.25);color:#fff}
-.pocv .pph-note{margin-left:auto;font-size:11px;font-weight:700;color:var(--major);white-space:nowrap}
-.pocv .pph-note a{color:var(--sky);cursor:pointer;font-weight:800}
+/* 표준 프로세스 여정 팝업 (openStagePopup) — 스코프: .jrny */
+.jrny .jr{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:11px;background:var(--card-alt);margin-bottom:8px}
+.jrny .jr.on{background:var(--sky-soft);border-color:var(--sky);box-shadow:0 0 0 1px var(--sky) inset}
+.jrny .jr.gate{background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(20,51,92,.03) 10px,rgba(20,51,92,.03) 20px);border-style:dashed}
+.jrny .jm{flex:none;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800}
+.jrny .jr.gate .jm{background:none;color:var(--muted);font-size:15px}
+.jrny .jt{flex:1;min-width:0}
+.jrny .jt b{display:block;font-size:13.5px;color:var(--navy-deep)}
+.jrny .jt span{font-size:11.5px;color:var(--muted)}
+.jrny .jtag{flex:none;font-size:10.5px;font-weight:800;color:var(--muted);background:var(--line-soft);border-radius:9px;padding:2.5px 9px}
+.jrny .jtag.now{background:var(--sky);color:#fff}
+.jrny .jp-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.jrny .jp{font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+
+/* POC 세부 단계 칩 — 종합 클리어 트랙 내 (클릭 = 단계 화면 전환, P1·P2=기획·제작 / P3~P5=평가) */
+.tk-exec .pcs9{border:1px solid var(--line-soft);border-radius:10px;background:var(--card);padding:7px 10px 6px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
+.tk-exec .pcs9-r{display:flex;align-items:center;gap:5px}
+.tk-exec .pcs9 .cap{font-size:10.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;margin-right:3px;white-space:nowrap}
+.tk-exec .pc9{flex:1;text-align:center;font-size:10.5px;font-weight:800;color:var(--muted);background:var(--card-alt);border:1px solid var(--line-soft);border-radius:8px;padding:3.5px 0;cursor:pointer;white-space:nowrap}
+.tk-exec .pc9:hover{background:var(--sky-soft);color:var(--sky)}
+.tk-exec .pc9.done{color:var(--green)}
+.tk-exec .pc9.now{border-color:var(--green)}
+.tk-exec .pc9.on{background:var(--sky);border-color:var(--sky);color:#fff}
+.tk-exec .pcs9-nm{margin-top:4px;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tk-exec .pcs9-nm b{color:var(--green)}
+.tk-exec .pcs9-nm em{font-style:normal;color:var(--major);font-weight:700}
 
 /* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
 .pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
