@@ -138,15 +138,15 @@ function renderHomePortfolio(withData, entries, proc) {
     const oc = (e.summary || {}).openCritical || 0;
     const failN = ((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length;
     const dd = (e.gate || {}).reviewDate ? ddNum(e.gate.reviewDate) : 999;
-    if (oc) return { cls: 'crit', tag: `치명 오픈 ${oc}` };
-    if (failN) return { cls: 'warn', tag: `기준 미달 ${failN}` };
-    if (dd <= 7) return { cls: 'soon', tag: `게이트 임박` };
+    if (oc) return { cls: 'crit', tag: `치명결함 ${oc}건` };
+    if (failN) return { cls: 'warn', tag: `기준 미달 ${failN}건` };
+    if (dd <= 14) return { cls: 'soon', tag: `심사 임박` };
     return { cls: 'ok', tag: '정상' };
   };
 
   // KPI
   const N = withData.length;
-  const soonN = withData.filter(e => (e.gate || {}).reviewDate && ddNum(e.gate.reviewDate) <= 7).length;
+  const soonN = withData.filter(e => (e.gate || {}).reviewDate && ddNum(e.gate.reviewDate) <= 14).length;
   const critN = withData.reduce((a, e) => a + ((e.summary || {}).openCritical || 0), 0);
   const failN = withData.reduce((a, e) => a + (((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length), 0);
   const kchip = (k, v, cls) => `<span class="jk ${cls || ''}"><em>${esc(k)}</em><b>${v}</b></span>`;
@@ -175,18 +175,26 @@ function renderHomePortfolio(withData, entries, proc) {
     const prj = e.project || {};
     const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
     const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.department || ''].filter(Boolean).join(' · ');
-    // 게이트 기준 준비도 — 5개 점(충족/진행/미달/대기)
+    // 게이트 통과 기준 준비도 — 5개 점(충족/진행/미달/대기)
     const crit9 = (g.criteria || []);
     const passN = crit9.filter(c => c.status === 'pass').length;
+    const failN = crit9.filter(c => c.status === 'fail').length;
     const dots = crit9.map(c => `<span class="gdot" style="background:${GST[c.status] || '#c3cfdd'}" title="${esc(c.label || '')}"></span>`).join('');
     const closed = sd.closed || 0, sdTot = closed + (sd.verifying || 0) + (sd.acting || 0) + (sd.new || 0);
+    // 평문 한 줄 — 결정권자용 "결론"
+    const ddNum2 = /^D-(\d+)$/.exec(dd || ''); const soon = ddNum2 && +ddNum2[1] <= 14;
+    const line = oc ? `치명 결함 ${oc}건 해결 중 — 다음 심사 전 마무리 필요`
+      : failN ? `통과 기준 ${failN}건 미달 — 보완 진행 중`
+      : soon ? `다음 심사 임박 (${dd}) — 마무리 점검 단계`
+      : `순조 진행 — 주요 기준 충족`;
     return `<div class="hpc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="hpc-top">
         <span class="hpc-stg" style="background:${esc(col)}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
         <b class="hpc-nm">${esc(nm)}</b>
         <span class="hpc-hl">${esc(h.tag)}</span>
       </div>
-      <div class="hpc-meta">${esc(meta)} · 프로세스 ${stagePos(e.stage)}단계 · 기간 ${esc((prj.startDate || '').slice(2))}~${esc((prj.endDate || '').slice(2))}</div>
+      <div class="hpc-meta">${esc(meta)} · ${esc(STAGE_LABEL[e.stage] || '')} 단계(${stagePos(e.stage)}) · 기간 ${esc((prj.startDate || '').slice(2))}~${esc((prj.endDate || '').slice(2))}</div>
+      <div class="hpc-line">${esc(line)}</div>
       <div class="hpc-body">
         <div class="hpc-gauge">
           <svg viewBox="0 0 42 42" class="hpc-donut"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>
@@ -195,16 +203,16 @@ function renderHomePortfolio(withData, entries, proc) {
         </div>
         <div class="hpc-num">
           <div class="n"><b>${fmt(prog.cum)}</b><span>/ ${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
-          <div class="r">${esc((e.run || {}).criterion || '')}</div>
-          <div class="g">게이트 <b>${esc(dd || '—')}</b> · ${esc((g.reviewDate || '').slice(2))}</div>
+          <div class="r">평가 진행률 · ${esc((e.run || {}).criterion || '')}</div>
+          <div class="g">다음 심사 <b>${esc(dd || '—')}</b> · ${esc((g.reviewDate || '').slice(2))}</div>
         </div>
       </div>
       <div class="hpc-meters">
-        ${crit9.length ? `<div class="hpc-meter gate"><span class="ml">게이트</span><span class="gdots">${dots}</span><span class="mn"><b>${passN}</b>/${crit9.length} 충족</span></div>` : ''}
-        ${meter('폐루프', [[closed, 'var(--green)', '종결'], [sd.verifying, 'var(--sky)', '검증'], [sd.acting, 'var(--major)', '조치'], [sd.new, 'var(--crit)', '신규']], `종결 <b>${closed}</b>/${sdTot}`)}
-        ${meter('심각도', [[crit, '#C0392B', '치명'], [d.Major, '#E08600', '중대'], [d.Minor, '#3F7CC4', '경미']], `발굴 <b>${tot}</b>${crit ? ` · <b style="color:var(--crit)">치명 ${crit}${oc ? `·오픈${oc}` : ''}</b>` : ''}`)}
+        ${crit9.length ? `<div class="hpc-meter gate"><span class="ml">통과 기준</span><span class="gdots">${dots}</span><span class="mn"><b>${passN}</b>/${crit9.length} 충족</span></div>` : ''}
+        ${meter('결함 조치', [[closed, 'var(--green)', '완료'], [sd.verifying, 'var(--sky)', '검증'], [sd.acting, 'var(--major)', '조치중'], [sd.new, 'var(--crit)', '미착수']], `해결 <b>${closed}</b>/${sdTot}건`)}
+        ${meter('결함 등급', [[crit, '#C0392B', '치명'], [d.Major, '#E08600', '중대'], [d.Minor, '#3F7CC4', '경미']], `발굴 <b>${tot}</b>건${crit ? ` · <b style="color:var(--crit)">치명 ${crit}</b>` : ''}`)}
       </div>
-      ${e.tecop ? `<div class="hpc-tecop">${tecopRow(e.tecop, true)}</div>` : ''}
+      ${e.tecop ? `<div class="hpc-tecop"><span class="tt-lbl">비기술 리스크</span>${tecopRow(e.tecop)}</div>` : ''}
     </div>`;
   };
 
@@ -216,14 +224,20 @@ function renderHomePortfolio(withData, entries, proc) {
       </div>
       <div class="jhero-k">
         ${kchip('진행 과제', `${N}건`)}
-        ${kchip('게이트 임박', `${soonN}`, soonN ? 'hl' : '')}
-        ${kchip('오픈 치명', `${critN}`, critN ? 'bad' : 'ok')}
-        ${kchip('기준 미달', `${failN}`, failN ? 'bad' : 'ok')}
+        ${kchip('심사 임박', `${soonN}건`, soonN ? 'hl' : '')}
+        ${kchip('미해결 치명결함', `${critN}건`, critN ? 'bad' : 'ok')}
+        ${kchip('통과기준 미달', `${failN}건`, failN ? 'bad' : 'ok')}
       </div>
     </section>
     <section class="sbox jsec">
       <div class="sbox-h"><span class="tag">과제 현황</span><h2>진행 중 과제 ${N}건 — 단계 순</h2>
-        <span class="d">각 과제 독립 · 좌측 색 = 건강도(빨강 치명·주황 미달·하늘 게이트 임박·정상) · 클릭 → 과제 페이지</span></div>
+        <span class="d">카드 클릭 → 과제 상세 · 왼쪽 색 띠 = 주의 신호(빨강 치명결함·주황 기준미달·하늘 심사임박·초록 정상)</span></div>
+      <div class="hlegend">
+        <span class="hl-g"><em>통과 기준</em><i class="d ok"></i>충족<i class="d pr"></i>진행<i class="d fa"></i>미달</span>
+        <span class="hl-g"><em>결함 조치</em><i class="b ok"></i>완료<i class="b vf"></i>검증<i class="b ac"></i>조치중<i class="b nw"></i>미착수</span>
+        <span class="hl-g"><em>결함 등급</em><i class="b cr"></i>치명<i class="b mj"></i>중대<i class="b mn"></i>경미</span>
+        <span class="hl-note">각 단계 통과 = 다음 단계로 · 치명결함은 통과 전 반드시 해결</span>
+      </div>
       <div class="hcards">${list.map(card).join('')}</div>
     </section>`;
 
