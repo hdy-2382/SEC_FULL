@@ -91,6 +91,48 @@
   .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer}
   .banner{background:#fff7e6;border:1px solid #f0d79a;color:#8a6420;border-radius:8px;padding:8px 12px;font-size:12.5px;margin:0 2px 12px}
   /* 탭(섹션) 박스 */
+  /* ── 한눈에 보기 여정 뷰 (renderHomeJourney) ── */
+  .jhero{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:22px 24px;margin:6px 0 22px;border-radius:18px;
+    background:linear-gradient(105deg,var(--navy-deep),#1c4a82 70%,#276aa8);color:#eaf3fc;box-shadow:0 3px 14px rgba(20,51,92,.2)}
+  .jhero-l{flex:1;min-width:220px}
+  .jhero .jh-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#a9cdf0}
+  .jhero .jh-title{font-size:27px;font-weight:800;letter-spacing:-.01em;margin-top:3px;color:#fff}
+  .jhero-k{display:flex;gap:10px;flex-wrap:wrap}
+  .jhero .jk{display:flex;flex-direction:column;gap:2px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:11px;padding:8px 14px;min-width:96px}
+  .jhero .jk em{font-style:normal;font-size:10.5px;font-weight:700;color:#a9cdf0}
+  .jhero .jk b{font-size:17px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+  .jhero .jk.ok b{color:#8fe0b0}
+  .jhero .jk.hl{background:rgba(95,176,236,.24);border-color:rgba(95,176,236,.5)}
+  .jsec .sbox-h .d{white-space:normal}
+  .jflow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 2px 8px}
+  .jflow .jconn{flex:none;align-self:center;color:#b3c3d4;font-weight:800;font-size:18px;padding:0 8px}
+  .jstn{flex:1 1 0;min-width:186px;background:var(--card);border:1px solid var(--line-soft);border-top:3px solid var(--sc,#888);
+    border-radius:13px;padding:13px 15px;cursor:pointer;transition:box-shadow .14s,transform .1s;display:flex;flex-direction:column;gap:9px}
+  .jstn:hover{box-shadow:0 5px 16px rgba(20,51,92,.14);transform:translateY(-2px)}
+  .jstn.active{box-shadow:0 0 0 2px var(--sc) inset,0 4px 14px rgba(20,51,92,.12)}
+  .jstn-h{display:flex;align-items:center;gap:8px}
+  .jstn-h .jnum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--sc,#888);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .jstn-h b{font-size:15px;font-weight:800;color:var(--navy-deep)}
+  .jstn-h .jnow{margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:var(--sc,#888);border-radius:8px;padding:2px 8px}
+  .jstn-run{font-size:11px;color:var(--muted);font-weight:600;margin-top:-2px}
+  .jgauge .jg-num{display:flex;align-items:baseline;gap:3px}
+  .jgauge .jg-num b{font-size:23px;font-weight:800;color:var(--navy-deep);line-height:1;font-variant-numeric:tabular-nums}
+  .jgauge .jg-num span{font-size:12px;color:var(--muted)}
+  .jgauge .jg-num em{margin-left:auto;font-style:normal;font-size:12px;font-weight:800;color:var(--ink-soft)}
+  .jgauge .jg-bar{height:7px;border-radius:5px;background:var(--line-soft);overflow:hidden;margin-top:5px}
+  .jgauge .jg-bar i{display:block;height:100%;border-radius:5px}
+  .jstn-gate{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;border-top:1px solid var(--line-soft);padding-top:8px}
+  .jstn-gate span{color:var(--muted);font-weight:700}
+  .jstn-gate b{color:var(--navy-deep);font-weight:800;font-variant-numeric:tabular-nums}
+  .jsev{display:flex;align-items:center;gap:8px}
+  .jsev-bar{flex:1;display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--line-soft);gap:1px}
+  .jsev-bar i{display:block;height:100%}
+  .jsev-n{flex:none;font-size:10.5px;font-weight:700;color:var(--muted)}
+  .jcr{font-size:11px;font-weight:800;border-radius:8px;padding:3px 9px;text-align:center}
+  .jcr.hot{background:var(--crit-soft);color:var(--crit)}
+  .jcr.ok{background:var(--green-soft);color:var(--green)}
+  @media(max-width:900px){.jflow{flex-wrap:nowrap}.jstn{min-width:170px}}
+
   .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:30px;box-shadow:var(--shadow-sm)}
   .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}
   .sbox-h .tag{font-size:11px;font-weight:800;color:#fff;background:var(--navy);padding:4px 12px;border-radius:20px;letter-spacing:.03em}

@@ -126,10 +126,81 @@ function homeCard(e) {
   </div>`;
 }
 
+/* 여정 뷰 — 드럼 자동화의 4단계를 스테이션 카드로 (표준 프로세스·깔때기·과제 카드 통합) */
+function renderHomeJourney(jr, entries, proc) {
+  const projName = (jr[0].name || '드럼 자동화').replace(/\s*\(.*\)$/, '');
+  const dept = (jr[0].project || {}).department || '';
+  // 활성 단계 = 지나지 않은 가장 가까운 게이트
+  let activeIdx = jr.findIndex(e => (e.gate || {}).reviewDate && !ddayLabel(e.gate.reviewDate).startsWith('D+'));
+  if (activeIdx < 0) activeIdx = jr.length - 1;
+
+  const totRec = jr.reduce((a, e) => a + ((e.summary || {}).records || 0), 0);
+  const upCrit = (jr[0].summary.sevDist.Critical || 0);
+  const downCrit = jr.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
+  const ag = jr[activeIdx] && jr[activeIdx].gate;
+  const kchip = (k, v, cls) => `<span class="jk ${cls || ''}"><em>${esc(k)}</em><b>${v}</b></span>`;
+
+  // 스테이션 카드
+  const UNIT = { poc: 'h', pilot: 'h', mass: 'Cy', spread: '호기', ops: '' };
+  const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}"></i>` : '';
+  const stations = jr.map((e, i) => {
+    const s = e.summary || {}, d = s.sevDist || {}, prog = s.progress || {};
+    const g = e.gate || {}, dd = g.reviewDate ? ddayLabel(g.reviewDate) : '';
+    const col = STAGE_COLOR[e.stage] || '#888';
+    const pct = Math.max(0, Math.min(100, prog.pct || 0));
+    const crit = d.Critical || 0, oc = s.openCritical || 0;
+    const tot = crit + (d.Major || 0) + (d.Minor || 0);
+    const critBadge = crit
+      ? `<span class="jcr hot">치명 ${crit}${oc ? ` · 오픈 ${oc}` : ' 소진'}</span>`
+      : `<span class="jcr ok">치명 0</span>`;
+    const run = e.run || {};
+    return `<div class="jstn${i === activeIdx ? ' active' : ''}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
+      <div class="jstn-h"><span class="jnum">${i + 1}</span><b>${esc(STAGE_LABEL[e.stage] || e.stage)}</b>
+        ${i === activeIdx ? '<span class="jnow">진행 중</span>' : ''}</div>
+      <div class="jstn-run">${esc(run.criterion || '')} ${prog.target != null ? `${fmt(prog.target)}${UNIT[e.stage] || ''}` : ''}</div>
+      <div class="jgauge"><div class="jg-num"><b>${fmt(prog.cum)}</b><span>/${fmt(prog.target)}${UNIT[e.stage] || ''}</span><em>${Math.round(pct)}%</em></div>
+        <div class="jg-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div></div>
+      <div class="jstn-gate"><span>게이트</span><b>${esc(dd || '—')}</b></div>
+      <div class="jsev"><div class="jsev-bar">${seg(crit, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
+        <span class="jsev-n">발굴 ${tot}</span></div>
+      ${critBadge}</div>`;
+  }).join('<span class="jconn">→</span>');
+
+  const html = `
+    <section class="jhero">
+      <div class="jhero-l">
+        <div class="jh-eyebrow">${esc(dept)} · 표준 프로세스 4단계 여정</div>
+        <h1 class="jh-title">${esc(projName)}</h1>
+      </div>
+      <div class="jhero-k">
+        ${kchip('총 발굴', `${totRec}건`)}
+        ${kchip('치명 소진', `${upCrit} → 0`, downCrit ? '' : 'ok')}
+        ${ag ? kchip('다음 게이트', `${esc((jr[activeIdx].abbr) || '')} ${esc(ddayLabel(ag.reviewDate))}`, 'hl') : ''}
+      </div>
+    </section>
+    <section class="sbox jsec">
+      <div class="sbox-h"><span class="tag">과제 여정</span><h2>단계별 성적 · 치명 에러는 상류에서 소진</h2>
+        <span class="d">치명 ${upCrit}건을 POC에서 소진 → 이후 전 단계 0 · 하류 평가비용↓ · 카드 클릭 → 단계 페이지</span></div>
+      <div class="jflow">${stations}</div>
+    </section>`;
+
+  $('s-home').innerHTML = html;
+  document.querySelectorAll('#s-home .jstn[data-go]').forEach(c =>
+    c.addEventListener('click', () => { location.hash = '#/' + c.dataset.go; }));
+}
+
+/* 한눈에 보기 — 드럼 자동화 1개 과제의 표준 프로세스 여정을 한 장으로.
+   ① 헤더 밴드(정체성 + 핵심 KPI)  ② 여정 스테이션(단계별 성적 + 치명 소진 스토리) */
 function renderHome() {
   const proc = (REG && REG.org && REG.org.process) || {};
   const entries = (PORTFOLIO && PORTFOLIO.projects) || [];
   const withData = entries.filter(e => e.hasData);
+  const ORDER9 = ['poc', 'pilot', 'mass', 'spread', 'ops'];
+  const jr = withData.filter(e => (e.summary || {}).sevDist)
+    .sort((a, b) => ORDER9.indexOf(a.stage) - ORDER9.indexOf(b.stage));
+
+  if (jr.length >= 2) return renderHomeJourney(jr, entries, proc);
+  // 폴백(단계 데이터 없음): 기존 상세 뷰 유지
 
   // 상단 요약 밴드는 두지 않는다 — 과제 5건 규모에선 카드가 곧 요약이고, 게이트 D-day·TECOP는
   // 카드 안에 이미 있다. 최소 신호(가장 임박한 게이트·기준 미달 수)만 과제 현황 헤더에 한 줄로.
@@ -173,77 +244,10 @@ function renderHome() {
       ${principles ? `<div class="principles">${principles}</div>` : ''}
     </section>` : '';
 
-  // ①-2 심각도 깔때기 — 이 체계의 목적 그 자체: 누적 대장 기반으로 크리티컬을 조기(상류)에
-  //     소진해 뒤 단계를 싸게 만든다. 단계 순서대로 발굴 심각도 구성과 오픈 Critical을 본다.
-  const ORDER9 = ['poc', 'pilot', 'mass', 'spread', 'ops'];
-  const journey = withData.filter(e => (e.summary || {}).sevDist)
-    .sort((a, b) => ORDER9.indexOf(a.stage) - ORDER9.indexOf(b.stage));
-  let funnelBox = '';
-  if (journey.length >= 2) {
-    const maxTot = Math.max(...journey.map(e => {
-      const d = e.summary.sevDist; return (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
-    }), 1);
-    const seg = (n, col, label) => n ? `<i style="flex:${n};background:${col}" title="${label ? label + ' ' : ''}${n}건"></i>` : '';
-    // 원인분류 팔레트 — 단계 페이지의 카테고리 색 1:1 고정과 동일 (styles.css). [key, 라벨, 색, 세그 글자색]
-    const CAUSE_HOME = [
-      ['concept', '컨셉', '#C0392B'], ['design', '설계', '#2E89D6'], ['parts', '부품', '#7A4FB3'],
-      ['build', '제작·조립', '#B36F0A'], ['install', '설치·시공', '#0e7a8a'], ['sw', 'SW', '#E08600', '#4a3000'],
-      ['env', '환경·자재', '#3E9B6E'], ['oper', '운영·조작', '#6E7D90'], ['etc', '기타', '#9aa9bb'],
-    ];
-    // 행 라벨 — 단계 + 과제명 (한 단계에 여러 과제가 있어도 구분되게)
-    const fnStg = e => `<span class="fn-stg" title="${esc(e.name || '')} — ${esc(STAGE_LABEL[e.stage] || e.stage)}">
-      <b style="color:${esc(STAGE_COLOR[e.stage] || '#666')}">${esc(STAGE_LABEL[e.stage] || e.stage)}</b><small>${esc(e.name || '')}</small></span>`;
-    // 왼쪽 — 심각도 깔때기 (총량 비례 폭)
-    const fRows = journey.map(e => {
-      const d = e.summary.sevDist, oc = e.summary.openCritical || 0;
-      const tot = (d.Critical || 0) + (d.Major || 0) + (d.Minor || 0);
-      return `<div class="fn-row" data-go="${esc(e.id)}">
-        ${fnStg(e)}
-        <div class="fn-bar" style="width:${Math.round(tot / maxTot * 100)}%">${seg(d.Critical, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
-        <span class="fn-tot">${tot}건</span>
-        <span class="fn-crit${(d.Critical || 0) ? '' : ' zero'}">치명 ${d.Critical || 0}${oc ? ` <b>· 오픈 ${oc}</b>` : ''}</span>
-      </div>`;
-    }).join('');
-    // 오른쪽 — 원인분류 구성 (전폭 구성비 · 세그 안에 라벨)
-    const cRows = journey.map(e => {
-      const cd = e.summary.causeDist || {};
-      const tot = CAUSE_HOME.reduce((a, [k]) => a + (cd[k] || 0), 0);
-      const segs = CAUSE_HOME.map(([k, lb, col, txt]) => {
-        const n = cd[k]; if (!n) return '';
-        return `<span class="fc-sg" style="flex:${n};background:${col}${txt ? `;color:${txt}` : ''}" title="${lb} ${n}건"><b>${lb} ${n}</b></span>`;
-      }).join('');
-      return `<div class="fn-row" data-go="${esc(e.id)}">
-        ${fnStg(e)}
-        <div class="fc-bar">${segs || '<span class="mini">기록 없음</span>'}</div>
-      </div>`;
-    }).join('');
-    // 분류 레전드 — 여정에 실제 등장하는 분류만
-    const usedCats = CAUSE_HOME.filter(([k]) => journey.some(e => ((e.summary.causeDist || {})[k] || 0) > 0));
-    const catLegend = usedCats.map(([, lb, col]) => `<span><i style="background:${col}"></i>${lb}</span>`).join('');
-    const upCrit = journey[0].summary.sevDist.Critical || 0;
-    const downCrit = journey.slice(1).reduce((a, e) => a + (e.summary.sevDist.Critical || 0), 0);
-    funnelBox = `
-    <section class="sbox">
-      <div class="sbox-h"><span class="tag">${esc(orgT('funnelTag', '과제 여정'))}</span><h2>${esc(orgT('funnelTitle', ''))}</h2><span class="d"></span></div>
-      <div class="fn2">
-        <div class="panel">
-          <div class="fn-h">심각도 깔때기</div>
-          <div class="fnl">${fRows}</div>
-          <div class="clegend"><span><i style="background:#C0392B"></i>치명</span><span><i style="background:#E08600"></i>중대</span><span><i style="background:#3F7CC4"></i>경미</span></div>
-        </div>
-        <div class="panel">
-          <div class="fn-h">원인분류 구성</div>
-          <div class="fnl">${cRows}</div>
-          <div class="clegend">${catLegend}</div>
-        </div>
-      </div>
-    </section>`;
-  }
-
-  // ② 과제 카드
+  // ② 과제 카드 (폴백 — 여정 데이터가 없을 때)
   const cards = entries.map(homeCard).join('');
 
-  $('s-home').innerHTML = procBox + funnelBox + `
+  $('s-home').innerHTML = procBox + `
     <section class="sbox">
       <div class="sbox-h"><span class="tag">${esc(orgT('cardsTag', '과제 현황'))}</span><h2>${esc(orgT('cardsTitle', '진행 중 과제'))} ${entries.length}${esc(orgT('cardsUnit', '건'))}</h2><span class="d">${cardsNote}</span></div>
       <div class="pcards">${cards}</div>
