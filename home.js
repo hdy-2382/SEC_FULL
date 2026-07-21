@@ -151,29 +151,53 @@ function renderHomePortfolio(withData, entries, proc) {
   const failN = withData.reduce((a, e) => a + (((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length), 0);
   const kchip = (k, v, cls) => `<span class="jk ${cls || ''}"><em>${esc(k)}</em><b>${v}</b></span>`;
 
+  // 단계 순서로 정렬 (프로세스 진행 순)
+  const ORD = { poc: 0, pilot: 1, mass: 2, spread: 3, ops: 4 };
+  const list = withData.slice().sort((a, b) => (ORD[a.stage] ?? 9) - (ORD[b.stage] ?? 9));
+  const seg = (n, col, lb) => n ? `<i style="flex:${n};background:${col}" title="${lb} ${n}"></i>` : '';
+  const stagePos = k => { const i = stages.findIndex(r => r.key === k); return i < 0 ? '' : `${i + 1}/${stages.length}`; };
+
   const card = e => {
-    const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {};
+    const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {}, d = s.sevDist || {};
     const col = STAGE_COLOR[e.stage] || '#888';
     const pct = Math.max(0, Math.min(100, prog.pct || 0));
     const h = health(e);
     const dd = g.reviewDate ? ddayLabel(g.reviewDate) : '';
     const nm = (e.name || '').replace(/\s*\(.*\)$/, '');
-    return `<div class="ppc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
-      <div class="ppc-h"><b>${esc(nm)}</b><span class="ppc-dd">${esc(dd)}</span></div>
-      <div class="ppc-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div>
-      <div class="ppc-f"><span class="ppc-g">${fmt(prog.cum)}/${fmt(prog.target)}${UNIT[e.stage] || ''} · ${Math.round(pct)}%</span>
-        <span class="ppc-hl">${esc(h.tag)}</span></div>
+    const prj = e.project || {};
+    const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
+    const recur = s.recur;
+    const meta = [prj.team ? 'PM ' + prj.team.split(',')[0] : '', prj.department || '',
+      prj.startDate ? `${prj.startDate.slice(2)}~${(prj.endDate || '').slice(2)}` : ''].filter(Boolean).join(' · ');
+    const stat = (lb, v, cls) => `<div class="hpc-st"><em>${lb}</em><b class="${cls || ''}">${v}</b></div>`;
+    return `<div class="hpc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
+      <div class="hpc-top">
+        <span class="hpc-stg" style="background:${esc(col)}">${esc(STAGE_LABEL[e.stage] || e.stage)}</span>
+        <b class="hpc-nm">${esc(nm)}</b>
+        <span class="hpc-hl">${esc(h.tag)}</span>
+      </div>
+      <div class="hpc-meta">${esc(meta)} · 프로세스 ${stagePos(e.stage)}단계</div>
+      <div class="hpc-body">
+        <div class="hpc-gauge">
+          <svg viewBox="0 0 42 42" class="hpc-donut"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="${esc(col)}" stroke-width="5" stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="25" stroke-linecap="round"/></svg>
+          <span class="hpc-pct">${Math.round(pct)}<small>%</small></span>
+        </div>
+        <div class="hpc-num">
+          <div class="n"><b>${fmt(prog.cum)}</b><span>/ ${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
+          <div class="r">${esc((e.run || {}).criterion || '')}</div>
+          <div class="g">게이트 <b>${esc(dd || '—')}</b></div>
+        </div>
+      </div>
+      <div class="hpc-stats">
+        ${stat('발굴', tot)}
+        ${stat('치명', crit + (oc ? ` <small>오픈 ${oc}</small>` : ''), crit ? 'hot' : 'okv')}
+        ${recur != null ? stat('재발', recur, recur ? 'hot' : 'okv') : stat('상태', ({new:'신규',acting:'조치중',verifying:'검증중',closed:'종결'}[Object.entries(s.statusDist||{}).sort((a,b)=>b[1]-a[1])[0]?.[0]] || '—'))}
+      </div>
+      <div class="hpc-sev">${seg(crit, '#C0392B', '치명')}${seg(d.Major, '#E08600', '중대')}${seg(d.Minor, '#3F7CC4', '경미')}</div>
+      ${e.tecop ? `<div class="hpc-tecop">${tecopRow(e.tecop, true)}</div>` : ''}
     </div>`;
   };
-
-  const cols = stages.map(r => {
-    const list = withData.filter(e => e.stage === r.key);
-    const nm9 = String(r.stg || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
-    return `<div class="ppcol" style="--sc:${esc(r.color || '#8a99ac')}">
-      <div class="ppcol-h"><span class="ppcol-t">${esc(nm9)}</span><span class="ppcol-n">${list.length || '·'}</span></div>
-      <div class="ppcol-b">${list.map(card).join('') || '<div class="ppcol-e">진행 과제 없음</div>'}</div>
-    </div>`;
-  }).join('');
 
   const html = `
     <section class="jhero">
@@ -189,13 +213,13 @@ function renderHomePortfolio(withData, entries, proc) {
       </div>
     </section>
     <section class="sbox jsec">
-      <div class="sbox-h"><span class="tag">파이프라인</span><h2>단계별 진행 과제 — 표준 프로세스 위 위치</h2>
-        <span class="d">각 과제는 독립 · 카드 색 = 건강도(빨강 치명·주황 미달·정상) · 클릭 → 과제 페이지</span></div>
-      <div class="ppipe">${cols}</div>
+      <div class="sbox-h"><span class="tag">과제 현황</span><h2>진행 중 과제 ${N}건 — 단계 순</h2>
+        <span class="d">각 과제 독립 · 좌측 색 = 건강도(빨강 치명·주황 미달·하늘 게이트 임박·정상) · 클릭 → 과제 페이지</span></div>
+      <div class="hcards">${list.map(card).join('')}</div>
     </section>`;
 
   $('s-home').innerHTML = html;
-  document.querySelectorAll('#s-home .ppc[data-go]').forEach(c =>
+  document.querySelectorAll('#s-home .hpc[data-go]').forEach(c =>
     c.addEventListener('click', () => { location.hash = '#/' + c.dataset.go; }));
 }
 

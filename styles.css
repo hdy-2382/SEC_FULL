@@ -105,30 +105,44 @@
   .jhero .jk.bad b{color:#ff9e8f}
   .jhero .jk.hl{background:rgba(95,176,236,.24);border-color:rgba(95,176,236,.5)}
   .jsec .sbox-h .d{white-space:normal}
-  /* 파이프라인 보드 — 단계 열 + 과제 카드 */
-  .ppipe{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);gap:12px;overflow-x:auto;padding:4px 2px 8px}
-  .ppcol{background:rgba(255,255,255,.5);border:1px solid var(--line-soft);border-radius:12px;padding:0 0 8px;min-width:0}
-  .ppcol-h{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:2px solid var(--sc,#888)}
-  .ppcol-t{flex:1;min-width:0;font-size:12.5px;font-weight:800;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ppcol-n{flex:none;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--sc,#888);color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
-  .ppcol-b{display:flex;flex-direction:column;gap:8px;padding:9px}
-  .ppcol-e{font-size:11px;color:var(--muted);text-align:center;padding:16px 0;border:1px dashed var(--line);border-radius:9px}
-  .ppc{background:var(--card);border:1px solid var(--line-soft);border-left:3px solid var(--sc,#888);border-radius:10px;padding:10px 12px;cursor:pointer;transition:box-shadow .12s,transform .08s;display:flex;flex-direction:column;gap:7px}
-  .ppc:hover{box-shadow:0 4px 12px rgba(20,51,92,.13);transform:translateY(-1px)}
-  .ppc.h-crit{border-left-color:var(--crit)}
-  .ppc.h-warn{border-left-color:var(--major)}
-  .ppc.h-soon{border-left-color:var(--sky)}
-  .ppc-h{display:flex;align-items:baseline;gap:8px}
-  .ppc-h b{flex:1;min-width:0;font-size:13px;font-weight:800;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ppc-dd{flex:none;font-size:11px;font-weight:800;color:var(--ink-soft);font-variant-numeric:tabular-nums}
-  .ppc-bar{height:6px;border-radius:4px;background:var(--line-soft);overflow:hidden}
-  .ppc-bar i{display:block;height:100%;border-radius:4px}
-  .ppc-f{display:flex;align-items:center;gap:6px}
-  .ppc-g{flex:1;min-width:0;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ppc-hl{flex:none;font-size:10px;font-weight:800;border-radius:7px;padding:2px 7px;background:var(--green-soft);color:var(--green)}
-  .ppc.h-crit .ppc-hl{background:var(--crit-soft);color:var(--crit)}
-  .ppc.h-warn .ppc-hl{background:var(--major-soft);color:var(--major)}
-  .ppc.h-soon .ppc-hl{background:var(--sky-soft);color:var(--sky)}
+  /* 과제 카드 그리드 (4~5개 규모 — 풍부한 카드 2열) */
+  .hcards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:920px){.hcards{grid-template-columns:1fr}}
+  .hpc{background:var(--card);border:1px solid var(--line-soft);border-left:4px solid var(--sc,#888);border-radius:14px;
+    padding:15px 17px;cursor:pointer;transition:box-shadow .13s,transform .09s;display:flex;flex-direction:column;gap:11px}
+  .hpc:hover{box-shadow:0 6px 18px rgba(20,51,92,.14);transform:translateY(-2px)}
+  .hpc.h-crit{border-left-color:var(--crit)}
+  .hpc.h-warn{border-left-color:var(--major)}
+  .hpc.h-soon{border-left-color:var(--sky)}
+  .hpc-top{display:flex;align-items:center;gap:9px}
+  .hpc-stg{flex:none;font-size:10.5px;font-weight:800;color:#fff;border-radius:8px;padding:3px 10px;letter-spacing:.02em}
+  .hpc-nm{flex:1;min-width:0;font-size:16px;font-weight:800;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hpc-hl{flex:none;font-size:10.5px;font-weight:800;border-radius:8px;padding:3px 9px;background:var(--green-soft);color:var(--green)}
+  .hpc.h-crit .hpc-hl{background:var(--crit-soft);color:var(--crit)}
+  .hpc.h-warn .hpc-hl{background:var(--major-soft);color:var(--major)}
+  .hpc.h-soon .hpc-hl{background:var(--sky-soft);color:var(--sky)}
+  .hpc-meta{font-size:11px;color:var(--muted);margin-top:-4px}
+  .hpc-body{display:flex;align-items:center;gap:14px;padding:2px 0}
+  .hpc-gauge{flex:none;position:relative;width:60px;height:60px}
+  .hpc-donut{width:60px;height:60px;transform:rotate(-90deg)}
+  .hpc-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--navy-deep)}
+  .hpc-pct small{font-size:9px;margin-left:1px}
+  .hpc-num{flex:1;min-width:0}
+  .hpc-num .n{display:flex;align-items:baseline;gap:4px}
+  .hpc-num .n b{font-size:25px;font-weight:800;color:var(--navy-deep);line-height:1;font-variant-numeric:tabular-nums}
+  .hpc-num .n span{font-size:13px;color:var(--muted)}
+  .hpc-num .r{font-size:11.5px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+  .hpc-num .g{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .hpc-num .g b{color:var(--navy-deep);font-weight:800;font-variant-numeric:tabular-nums}
+  .hpc-stats{display:flex;gap:8px;border-top:1px solid var(--line-soft);padding-top:9px}
+  .hpc-st{flex:1;background:var(--card-alt);border-radius:9px;padding:6px 9px;min-width:0}
+  .hpc-st em{display:block;font-style:normal;font-size:10px;font-weight:700;color:var(--muted)}
+  .hpc-st b{font-size:15px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
+  .hpc-st b small{font-size:10px;font-weight:700;color:var(--crit);margin-left:3px}
+  .hpc-st b.hot{color:var(--crit)} .hpc-st b.okv{color:var(--green)}
+  .hpc-sev{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--line-soft);gap:1px}
+  .hpc-sev i{display:block;height:100%}
+  .hpc-tecop .tecop{gap:5px}
 
   .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:30px;box-shadow:var(--shadow-sm)}
   .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}
