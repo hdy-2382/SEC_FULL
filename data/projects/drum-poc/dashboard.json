@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T01:23:41Z",
+  "generatedAt": "2026-07-21T01:33:56Z",
   "source": "드럼POC_샘플.xlsx",
   "config": {
     "stage": "poc",
@@ -125,17 +125,20 @@
         {
           "label": "① 기성능 스펙",
           "value": "3/3",
-          "status": "pass"
+          "status": "pass",
+          "phase": 3
         },
         {
           "label": "② 72h 무에러",
           "value": "auto:run",
-          "status": "prog"
+          "status": "prog",
+          "phase": 5
         },
         {
           "label": "③ 비정상 시나리오",
           "value": "auto:abnormal",
-          "status": "prog"
+          "status": "prog",
+          "phase": 5
         },
         {
           "label": "④ Critical 미해결 0",
@@ -145,7 +148,8 @@
         {
           "label": "⑤ FMEA 상위 리스크",
           "value": "조치계획 수립",
-          "status": "pass"
+          "status": "pass",
+          "phase": 1
         }
       ]
     },

@@ -873,12 +873,13 @@ def gen_drum_poc():
                 {"id": "R-P2", "risk": "안전인증 컨셉 부적합 가능성", "level": "Low", "mitigation": "인증기관 사전 컨셉 미팅 — 합의서 확보 (P2)", "owner": "PM", "due": "2026-06-10", "progress": 100, "status": "완화 완료"},
             ]},
         ],
+        # phase = 이 기준이 결판나는 세부 단계 번호 (종합 클리어의 단계×기준 통합 행에 사용, 없으면 공통 조건)
         "gate": {"reviewDate": "2026-07-15", "label": "게이트 리뷰(Pilot 이관)", "criteria": [
-            {"label": "① 기성능 스펙", "value": "3/3", "status": "pass"},
-            {"label": "② 72h 무에러", "value": "auto:run", "status": "prog"},
-            {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog"},
+            {"label": "① 기성능 스펙", "value": "3/3", "status": "pass", "phase": 3},
+            {"label": "② 72h 무에러", "value": "auto:run", "status": "prog", "phase": 5},
+            {"label": "③ 비정상 시나리오", "value": "auto:abnormal", "status": "prog", "phase": 5},
             {"label": "④ Critical 미해결 0", "value": "현재 1건 · 무발생 41/50Cy", "status": "prog"},
-            {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass"},
+            {"label": "⑤ FMEA 상위 리스크", "value": "조치계획 수립", "status": "pass", "phase": 1},
         ]},
         "project": {"name": "드럼 자동화 (POC)", "department": "인프라 기술팀", "team": "김OO, 박OO",
                     "startDate": "2026-06-05", "endDate": "2026-07-15"},

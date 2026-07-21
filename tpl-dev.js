@@ -142,7 +142,7 @@ function devClearTrack(C, opts) {
   }).join('');
   return `<div class="prog-track tk-exec"><div class="pt-h">${title}</div>
     ${(opts && opts.sub) || ''}
-    <div class="clr-list">${tiles}</div>
+    ${(opts && opts.rows) || `<div class="clr-list">${tiles}</div>`}
     <div class="exec-roi"><div class="exec-roi-h">${esc(g.label || '게이트 리뷰')}${anyRisk ? `<a class="exr-more" onclick="openTecopModal()">리스크 레지스터 →</a>` : ''}</div>
       <div class="exr-dday"><b>${esc(dday || '—')}</b><span>${esc(g.reviewDate || '일정 미정')}</span></div>
       <div class="exr-tecop"><div class="exr-th">고정 안건 — TECOP 리스크</div>${trows || '<div class="mini">TECOP 미기재</div>'}</div></div>
@@ -814,38 +814,39 @@ function lcStepGo(i) {
   scrollTo(0, 0);
 }
 
-/* POC 세부 단계 타일 — 종합 클리어 트랙 안, TECOP 박스와 동일 양식(구획 박스).
-   현재(보는) 단계 하나만 표시, 클릭 = 단계 목록 팝업에서 이동 */
-function pocPhaseTile(C, view, cur) {
+/* 종합 클리어 = 단계×기준 통합 행 (POC 전용) — 세부 단계와 게이트 기준이 1:1로 겹치므로 한 몸으로.
+   각 행 = 세부 단계 + 그 단계에서 결판나는 게이트 기준(criteria.phase 매핑) · 클릭 = 단계 화면 이동.
+   phase 미지정 기준(Critical 미해결 등)은 '공통 조건' 행. TECOP 구획 박스와 동일 양식. */
+function pocClearPhases(C, view, cur) {
   const lc = C.lifecycle || [];
-  if (!lc.length) return '';
-  const s = lc[view] || {};
-  const name = String(s.stage || '').replace(/^P\d+\s*/, '');
-  const retro = view !== cur;
-  return `<div class="exr-box phase rowlink" onclick="openPocPhasePopup()" title="클릭 = 세부 단계 이동">
-    <div class="xh"><span class="exr-ax">P${view + 1}</span><span class="exr-k">${esc(name)}</span>
-      <span class="exr-st ${retro ? 'warn' : ''}">${retro ? '회고' : '진행 중'}</span>
-      <span class="exr-rn lo">${view + 1}/${lc.length} ▾</span></div>
-    <div class="exr-n2" title="${esc(s.note || '')}">${esc(s.note || '단계 화면 이동')}</div></div>`;
-}
-
-/* 세부 단계 이동 팝업 — 여정 팝업(.jrny)과 동일 양식 */
-function openPocPhasePopup() {
-  const C = (DATA || {}).config || {};
-  const lc = C.lifecycle || [];
-  if (!lc.length) return;
-  let cur = lc.findIndex(x => x.status === 'current'); if (cur < 0) cur = lc.length - 1;
-  let view = POC_PHASE[CUR_PID]; if (view == null || view < 0 || view >= lc.length) view = cur;
-  const rows = lc.map((s, i) => `
-    <div class="jr${i === view ? ' on' : ''}" onclick="closeModal();lcStepGo(${i})" style="cursor:pointer">
-      <span class="jm" style="background:${s.status === 'done' ? 'var(--green)' : i === cur ? 'var(--sky)' : '#9aa9bb'}">${s.status === 'done' ? '✓' : i + 1}</span>
-      <div class="jt"><b>${esc(s.stage)}</b><span>${esc(s.note || '')}</span></div>
-      ${i === cur ? '<span class="jtag now">진행 중</span>' : ''}${i === view && i !== cur ? '<span class="jtag">보는 중</span>' : ''}
-    </div>`).join('');
-  $('modal-title').textContent = 'POC 세부 단계 — 화면 이동';
-  $('modal-body').innerHTML = `<div class="jrny">${rows}
-    <div class="mini" style="margin-top:4px">P1·P2 = 기획·제작 관제 · P3~P5 = 평가 관제 — 클릭하면 해당 단계 화면으로 전환</div></div>`;
-  $('modal-back').classList.add('open');
+  const crits = ((C.gate || {}).criteria) || [];
+  const nm9 = s => String(s || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, '');
+  const ST9 = { pass: ['st-ok', '충족'], prog: ['st-warn', '진행'], fail: ['st-risk', '미달'], wait: ['st-ok', '대기'] };
+  const rows = lc.map((s, i) => {
+    const cs = crits.filter(c => c.phase === i + 1);
+    let cls, lb, note;
+    if (cs.length) {
+      const worst = cs.some(c => c.status === 'fail') ? 'fail' : cs.some(c => c.status !== 'pass') ? 'prog' : 'pass';
+      [cls, lb] = ST9[worst];
+      note = cs.map(c => `${nm9(c.label)} <b>${esc(devGateValue(String(c.value == null ? '' : c.value)))}</b>`).join(' · ');
+    } else {
+      cls = s.status === 'done' ? 'st-ok' : 'st-warn';
+      lb = s.status === 'done' ? '완료' : '진행';
+      note = esc(s.note || '');
+    }
+    return `<div class="exr-box ${cls} rowlink${i === view ? ' view' : ''}" onclick="lcStepGo(${i})" title="${esc(s.stage)}${i === cur ? ' — 진행 중' : ''} · 클릭 = 단계 화면">
+      <div class="xh"><span class="exr-ax"${i === cur ? ' style="background:var(--green)"' : ''}>P${i + 1}</span><span class="exr-k">${esc(String(s.stage || '').replace(/^P\d+\s*/, ''))}</span>
+        <span class="exr-st ${cls === 'st-warn' ? 'warn' : cls === 'st-risk' ? 'risk' : ''}" style="margin-left:auto">${i === cur ? '진행 중' : lb}</span></div>
+      <div class="exr-n2">${note}</div></div>`;
+  });
+  crits.filter(c => !c.phase).forEach(c => {
+    const [cls, lb] = ST9[c.status] || ST9.prog;
+    rows.push(`<div class="exr-box ${cls}">
+      <div class="xh"><span class="exr-ax" style="width:auto;padding:0 6px">공통</span><span class="exr-k">${esc(nm9(c.label))}</span>
+        <span class="exr-st ${cls === 'st-warn' ? 'warn' : cls === 'st-risk' ? 'risk' : ''}" style="margin-left:auto">${lb}</span></div>
+      <div class="exr-n2"><b>${esc(devGateValue(String(c.value == null ? '' : c.value)))}</b> — 전 단계 공통 게이트 조건</div></div>`);
+  });
+  return `<div class="clr-phases">${rows.join('')}</div>`;
 }
 
 /* P1 기획 산출물 히어로 — 체크 n/m + 목표/ROI */
@@ -924,7 +925,7 @@ function renderPocPlanBuild(C, view, cur) {
   $('s-overview').innerHTML = devShell('poc', C, {
     qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
-    clear: { sub: pocPhaseTile(C, view, cur) },
+    clear: { rows: pocClearPhases(C, view, cur) },
     aTitle: '과제 기획 → 산출물',
     aHero: pocPlanHero(C),
     aChart: pocPlanChecksPanel(C),
@@ -953,7 +954,7 @@ function renderPoc(C) {
   $('s-overview').innerHTML = devShell('poc', C, {
     qbox: view !== cur ? `<b>${esc((lc[view] || {}).stage || '')}</b> 화면 — 회고 보기 · 현재 단계는 <b>${esc((lc[cur] || {}).stage || '')}</b>
       <a onclick="lcStepGo(${cur})" style="cursor:pointer;color:var(--sky);font-weight:800;margin-left:6px">현재 단계 화면으로 →</a>` : '',
-    clear: { sub: pocPhaseTile(C, view, cur) },
+    clear: { rows: pocClearPhases(C, view, cur) },
     aTitle: '완주 진행 → 수렴 · 연결된 지표',
     aHero: devRunHero(C, [devStatAbnormal(), devStatGate(C)]),
     aChart: pocTrendPanel({ narrow: true, zoom: true }),

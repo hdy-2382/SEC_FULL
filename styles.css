@@ -259,18 +259,18 @@
   .tk-exec .clr-num{flex:none;min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:var(--clr-soft);color:var(--clr);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
   .tk-exec .clr-gauge{height:5px;border-radius:4px;background:var(--line-soft);overflow:hidden}
   .tk-exec .clr-gauge i{display:block;height:100%;border-radius:4px;background:var(--clr)}
-  .tk-exec .exec-roi{flex:1 1 auto;display:flex;flex-direction:column;gap:0;min-height:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:14px 15px}
+  .tk-exec .exec-roi{flex:1 1 auto;display:flex;flex-direction:column;gap:0;min-height:0;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;box-shadow:0 1px 3px rgba(20,51,92,.05);padding:11px 13px}
   .tk-exec .exec-roi-h{font-size:13px;font-weight:800;color:var(--navy-deep);padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
   /* 게이트 카드 — D-day 히어로 + 고정 안건 TECOP 행 리스트 (남는 높이를 행이 나눠 갖는다) */
-  .tk-exec .exr-dday{text-align:center;padding:8px 0 7px;border-bottom:1px dashed var(--line)}
+  .tk-exec .exr-dday{text-align:center;padding:6px 0 5px;border-bottom:1px dashed var(--line)}
   .tk-exec .exr-dday b{display:block;font-size:31px;font-weight:800;color:var(--navy-deep);line-height:1.1}
   .tk-exec .exr-dday span{font-size:12px;color:var(--muted);font-weight:600}
   .tk-exec .exr-note{font-size:10.5px;color:var(--muted);font-weight:600;text-align:center;padding:8px 0 6px;line-height:1.45}
   .tk-exec .exr-tecop{flex:1;display:flex;flex-direction:column;min-height:0;margin-top:2px}
   .tk-exec .exr-th{font-size:11px;font-weight:800;color:var(--ink-soft);letter-spacing:.02em;padding:2px 0 6px}
   /* TECOP 축별 구획 박스 — 상태색 좌측 보더 (양호 초록 / 주의 주황 / 리스크 빨강). 2줄: 헤더 + 비고 전체 */
-  .tk-exec .exr-box{--clr:var(--green);flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:2px;margin-bottom:5px;
-    border:1px solid var(--line-soft);border-left:3px solid var(--clr);border-radius:9px;background:var(--card-alt);padding:5px 10px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
+  .tk-exec .exr-box{--clr:var(--green);flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:1px;margin-bottom:4px;
+    border:1px solid var(--line-soft);border-left:3px solid var(--clr);border-radius:9px;background:var(--card-alt);padding:4px 9px;box-shadow:0 1px 2px rgba(20,51,92,.04)}
   .tk-exec .exr-box .xh{display:flex;align-items:center;gap:7px;min-width:0}
   .tk-exec .exr-box .xh .exr-rn{margin-left:auto}
   .tk-exec .exr-n2{font-size:10.5px;color:var(--muted);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -657,9 +657,13 @@
 .jrny .jp-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .jrny .jp{font-size:11px;font-weight:700;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
 
-/* POC 세부 단계 타일 — 종합 클리어 트랙 내, TECOP 구획 박스와 동일 양식 (클릭 = 단계 이동 팝업) */
-.tk-exec .exr-box.phase{--clr:var(--sky);flex:none}
-.tk-exec .exr-box.phase .exr-ax{width:auto;min-width:18px;padding:0 5px;border-radius:6px;background:var(--sky)}
+/* 종합 클리어 단계×기준 통합 행 (POC) — TECOP 구획 박스 동일 양식, 클릭 = 단계 화면 */
+.tk-exec .clr-phases{display:flex;flex-direction:column;min-height:0}
+.tk-exec .clr-phases .exr-box{flex:1}
+.tk-exec .clr-phases .exr-box.st-ok{--clr:var(--green)}
+.tk-exec .clr-phases .exr-box.view{outline:2px solid var(--sky);outline-offset:-1px}
+.tk-exec .exr-now{font-style:normal;font-size:9.5px;font-weight:800;color:var(--green);background:var(--green-soft);border-radius:8px;padding:1px 6px;white-space:nowrap}
+.tk-exec .clr-phases .exr-n2 b{color:var(--navy-deep)}
 
 /* POC 기획·제작 관제 (P1~P2) — 제작 진척 목록 · 사진 갤러리 · 컨셉 카드 */
 .pocv .bld-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
