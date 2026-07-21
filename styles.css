@@ -682,6 +682,21 @@
 /* 게이트 전제 확인 — 표는 자연 높이(전 행 노출), 패널 상단 정렬 */
 .pocv .gpre .fault-grid{align-items:start}
 .pocv .gpre .panel>.tbl-scroll{flex:none;max-height:none!important;overflow:visible}
+/* 상세 탭 2열 (의사결정 · 산출물) */
+.pocv .step-body .fault-grid.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:1000px){.pocv .step-body .fault-grid.two{grid-template-columns:1fr}}
+.pocv .step-body .fault-grid.two .panel>.tbl-scroll{flex:none;max-height:360px!important;overflow:auto}
+/* 의사결정·협의 이력 — 타임라인 */
+.pocv .dlog{display:flex;flex-direction:column;gap:2px}
+.pocv .dlog-it{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line-soft)}
+.pocv .dlog-it:first-child{border-top:none}
+.pocv .dlog-dt{flex:none;width:74px;font-size:11px;font-weight:800;color:var(--sky);font-variant-numeric:tabular-nums;padding-top:1px}
+.pocv .dlog-bd{flex:1;min-width:0}
+.pocv .dlog-h{display:flex;align-items:baseline;gap:8px}
+.pocv .dlog-h b{font-size:12.5px;color:var(--navy-deep)}
+.pocv .dlog-by{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.pocv .dlog-dc{font-size:12.5px;color:var(--ink);margin-top:2px;line-height:1.5}
+.pocv .dlog-nt{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.45}
 /* SW 체크리스트 (평가 화면 P4 패널) */
 .pocv .swck{display:flex;flex-direction:column;gap:2px;margin-top:2px}
 .pocv .swck-it{display:flex;align-items:center;gap:9px;padding:6px 0;border-top:1px solid var(--line-soft);min-width:0}

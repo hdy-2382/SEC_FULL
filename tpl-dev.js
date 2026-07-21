@@ -658,6 +658,48 @@ function openIssueModal(i) {
 }
 
 /* POC 상세 탭 (s-steps) — 원본 기록 전체: 대장 전수 · 런 기록 · 비정상 · 게이트/단계 */
+/* 설계·형상 변경 이력 (ECN) — 무엇을·왜·언제 바꿨나 + 유발 이슈 연동 */
+function pocChangeLogPanel(C) {
+  const CC = { '설계': 'c4-design', '기구': 'c4-parts', '부품': 'c4-parts', 'SW': 'c4-sw', '셋업': 'c4-install', '전장': 'c4-install' };
+  const chs = ((C.pocHistory || {}).changes || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const rows = chs.map(c => `<tr><td class="c">${esc(c.date || '')}</td>
+    <td class="c"><span class="c4 ${CC[c.cat] || ''}">${esc(c.cat || '')}</span></td>
+    <td><b>${esc(c.item || '')}</b></td><td>${esc(c.change || '')}</td>
+    <td class="mini">${esc(c.reason || '')}</td>
+    <td class="c">${c.link ? `<span class="rlink" title="유발 이슈">${esc(c.link)}</span>` : '—'}</td></tr>`).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>설계·형상 변경 이력 (ECN)</h3><span class="ps">무엇을·왜·언제 바꿨나 — 유발 이슈 연동</span></div>
+    <div class="tbl-scroll"><table><tr><th class="c">일자</th><th class="c">구분</th><th>대상</th><th>변경 내용</th><th>사유</th><th class="c">이슈</th></tr>${rows || '<tr><td colspan="6" class="mini c">config pocHistory.changes 미기재</td></tr>'}</table></div>
+  </div>`;
+}
+
+/* 의사결정·협의 이력 — 결정 로그(근거·오너·날짜) */
+function pocDecisionPanel(C) {
+  const ds = ((C.pocHistory || {}).decisions || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const items = ds.map(d => `<div class="dlog-it">
+    <div class="dlog-dt">${esc(d.date || '')}</div>
+    <div class="dlog-bd"><div class="dlog-h"><b>${esc(d.topic || '')}</b><span class="dlog-by">${esc(d.by || '')}</span></div>
+      <div class="dlog-dc">${esc(d.decision || '')}</div>
+      ${d.note ? `<div class="dlog-nt">${esc(d.note || '')}</div>` : ''}</div></div>`).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>의사결정·협의 이력</h3><span class="ps">결정 · 근거 · 오너 — 시점 고정</span></div>
+    <div class="dlog">${items || '<div class="mini">config pocHistory.decisions 미기재</div>'}</div>
+  </div>`;
+}
+
+/* 산출물·문서 — POC 기간 생성 문서 목록 */
+function pocDocsPanel(C) {
+  const TC = { '기준': 'b-ok', 'FMEA': 'b-major', '안전': 'b-crit', '설계': 'b-prog', '보고': 'b-wait' };
+  const ds = (C.pocHistory || {}).docs || [];
+  const rows = ds.map(d => `<tr><td><b>${esc(d.name || '')}</b></td>
+    <td class="c"><span class="badge ${TC[d.type] || 'b-wait'}">${esc(d.type || '')}</span></td>
+    <td class="c mini">${esc(d.owner || '')}</td><td class="c mini">${esc(d.date || '')}</td></tr>`).join('');
+  return `<div class="panel">
+    <div class="ph"><h3>산출물·문서</h3><span class="ps">POC 기간 생성 — 이관 패키지 후보</span></div>
+    <div class="tbl-scroll"><table><tr><th>문서</th><th class="c">구분</th><th class="c">오너</th><th class="c">일자</th></tr>${rows || '<tr><td colspan="4" class="mini c">config pocHistory.docs 미기재</td></tr>'}</table></div>
+  </div>`;
+}
+
 function pocSteps(C) {
   const all = (DATA.issues || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const runrows = (DATA.runlog || []).map(r =>
@@ -685,7 +727,15 @@ function pocSteps(C) {
       <div class="step-body">${pocAbnormalPanel()}</div>
     </section>
     <section class="step" id="d4">
-      ${stepHead(4, '단계 진행 · 게이트 통과 기준', '사전 확정된 잣대 — 데이터 이후 변경·재해석 금지 (docs/CRITERIA.md)', `리뷰 ${(C.gate || {}).reviewDate || '—'}`, 'prog')}
+      ${stepHead(4, '설계·형상 변경 이력', '개발 중 무엇을 왜 바꿨나 — 형상 관리·이슈 연동', `${((C.pocHistory || {}).changes || []).length}건`, 'prog')}
+      <div class="step-body">${pocChangeLogPanel(C)}</div>
+    </section>
+    <section class="step" id="d5">
+      ${stepHead(5, '의사결정·협의 · 산출물', '결정 로그(근거·오너) + POC 기간 생성 문서', `결정 ${((C.pocHistory || {}).decisions || []).length} · 문서 ${((C.pocHistory || {}).docs || []).length}`, 'prog')}
+      <div class="step-body"><div class="fault-grid two">${pocDecisionPanel(C)}${pocDocsPanel(C)}</div></div>
+    </section>
+    <section class="step" id="d6">
+      ${stepHead(6, '단계 진행 · 게이트 통과 기준', '사전 확정된 잣대 — 데이터 이후 변경·재해석 금지 (docs/CRITERIA.md)', `리뷰 ${(C.gate || {}).reviewDate || '—'}`, 'prog')}
       <div class="step-body">${lifecycleStagePanel(C)}${devGatePanel(C)}</div>
     </section>
   </div>`;
