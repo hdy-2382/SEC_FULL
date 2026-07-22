@@ -121,16 +121,22 @@
   .rc.h-crit .rc-badge{background:var(--crit-soft);color:var(--crit)}
   .rc.h-warn .rc-badge{background:var(--major-soft);color:var(--major)}
   .rc.h-soon .rc-badge{background:var(--sky-soft);color:var(--sky)}
-  .rc-track{display:flex;align-items:flex-start;padding:2px 2px 0}
-  .rc-node{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative}
-  .rc-node i{width:13px;height:13px;border-radius:50%;background:#fff;border:2px solid #d3ddea;z-index:1}
-  .rc-node em{font-style:normal;font-size:9.5px;font-weight:700;color:#a9b6c6;white-space:nowrap}
-  .rc-node.done i{background:var(--nc);border-color:var(--nc)}
-  .rc-node.done em{color:var(--ink-soft)}
-  .rc-node.cur i{width:16px;height:16px;background:var(--nc);border-color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--nc) 30%,transparent),0 1px 3px rgba(20,51,92,.25)}
-  .rc-node.cur em{color:var(--navy-deep);font-weight:800}
-  .rc-link{flex:1 1 0;height:2px;background:#e2e9f1;margin-top:7px}
-  .rc-node.done + .rc-link{background:var(--sc,#888);opacity:.5}
+  /* 내부 진행 축약 — lifecycle 세부 단계 타임라인 */
+  .rc-steps{display:flex;flex-direction:column;gap:0;padding:11px 13px;background:var(--card-alt);border-radius:11px}
+  .rc-steps-h{font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--muted);margin-bottom:7px}
+  .rc-step{display:grid;grid-template-columns:20px 104px 1fr;align-items:baseline;gap:8px;padding:4px 0;position:relative}
+  .rc-step .rc-sdot{grid-row:1;justify-self:center;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #cdd8e6;color:#fff;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;align-self:center}
+  .rc-step::before{content:"";position:absolute;left:9px;top:0;bottom:0;width:2px;background:#e2e9f1;z-index:0}
+  .rc-step:first-of-type::before{top:11px}
+  .rc-step:last-of-type::before{bottom:calc(100% - 11px)}
+  .rc-step .rc-sdot{z-index:1}
+  .rc-step.done .rc-sdot{background:var(--sc,#888);border-color:var(--sc,#888)}
+  .rc-step.cur .rc-sdot{background:var(--sc,#888);border-color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc,#888) 28%,transparent)}
+  .rc-step .rc-stg{font-size:11.5px;font-weight:800;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rc-step.cur .rc-stg{color:var(--navy-deep)}
+  .rc-step.todo .rc-stg{color:var(--muted)}
+  .rc-step .rc-snote{font-size:11px;color:var(--muted);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+  .rc-step.cur .rc-snote{color:var(--ink-soft)}
   .rc-line{font-size:13.5px;font-weight:700;color:var(--navy-deep);line-height:1.5}
   .rc-line b{color:inherit;font-weight:800}
   .rc.h-crit .rc-line{color:var(--crit)} .rc.h-warn .rc-line{color:#8a5408} .rc.h-soon .rc-line{color:#2e6db0}
@@ -142,13 +148,14 @@
   .rc-bar i{display:block;height:100%;border-radius:4px}
   .rc-prog-f{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
   .rc-prog-f b{color:var(--navy-deep);font-weight:800}
-  .rc-facts{display:flex;gap:10px;border-top:1px solid var(--line-soft);padding-top:13px}
-  .rc-fk{flex:1;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:700;color:var(--muted)}
+  .rc-facts{display:flex;gap:10px;align-items:flex-end;border-top:1px solid var(--line-soft);padding-top:13px}
+  .rc-fk{flex:none;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:700;color:var(--muted)}
   .rc-fk b{font-size:17px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
   .rc-fk b i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
   .rc-fk b i.cr{color:var(--crit)}
-  .rc-risk{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:11px}
-  .rc-risk em{font-style:normal;font-weight:800;color:var(--muted)}
+  .rc-fk.risk{flex:1;min-width:0;align-items:flex-end}
+  .rc-fk.risk em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);align-self:flex-start;margin-bottom:1px}
+  .rc-rks{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .rc-rk{font-size:10.5px;font-weight:800;border-radius:8px;padding:2.5px 9px}
   .rc-rk.w{background:var(--major-soft);color:var(--major)}
   .rc-rk.r{background:var(--crit-soft);color:var(--crit)}

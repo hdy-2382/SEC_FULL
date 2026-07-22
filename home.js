@@ -177,27 +177,32 @@ function renderHomePortfolio(withData, entries, proc) {
       : failN ? `통과 기준 <b>${failN}건</b> 미달 — 보완 진행 중`
       : soon ? `다음 심사 임박 <b>${dd}</b> — 마무리 점검 단계`
       : `순조 진행 — 주요 기준 충족`;
-    // 여정 트랙 — 표준 프로세스 위 현재 위치
-    const cur = stageIdx(e.stage);
-    const track = stages.map((r, i) => {
-      const st = i < cur ? 'done' : i === cur ? 'cur' : 'todo';
-      return `<span class="rc-node ${st}" style="--nc:${esc(r.color || '#c3cfdd')}" title="${esc(TKO[r.key] || r.key)}"><i></i><em>${esc(TKO[r.key] || r.key)}</em></span>`;
-    }).join('<span class="rc-link"></span>');
+    // 내부 진행 축약 — 이 과제가 자기 단계 안에서 무엇을 했고 지금 뭘 하나 (lifecycle steps)
+    const steps = (e.lifecycle || {}).steps || [];
+    const nmShort = s => String(s || '').replace(/^([PLS]\d+|①②③④⑤⑥⑦⑧⑨⑩|POC|Pilot|양산\S*)\s*/, '').trim() || String(s || '');
+    const tl = steps.map(st => {
+      const cls = st.status === 'done' ? 'done' : st.status === 'current' ? 'cur' : 'todo';
+      const mk = st.status === 'done' ? '✓' : st.status === 'current' ? '' : '';
+      return `<div class="rc-step ${cls}"><span class="rc-sdot">${mk}</span>
+        <span class="rc-stg">${esc(nmShort(st.stage))}</span>
+        <span class="rc-snote">${esc(st.note || '')}</span></div>`;
+    }).join('');
     // 비기술 리스크 — 주의/리스크 축만 표기, 없으면 '없음'
     const TK = { T: '기술', E: '경제', C: '계약', O: '조직', P: '이해·안전' };
     const flagged = (e.tecop || []).filter(t => t.status === 'warn' || t.status === 'risk' || t.status === 'bad');
     const riskTxt = flagged.length
       ? flagged.map(t => `<span class="rc-rk ${t.status === 'warn' ? 'w' : 'r'}">${esc(TK[t.k] || t.k)}</span>`).join('')
       : '<span class="rc-rk ok">특이사항 없음</span>';
+    const posLabel = `${TKO[e.stage] || e.stage} 단계 · 표준 프로세스 ${stageIdx(e.stage) + 1}/${stages.length}`;
     return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="rc-top">
-        <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(meta)}</span></div>
+        <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)} · ${esc(meta)}</span></div>
         <span class="rc-badge">${esc(h.tag)}</span>
       </div>
-      <div class="rc-track">${track}</div>
       <div class="rc-line">${line}</div>
+      ${tl ? `<div class="rc-steps"><div class="rc-steps-h">진행 경과</div>${tl}</div>` : ''}
       <div class="rc-prog">
-        <div class="rc-prog-h"><span>${esc((e.run || {}).criterion || '평가')} 진행</span><b>${Math.round(pct)}<small>%</small></b></div>
+        <div class="rc-prog-h"><span>현재 · ${esc((e.run || {}).criterion || '평가')} 진행</span><b>${Math.round(pct)}<small>%</small></b></div>
         <div class="rc-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div>
         <div class="rc-prog-f"><span>${fmt(prog.cum)} / ${fmt(prog.target)}${UNIT[e.stage] || ''}</span><span>다음 심사 <b>${esc(dd || '—')}</b></span></div>
       </div>
@@ -205,8 +210,8 @@ function renderHomePortfolio(withData, entries, proc) {
         <span class="rc-fk">통과 기준<b>${passN}<i>/${crit9.length || '—'}</i></b></span>
         <span class="rc-fk">결함 해결<b>${closed}<i>/${sdTot}</i></b></span>
         <span class="rc-fk">발굴<b>${tot}${crit ? `<i class="cr"> · 치명 ${crit}</i>` : ''}</b></span>
+        <span class="rc-fk risk"><em>리스크</em><span class="rc-rks">${riskTxt}</span></span>
       </div>
-      <div class="rc-risk"><em>리스크</em>${riskTxt}</div>
     </div>`;
   };
 

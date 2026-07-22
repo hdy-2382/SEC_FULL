@@ -162,10 +162,27 @@
       "lifecycle": {
         "total": 3,
         "pos": 3,
-        "current": "P3 기/성능·SW·72h 평가"
+        "current": "P3 기/성능·SW·72h 평가",
+        "steps": [
+          {
+            "stage": "P1 과제 기획",
+            "status": "done",
+            "note": "목표·평가항목 정의 · 개략 ROI · 컨셉 확정 · 특허 검토 · FMEA 초판(어휘 v1)"
+          },
+          {
+            "stage": "P2 설계·제작",
+            "status": "done",
+            "note": "설계 동결 v1 · 사외 랩 셀 셋업 완료 (07-04)"
+          },
+          {
+            "stage": "P3 기/성능·SW·72h 평가",
+            "status": "current",
+            "note": "기성능 3/3 · SW 체크 · 2차 시도 52h · 비정상 6/8"
+          }
+        ]
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-21T07:04:27Z",
+      "generatedAt": "2026-07-22T02:11:28Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -329,10 +346,32 @@
       "lifecycle": {
         "total": 4,
         "pos": 2,
-        "current": "L2 신뢰성 평가/검증 (TAAF)"
+        "current": "L2 신뢰성 평가/검증 (TAAF)",
+        "steps": [
+          {
+            "stage": "L1 가동 지표 정의",
+            "status": "done",
+            "note": "MCBF/MTTR/가동률 — 양산시범과 동일 산식"
+          },
+          {
+            "stage": "L2 신뢰성 평가/검증 (TAAF)",
+            "status": "current",
+            "note": "성장 추적 · DRM-03 만성 마감 중"
+          },
+          {
+            "stage": "L3 임시 사용 안전 승인 · 퀄 사양",
+            "status": "current",
+            "note": "v0.9 협의"
+          },
+          {
+            "stage": "L4 무정지 300h",
+            "status": "todo",
+            "note": "설계 동결(9/10) 후 본 런"
+          }
+        ]
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-21T07:04:27Z",
+      "generatedAt": "2026-07-22T02:11:28Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -450,10 +489,42 @@
       "lifecycle": {
         "total": 6,
         "pos": 4,
-        "current": "양산평가 1차"
+        "current": "양산평가 1차",
+        "steps": [
+          {
+            "stage": "POC",
+            "status": "done",
+            "note": "개념 검증 완료"
+          },
+          {
+            "stage": "Pilot",
+            "status": "done",
+            "note": "파일럿 라인 검증"
+          },
+          {
+            "stage": "양산성 평가",
+            "status": "done",
+            "note": "양산성 확인"
+          },
+          {
+            "stage": "양산평가 1차",
+            "status": "current",
+            "note": "360 Cycle 평가 진행"
+          },
+          {
+            "stage": "양산평가 2차",
+            "status": "todo",
+            "note": ""
+          },
+          {
+            "stage": "양산대응",
+            "status": "todo",
+            "note": ""
+          }
+        ]
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-21T07:04:27Z",
+      "generatedAt": "2026-07-22T02:11:28Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -614,10 +685,32 @@
       "lifecycle": {
         "total": 4,
         "pos": 2,
-        "current": "S2 호기 설치·SAT"
+        "current": "S2 호기 설치·SAT",
+        "steps": [
+          {
+            "stage": "S1 기준 구성 동결",
+            "status": "done",
+            "note": "v1.1 동결 — 편차 0"
+          },
+          {
+            "stage": "S2 호기 설치·SAT",
+            "status": "current",
+            "note": "8호기 중 SAT 5 통과"
+          },
+          {
+            "stage": "S3 축약 무고장 런 (48h)",
+            "status": "current",
+            "note": "4호기 통과 · 5호기 진행"
+          },
+          {
+            "stage": "S4 가동지표 검증·횡전개",
+            "status": "todo",
+            "note": "설치 표준 v2.1 개정 중"
+          }
+        ]
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-21T07:04:27Z",
+      "generatedAt": "2026-07-22T02:11:28Z",
       "summary": {
         "progress": {
           "cum": 4,

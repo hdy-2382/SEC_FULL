@@ -1890,6 +1890,9 @@ def write_portfolio():
                     "total": len(lc),
                     "pos": (cur_i + 1) if cur_i is not None else sum(1 for st in lc if st.get("status") == "done"),
                     "current": next((st.get("stage") for st in lc if st.get("status") == "current"), ""),
+                    # 홈 카드의 '내부 진행 축약'용 — 세부 단계별 상태·한 줄 요약
+                    "steps": [{"stage": st.get("stage", ""), "status": st.get("status", ""),
+                               "note": st.get("note", "")} for st in lc],
                 }
             sw = cfg.get("swModules") or []
             if sw:
