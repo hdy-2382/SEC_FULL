@@ -242,13 +242,20 @@ function renderHomePortfolio(withData, entries, proc) {
       band('조치', [[closed, 'var(--green)', '종결'], [sd.verifying || 0, 'var(--sky)', '검증'], [sd.acting || 0, '#E08600', '조치', '#4a3000'], [sd.new || 0, '#C0392B', '신규']],
         `종결 ${closed}/${sdTot}`);
 
-    // ── E. TECOP 고정 안건 — 5축 레터 배지 + 오픈 리스크 건수 (게이트 카드 미러) ──
+    // ── E. 비기술 리스크(TECOP) — 한글 축 이름 칩: 걸린 축은 상태·건수까지, 양호는 ✓ ──
     const TK = { T: '기술', E: '경제', C: '계약', O: '조직', P: '이해·안전' };
-    const tecopStrip = (e.tecop || []).map(t => {
+    const tecopSorted = (e.tecop || []).slice().sort((a, b) => {
+      const w9 = t => t.status === 'risk' || t.status === 'bad' ? 0 : t.status === 'warn' ? 1 : 2;
+      return w9(a) - w9(b);
+    });
+    const tecopStrip = tecopSorted.map(t => {
       const open = (t.risks || []).filter(r => r.status !== '완화 완료' && (r.progress || 0) < 100).length;
-      const cls = t.status === 'warn' ? 'w' : (t.status === 'risk' || t.status === 'bad') ? 'r' : 'ok';
-      return `<span class="mzt ${cls}" title="${esc(TK[t.k] || t.k)} ${esc(t.status === 'warn' ? '주의' : '양호')}${t.note ? ' — ' + esc(t.note) : ''}${open ? ` · 오픈 리스크 ${open}건` : ''}">
-        <b>${esc(t.k)}</b>${open ? `<i>${open}</i>` : ''}</span>`;
+      const bad = t.status === 'risk' || t.status === 'bad', warn = t.status === 'warn';
+      const cls = bad ? 'r' : warn ? 'w' : 'ok';
+      const tip = `${TK[t.k] || t.k} ${bad ? '위험' : warn ? '주의' : '양호'}${t.note ? ' — ' + t.note : ''}${open ? ` · 대응 중 ${open}건` : ''}`;
+      return (bad || warn)
+        ? `<span class="mzt2 ${cls}" title="${esc(tip)}">${esc(TK[t.k] || t.k)} <b>${bad ? '위험' : '주의'}</b>${open ? `<em>대응 ${open}건</em>` : ''}</span>`
+        : `<span class="mzt2 ok" title="${esc(tip)}">${esc(TK[t.k] || t.k)} ✓</span>`;
     }).join('');
 
     return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
@@ -277,7 +284,7 @@ function renderHomePortfolio(withData, entries, proc) {
         <div class="mz-box clear">
           <div class="mz-h">종합 클리어<span class="mz-hn"><b>${passN}</b>/${crit9.length || '—'} 충족</span></div>
           <div class="mzc">${clearRows || '<div class="mzc-row"><span>기준 준비 중</span></div>'}</div>
-          ${tecopStrip ? `<div class="mzc-tecop"><em>TECOP 리스크</em>${tecopStrip}</div>` : ''}
+          ${tecopStrip ? `<div class="mzc-tecop"><em>비기술 리스크</em><div class="mzt-l">${tecopStrip}</div></div>` : ''}
         </div>
       </div>
       <div class="mz-box bands">

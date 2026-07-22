@@ -189,19 +189,17 @@
   .mzb-sg b{font-size:9.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:clip;padding:0 3px}
   .mzb-sg.none{flex:1;background:var(--line-soft);color:var(--muted)}
   .mzb-n{flex:none;min-width:58px;text-align:right;font-size:10.5px;font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
-  /* E. TECOP 스트립 — 종합 클리어 하단 (게이트 카드 미러) */
-  .mzc-tecop{display:flex;align-items:center;gap:6px;border-top:1px dashed var(--line);margin-top:9px;padding-top:8px}
-  .mzc-tecop em{font-style:normal;font-size:10px;font-weight:800;color:var(--muted);margin-right:2px}
-  .mzt{position:relative;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:#fff;border:1.5px solid var(--line-soft);cursor:default}
-  .mzt b{font-size:11px;font-weight:800;color:var(--muted)}
-  .mzt.ok{border-color:color-mix(in srgb,var(--green) 45%,transparent);background:var(--green-soft)}
-  .mzt.ok b{color:var(--green)}
-  .mzt.w{border-color:color-mix(in srgb,var(--major) 55%,transparent);background:var(--major-soft)}
-  .mzt.w b{color:var(--major)}
-  .mzt.r{border-color:color-mix(in srgb,var(--crit) 55%,transparent);background:var(--crit-soft)}
-  .mzt.r b{color:var(--crit)}
-  .mzt i{position:absolute;top:-5px;right:-5px;min-width:13px;height:13px;padding:0 3px;border-radius:7px;background:var(--navy);color:#fff;font-size:8.5px;font-weight:800;font-style:normal;display:flex;align-items:center;justify-content:center}
-  .mzt.w i{background:var(--major)} .mzt.r i{background:var(--crit)}
+  /* E. 비기술 리스크(TECOP) — 한글 라벨 칩: 걸린 축 강조, 양호 ✓ 축약 */
+  .mzc-tecop{display:flex;align-items:flex-start;gap:7px;border-top:1px dashed var(--line);margin-top:9px;padding-top:8px}
+  .mzc-tecop em{flex:none;font-style:normal;font-size:10px;font-weight:800;color:var(--muted);margin-top:3px}
+  .mzt-l{flex:1;display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+  .mzt2{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;border-radius:8px;padding:2.5px 8px;cursor:default;white-space:nowrap}
+  .mzt2 b{font-weight:800}
+  .mzt2 em{font-style:normal;font-size:9.5px;font-weight:700;opacity:.85}
+  .mzt2.ok{background:var(--green-soft);color:var(--green)}
+  .mzt2.w{background:var(--major-soft);color:#8a5408;border:1px solid color-mix(in srgb,var(--major) 45%,transparent)}
+  .mzt2.w b{color:var(--major)}
+  .mzt2.r{background:var(--crit-soft);color:var(--crit);border:1px solid color-mix(in srgb,var(--crit) 45%,transparent)}
 
   .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:30px;box-shadow:var(--shadow-sm)}
   .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}
