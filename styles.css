@@ -117,6 +117,14 @@
   .rc-id{flex:1;min-width:0}
   .rc-nm{display:block;font-size:18px;font-weight:800;letter-spacing:-.01em;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rc-sub{font-size:11.5px;color:var(--muted)}
+  .rc-tr{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  /* 표준 프로세스 미니 트랙 — 카드 우상단 */
+  .mst-row{display:flex;align-items:center;gap:2px}
+  .mst{font-size:9.5px;font-weight:800;border-radius:6px;padding:2px 7px;white-space:nowrap;cursor:default;
+    color:var(--muted);background:#fff;border:1px solid var(--line-soft)}
+  .mst.done{color:#fff;background:var(--tc);border-color:var(--tc);opacity:.75}
+  .mst.cur{color:#fff;background:var(--tc);border-color:var(--tc);box-shadow:0 0 0 2px color-mix(in srgb,var(--tc) 30%,transparent)}
+  .mst-a{font-style:normal;font-size:9px;font-weight:800;color:#b3c3d4;padding:0 1px}
   .rc-badge{flex:none;font-size:11px;font-weight:800;border-radius:20px;padding:4px 12px;background:var(--green-soft);color:var(--green)}
   .rc.h-crit .rc-badge{background:var(--crit-soft);color:var(--crit)}
   .rc.h-warn .rc-badge{background:var(--major-soft);color:var(--major)}

@@ -179,7 +179,13 @@ function renderHomePortfolio(withData, entries, proc) {
     const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
     const meta = [prj.department || '', prj.team ? 'PM ' + prj.team.split(',')[0] : ''].filter(Boolean).join(' · ');
     const closed = sd.closed || 0, sdTot = closed + (sd.verifying || 0) + (sd.acting || 0) + (sd.new || 0);
-    const posLabel = `${TKO[e.stage] || e.stage} 단계 · 표준 프로세스 ${stageIdx(e.stage) + 1}/${stages.length}`;
+    const posLabel = `${TKO[e.stage] || e.stage} 단계 · ${meta}`;
+    // 표준 프로세스 미니 트랙 — 지나온 단계 포함, 카드 우상단
+    const cur9 = stageIdx(e.stage);
+    const stageTrack = stages.map((r, i) => {
+      const st = i < cur9 ? 'done' : i === cur9 ? 'cur' : 'todo';
+      return `<span class="mst ${st}" style="--tc:${esc(r.color || '#8a99ac')}" title="${esc(TKO[r.key] || r.key)} — ${st === 'done' ? '완료' : st === 'cur' ? '현재 단계' : '예정'}">${st === 'done' ? '✓ ' : ''}${esc(TKO[r.key] || r.key)}</span>`;
+    }).join('<i class="mst-a">›</i>');
 
     // ── A. 개발 단계 — 가로 스테퍼 (lifecycle) ──
     const steps = (e.lifecycle || {}).steps || [];
@@ -261,8 +267,11 @@ function renderHomePortfolio(withData, entries, proc) {
 
     return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="rc-top">
-        <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)} · ${esc(meta)}</span></div>
-        <span class="rc-badge">${esc(h.tag)}</span>
+        <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)}</span></div>
+        <div class="rc-tr">
+          <div class="mst-row">${stageTrack}</div>
+          <span class="rc-badge">${esc(h.tag)}</span>
+        </div>
       </div>
       ${stepper ? `<div class="mz-box steps"><div class="mz-h">개발 단계${(() => {
         const cs = steps.find(st => st.status === 'current');
