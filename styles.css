@@ -150,6 +150,26 @@
   .mzr-tx .n b{font-size:21px;font-weight:800;color:var(--navy-deep);line-height:1.1}
   .mzr-tx .n span{font-size:12px;color:var(--muted)}
   .mzr-tx .r{font-size:11px;font-weight:700;color:var(--ink-soft);margin-top:3px}
+  .mzr-tx .a{font-size:10px;font-weight:800;border-radius:6px;padding:1.5px 7px;margin-top:4px;display:inline-block}
+  .mzr-tx .a.up{background:var(--green-soft);color:var(--green)}
+  .mzr-tx .a.dn9{background:var(--crit-soft);color:var(--crit)}
+  .mz-hn.cur-note{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink-soft)}
+  /* 진행 vs 기간 비교 바 */
+  .mzp-wrap{margin-top:9px;border-top:1px dashed var(--line);padding-top:8px}
+  .mzp{display:flex;align-items:center;gap:7px;margin-top:4px}
+  .mzp:first-child{margin-top:0}
+  .mzp span{flex:none;width:28px;font-size:10px;font-weight:800;color:var(--muted)}
+  .mzp-b{flex:1;height:7px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+  .mzp-b i{display:block;height:100%;border-radius:4px}
+  .mzp b{flex:none;min-width:30px;text-align:right;font-size:10px;font-weight:800;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  /* 미니 스탯 (SW 완성도 · 에러버짓/재발/환경) */
+  .mzr2{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .mzr2-it{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--muted);min-width:0}
+  .mzr2-it b{font-size:11px;font-weight:800;color:var(--navy-deep);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mzr2-it .mzp-b.sw{width:44px;flex:none}
+  .mz-eb{display:inline-flex;gap:2px}
+  .mz-eb i{width:10px;height:10px;border-radius:3px;background:var(--line-soft);border:1px solid var(--line)}
+  .mz-eb i.on{background:var(--crit);border-color:var(--crit)}
   /* C. 종합 클리어 — 기준 상태 행 */
   .mzc{display:flex;flex-direction:column;gap:4px}
   .mzc-row{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--ink-soft);min-width:0}

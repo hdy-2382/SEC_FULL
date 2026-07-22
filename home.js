@@ -191,9 +191,30 @@ function renderHomePortfolio(withData, entries, proc) {
           <i>${st.status === 'done' ? '✓' : ''}</i><em>${esc(nmShort(st.stage))}</em></span>`;
     }).join('');
 
-    // ── B. 완주 진행 — 도넛 ──
+    // ── B. 완주 진행 — 도넛 + 일정 대비 + 미니 스탯 ──
     const donut = (p, c, w) => `<svg viewBox="0 0 42 42" class="dn"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="${w}"/>
       <circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${Math.max(0, Math.min(100, p))} ${100 - Math.max(0, Math.min(100, p))}" stroke-dashoffset="25" stroke-linecap="round"/></svg>`;
+    // 일정 소진율 — 진행률과 비교해 앞섬/지연 신호
+    let schedPct = null;
+    if (prj.startDate && prj.endDate) {
+      const s0 = +new Date(prj.startDate), e0 = +new Date(prj.endDate);
+      if (e0 > s0) schedPct = Math.max(0, Math.min(100, Math.round((Date.now() - s0) / (e0 - s0) * 100)));
+    }
+    const ahead = schedPct != null ? Math.round(pct) - schedPct : null;
+    const pbar = (lb, p, c9, val) => `<div class="mzp"><span>${lb}</span><div class="mzp-b"><i style="width:${Math.max(0, Math.min(100, p))}%;background:${c9}"></i></div><b>${val}</b></div>`;
+    const runBars = pbar('진행', pct, col, `${Math.round(pct)}%`) +
+      (schedPct != null ? pbar('기간', schedPct, '#b3c3d4', `${schedPct}%`) : '');
+    // 미니 스탯 — SW 완성도 + (에러버짓 | 재발 | 평가환경)
+    const eb = s.errorBudget;
+    const stat2 = eb
+      ? `<span class="mzr2-it">에러 버짓 <span class="mz-eb">${Array.from({ length: eb.limit || 0 }, (_, i) => `<i class="${i < (eb.used || 0) ? 'on' : ''}"></i>`).join('')}</span><b>${eb.used || 0}/${eb.limit}</b></span>`
+      : s.recur != null
+        ? `<span class="mzr2-it">재발 <b style="color:${s.recur ? 'var(--crit)' : 'var(--green)'}">${s.recur}건</b></span>`
+        : `<span class="mzr2-it">환경 <b>${esc((e.run || {}).env || '—')}</b></span>`;
+    const stat9 = `<div class="mzr2">
+      ${e.swAvg != null ? `<span class="mzr2-it">SW 완성도 <span class="mzp-b sw"><i style="width:${e.swAvg}%;background:${col}"></i></span><b>${e.swAvg}%</b></span>` : ''}
+      ${stat2}
+    </div>`;
 
     // ── C. 종합 클리어 — 기준별 상태 행 (게이트 기준 or 합격 기준) ──
     const GST2 = { pass: 'ok', prog: 'pr', fail: 'fa', wait: 'wt' };
@@ -235,7 +256,10 @@ function renderHomePortfolio(withData, entries, proc) {
         <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)} · ${esc(meta)}</span></div>
         <span class="rc-badge">${esc(h.tag)}</span>
       </div>
-      ${stepper ? `<div class="mz-box steps"><div class="mz-h">개발 단계</div><div class="mzs">${stepper}</div></div>` : ''}
+      ${stepper ? `<div class="mz-box steps"><div class="mz-h">개발 단계${(() => {
+        const cs = steps.find(st => st.status === 'current');
+        return cs && cs.note ? `<span class="mz-hn cur-note">현재 — ${esc(cs.note)}</span>` : '';
+      })()}</div><div class="mzs">${stepper}</div></div>` : ''}
       <div class="mz-grid">
         <div class="mz-box run">
           <div class="mz-h">완주 진행<span class="mz-hn">다음 심사 <b>${esc(dd || '—')}</b></span></div>
@@ -244,8 +268,11 @@ function renderHomePortfolio(withData, entries, proc) {
             <div class="mzr-tx">
               <div class="n"><b>${fmt(prog.cum)}</b><span>/${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
               <div class="r">${esc((e.run || {}).criterion || '평가')}</div>
+              ${ahead != null ? `<div class="a ${ahead >= 0 ? 'up' : 'dn9'}">일정 대비 ${ahead >= 0 ? '+' : ''}${ahead}%p</div>` : ''}
             </div>
           </div>
+          <div class="mzp-wrap">${runBars}</div>
+          ${stat9}
         </div>
         <div class="mz-box clear">
           <div class="mz-h">종합 클리어<span class="mz-hn"><b>${passN}</b>/${crit9.length || '—'} 충족</span></div>
