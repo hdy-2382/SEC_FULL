@@ -1856,6 +1856,10 @@ def _portfolio_summary(stage: str, out: dict) -> dict:
         s["errorBudget"] = m.get("errorBudget")
         s["mtbf"] = m.get("mtbf")
         s["acceptance"] = {k: (out.get("acceptance") or {}).get(k) for k in ("passed", "total")}
+        # 홈 카드 '종합 클리어' 축약용 — 합격 기준 목록(라벨·상태)
+        s["acceptance"]["criteria"] = [
+            {"key": c.get("key", ""), "status": c.get("status", "")}
+            for c in (out.get("acceptance") or {}).get("criteria", [])]
     return s
 
 

@@ -133,10 +133,13 @@ function renderHomePortfolio(withData, entries, proc) {
   const ddNum = d => { const m = /^D-(\d+)$/.exec(ddayLabel(d) || ''); return m ? +m[1] : (String(ddayLabel(d)).startsWith('D+') ? 999 : 0); };
   const stages = (proc.ladder || []).filter(r => r.key);
 
+  // 클리어 기준 통합 — 게이트 기준, 없으면 합격 기준(양산평가)
+  const clearCrits = e => ((e.gate || {}).criteria || []).length ? e.gate.criteria
+    : (((e.summary || {}).acceptance || {}).criteria || []).map(c => ({ label: c.key, status: c.status }));
   // 과제 건강도: 오픈 치명 > 기준 미달 > 게이트 임박 > 정상
   const health = e => {
     const oc = (e.summary || {}).openCritical || 0;
-    const failN = ((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length;
+    const failN = clearCrits(e).filter(c => c.status === 'fail').length;
     const dd = (e.gate || {}).reviewDate ? ddNum(e.gate.reviewDate) : 999;
     if (oc) return { cls: 'crit', tag: `치명결함 ${oc}건` };
     if (failN) return { cls: 'warn', tag: `기준 미달 ${failN}건` };
@@ -148,7 +151,7 @@ function renderHomePortfolio(withData, entries, proc) {
   const N = withData.length;
   const soonN = withData.filter(e => (e.gate || {}).reviewDate && ddNum(e.gate.reviewDate) <= 14).length;
   const critN = withData.reduce((a, e) => a + ((e.summary || {}).openCritical || 0), 0);
-  const failN = withData.reduce((a, e) => a + (((e.gate || {}).criteria || []).filter(c => c.status === 'fail').length), 0);
+  const failN = withData.reduce((a, e) => a + clearCrits(e).filter(c => c.status === 'fail').length, 0);
   const kchip = (k, v, cls) => `<span class="jk ${cls || ''}"><em>${esc(k)}</em><b>${v}</b></span>`;
 
   // 단계 순서로 정렬 (프로세스 진행 순)
@@ -156,6 +159,14 @@ function renderHomePortfolio(withData, entries, proc) {
   const list = withData.slice().sort((a, b) => (ORD[a.stage] ?? 9) - (ORD[b.stage] ?? 9));
   const stageIdx = k => stages.findIndex(r => r.key === k);
   const TKO = { poc: 'POC', pilot: '파일럿', mass: '양산평가', spread: '확산', ops: '운영' };
+
+  // 원인분류 팔레트 — 단계 페이지 카테고리 색 1:1 (styles.css)
+  const CAUSE_P = {
+    concept: ['컨셉', '#C0392B'], design: ['설계', '#2E89D6'], parts: ['부품', '#7A4FB3'],
+    build: ['제작·조립', '#B36F0A'], install: ['설치', '#0e7a8a'], sw: ['SW', '#E08600'],
+    env: ['환경', '#3E9B6E'], oper: ['운영', '#6E7D90'], etc: ['기타', '#9aa9bb'],
+  };
+  const CAUSE_ORD = ['concept', 'design', 'parts', 'build', 'install', 'sw', 'env', 'oper', 'etc'];
 
   const card = e => {
     const s = e.summary || {}, prog = s.progress || {}, g = e.gate || {}, d = s.sevDist || {}, sd = s.statusDist || {};
@@ -167,67 +178,81 @@ function renderHomePortfolio(withData, entries, proc) {
     const prj = e.project || {};
     const crit = d.Critical || 0, oc = s.openCritical || 0, tot = crit + (d.Major || 0) + (d.Minor || 0);
     const meta = [prj.department || '', prj.team ? 'PM ' + prj.team.split(',')[0] : ''].filter(Boolean).join(' · ');
-    const crit9 = (g.criteria || []);
-    const passN = crit9.filter(c => c.status === 'pass').length;
-    const failN = crit9.filter(c => c.status === 'fail').length;
     const closed = sd.closed || 0, sdTot = closed + (sd.verifying || 0) + (sd.acting || 0) + (sd.new || 0);
-    const ddNum2 = /^D-(\d+)$/.exec(dd || ''); const soon = ddNum2 && +ddNum2[1] <= 14;
-    // 평문 결론
-    const line = oc ? `치명 결함 <b>${oc}건</b> 해결 중 — 다음 심사 전 마무리 필요`
-      : failN ? `통과 기준 <b>${failN}건</b> 미달 — 보완 진행 중`
-      : soon ? `다음 심사 임박 <b>${dd}</b> — 마무리 점검 단계`
-      : `순조 진행 — 주요 기준 충족`;
-    // 내부 진행 축약 — 이 과제가 자기 단계 안에서 무엇을 했고 지금 뭘 하나 (lifecycle steps)
+    const posLabel = `${TKO[e.stage] || e.stage} 단계 · 표준 프로세스 ${stageIdx(e.stage) + 1}/${stages.length}`;
+
+    // ── A. 개발 단계 — 가로 스테퍼 (lifecycle) ──
     const steps = (e.lifecycle || {}).steps || [];
-    const nmShort = s => String(s || '').replace(/^([PLS]\d+|①②③④⑤⑥⑦⑧⑨⑩|POC|Pilot|양산\S*)\s*/, '').trim() || String(s || '');
-    const tl = steps.map(st => {
+    const nmShort = t => String(t || '').replace(/^([PLS]\d+|①②③④⑤⑥⑦⑧⑨⑩)\s*/, '').trim() || String(t || '');
+    const stepper = steps.map((st, i) => {
       const cls = st.status === 'done' ? 'done' : st.status === 'current' ? 'cur' : 'todo';
-      const mk = st.status === 'done' ? '✓' : st.status === 'current' ? '' : '';
-      return `<div class="rc-step ${cls}"><span class="rc-sdot">${mk}</span>
-        <span class="rc-stg">${esc(nmShort(st.stage))}</span>
-        <span class="rc-snote">${esc(st.note || '')}</span></div>`;
+      return `${i ? `<span class="mzs-ln ${steps[i - 1].status === 'done' ? 'on' : ''}"></span>` : ''}
+        <span class="mzs-nd ${cls}" title="${esc(st.stage)}${st.note ? ' — ' + esc(st.note) : ''}">
+          <i>${st.status === 'done' ? '✓' : ''}</i><em>${esc(nmShort(st.stage))}</em></span>`;
     }).join('');
-    // 비기술 리스크 — 주의/리스크 축만 표기, 없으면 '없음'
+
+    // ── B. 완주 진행 — 도넛 ──
+    const donut = (p, c, w) => `<svg viewBox="0 0 42 42" class="dn"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="${w}"/>
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${Math.max(0, Math.min(100, p))} ${100 - Math.max(0, Math.min(100, p))}" stroke-dashoffset="25" stroke-linecap="round"/></svg>`;
+
+    // ── C. 종합 클리어 — 기준별 상태 행 (게이트 기준 or 합격 기준) ──
+    const GST2 = { pass: 'ok', prog: 'pr', fail: 'fa', wait: 'wt' };
+    const stripNo = t => String(t || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d.]+\s*/, '').trim();
+    const crit9 = clearCrits(e);
+    const passN = crit9.filter(c => c.status === 'pass').length;
+    const clearRows = crit9.map(c => `<div class="mzc-row st-${GST2[c.status] || 'wt'}" title="${esc(c.label || '')}">
+      <i></i><span>${esc(stripNo(c.label))}</span></div>`).join('');
+
+    // ── D. 분류 밴드 — 4분류/원인분류 + 심각도 + 조치 상태 (인라인 라벨 스택바) ──
+    const band = (lb, segs, note) => {
+      const total = segs.reduce((a, x) => a + (x[0] || 0), 0);
+      const bar = segs.filter(x => x[0]).map(([n, c9, l9, txc]) =>
+        `<span class="mzb-sg" style="flex:${n};background:${c9}${txc ? `;color:${txc}` : ''}" title="${l9} ${n}건"><b>${l9} ${n}</b></span>`).join('');
+      return `<div class="mzb-row"><span class="mzb-l">${lb}</span>
+        <span class="mzb-bar">${bar || '<span class="mzb-sg none"><b>기록 없음</b></span>'}</span>
+        <span class="mzb-n">${note != null ? note : total + '건'}</span></div>`;
+    };
+    const cd = s.causeDist || {};
+    const causeSegs = CAUSE_ORD.filter(k => cd[k]).map(k => [cd[k], CAUSE_P[k][1], CAUSE_P[k][0], k === 'sw' ? '#4a3000' : '']);
+    const bands =
+      band(e.stage === 'poc' ? '전수 4분류' : '원인분류', causeSegs) +
+      band('심각도', [[crit, '#C0392B', '치명'], [d.Major || 0, '#E08600', '중대', '#4a3000'], [d.Minor || 0, '#3F7CC4', '경미']],
+        crit ? `치명 ${crit}` : '치명 0') +
+      band('조치', [[closed, 'var(--green)', '종결'], [sd.verifying || 0, 'var(--sky)', '검증'], [sd.acting || 0, '#E08600', '조치', '#4a3000'], [sd.new || 0, '#C0392B', '신규']],
+        `종결 ${closed}/${sdTot}`);
+
+    // ── E. 리스크 (TECOP 걸린 축) ──
     const TK = { T: '기술', E: '경제', C: '계약', O: '조직', P: '이해·안전' };
     const flagged = (e.tecop || []).filter(t => t.status === 'warn' || t.status === 'risk' || t.status === 'bad');
     const riskTxt = flagged.length
       ? flagged.map(t => `<span class="rc-rk ${t.status === 'warn' ? 'w' : 'r'}">${esc(TK[t.k] || t.k)}</span>`).join('')
-      : '<span class="rc-rk ok">특이사항 없음</span>';
-    const posLabel = `${TKO[e.stage] || e.stage} 단계 · 표준 프로세스 ${stageIdx(e.stage) + 1}/${stages.length}`;
-    // 진행 도넛(완주 진행 축약)
-    const donut = (p, c, w) => `<svg viewBox="0 0 42 42" class="dn"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="${w}"/>
-      <circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${Math.max(0, Math.min(100, p))} ${100 - Math.max(0, Math.min(100, p))}" stroke-dashoffset="25" stroke-linecap="round"/></svg>`;
-    // 종합 클리어 축약 — 게이트 통과 기준을 상태 칩으로 (없으면 합격 기준 요약)
-    const GST2 = { pass: 'ok', prog: 'pr', fail: 'fa', wait: 'wt' };
-    const shortC = s9 => String(s9 || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d.]+\s*/, '').replace(/\s*(0|미해결|시나리오|스펙|상위 리스크)\b/g, '').trim().split(/[\s(·]/)[0] || '기준';
-    const clearChips = crit9.map(c => `<span class="cc ${GST2[c.status] || 'wt'}" title="${esc(c.label || '')}">${esc(shortC(c.label))}</span>`).join('');
-    const accept = s.acceptance;
-    const clearNote = crit9.length ? `<b>${passN}</b>/${crit9.length} 충족`
-      : accept ? `합격 <b>${accept.passed || 0}</b>/${accept.total || 0}` : '';
+      : '<span class="rc-rk ok">없음</span>';
+
     return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="rc-top">
         <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)} · ${esc(meta)}</span></div>
         <span class="rc-badge">${esc(h.tag)}</span>
       </div>
-      <div class="rc-line">${line}</div>
-      ${tl ? `<div class="rc-steps"><div class="rc-steps-h">진행 경과</div>${tl}</div>` : ''}
-      <div class="rc-two">
-        <div class="rc-box run">
-          <div class="rc-box-h">완주 진행</div>
-          <div class="rc-run-row">
+      ${stepper ? `<div class="mz-box steps"><div class="mz-h">개발 단계</div><div class="mzs">${stepper}</div></div>` : ''}
+      <div class="mz-grid">
+        <div class="mz-box run">
+          <div class="mz-h">완주 진행<span class="mz-hn">다음 심사 <b>${esc(dd || '—')}</b></span></div>
+          <div class="mzr">
             <div class="rc-donut">${donut(pct, col, 4.5)}<div class="dn-c"><b>${Math.round(pct)}</b><small>%</small></div></div>
-            <div class="rc-run-tx">
-              <div class="n"><b>${fmt(prog.cum)}</b>/${fmt(prog.target)}${UNIT[e.stage] || ''}</div>
+            <div class="mzr-tx">
+              <div class="n"><b>${fmt(prog.cum)}</b><span>/${fmt(prog.target)}${UNIT[e.stage] || ''}</span></div>
               <div class="r">${esc((e.run || {}).criterion || '평가')}</div>
-              <div class="g">다음 심사 <b>${esc(dd || '—')}</b></div>
             </div>
           </div>
         </div>
-        <div class="rc-box clear">
-          <div class="rc-box-h">종합 클리어<span class="rc-cn">${clearNote}</span></div>
-          ${clearChips ? `<div class="rc-crits">${clearChips}</div>` : `<div class="rc-crit-alt">계약 합격 기준 진행 · 발굴 ${tot}건${crit ? ` · 치명 ${crit}` : ''}</div>`}
-          <div class="rc-risk"><em>리스크</em>${riskTxt}</div>
+        <div class="mz-box clear">
+          <div class="mz-h">종합 클리어<span class="mz-hn"><b>${passN}</b>/${crit9.length || '—'} 충족</span></div>
+          <div class="mzc">${clearRows || '<div class="mzc-row"><span>기준 준비 중</span></div>'}</div>
         </div>
+      </div>
+      <div class="mz-box bands">
+        <div class="mz-h">발굴 ${tot}건 분석<span class="mz-hn">리스크 ${riskTxt}</span></div>
+        ${bands}
       </div>
     </div>`;
   };

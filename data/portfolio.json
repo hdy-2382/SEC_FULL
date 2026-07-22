@@ -182,7 +182,7 @@
         ]
       },
       "swAvg": 77,
-      "generatedAt": "2026-07-22T02:11:28Z",
+      "generatedAt": "2026-07-22T02:33:03Z",
       "summary": {
         "progress": {
           "cum": 52.0,
@@ -371,7 +371,7 @@
         ]
       },
       "swAvg": 87,
-      "generatedAt": "2026-07-22T02:11:28Z",
+      "generatedAt": "2026-07-22T02:33:03Z",
       "summary": {
         "progress": {
           "cum": 121.0,
@@ -524,7 +524,7 @@
         ]
       },
       "swAvg": 92,
-      "generatedAt": "2026-07-22T02:11:28Z",
+      "generatedAt": "2026-07-22T02:33:03Z",
       "summary": {
         "progress": {
           "cum": 60,
@@ -564,7 +564,29 @@
         },
         "acceptance": {
           "passed": 3,
-          "total": 5
+          "total": 5,
+          "criteria": [
+            {
+              "key": "완주",
+              "status": "prog"
+            },
+            {
+              "key": "MTBF≥100 @80%",
+              "status": "pass"
+            },
+            {
+              "key": "미해결 Critical=0",
+              "status": "pass"
+            },
+            {
+              "key": "재발≤0",
+              "status": "fail"
+            },
+            {
+              "key": "전 결함 검증종결",
+              "status": "pass"
+            }
+          ]
         }
       }
     },
@@ -710,7 +732,7 @@
         ]
       },
       "swAvg": 88,
-      "generatedAt": "2026-07-22T02:11:28Z",
+      "generatedAt": "2026-07-22T02:33:03Z",
       "summary": {
         "progress": {
           "cum": 4,
