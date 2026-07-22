@@ -140,35 +140,36 @@
   .rc-line{font-size:13.5px;font-weight:700;color:var(--navy-deep);line-height:1.5}
   .rc-line b{color:inherit;font-weight:800}
   .rc.h-crit .rc-line{color:var(--crit)} .rc.h-warn .rc-line{color:#8a5408} .rc.h-soon .rc-line{color:#2e6db0}
-  /* 중단 — 진행 도넛(좌) + 타임라인(우) */
-  .rc-mid{display:flex;gap:16px;align-items:flex-start}
-  .rc-mid .rc-steps{flex:1;min-width:0}
-  .rc-mid-l{flex:none;width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px}
-  .rc-donut{position:relative;width:72px;height:72px;margin-bottom:5px}
   .dn{width:100%;height:100%;transform:rotate(-90deg)}
-  .rc-donut .dn-c{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--navy-deep)}
-  .rc-donut .dn-c small{font-size:10px;margin-left:1px;color:var(--muted)}
-  .rc-run{font-size:11px;font-weight:800;color:var(--ink-soft)}
-  .rc-run2{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .rc-run2 b{font-size:15px;font-weight:800;color:var(--navy-deep)}
-  .rc-run3{font-size:10.5px;color:var(--muted);margin-top:2px}
-  .rc-run3 b{color:var(--navy-deep);font-weight:800}
-  /* 하단 게이지 — 미니 링 2 + 심각도 도넛 + 리스크 */
-  .rc-gauges{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line-soft);padding-top:12px}
-  .rc-g{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
-  .rc-g-dn{position:relative;width:42px;height:42px}
-  .rc-g-dn .dn{width:100%;height:100%;transform:rotate(-90deg)}
-  .rc-g-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--navy-deep)}
-  .rc-g-n i{font-style:normal;font-size:9px;font-weight:700;color:var(--muted);margin-left:1px}
-  .rc-g-n.cr{color:var(--crit)}
-  .rc-g-l{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
-  .rc-risk{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin-left:auto}
-  .rc-risk em{font-style:normal;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.03em}
-  .rc-rks{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+  /* 두 박스 — 완주 진행 + 종합 클리어 (과제 페이지 축약) */
+  .rc-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.rc-two{grid-template-columns:1fr}}
+  .rc-box{background:var(--card-alt);border:1px solid var(--line-soft);border-radius:11px;padding:10px 12px;min-width:0}
+  .rc-box-h{display:flex;align-items:baseline;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.03em;color:var(--muted);margin-bottom:9px}
+  .rc-cn{font-size:11px;font-weight:800;color:var(--ink-soft)}
+  .rc-cn b{color:var(--navy-deep);font-size:13px}
+  .rc-run-row{display:flex;align-items:center;gap:12px}
+  .rc-donut{flex:none;position:relative;width:58px;height:58px}
+  .rc-donut .dn-c{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--navy-deep)}
+  .rc-donut .dn-c small{font-size:9px;margin-left:1px;color:var(--muted)}
+  .rc-run-tx{min-width:0}
+  .rc-run-tx .n{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .rc-run-tx .n b{font-size:19px;font-weight:800;color:var(--navy-deep)}
+  .rc-run-tx .r{font-size:11px;font-weight:700;color:var(--ink-soft);margin-top:1px}
+  .rc-run-tx .g{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .rc-run-tx .g b{color:var(--navy-deep);font-weight:800}
+  .rc-crits{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+  .cc{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;border-radius:7px;padding:2.5px 8px;background:#fff;border:1px solid var(--line-soft);color:var(--ink-soft)}
+  .cc::before{content:"";width:7px;height:7px;border-radius:50%;background:#c3cfdd}
+  .cc.ok::before{background:var(--green)} .cc.pr::before{background:var(--major)} .cc.fa::before{background:var(--crit)} .cc.wt::before{background:#c3cfdd}
+  .cc.fa{border-color:color-mix(in srgb,var(--crit) 40%,transparent);color:var(--crit)}
+  .rc-crit-alt{font-size:11.5px;color:var(--ink-soft);margin-bottom:9px;line-height:1.5}
+  .rc-risk{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:8px}
+  .rc-risk em{font-style:normal;font-size:10px;font-weight:800;color:var(--muted)}
   .rc-rk{font-size:10.5px;font-weight:800;border-radius:8px;padding:2.5px 9px}
   .rc-rk.w{background:var(--major-soft);color:var(--major)}
   .rc-rk.r{background:var(--crit-soft);color:var(--crit)}
-  .rc-rk.ok{background:var(--card-alt);color:var(--muted);font-weight:700}
+  .rc-rk.ok{background:#fff;border:1px solid var(--line-soft);color:var(--muted);font-weight:700}
 
   .sbox{background:#F1F6FC;border:1px solid #CFE0F1;border-radius:18px;padding:6px 20px 20px;margin-bottom:30px;box-shadow:var(--shadow-sm)}
   .sbox-h{display:flex;align-items:center;gap:11px;padding:16px 4px 14px;flex-wrap:wrap}
