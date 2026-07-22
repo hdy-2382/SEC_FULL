@@ -140,21 +140,30 @@
   .rc-line{font-size:13.5px;font-weight:700;color:var(--navy-deep);line-height:1.5}
   .rc-line b{color:inherit;font-weight:800}
   .rc.h-crit .rc-line{color:var(--crit)} .rc.h-warn .rc-line{color:#8a5408} .rc.h-soon .rc-line{color:#2e6db0}
-  .rc-prog .rc-prog-h{display:flex;align-items:baseline;justify-content:space-between}
-  .rc-prog .rc-prog-h span{font-size:11.5px;font-weight:700;color:var(--muted)}
-  .rc-prog .rc-prog-h b{font-size:22px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
-  .rc-prog .rc-prog-h b small{font-size:12px;margin-left:1px}
-  .rc-bar{height:6px;border-radius:4px;background:var(--line-soft);overflow:hidden;margin:6px 0}
-  .rc-bar i{display:block;height:100%;border-radius:4px}
-  .rc-prog-f{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .rc-prog-f b{color:var(--navy-deep);font-weight:800}
-  .rc-facts{display:flex;gap:10px;align-items:flex-end;border-top:1px solid var(--line-soft);padding-top:13px}
-  .rc-fk{flex:none;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:700;color:var(--muted)}
-  .rc-fk b{font-size:17px;font-weight:800;color:var(--navy-deep);font-variant-numeric:tabular-nums}
-  .rc-fk b i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
-  .rc-fk b i.cr{color:var(--crit)}
-  .rc-fk.risk{flex:1;min-width:0;align-items:flex-end}
-  .rc-fk.risk em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);align-self:flex-start;margin-bottom:1px}
+  /* 중단 — 진행 도넛(좌) + 타임라인(우) */
+  .rc-mid{display:flex;gap:16px;align-items:flex-start}
+  .rc-mid .rc-steps{flex:1;min-width:0}
+  .rc-mid-l{flex:none;width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px}
+  .rc-donut{position:relative;width:72px;height:72px;margin-bottom:5px}
+  .dn{width:100%;height:100%;transform:rotate(-90deg)}
+  .rc-donut .dn-c{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--navy-deep)}
+  .rc-donut .dn-c small{font-size:10px;margin-left:1px;color:var(--muted)}
+  .rc-run{font-size:11px;font-weight:800;color:var(--ink-soft)}
+  .rc-run2{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .rc-run2 b{font-size:15px;font-weight:800;color:var(--navy-deep)}
+  .rc-run3{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .rc-run3 b{color:var(--navy-deep);font-weight:800}
+  /* 하단 게이지 — 미니 링 2 + 심각도 도넛 + 리스크 */
+  .rc-gauges{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line-soft);padding-top:12px}
+  .rc-g{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .rc-g-dn{position:relative;width:42px;height:42px}
+  .rc-g-dn .dn{width:100%;height:100%;transform:rotate(-90deg)}
+  .rc-g-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--navy-deep)}
+  .rc-g-n i{font-style:normal;font-size:9px;font-weight:700;color:var(--muted);margin-left:1px}
+  .rc-g-n.cr{color:var(--crit)}
+  .rc-g-l{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
+  .rc-risk{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin-left:auto}
+  .rc-risk em{font-style:normal;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.03em}
   .rc-rks{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
   .rc-rk{font-size:10.5px;font-weight:800;border-radius:8px;padding:2.5px 9px}
   .rc-rk.w{background:var(--major-soft);color:var(--major)}

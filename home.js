@@ -194,23 +194,41 @@ function renderHomePortfolio(withData, entries, proc) {
       ? flagged.map(t => `<span class="rc-rk ${t.status === 'warn' ? 'w' : 'r'}">${esc(TK[t.k] || t.k)}</span>`).join('')
       : '<span class="rc-rk ok">특이사항 없음</span>';
     const posLabel = `${TKO[e.stage] || e.stage} 단계 · 표준 프로세스 ${stageIdx(e.stage) + 1}/${stages.length}`;
+    // ── 시각 요소 ──
+    const donut = (p, c, w) => `<svg viewBox="0 0 42 42" class="dn"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="${w}"/>
+      <circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${Math.max(0, Math.min(100, p))} ${100 - Math.max(0, Math.min(100, p))}" stroke-dashoffset="25" stroke-linecap="round"/></svg>`;
+    // 진행 도넛(큰 것)
+    const bigDonut = `<div class="rc-donut">${donut(pct, col, 4.5)}<div class="dn-c"><b>${Math.round(pct)}</b><small>%</small></div></div>`;
+    // 미니 링(비율) — 통과 기준 · 결함 해결
+    const ring = (lb, n, t, c) => `<div class="rc-g"><div class="rc-g-dn">${donut(t ? n / t * 100 : 0, c, 5)}<span class="rc-g-n">${n}<i>/${t || '—'}</i></span></div><span class="rc-g-l">${lb}</span></div>`;
+    // 심각도 도넛(구성비) — 치명·중대·경미
+    const sevArcs = (() => {
+      const segs = [[crit, '#C0392B'], [d.Major || 0, '#E08600'], [d.Minor || 0, '#3F7CC4']];
+      const t = tot || 1; let off = 25, out = '';
+      segs.forEach(([n, c]) => { if (!n) return; const p = n / t * 100; out += `<circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="5" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${off}"/>`; off -= p; });
+      return out || '<circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>';
+    })();
+    const sevDonut = `<div class="rc-g"><div class="rc-g-dn"><svg viewBox="0 0 42 42" class="dn"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--line-soft)" stroke-width="5"/>${sevArcs}</svg><span class="rc-g-n ${crit ? 'cr' : ''}">${tot}</span></div><span class="rc-g-l">발굴${crit ? ` · 치명${crit}` : ''}</span></div>`;
     return `<div class="rc h-${h.cls}" data-go="${esc(e.id)}" style="--sc:${esc(col)}">
       <div class="rc-top">
         <div class="rc-id"><b class="rc-nm">${esc(nm)}</b><span class="rc-sub">${esc(posLabel)} · ${esc(meta)}</span></div>
         <span class="rc-badge">${esc(h.tag)}</span>
       </div>
       <div class="rc-line">${line}</div>
-      ${tl ? `<div class="rc-steps"><div class="rc-steps-h">진행 경과</div>${tl}</div>` : ''}
-      <div class="rc-prog">
-        <div class="rc-prog-h"><span>현재 · ${esc((e.run || {}).criterion || '평가')} 진행</span><b>${Math.round(pct)}<small>%</small></b></div>
-        <div class="rc-bar"><i style="width:${pct}%;background:${esc(col)}"></i></div>
-        <div class="rc-prog-f"><span>${fmt(prog.cum)} / ${fmt(prog.target)}${UNIT[e.stage] || ''}</span><span>다음 심사 <b>${esc(dd || '—')}</b></span></div>
+      <div class="rc-mid">
+        <div class="rc-mid-l">
+          ${bigDonut}
+          <div class="rc-run">${esc((e.run || {}).criterion || '평가')}</div>
+          <div class="rc-run2"><b>${fmt(prog.cum)}</b>/${fmt(prog.target)}${UNIT[e.stage] || ''}</div>
+          <div class="rc-run3">다음 심사 <b>${esc(dd || '—')}</b></div>
+        </div>
+        ${tl ? `<div class="rc-steps"><div class="rc-steps-h">진행 경과</div>${tl}</div>` : ''}
       </div>
-      <div class="rc-facts">
-        <span class="rc-fk">통과 기준<b>${passN}<i>/${crit9.length || '—'}</i></b></span>
-        <span class="rc-fk">결함 해결<b>${closed}<i>/${sdTot}</i></b></span>
-        <span class="rc-fk">발굴<b>${tot}${crit ? `<i class="cr"> · 치명 ${crit}</i>` : ''}</b></span>
-        <span class="rc-fk risk"><em>리스크</em><span class="rc-rks">${riskTxt}</span></span>
+      <div class="rc-gauges">
+        ${ring('통과 기준', passN, crit9.length, 'var(--sky)')}
+        ${ring('결함 해결', closed, sdTot, 'var(--green)')}
+        ${sevDonut}
+        <div class="rc-risk"><em>리스크</em><span class="rc-rks">${riskTxt}</span></div>
       </div>
     </div>`;
   };
