@@ -170,16 +170,19 @@
   .mz-eb{display:inline-flex;gap:2px}
   .mz-eb i{width:10px;height:10px;border-radius:3px;background:var(--line-soft);border:1px solid var(--line)}
   .mz-eb i.on{background:var(--crit);border-color:var(--crit)}
-  /* C. 종합 클리어 — 기준 상태 행 */
-  .mzc{display:flex;flex-direction:column;gap:4px}
-  .mzc-row{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--ink-soft);min-width:0}
-  .mzc-row i{flex:none;width:9px;height:9px;border-radius:50%;background:#c3cfdd;box-shadow:0 0 0 2px color-mix(in srgb,#c3cfdd 25%,transparent)}
-  .mzc-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .mzc-row.st-ok i{background:var(--green);box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 22%,transparent)}
-  .mzc-row.st-pr i{background:var(--major);box-shadow:0 0 0 2px color-mix(in srgb,var(--major) 25%,transparent)}
-  .mzc-row.st-fa i{background:var(--crit);box-shadow:0 0 0 2px color-mix(in srgb,var(--crit) 25%,transparent)}
-  .mzc-row.st-fa span{color:var(--crit);font-weight:800}
-  .mzc-row.st-wt span{color:var(--muted)}
+  /* C. 종합 클리어 — 상태색 타일 그리드 (과제 페이지 클리어 타일 미러) */
+  .mzc-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .mzc-t{display:flex;align-items:center;gap:6px;min-width:0;border-radius:8px;padding:6px 9px;font-size:10.5px;font-weight:800;
+    background:#fff;border:1px solid var(--line-soft);color:var(--ink-soft);border-left-width:3px}
+  .mzc-t i{flex:none;font-style:normal;font-size:10px;font-weight:900;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;background:#c3cfdd}
+  .mzc-t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mzc-t.st-ok{border-left-color:var(--green);background:var(--green-soft)}
+  .mzc-t.st-ok i{background:var(--green)}
+  .mzc-t.st-pr{border-left-color:var(--major);background:var(--major-soft)}
+  .mzc-t.st-pr i{background:var(--major)}
+  .mzc-t.st-fa{border-left-color:var(--crit);background:var(--crit-soft);color:var(--crit)}
+  .mzc-t.st-fa i{background:var(--crit)}
+  .mzc-t.st-wt{border-left-color:#c3cfdd;color:var(--muted)}
   /* D. 분류 밴드 — 인라인 라벨 스택바 */
   .mzb-row{display:flex;align-items:center;gap:9px;margin-top:7px}
   .mzb-row:first-of-type{margin-top:0}

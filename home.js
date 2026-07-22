@@ -218,11 +218,12 @@ function renderHomePortfolio(withData, entries, proc) {
 
     // ── C. 종합 클리어 — 기준별 상태 행 (게이트 기준 or 합격 기준) ──
     const GST2 = { pass: 'ok', prog: 'pr', fail: 'fa', wait: 'wt' };
+    const GIC = { pass: '✓', prog: '◐', fail: '✕', wait: '—' };
     const stripNo = t => String(t || '').replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d.]+\s*/, '').trim();
     const crit9 = clearCrits(e);
     const passN = crit9.filter(c => c.status === 'pass').length;
-    const clearRows = crit9.map(c => `<div class="mzc-row st-${GST2[c.status] || 'wt'}" title="${esc(c.label || '')}">
-      <i></i><span>${esc(stripNo(c.label))}</span></div>`).join('');
+    const clearRows = crit9.map(c => `<div class="mzc-t st-${GST2[c.status] || 'wt'}" title="${esc(c.label || '')} — ${esc(c.status === 'pass' ? '충족' : c.status === 'prog' ? '진행 중' : c.status === 'fail' ? '미달' : '대기')}">
+      <i>${GIC[c.status] || '—'}</i><span>${esc(stripNo(c.label))}</span></div>`).join('');
 
     // ── D. 분류 밴드 — 4분류/원인분류 + 심각도 + 조치 상태 (인라인 라벨 스택바) ──
     const band = (lb, segs, note) => {
@@ -283,7 +284,7 @@ function renderHomePortfolio(withData, entries, proc) {
         </div>
         <div class="mz-box clear">
           <div class="mz-h">종합 클리어<span class="mz-hn"><b>${passN}</b>/${crit9.length || '—'} 충족</span></div>
-          <div class="mzc">${clearRows || '<div class="mzc-row"><span>기준 준비 중</span></div>'}</div>
+          <div class="mzc-grid">${clearRows || '<div class="mzc-t st-wt"><span>기준 준비 중</span></div>'}</div>
           ${tecopStrip ? `<div class="mzc-tecop"><em>비기술 리스크</em><div class="mzt-l">${tecopStrip}</div></div>` : ''}
         </div>
       </div>
